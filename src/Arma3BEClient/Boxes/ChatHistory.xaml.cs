@@ -1,0 +1,66 @@
+﻿using System;
+using System.ComponentModel;
+using System.Text;
+using System.Threading;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Media;
+using Arma3BEClient.Lib.ModelCompact;
+using Arma3BEClient.Models;
+using Arma3BEClient.Updater.Models;
+using Arma3BEClient.ViewModel;
+
+namespace Arma3BEClient.Boxes
+{
+    /// <summary>
+    /// Interaction logic for ChatHistory.xaml
+    /// </summary>
+    public partial class ChatHistory : Window
+    {
+        private readonly ChatHistoryViewModel _model;
+
+        public ChatHistory(ChatHistoryViewModel model)
+        {
+            _model = model;
+            InitializeComponent();
+
+            _model.PropertyChanged += _model_PropertyChanged;
+
+            this.DataContext = _model;
+        }
+
+        void _model_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Log")
+            {
+                Refresh();
+            }
+        }
+
+        private void Refresh()
+        {
+            msgBox.Document.Blocks.Clear();
+            var p = new Paragraph();
+
+            foreach (var chatLog in _model.Log)
+            {
+                var mes = new ChatMessage { Date = chatLog.Date, Message = chatLog.Text };
+                AppendText(p, ChatScrollViewer, mes);
+            }
+
+
+            msgBox.Document.Blocks.Add(p);
+        }
+        
+        public void AppendText(Paragraph p, ScrollViewer scroll, ChatMessage message)
+        {
+            var text = string.Format("[ {0:yyyy-MM-dd HH:mm:ss} ]\t{1}\n", message.Date, message.Message);
+            var color = ServerMonitorModel.GetMessageColor(message);
+            var brush = new SolidColorBrush(color);
+            var span = new Span() { Foreground = brush };
+            span.Inlines.Add(text);
+            p.Inlines.Add(span);
+        }
+    }
+}

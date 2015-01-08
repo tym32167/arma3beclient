@@ -1,0 +1,52 @@
+﻿<Window x:Class="Arma3BEClient.Options"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:viewModel="clr-namespace:Arma3BEClient.ViewModel"
+        Title="Options" WindowStartupLocation="CenterScreen"  Height="600" Width="800"
+        WindowStyle="ToolWindow">
+    <Grid>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <TabControl VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" Margin="5">
+            <TabItem Header="Servers">
+                <Grid >
+                    <xctk:CollectionControl Name="ServerCollectionControl" IsReadOnly="False" ItemsSource="{Binding Servers}"
+                                            ItemAdded="ServerAdded" ItemDeleted="ServerDeleted"
+                                            ItemsSourceType="viewModel:ServerInfoModel"
+                                            ItemDeleting="ServerDeleting"
+                                            NewItemTypes="{Binding NewListItemTypes}">
+                    </xctk:CollectionControl>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Settings">
+                <Grid Margin="5" >
+                   <Grid.ColumnDefinitions>
+                       <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Text="AdminName" Margin="2"></TextBlock>
+                    <TextBox Grid.Column="1" Width="100" Margin="2" Text="{Binding Settings.AdminName, Mode=TwoWay}"></TextBox>
+                </Grid>
+            </TabItem>
+
+        </TabControl>
+        
+        <StackPanel Grid.Row="1" HorizontalAlignment="Right" Margin="5" Orientation="Horizontal">
+            <Button Content="Save" Margin="5 0 5 0" Padding="5 0" Click="Save_Click"></Button>
+            <Button Content="Cancel"  Margin="5 0 5 0" Padding="5 0" Click="Cancel_Click"></Button>
+        </StackPanel>
+
+    </Grid>
+</Window>
