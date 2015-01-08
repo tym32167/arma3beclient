@@ -5,9 +5,9 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Helpers.Views;
-using Arma3BEClient.Lib.Context;
-using Arma3BEClient.Lib.ModelCompact;
-using Arma3BEClient.Lib.Tools;
+using Arma3BEClient.Libs.Context;
+using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Tools;
 using Arma3BEClient.Updater;
 using Player = Arma3BEClient.Updater.Models.Player;
 
@@ -76,7 +76,7 @@ namespace Arma3BEClient.Helpers
                     foreach (var p in newplayers)
                     {
 
-                        var np = new Lib.ModelCompact.Player()
+                        var np = new Libs.ModelCompact.Player()
                         {
                             GUID = p.Guid,
                             Name = p.Name,

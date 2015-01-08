@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using Arma3BEClient.Extensions;
-using Arma3BEClient.Lib.ModelCompact;
+using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Models;
 
 namespace Arma3BEClient.Boxes

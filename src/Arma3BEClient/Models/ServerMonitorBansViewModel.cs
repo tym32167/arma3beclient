@@ -8,7 +8,7 @@ using Arma3BEClient.Commands;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Helpers;
 using Arma3BEClient.Helpers.Views;
-using Arma3BEClient.Lib.Context;
+using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Updater;
 using Ban = Arma3BEClient.Updater.Models.Ban;
 

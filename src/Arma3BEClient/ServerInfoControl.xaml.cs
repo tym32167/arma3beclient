@@ -8,7 +8,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Lib.ModelCompact;
+using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Updater.Models;
 using Arma3BEClient.ViewModel;
 

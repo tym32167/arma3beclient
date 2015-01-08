@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Arma3BEClient.Lib.Context;
-using Arma3BEClient.Lib.ModelCompact;
+using Arma3BEClient.Libs.Context;
+using Arma3BEClient.Libs.ModelCompact;
 using GalaSoft.MvvmLight;
 
 namespace Arma3BEClient.ViewModel

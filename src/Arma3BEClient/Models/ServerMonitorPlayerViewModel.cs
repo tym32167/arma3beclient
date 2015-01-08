@@ -5,9 +5,7 @@ using System.Windows.Input;
 using Arma3BEClient.Commands;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Helpers;
-using Arma3BEClient.Lib.Context;
-using Arma3BEClient.Lib.ModelCompact;
-using Arma3BEClient.Lib.Tools;
+using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Updater;
 using Player = Arma3BEClient.Updater.Models.Player;
 

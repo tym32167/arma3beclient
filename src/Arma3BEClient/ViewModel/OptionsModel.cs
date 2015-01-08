@@ -6,9 +6,9 @@ using System.Data.Entity;
 using System.Linq;
 using System.Windows;
 using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Lib.Context;
-using Arma3BEClient.Lib.ModelCompact;
-using Arma3BEClient.Lib.Tools;
+using Arma3BEClient.Libs.Context;
+using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Tools;
 using GalaSoft.MvvmLight;
 
 namespace Arma3BEClient.ViewModel

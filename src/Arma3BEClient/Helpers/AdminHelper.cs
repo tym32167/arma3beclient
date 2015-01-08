@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Lib.Context;
-using Arma3BEClient.Lib.ModelCompact;
+using Arma3BEClient.Libs.Context;
+using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Updater.Models;
 using Admin = Arma3BEClient.Updater.Models.Admin;
 
@@ -32,7 +32,7 @@ namespace Arma3BEClient.Helpers
                     var db = adminsdb.FirstOrDefault(x => x.IP == admin.IP/* && x.Port == admin.Port*/);
                     if (db == null)
                     {
-                        context.Admins.Add(new Lib.ModelCompact.Admin()
+                        context.Admins.Add(new Libs.ModelCompact.Admin()
                         {
                             ServerId = _currentServer.Id,
                             IP = admin.IP,

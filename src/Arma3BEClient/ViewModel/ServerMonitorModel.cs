@@ -3,7 +3,7 @@ using System.Windows.Media;
 using Arma3BEClient.Commands;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Helpers;
-using Arma3BEClient.Lib.ModelCompact;
+using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Models;
 using Arma3BEClient.Updater;
 using Arma3BEClient.Updater.Models;

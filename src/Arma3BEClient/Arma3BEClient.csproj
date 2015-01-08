@@ -283,9 +283,9 @@
       <Project>{d507e532-7de6-4028-9dbe-aa76c54cc92a}</Project>
       <Name>Arma3BEClient.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Arma3BEClient.Lib\Arma3BEClient.Lib.csproj">
-      <Project>{e5240a50-e944-4f50-a353-2e3c9e547447}</Project>
-      <Name>Arma3BEClient.Lib</Name>
+    <ProjectReference Include="..\Arma3BEClient.Libs\Arma3BEClient.Libs.csproj">
+      <Project>{E5240A50-E944-4F50-A353-2E3C9E547447}</Project>
+      <Name>Arma3BEClient.Libs</Name>
     </ProjectReference>
     <ProjectReference Include="..\Arma3BEClient.Updater\Arma3BEClient.Updater.csproj">
       <Project>{0bca3884-712a-4a1f-b5cd-4346671af18b}</Project>

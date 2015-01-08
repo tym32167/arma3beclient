@@ -6,7 +6,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
-using Arma3BEClient.Lib.ModelCompact;
 using Arma3BEClient.Models;
 using Arma3BEClient.Updater.Models;
 using Arma3BEClient.ViewModel;

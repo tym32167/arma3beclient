@@ -3,7 +3,7 @@ using System.Linq;
 using System.Windows.Input;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Helpers;
-using Arma3BEClient.Lib.ModelCompact;
+using Arma3BEClient.Libs.ModelCompact;
 using Admin = Arma3BEClient.Updater.Models.Admin;
 
 

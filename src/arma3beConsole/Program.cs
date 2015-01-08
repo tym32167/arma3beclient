@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Lib.Context;
-using Arma3BEClient.Lib.ModelCompact;
+using Arma3BEClient.Libs.Context;
+using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Models;
 using Arma3BEClient.ViewModel;
 

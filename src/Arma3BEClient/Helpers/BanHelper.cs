@@ -5,8 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Helpers.Views;
-using Arma3BEClient.Lib.Context;
-using Arma3BEClient.Lib.ModelCompact;
+using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Updater.Models;
 using Ban = Arma3BEClient.Updater.Models.Ban;
 
@@ -82,7 +81,7 @@ namespace Arma3BEClient.Helpers
                     if (bdb == null)
                     {
                         var player = players.FirstOrDefault(x => x.GUID == ban.GuidIp);
-                        var newBan = new Lib.ModelCompact.Ban()
+                        var newBan = new Libs.ModelCompact.Ban()
                         {
                             CreateDate = DateTime.UtcNow,
                             GuidIp = ban.GuidIp,
