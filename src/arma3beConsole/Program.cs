@@ -18,6 +18,7 @@ namespace arma3beConsole
             var log = new Log();
             log.Info("Startup");
 
+
             var servers = new List<ServerInfo>();
             
 
@@ -31,8 +32,15 @@ namespace arma3beConsole
 
             while (true)
             {
-                var t = Task.Run(() => run(models));
-                t.Wait();
+                try
+                {
+                    var t = Task.Run(() => run(models));
+                    t.Wait();
+                }
+                catch (Exception ex)
+                {
+                    log.Error(ex);
+                }
             }
         }
 

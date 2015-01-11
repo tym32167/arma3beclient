@@ -171,8 +171,15 @@ namespace Arma3BEClient.ViewModel
 
         public void Connect()
         {
-            if (!_updateClient.Connected)
-                _updateClient.Connect();
+            try
+            {
+                if (!_updateClient.Connected)
+                    _updateClient.Connect();
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex);
+            }
         }
 
         
