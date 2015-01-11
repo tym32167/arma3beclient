@@ -30,11 +30,7 @@ namespace Arma3BEClient.Helpers.Views
             {
                 if (string.IsNullOrEmpty(_country))
                 {
-                    IPInfo.Get(IP).ContinueWith(x =>
-                    {
-                        _country = x.Result.Split(Environment.NewLine.ToCharArray())[2];
-                        OnPropertyChanged();
-                    });
+                    _country = IPInfo.GetCountryLocal(IP);
                 }
 
                 return _country;

@@ -1,32 +1,40 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using MaxMind.GeoIP2;
 
 namespace Arma3BEClient.Helpers
 {
     public static class IPInfo
     {
-
-        static Dictionary<string, string> _cache = new Dictionary<string, string>();
-
         public async static Task<string> Get(string ip)
         {
             if (string.IsNullOrEmpty(ip)) return string.Empty;
-
-            if (_cache.ContainsKey(ip)) return _cache[ip];
-
             var c = new HttpClient();
             var pattern = ConfigurationManager.AppSettings["IPServicePattern"];
             var data = await c.GetStringAsync(string.Format(pattern, ip));
-
-
-            if (_cache.Count > 5000) _cache.Clear();
-
-            _cache[ip] = data;
             return data;
+        }
+
+        public static string GetCountryLocal(string ip)
+        {
+            if (string.IsNullOrEmpty(ip)) return string.Empty;
+
+            try
+            {
+                using (var reader = new DatabaseReader(@"IPDatabase\GeoLite2-City.mmdb"))
+                {
+
+                    var city = reader.City(ip);
+                    return city.Country.Name;
+                }
+            }
+            catch(Exception e)
+            {
+                return string.Empty;
+            }
         }
 
         public static string GetIPAddress(string host)
@@ -37,20 +45,15 @@ namespace Arma3BEClient.Helpers
             {
                 return ip.ToString();
             }
-            else
+            try
             {
-                try
-                {
-                    var entry = Dns.GetHostEntry(host);
-                    return entry.AddressList[0].ToString();
-                }
-                catch
-                {
-                    return string.Empty;
-                }
+                var entry = Dns.GetHostEntry(host);
+                return entry.AddressList[0].ToString();
             }
-
-            return string.Empty;
+            catch
+            {
+                return string.Empty;
+            }
         }
     }
 }
