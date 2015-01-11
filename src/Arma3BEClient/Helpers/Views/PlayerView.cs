@@ -1,9 +1,12 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using Arma3BEClient.Annotations;
 using Arma3BEClient.Common.Attributes;
 
 namespace Arma3BEClient.Helpers.Views
 {
-    public class PlayerView
+    public class PlayerView : INotifyPropertyChanged
     {
         [ShowInUi]
         [EnableCopy]
@@ -16,6 +19,27 @@ namespace Arma3BEClient.Helpers.Views
         [ShowInUi]
         [EnableCopy]
         public string Comment { get; set; }
+
+        private string _country;
+
+        [ShowInUi]
+        [EnableCopy]
+        public string Country
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_country))
+                {
+                    IPInfo.Get(IP).ContinueWith(x =>
+                    {
+                        _country = x.Result.Split(Environment.NewLine.ToCharArray())[2];
+                        OnPropertyChanged();
+                    });
+                }
+
+                return _country;
+            }
+        }
 
         [ShowInUi]
         [EnableCopy]
@@ -38,5 +62,15 @@ namespace Arma3BEClient.Helpers.Views
         public int Ping { get; set; }
 
         public Guid Id { get; set; }
+        
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

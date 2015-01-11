@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Net;
 using System.Net.Http;
@@ -8,13 +9,23 @@ namespace Arma3BEClient.Helpers
 {
     public static class IPInfo
     {
+
+        static Dictionary<string, string> _cache = new Dictionary<string, string>();
+
         public async static Task<string> Get(string ip)
         {
             if (string.IsNullOrEmpty(ip)) return string.Empty;
 
+            if (_cache.ContainsKey(ip)) return _cache[ip];
+
             var c = new HttpClient();
             var pattern = ConfigurationManager.AppSettings["IPServicePattern"];
             var data = await c.GetStringAsync(string.Format(pattern, ip));
+
+
+            if (_cache.Count > 5000) _cache.Clear();
+
+            _cache[ip] = data;
             return data;
         }
 
