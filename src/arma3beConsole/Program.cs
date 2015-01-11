@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
-using Arma3BEClient.Models;
 using Arma3BEClient.ViewModel;
 
 namespace arma3beConsole
@@ -18,7 +18,7 @@ namespace arma3beConsole
             var log = new Log();
             log.Info("Startup");
 
-            List<ServerInfo> servers = new List<ServerInfo>();
+            var servers = new List<ServerInfo>();
             
 
             using (var dc = new Arma3BeClientContext())
@@ -27,59 +27,16 @@ namespace arma3beConsole
             }
 
             var models = servers.Select(x=>OpenServerInfo(x, log)).ToList();
-
-            //while (true)
-            //{
-            //    foreach (var model in models)
-            //    {
-            //        if (!model.Connected)
-            //        {
-            //            model.Connect();
-            //            Console.WriteLine(@"Connectiong to {0}", model.CurrentServer.Name);
-            //            Thread.Sleep(2000);
-            //        }
-            //    }
-
-            //    Thread.Sleep(30000);
-            //}
-
-
-            var t = new Thread(() => run(models)) { IsBackground = true };
-            t.Start();
-
-            while (true)
-            {
-                Thread.Sleep(1000);
-                if (!t.IsAlive)
-                {
-                    try
-                    {
-                        t.Abort();
-                        t = new Thread(() => run(models)) { IsBackground = true };
-                        t.Start();
-                    }
-                    catch
-                    {
-                    }
-                }
-            }
             
-            models.ForEach(x=>x.Cleanup());
-        }
-
-        private static void ThreadKeeper(IEnumerable<ServerMonitorModel> models)
-        {
-            /*var ts = new ParameterizedThreadStart(run);
-
-            var thread = new Thread(ts);
-            thread.Start(models);
 
             while (true)
             {
-                Thread.Sleep(1000);
-
-            }*/
+                var t = Task.Run(() => run(models));
+                t.Wait();
+            }
         }
+
+       
 
         private static void run(IEnumerable<ServerMonitorModel> models)
         {
@@ -121,7 +78,7 @@ namespace arma3beConsole
 
         private static ServerMonitorModel OpenServerInfo(ServerInfo obj, ILog log)
         {
-            var model = new ServerMonitorModel(obj, log);
+            var model = new ServerMonitorModel(obj, log, true);
 
             model.ChatViewModel.ChatMessageEventHandler += (s, e) =>
             {
