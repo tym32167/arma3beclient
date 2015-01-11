@@ -79,14 +79,7 @@
 
                 <ScrollViewer Grid.ColumnSpan="2" Name="ConsoleScrollViewer">
 
-                    <RichTextBox Name="msgConsole"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  IsReadOnly="True" IsReadOnlyCaretVisible="False"
-                             FontSize="12" FontWeight="Normal"  FontStyle="Normal" Background="#F0F0F0">
-                        <RichTextBox.Resources>
-                            <Style TargetType="{x:Type Paragraph}">
-                                <Setter Property="Margin" Value="0"/>
-                            </Style>
-                        </RichTextBox.Resources>
-                    </RichTextBox>
+                    <TextBox Name="msgConsole" FontSize="12" IsReadOnly="True"></TextBox>
 
                 </ScrollViewer>
             </TabItem>

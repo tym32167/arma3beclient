@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -14,6 +15,7 @@ namespace Arma3BEClient.Chat
     /// Interaction logic for ChatControl.xaml
     /// </summary>
     public partial class ChatControl : UserControl{
+        
 
 
         private ServerMonitorChatViewModel Model { get { return DataContext as ServerMonitorChatViewModel; } }
@@ -21,6 +23,7 @@ namespace Arma3BEClient.Chat
         public ChatControl()
         {
             InitializeComponent();
+            InitBox();
         }
 
         void _model_ChatMessageEventHandler(object sender, Updater.Models.ChatMessage e)
@@ -30,7 +33,7 @@ namespace Arma3BEClient.Chat
                 if (!Model.EnableChat) return;
                 var type = e.Type;
                 if (type != ChatMessage.MessageType.Unknown)
-                    AppendText(msgBox, ChatScrollViewer, e);
+                    AppendText(paragraph, ChatScrollViewer, e);
                 else
                     AppendText(msgConsole, ConsoleScrollViewer, e);
             });
@@ -51,14 +54,38 @@ namespace Arma3BEClient.Chat
             }
         }
 
-        public void AppendText(RichTextBox box, ScrollViewer scroll, ChatMessage message)
+
+        private Paragraph paragraph;
+
+        private void InitBox()
+        {
+            msgBox.Document.Blocks.Clear();
+            paragraph = new Paragraph();
+
+            msgBox.Document.Blocks.Add(paragraph);
+        }
+
+
+        public void AppendText(Paragraph p, ScrollViewer scroll, ChatMessage message)
         {
             var text = string.Format("[ {0:HH:mm:ss} ]  {1}\n", message.Date, message.Message);
             var color = ServerMonitorModel.GetMessageColor(message);
-            var tr = new TextRange(box.Document.ContentEnd, box.Document.ContentEnd);
-            tr.Text = text;
-            tr.ApplyPropertyValue(TextElement.ForegroundProperty, new SolidColorBrush(color));
+            
+            var brush = new SolidColorBrush(color);
+            var span = new Span() { Foreground = brush };
+            span.Inlines.Add(text);
+            paragraph.Inlines.Add(span);
 
+            if (Model.AutoScroll)
+                scroll.ScrollToEnd();
+        }
+
+
+        public void AppendText(TextBox block, ScrollViewer scroll, ChatMessage message)
+        {
+            var text = string.Format("[ {0:HH:mm:ss} ]  {1}\n", message.Date, message.Message);
+            block.Text += text;
+            
             if (Model.AutoScroll)
             scroll.ScrollToEnd();
         }
@@ -71,10 +98,11 @@ namespace Arma3BEClient.Chat
         private void ClearAll_Click(object sender, RoutedEventArgs e)
         {
             msgBox.Document.Blocks.Clear();
-            msgConsole.Document.Blocks.Clear();
+            msgConsole.Text = string.Empty;
+
+            InitBox();
 
             msgBox.AppendText(Environment.NewLine);
-            msgConsole.AppendText(Environment.NewLine);
         }
     }
 }
