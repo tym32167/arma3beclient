@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         Title="Chat history" 
-        WindowStyle="SingleBorderWindow"  Width="700" Height="500"
+        WindowStyle="SingleBorderWindow"  Width="750" Height="500"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
@@ -12,6 +12,16 @@
         </Grid.RowDefinitions>
         
         <ToolBar>
+
+
+            <xctk:DropDownButton  Content="Servers">
+                <xctk:DropDownButton.DropDownContent>
+                    <xctk:CheckListBox ItemsSource="{Binding ServerList}" DisplayMemberPath="Name" ValueMemberPath="Id" SelectedValue="{Binding SelectedServers}" ></xctk:CheckListBox>
+                </xctk:DropDownButton.DropDownContent>
+            </xctk:DropDownButton>
+
+
+
             <xctk:DateTimePicker Value="{Binding StartDate, Mode=TwoWay}" Width="200" FormatString="dd.MM.yy HH:mm:ss"></xctk:DateTimePicker>
             <xctk:DateTimePicker Value="{Binding EndDate, Mode=TwoWay}" Width="200" FormatString="dd.MM.yy HH:mm:ss"></xctk:DateTimePicker>
             <xctk:WatermarkTextBox Watermark="Filter" Text="{Binding Filter, Mode=TwoWay}" Width="200"></xctk:WatermarkTextBox>

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
 using System.Windows;
 using Arma3BEClient.Helpers;
 using GalaSoft.MvvmLight;
+using Xceed.Wpf.Toolkit.Core;
 
 namespace Arma3BEClient.Boxes
 {
@@ -83,6 +86,27 @@ namespace Arma3BEClient.Boxes
         private string _reason;
         private long? _minutes;
         private TimeSpan _timeSpan;
+
+        public IEnumerable<string> Reasons
+        {
+            get
+            {
+                try
+                {
+                    var str =
+                        ConfigurationManager.AppSettings["Ban_reasons"].Split(new[] {'|'})
+                            .Where(x => !string.IsNullOrEmpty(x))
+                            .Select(x => x.Trim())
+                            .ToArray();
+
+                    return str;
+                }
+                catch (Exception e)
+                {
+                    return new[]{string.Empty};
+                }
+            }
+        }
 
 
         public string PlayerGuid

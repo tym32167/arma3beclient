@@ -45,16 +45,16 @@ namespace Arma3BEClient.Boxes
             foreach (var chatLog in _model.Log)
             {
                 var mes = new ChatMessage { Date = chatLog.Date, Message = chatLog.Text };
-                AppendText(p, ChatScrollViewer, mes);
+                AppendText(p, ChatScrollViewer, mes, chatLog.ServerName);
             }
 
 
             msgBox.Document.Blocks.Add(p);
         }
         
-        public void AppendText(Paragraph p, ScrollViewer scroll, ChatMessage message)
+        public void AppendText(Paragraph p, ScrollViewer scroll, ChatMessage message, string servername)
         {
-            var text = string.Format("[ {0:yyyy-MM-dd HH:mm:ss} ]\t{1}\n", message.Date, message.Message);
+            var text = string.Format("[{0}] [ {1:yyyy-MM-dd HH:mm:ss} ]\t{2}\n", servername, message.Date, message.Message);
             var color = ServerMonitorModel.GetMessageColor(message);
             var brush = new SolidColorBrush(color);
             var span = new Span() { Foreground = brush };

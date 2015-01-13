@@ -32,13 +32,7 @@
         
 
         <TextBlock Text="Template" Grid.Row="2" Margin="5"></TextBlock>
-        <ComboBox Grid.Row="2" Grid.Column="1" Margin="5" SelectedItem="{Binding Reason, Mode=TwoWay}">
-            <system:String>Fill nickname</system:String>
-            <system:String>Sabotage</system:String>
-            <system:String>Teamkill</system:String>
-            <system:String>Inadequate</system:String>
-            <system:String>Troll</system:String>
-            <system:String>Flud</system:String>
+        <ComboBox Grid.Row="2" Grid.Column="1" Margin="5" SelectedItem="{Binding Reason, Mode=TwoWay}" ItemsSource="{Binding Reasons, Mode=OneWay}">
         </ComboBox>
 
         <TextBlock Text="Minutes" Margin="5" Grid.Row="3" ></TextBlock>

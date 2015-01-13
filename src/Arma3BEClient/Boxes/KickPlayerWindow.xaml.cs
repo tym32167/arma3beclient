@@ -1,4 +1,8 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
+using System.Windows;
 using Arma3BEClient.Helpers;
 using Arma3BEClient.Models;
 using GalaSoft.MvvmLight;
@@ -61,6 +65,28 @@ namespace Arma3BEClient.Boxes
             {
                 _reason = value;
                 RaisePropertyChanged("Reason");
+            }
+        }
+
+
+        public IEnumerable<string> Reasons
+        {
+            get
+            {
+                try
+                {
+                    var str =
+                        ConfigurationManager.AppSettings["Kick_reasons"].Split(new[] { '|' })
+                            .Where(x => !string.IsNullOrEmpty(x))
+                            .Select(x => x.Trim())
+                            .ToArray();
+
+                    return str;
+                }
+                catch (Exception e)
+                {
+                    return new[] { string.Empty };
+                }
             }
         }
     }
