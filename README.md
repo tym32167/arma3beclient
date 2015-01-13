@@ -40,7 +40,7 @@
              width="256px"
              height="192px">
       </a><br />
-      <strong><sup>Player notes</sup></strong>
+      <strong><sup>Player Nicknames and IP's</sup></strong>
     </td>
     <td align="center">
       <a href="https://raw.githubusercontent.com/tym32167/arma3beclient/master/desc/5.PNG">
@@ -49,8 +49,16 @@
              width="256px"
              height="192px">
       </a><br />
-      <strong><sup>Chat history</sup></strong>
+	  <strong><sup>Player notes</sup></strong>
     </td>
-    <td></td>
+    <td align="center">
+	  <a href="https://raw.githubusercontent.com/tym32167/arma3beclient/master/desc/6.PNG">
+        <img src="https://github.com/tym32167/arma3beclient/raw/master/desc/6.PNG"
+             alt="A3BC main interface"
+             width="256px"
+             height="192px">
+      </a><br />
+	  <strong><sup>Chat history</sup></strong>
+    </td>
   </tr>
 </table>
