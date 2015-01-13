@@ -54,7 +54,7 @@ namespace Arma3BEClient.Boxes
         
         public void AppendText(Paragraph p, ScrollViewer scroll, ChatMessage message, string servername)
         {
-            var text = string.Format("[{0}] [ {1:yyyy-MM-dd HH:mm:ss} ]\t{2}\n", servername, message.Date, message.Message);
+            var text = string.Format("[{0}] [ {1:yyyy-MM-dd HH:mm:ss} ]  {2}\n", servername, message.Date, message.Message);
             var color = ServerMonitorModel.GetMessageColor(message);
             var brush = new SolidColorBrush(color);
             var span = new Span() { Foreground = brush };
