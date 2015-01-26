@@ -4,7 +4,7 @@
 		xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
 		xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
         Loaded="LoadedWindow"
-		Title="Arma 3 Battle Eye Tool - http://tehgam.com" Height="600" Width="800" WindowStartupLocation="CenterScreen">
+		Title="Arma 3 BattlEye Tool - http://tehgam.com" Height="600" Width="800" WindowStartupLocation="CenterScreen">
 
     <Grid>
         <Grid.RowDefinitions>
