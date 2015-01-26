@@ -1,5 +1,5 @@
 <h2 align="center">Arma 3 BattlEye Tool</h2>
-<p>This program is designed specifically for the <a href="http://tehgam.com/">TEHGAM</a> community, with the main intended purpose of managing players and bans through the BattleEye protocol.</p>
+<p>This program is designed specifically for the <a href="http://tehgam.com/">TEHGAM</a> community, with the main intended purpose of managing players and bans through the BattlEye protocol.</p>
 
 <h3>Screenshots</h3>
 <table border="1">
