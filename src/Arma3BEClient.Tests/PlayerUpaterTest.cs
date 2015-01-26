@@ -1,5 +1,4 @@
-﻿/*
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Arma3BEClient.Tests
 {
@@ -14,4 +13,3 @@ namespace Arma3BEClient.Tests
         }
     }
 }
-*/
