@@ -90,13 +90,13 @@ namespace Arma3BEClient.Models
         {
             get
             {
-                if (Data == null) return new List<BanView>();
+                if (_data == null) return new List<BanView>();
 
                 using (var dc = new Arma3BeClientContext())
                 {
                     var dbBans = dc.Bans.Where(x => x.ServerInfo.Active && x.IsActive && x.MinutesLeft == 0).ToList();
 
-                    var data = Data.ToList();
+                    var data = _data.ToList();
 
                     var res =
                         dbBans.Where(x => data.All(y => y.GuidIp != x.GuidIp)).GroupBy(x => x.GuidIp)

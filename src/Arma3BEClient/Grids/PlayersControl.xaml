@@ -15,6 +15,7 @@
         </Grid.RowDefinitions>
 
 
+
         <ToolBar Height="30">
             <Button Command="{Binding RefreshCommand, Mode=OneWay}">
                 <Image Source="../Icons/refresh.ico" Height="16" Width="16"></Image>
@@ -25,7 +26,6 @@
             <Separator></Separator>
             <TextBlock Margin="2" HorizontalAlignment="Right" VerticalAlignment="Center" Text="{Binding PlayerCount, Mode=OneWay, StringFormat=Total: {0}}"></TextBlock>
 
-
             <xctk:DropDownButton  Content="Search options">
                 <xctk:DropDownButton.DropDownContent>
                     <xctk:CheckListBox ItemsSource="{Binding SearchOptions}" SelectedValue="{Binding SelectedOptions}"></xctk:CheckListBox>
@@ -33,9 +33,23 @@
             </xctk:DropDownButton>
         </ToolBar>
 
-        <xcdg:DataGridControl Name="dg"  Grid.Row="1" ItemsSource="{Binding Players,  Mode=OneWay}" 
-                              AutoCreateColumns="False" ReadOnly="True" SelectedItem="{Binding SelectedPlayer, Mode=TwoWay}"
-                             >
+
+        <!--<DataGrid ItemsSource="{Binding Players,  Mode=OneWay}" AutoGenerateColumns="False" Name="dg" IsReadOnly="True" AllowDrop="False" Grid.Row="1">
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+
+                    <MenuItem Header="Ban" Click="BanClick" >
+                    </MenuItem>
+
+                    <MenuItem Header="Player Info" Click="PlayerInfo_Click" >
+                    </MenuItem>
+
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>-->
+
+        <xcdg:DataGridControl Name="dg"  Grid.Row="1" ItemsSource="{Binding Players,  Mode=OneWay}"  
+                              AutoCreateColumns="False" ReadOnly="True" SelectedItem="{Binding SelectedPlayer, Mode=TwoWay}">
             <xcdg:DataGridControl.ContextMenu>
                 <ContextMenu>
 
