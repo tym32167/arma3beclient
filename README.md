@@ -61,4 +61,33 @@
 	  <strong><sup>Chat history</sup></strong>
     </td>
   </tr>
+    <tr>
+    <td align="center">
+      <a href="https://raw.githubusercontent.com/tym32167/arma3beclient/master/desc/7.PNG">
+        <img src="https://github.com/tym32167/arma3beclient/raw/master/desc/7.PNG"
+             alt="A3BC main interface"
+             width="256px"
+             height="192px">
+      </a><br />
+      <strong><sup>Server settings</sup></strong>
+    </td>
+    <td align="center">
+      <a href="https://raw.githubusercontent.com/tym32167/arma3beclient/master/desc/8.PNG">
+        <img src="https://github.com/tym32167/arma3beclient/raw/master/desc/8.PNG"
+             alt="A3BC main interface"
+             width="256px"
+             height="192px">
+      </a><br />
+	  <strong><sup>Select mission</sup></strong>
+    </td>
+    <td align="center">
+	  <a href="https://raw.githubusercontent.com/tym32167/arma3beclient/master/desc/9.PNG">
+        <img src="https://github.com/tym32167/arma3beclient/raw/master/desc/9.PNG"
+             alt="A3BC main interface"
+             width="256px"
+             height="192px">
+      </a><br />
+	  <strong><sup>Steam query support</sup></strong>
+    </td>
+  </tr>
 </table>
