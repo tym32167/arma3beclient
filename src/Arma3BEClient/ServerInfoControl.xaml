@@ -64,6 +64,10 @@
             <TabItem Header="Manage Server">
                 <local:ManageServer DataContext="{Binding ManageServerViewModel}"></local:ManageServer>
             </TabItem>
+            
+            <TabItem Header="Steam Query">
+                <local:SteamQuery DataContext="{Binding SteamQueryViewModel}"></local:SteamQuery>
+            </TabItem>
         </TabControl>
 
 

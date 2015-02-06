@@ -78,6 +78,8 @@ namespace Arma3BEClient.ViewModel
             }
 
 
+            SteamQueryViewModel = new ServerMonitorSteamQueryViewModel(_currentServer.Host, _currentServer.Port, _log);
+
             _updateClient = new UpdateClient(host, _currentServer.Port, _currentServer.Password, _log);
             
             _updateClient.PlayerHandler += (s, e) => PlayersViewModel.SetData(e);
@@ -156,6 +158,8 @@ namespace Arma3BEClient.ViewModel
 
         #region ViewModels
 
+
+        public ServerMonitorSteamQueryViewModel SteamQueryViewModel { get; set; }
 
         public ServerMonitorPlayerViewModel PlayersViewModel { get; set; }
         public ServerMonitorBansViewModel BansViewModel { get; set; }

@@ -204,6 +204,9 @@
     <Compile Include="Grids\OnlinePlayers.xaml.cs">
       <DependentUpon>OnlinePlayers.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Grids\SteamQuery.xaml.cs">
+      <DependentUpon>SteamQuery.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\AdminHelper.cs" />
     <Compile Include="Helpers\BanHelper.cs" />
     <Compile Include="Helpers\IPInfo.cs" />
@@ -226,6 +229,7 @@
     <Compile Include="Models\ServerMonitorChatViewModel.cs" />
     <Compile Include="Models\ServerMonitorManageServerViewModel.cs" />
     <Compile Include="Models\ServerMonitorPlayerViewModel.cs" />
+    <Compile Include="Models\ServerMonitorSteamQueryViewModel.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ServerInfoControl.xaml.cs">
       <DependentUpon>ServerInfoControl.xaml</DependentUpon>
@@ -269,6 +273,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Grids\OnlinePlayers.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Grids\SteamQuery.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -343,6 +351,10 @@
     <ProjectReference Include="..\Arma3BEClient.Libs\Arma3BEClient.Libs.csproj">
       <Project>{E5240A50-E944-4F50-A353-2E3C9E547447}</Project>
       <Name>Arma3BEClient.Libs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Arma3BEClient.Steam\Arma3BEClient.Steam.csproj">
+      <Project>{b2948bd4-b413-4e9d-b9ed-41261b0c56da}</Project>
+      <Name>Arma3BEClient.Steam</Name>
     </ProjectReference>
     <ProjectReference Include="..\Arma3BEClient.Updater\Arma3BEClient.Updater.csproj">
       <Project>{0bca3884-712a-4a1f-b5cd-4346671af18b}</Project>

@@ -32,7 +32,8 @@ namespace Arma3BEClient.Models
                 var m = SelectedMission;
                 if (m != null)
                 {
-                    _updateClient.SendCommandAsync(UpdateClient.CommandType.Mission, m.Name);
+                    var mn = m.Name;
+                    _updateClient.SendCommandAsync(UpdateClient.CommandType.Mission, mn);
                 }
             },
             () => SelectedMission != null);
