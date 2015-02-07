@@ -7,23 +7,26 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
 
-        <StackPanel Orientation="Vertical"   Margin="5">
-            
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding Host}" Width="Auto" Margin="2"></TextBlock>
-                <TextBox Text="{Binding Port, Mode=TwoWay}" Width="50" Margin="2"></TextBox>
-                <Button Content="Go" Command="{Binding ExcecuteCommand}" Width="20" Margin="2"></Button>
-            </StackPanel>
-            
-            
-            <StackPanel Orientation="Horizontal">
-                <DataGrid ItemsSource="{Binding Path=ServerPlayers.Players}" AutoGenerateColumns="True"></DataGrid>
-                <DataGrid ItemsSource="{Binding ServerInfo}" AutoGenerateColumns="True"></DataGrid>
-                
-            </StackPanel>
+        <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
 
-            <DataGrid ItemsSource="{Binding ServerRules}" AutoGenerateColumns="True"></DataGrid>
+            <StackPanel Orientation="Vertical"   Margin="5">
 
-        </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Host}" Width="Auto" Margin="2"></TextBlock>
+                    <TextBox Text="{Binding Port, Mode=TwoWay}" Width="50" Margin="2"></TextBox>
+                    <Button Content="Go" Command="{Binding ExcecuteCommand}" Width="20" Margin="2"></Button>
+                </StackPanel>
+
+
+                <StackPanel Orientation="Horizontal">
+                    <DataGrid ItemsSource="{Binding Path=ServerPlayers.Players}" AutoGenerateColumns="True" Margin="5"></DataGrid>
+                    <DataGrid ItemsSource="{Binding ServerInfo}" AutoGenerateColumns="True" Margin="5"></DataGrid>
+
+                </StackPanel>
+
+                <DataGrid ItemsSource="{Binding ServerRules}" AutoGenerateColumns="True" Margin="5"></DataGrid>
+
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>
