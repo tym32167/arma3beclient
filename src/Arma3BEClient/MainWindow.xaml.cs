@@ -4,16 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Xml.Serialization;
-using Arma3BEClient.Grids;
 using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Models.Export;
 using Arma3BEClient.ViewModel;
 using Microsoft.Win32;
 using Xceed.Wpf.AvalonDock.Layout;
-using Xceed.Wpf.Toolkit;
 using MessageBox = Xceed.Wpf.Toolkit.MessageBox;
 
 namespace Arma3BEClient
@@ -21,21 +18,17 @@ namespace Arma3BEClient
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    // ReSharper disable once RedundantExtendsListEntry
     public partial class MainWindow : Window
     {
-        private MainViewModel _model;
+        private readonly MainViewModel _model;
 
         public MainWindow()
         {
             InitializeComponent();
 
             _model = new MainViewModel();
-            this.DataContext = _model;
-        }
-
-        private void NewClick(object sender, RoutedEventArgs e)
-        {
-
+            DataContext = _model;
         }
 
         private void OptionsClick(object sender, RoutedEventArgs e)
@@ -52,9 +45,8 @@ namespace Arma3BEClient
             Dispatcher.BeginInvoke(new Action(() =>
             {
 
-                var doc = new LayoutDocument();
+                var doc = new LayoutDocument {Title = serverInfo.Name};
 
-                doc.Title = serverInfo.Name;
 
                 var control = new ServerInfoControl(serverInfo);
 
@@ -69,7 +61,8 @@ namespace Arma3BEClient
                 doc.Closed += (s, a) =>
                 {
                     control.Cleanup();
-                    _model.SetActive(serverInfo.Id, false);
+                    // ReSharper disable once RedundantArgumentDefaultValue
+                    _model.SetActive(serverInfo.Id, active: false);
                     _model.Reload();
                 };
 
@@ -88,15 +81,14 @@ namespace Arma3BEClient
             var orig = e.OriginalSource as FrameworkElement;
             if (orig != null && orig.DataContext is ServerInfo)
             {
-                var serverInfo = orig.DataContext as ServerInfo;
-
+                var serverInfo = (ServerInfo) orig.DataContext;
                 OpenServerInfo(serverInfo);
             }
         }
 
         private void ExitClick(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Close();
             Application.Current.Shutdown();
         }
 
@@ -106,21 +98,19 @@ namespace Arma3BEClient
             using (var dc = new Arma3BeClientContext())
             {
                 var servers = dc.ServerInfo.Where(x => x.Active).ToList();
-
                 Parallel.ForEach(servers, OpenServerInfo);
-
-                //servers.ForEach(OpenServerInfo);
-
             }
         }
 
 
         private async void ExportClick(object sender, RoutedEventArgs e)
         {
-            var dlg = new SaveFileDialog();
-            dlg.DefaultExt = "*.xml";
-            dlg.Filter = "*.xml|*.xml";
-            dlg.Title = "Select file to save players";
+            var dlg = new SaveFileDialog
+            {
+                DefaultExt = "*.xml",
+                Filter = "*.xml|*.xml",
+                Title = "Select file to save players"
+            };
 
             var res = dlg.ShowDialog();
 
@@ -166,7 +156,7 @@ namespace Arma3BEClient
             {
 
                 var db = dc.Player.ToList().GroupBy(x=>x.GUID).Select(x=>x.OrderByDescending(y=>y.Name).First()).ToDictionary(x => x.GUID);
-                var players = new List<PlayerXML>();
+                List<PlayerXML> players;
 
                 using (var sr = new StreamReader(fname))
                 {
@@ -213,11 +203,12 @@ namespace Arma3BEClient
 
         private async void ImportClick(object sender, RoutedEventArgs e)
         {
-            var ofd = new OpenFileDialog();
-
-            ofd.DefaultExt = "*.xml";
-            ofd.Filter = "*.xml|*.xml";
-            ofd.Title = "Select file to import players";
+            var ofd = new OpenFileDialog
+            {
+                DefaultExt = "*.xml",
+                Filter = "*.xml|*.xml",
+                Title = "Select file to import players"
+            };
 
             var res = ofd.ShowDialog();
 

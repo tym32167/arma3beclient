@@ -5,15 +5,15 @@ using Arma3BEClient.Updater;
 
 namespace Arma3BEClient.Sheduler
 {
-    class Program
+    static class Program
     {
         static void Main(string[] args)
         {
-            var host = string.Empty;
-            var port = 0;
-            var password = string.Empty;
-            var adminname = string.Empty;
-            var message = string.Empty;
+            string host;
+            int port;
+            string password;
+            string adminname;
+            string message;
             var interval = 0;
 
 
@@ -69,12 +69,9 @@ namespace Arma3BEClient.Sheduler
                         Thread.Sleep(1000);
                         continue;
                     }
-                    else
-                    {
-                        var result = string.Format(" -1 {0}: {1}", adminname, message);
-                        uc.SendCommand(UpdateClient.CommandType.Say, result);
-                        Console.WriteLine(message);
-                    }
+                    var result = string.Format(" -1 {0}: {1}", adminname, message);
+                    uc.SendCommand(UpdateClient.CommandType.Say, result);
+                    Console.WriteLine(message);
 
                     Thread.Sleep(interval * 1000);
                 }
