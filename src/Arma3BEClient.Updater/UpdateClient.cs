@@ -25,8 +25,6 @@ namespace Arma3BEClient.Updater
 
         private object _lock = new object();
 
-
-
         public event EventHandler<IEnumerable<Player>> PlayerHandler;
         public event EventHandler<IEnumerable<Ban>> BanHandler;
         public event EventHandler<IEnumerable<Admin>> AdminHandler;
