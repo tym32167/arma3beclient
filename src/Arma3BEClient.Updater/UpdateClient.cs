@@ -12,7 +12,7 @@ using Admin = Arma3BEClient.Updater.Models.Admin;
 namespace Arma3BEClient.Updater
 {
     public class UpdateClient : IDisposable
-    { 
+    {  
         private readonly string _host; 
         private readonly int _port;
         private readonly string _password;
