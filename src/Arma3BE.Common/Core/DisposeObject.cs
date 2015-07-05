@@ -4,6 +4,8 @@ namespace Arma3BEClient.Common.Core
 {
     public abstract class DisposeObject : IDisposable
     {
+        private bool _disposed;
+
         public void Dispose()
         {
             Dispose(true);
@@ -14,10 +16,6 @@ namespace Arma3BEClient.Common.Core
         {
             Dispose(false);
         }
-
-
-        private bool _disposed;
-
 
         protected virtual void Dispose(bool disposing)
         {

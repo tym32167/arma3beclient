@@ -6,13 +6,12 @@ using Arma3BEClient.Helpers;
 using Arma3BEClient.Libs.ModelCompact;
 using Admin = Arma3BEClient.Updater.Models.Admin;
 
-
 namespace Arma3BEClient.Models
 {
     public class ServerMonitorAdminsViewModel : ServerMonitorBaseViewModel<Admin, Admin>
     {
-        private readonly ILog _log;
         private readonly AdminHelper _helper;
+        private readonly ILog _log;
 
         public ServerMonitorAdminsViewModel(ILog log, ServerInfo serverInfo, ICommand refreshCommand)
             : base(refreshCommand)

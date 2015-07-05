@@ -1,17 +1,18 @@
 ﻿using System;
+using log4net;
+using log4net.Repository.Hierarchy;
 
 namespace Arma3BEClient.Common.Logging
 {
     public class Log : ILog
     {
         private static readonly Lazy<log4net.ILog> Logger = new Lazy<log4net.ILog>(() =>
-            log4net.LogManager.GetLogger(typeof(log4net.Repository.Hierarchy.Logger)));
+            LogManager.GetLogger(typeof (Logger)));
 
         private log4net.ILog _log
         {
             get { return Logger.Value; }
         }
-
 
         #region Implementation of ILog
 

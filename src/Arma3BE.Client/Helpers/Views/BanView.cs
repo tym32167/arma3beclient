@@ -12,16 +12,13 @@ namespace Arma3BEClient.Helpers.Views
         [EnableCopy]
         public string PlayerName { get; set; }
 
-
         [ShowInUi]
         [EnableCopy]
         public int Minutesleft { get; set; }
 
-
         [ShowInUi]
         [EnableCopy]
         public string Reason { get; set; }
-
 
         [ShowInUi]
         [EnableCopy]

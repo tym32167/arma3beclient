@@ -11,13 +11,12 @@ namespace Arma3BEClient.Libs.ModelCompact
         {
             Date = DateTime.UtcNow;
         }
-        
+
         [Key]
         public int Id { get; set; }
 
         [Required]
         public Guid PlayerId { get; set; }
-
 
         [ShowInUi]
         [EnableCopy]

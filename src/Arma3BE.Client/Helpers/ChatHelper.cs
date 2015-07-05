@@ -8,8 +8,8 @@ namespace Arma3BEClient.Helpers
 {
     public class ChatHelper
     {
-        private readonly ILog _log;
         private readonly Guid _currentServerId;
+        private readonly ILog _log;
 
         public ChatHelper(ILog log, Guid currentServerId)
         {
@@ -35,6 +35,6 @@ namespace Arma3BEClient.Helpers
             }
 
             return true;
-        } 
+        }
     }
 }

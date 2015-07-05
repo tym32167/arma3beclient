@@ -4,11 +4,12 @@ using System.Windows.Controls;
 using Arma3BEClient.Boxes;
 using Arma3BEClient.Extensions;
 using Arma3BEClient.Models;
+using PlayerView = Arma3BEClient.Helpers.Views.PlayerView;
 
 namespace Arma3BEClient.Grids
 {
     /// <summary>
-    /// Interaction logic for OnlinePlayers.xaml
+    ///     Interaction logic for OnlinePlayers.xaml
     /// </summary>
     public partial class OnlinePlayers : UserControl
     {
@@ -17,7 +18,7 @@ namespace Arma3BEClient.Grids
             InitializeComponent();
 
 
-            var menu = dg.Generate<Helpers.Views.PlayerView>();
+            var menu = dg.Generate<PlayerView>();
 
             foreach (var menuItem in menu.Items.OfType<MenuItem>().ToList())
             {
@@ -25,15 +26,20 @@ namespace Arma3BEClient.Grids
                 dg.ContextMenu.Items.Add(menuItem);
             }
 
-            foreach (var generateColumn in GridHelper.GenerateColumns<Helpers.Views.PlayerView>())
+            foreach (var generateColumn in GridHelper.GenerateColumns<PlayerView>())
             {
                 dg.Columns.Add(generateColumn);
             }
         }
 
+        private ServerMonitorPlayerViewModel Model
+        {
+            get { return DataContext as ServerMonitorPlayerViewModel; }
+        }
+
         private void KickClick(object sender, RoutedEventArgs e)
         {
-            var si = dg.SelectedItem as Helpers.Views.PlayerView;
+            var si = dg.SelectedItem as PlayerView;
 
             if (si != null)
             {
@@ -42,11 +48,9 @@ namespace Arma3BEClient.Grids
             }
         }
 
-        private ServerMonitorPlayerViewModel Model { get { return DataContext as ServerMonitorPlayerViewModel; } }
-
         private void BanClick(object sender, RoutedEventArgs e)
         {
-            var si = dg.SelectedItem as Helpers.Views.PlayerView;
+            var si = dg.SelectedItem as PlayerView;
 
             if (si != null)
             {
@@ -57,7 +61,7 @@ namespace Arma3BEClient.Grids
 
         private void PlayerInfo_Click(object sender, RoutedEventArgs e)
         {
-            var si = dg.SelectedItem as Helpers.Views.PlayerView;
+            var si = dg.SelectedItem as PlayerView;
 
             if (si != null)
             {

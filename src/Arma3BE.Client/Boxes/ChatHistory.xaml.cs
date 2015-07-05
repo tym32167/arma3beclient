@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
@@ -9,7 +10,7 @@ using Arma3BEClient.ViewModel;
 namespace Arma3BEClient.Boxes
 {
     /// <summary>
-    /// Interaction logic for ChatHistory.xaml
+    ///     Interaction logic for ChatHistory.xaml
     /// </summary>
     public partial class ChatHistory : Window
     {
@@ -22,10 +23,10 @@ namespace Arma3BEClient.Boxes
 
             _model.PropertyChanged += _model_PropertyChanged;
 
-            this.DataContext = _model;
+            DataContext = _model;
         }
 
-        void _model_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void _model_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Log")
             {
@@ -40,20 +41,21 @@ namespace Arma3BEClient.Boxes
 
             foreach (var chatLog in _model.Log)
             {
-                var mes = new ChatMessage { Date = chatLog.Date, Message = chatLog.Text };
+                var mes = new ChatMessage {Date = chatLog.Date, Message = chatLog.Text};
                 AppendText(p, ChatScrollViewer, mes, chatLog.ServerName);
             }
 
 
             msgBox.Document.Blocks.Add(p);
         }
-        
+
         public void AppendText(Paragraph p, ScrollViewer scroll, ChatMessage message, string servername)
         {
-            var text = string.Format("[{0}] [ {1:yyyy-MM-dd HH:mm:ss} ]  {2}\n", servername, message.Date, message.Message);
+            var text = string.Format("[{0}] [ {1:yyyy-MM-dd HH:mm:ss} ]  {2}\n", servername, message.Date,
+                message.Message);
             var color = ServerMonitorModel.GetMessageColor(message);
             var brush = new SolidColorBrush(color);
-            var span = new Span() { Foreground = brush };
+            var span = new Span {Foreground = brush};
             span.Inlines.Add(text);
             p.Inlines.Add(span);
         }

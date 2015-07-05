@@ -1,62 +1,63 @@
 ﻿<UserControl x:Class="Arma3BEClient.Grids.BansControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
-             mc:Ignorable="d" >
+             mc:Ignorable="d">
     <Grid>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
         </Grid.RowDefinitions>
 
         <ToolBar Height="30">
             <Button Command="{Binding RefreshCommand, Mode=OneWay}">
-                <Image x:Uid="Image_1" Source="../Icons/refresh.ico" Height="16" Width="16"></Image>
+                <Image x:Uid="Image_1" Source="../Icons/refresh.ico" Height="16" Width="16" />
             </Button>
 
-            <Separator></Separator>
-            <TextBlock Margin="2" HorizontalAlignment="Right" VerticalAlignment="Center" Text="{Binding DataCount, Mode=OneWay, StringFormat=Total: {0}}"></TextBlock>
+            <Separator />
+            <TextBlock Margin="2" HorizontalAlignment="Right" VerticalAlignment="Center"
+                       Text="{Binding DataCount, Mode=OneWay, StringFormat=Total: {0}}" />
 
-            <Separator></Separator>
+            <Separator />
 
-            <TextBlock Margin="2" HorizontalAlignment="Right" VerticalAlignment="Center" Text="{Binding AvailibleBansCount, Mode=OneWay, StringFormat=Availible bans: {0}}"></TextBlock>
+            <TextBlock Margin="2" HorizontalAlignment="Right" VerticalAlignment="Center"
+                       Text="{Binding AvailibleBansCount, Mode=OneWay, StringFormat=Availible bans: {0}}" />
 
             <Button Command="{Binding SyncBans, Mode=OneWay}" Content="Ban selected">
                 <!--<Image x:Uid="Image_1" Source="../Icons/refresh.ico" Height="16" Width="16"></Image>-->
             </Button>
 
-            <Separator></Separator>
+            <Separator />
 
-            <Button Content="Custom ban" Command="{Binding CustomBan, Mode=TwoWay}"></Button>
+            <Button Content="Custom ban" Command="{Binding CustomBan, Mode=TwoWay}" />
 
-            <Separator></Separator>
+            <Separator />
 
-            <TextBox Margin="2" Text="{Binding Filter, Mode=TwoWay}" Height="20" MinWidth="150"></TextBox>
-            <Button Content="Search" Margin="2" Command="{Binding FilterCommand, Mode=OneWay}"></Button>
+            <TextBox Margin="2" Text="{Binding Filter, Mode=TwoWay}" Height="20" MinWidth="150" />
+            <Button Content="Search" Margin="2" Command="{Binding FilterCommand, Mode=OneWay}" />
 
         </ToolBar>
 
 
         <TabControl Grid.Row="1">
             <TabItem Header="Actual bans">
-                <xcdg:DataGridControl  ItemsSource="{Binding Data, Mode=OneWay}" AutoCreateColumns="False" ReadOnly="True" Name="dg">
+                <xcdg:DataGridControl ItemsSource="{Binding Data, Mode=OneWay}" AutoCreateColumns="False"
+                                      ReadOnly="True" Name="dg">
 
                     <xcdg:DataGridControl.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Header="Remove Ban" Click="RemoveBan_Click">
-                            </MenuItem>
+                            <MenuItem Header="Remove Ban" Click="RemoveBan_Click" />
 
-                            <MenuItem Header="Player Info" Click="PlayerInfo_Click" >
-                            </MenuItem>
+                            <MenuItem Header="Player Info" Click="PlayerInfo_Click" />
 
                         </ContextMenu>
                     </xcdg:DataGridControl.ContextMenu>
 
                     <xcdg:DataGridControl.View>
-                        <xcdg:TableflowView FixedColumnCount="0"  UseDefaultHeadersFooters="False" ContainerHeight="20"  >
+                        <xcdg:TableflowView FixedColumnCount="0" UseDefaultHeadersFooters="False" ContainerHeight="20">
                             <xcdg:TableView.FixedHeaders>
                                 <DataTemplate>
                                     <xcdg:ColumnManagerRow />
@@ -68,19 +69,18 @@
             </TabItem>
             <TabItem Header="Availible bans">
 
-                <xcdg:DataGridControl  ItemsSource="{Binding AvailibleBans, Mode=OneWay}" AutoCreateColumns="False" ReadOnly="True"
-                                       SelectionChanged="Av_Grid_Selection_Changed" Name="dg2"
-                                       >
+                <xcdg:DataGridControl ItemsSource="{Binding AvailibleBans, Mode=OneWay}" AutoCreateColumns="False"
+                                      ReadOnly="True"
+                                      SelectionChanged="Av_Grid_Selection_Changed" Name="dg2">
 
                     <xcdg:DataGridControl.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Header="Player Info" Click="PlayerInfo2_Click" >
-                            </MenuItem>
+                            <MenuItem Header="Player Info" Click="PlayerInfo2_Click" />
                         </ContextMenu>
                     </xcdg:DataGridControl.ContextMenu>
 
                     <xcdg:DataGridControl.View>
-                        <xcdg:TableflowView FixedColumnCount="0"  UseDefaultHeadersFooters="False" ContainerHeight="20"  >
+                        <xcdg:TableflowView FixedColumnCount="0" UseDefaultHeadersFooters="False" ContainerHeight="20">
                             <xcdg:TableView.FixedHeaders>
                                 <DataTemplate>
                                     <xcdg:ColumnManagerRow />
@@ -106,12 +106,8 @@
                 </xcdg:DataGridControl>
 
             </TabItem>
-            
+
         </TabControl>
-        
-
-
-        
 
 
         <!--<Viewbox Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">

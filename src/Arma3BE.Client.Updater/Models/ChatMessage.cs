@@ -4,17 +4,25 @@ namespace Arma3BEClient.Updater.Models
 {
     public class ChatMessage
     {
+        public enum MessageType
+        {
+            Unknown,
+            Side,
+            Direct,
+            Vehicle,
+            Global,
+            Group,
+            Command,
+            RCon
+        }
+
         public DateTime Date { get; set; }
         public string Message { get; set; }
-
-        public enum MessageType { Unknown, Side, Direct, Vehicle, Global, Group, Command, RCon }
-
 
         public MessageType Type
         {
             get
             {
-
                 if (Message.StartsWith("(Side)")) return MessageType.Side;
                 if (Message.StartsWith("(Vehicle)")) return MessageType.Vehicle;
                 if (Message.StartsWith("(Global)")) return MessageType.Global;

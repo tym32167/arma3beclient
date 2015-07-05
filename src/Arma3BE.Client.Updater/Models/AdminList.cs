@@ -9,7 +9,6 @@ namespace Arma3BEClient.Updater.Models
         public AdminList(ServerMessage message)
             : base(Parse(message.Message))
         {
-
         }
 
         private static IEnumerable<Admin> Parse(string text)

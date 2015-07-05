@@ -2,64 +2,67 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
-        Title="{Binding Path=Player.Name, StringFormat=Player info: {0}}" 
-        WindowStyle="ToolWindow"  Width="700" Height="500"
+        Title="{Binding Path=Player.Name, StringFormat=Player info: {0}}"
+        WindowStyle="ToolWindow" Width="700" Height="500"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <TabControl>
             <TabItem Header="Common">
-                
+
                 <Grid>
-                    
+
                     <Grid.Resources>
                         <Style TargetType="TextBlock">
-                            <Setter Value="5" Property="Margin"></Setter>
+                            <Setter Value="5" Property="Margin" />
                         </Style>
                     </Grid.Resources>
-                    
+
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
 
-                    <TextBlock Text="Guid" Grid.Row="0" Grid.Column="0"></TextBlock>
-                    <TextBlock Text="Name" Grid.Row="1" Grid.Column="0"></TextBlock>
-                    <TextBlock Text="Last IP" Grid.Row="2" Grid.Column="0"></TextBlock>
-                    <TextBlock Text="IP Info" Grid.Row="3" Grid.Column="0"></TextBlock>
-                    <TextBlock Text="Last seen" Grid.Row="4" Grid.Column="0"></TextBlock>
-                    <TextBlock Text="Comment" Grid.Row="5" Grid.Column="0"></TextBlock>
+                    <TextBlock Text="Guid" Grid.Row="0" Grid.Column="0" />
+                    <TextBlock Text="Name" Grid.Row="1" Grid.Column="0" />
+                    <TextBlock Text="Last IP" Grid.Row="2" Grid.Column="0" />
+                    <TextBlock Text="IP Info" Grid.Row="3" Grid.Column="0" />
+                    <TextBlock Text="Last seen" Grid.Row="4" Grid.Column="0" />
+                    <TextBlock Text="Comment" Grid.Row="5" Grid.Column="0" />
 
-                    <TextBlock Text="{Binding Path=Player.GUID}" Grid.Row="0" Grid.Column="1"></TextBlock>
-                    <TextBlock Text="{Binding Path=Player.Name}" Grid.Row="1" Grid.Column="1"></TextBlock>
-                    <TextBlock Text="{Binding Path=Player.LastIp}" Grid.Row="2" Grid.Column="1"></TextBlock>
+                    <TextBlock Text="{Binding Path=Player.GUID}" Grid.Row="0" Grid.Column="1" />
+                    <TextBlock Text="{Binding Path=Player.Name}" Grid.Row="1" Grid.Column="1" />
+                    <TextBlock Text="{Binding Path=Player.LastIp}" Grid.Row="2" Grid.Column="1" />
 
-                    <TextBlock Text="{Binding Path=PlayerIPInfo}" Grid.Row="3" Grid.Column="1"></TextBlock>
+                    <TextBlock Text="{Binding Path=PlayerIPInfo}" Grid.Row="3" Grid.Column="1" />
 
-                    <TextBlock Text="{Binding Path=Player.LastSeen, StringFormat=\{0:dd.MM.yy HH:mm:ss\}}" Grid.Row="4" Grid.Column="1"></TextBlock>
+                    <TextBlock Text="{Binding Path=Player.LastSeen, StringFormat=\{0:dd.MM.yy HH:mm:ss\}}" Grid.Row="4"
+                               Grid.Column="1" />
 
-                    <StackPanel Orientation="Horizontal"  Grid.Row="5" Grid.Column="1">
-                        <TextBox Text="{Binding Path=Player.Comment, Mode=TwoWay}" MinLines="3" Width="300" TextWrapping="Wrap" AcceptsReturn="True" ></TextBox>
-                        <Button Content="Save" Command="{Binding SaveComment}"></Button>
+                    <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="1">
+                        <TextBox Text="{Binding Path=Player.Comment, Mode=TwoWay}" MinLines="3" Width="300"
+                                 TextWrapping="Wrap" AcceptsReturn="True" />
+                        <Button Content="Save" Command="{Binding SaveComment}" />
                     </StackPanel>
                 </Grid>
-                
-                
+
+
             </TabItem>
             <TabItem Header="Bans">
 
-                <xcdg:DataGridControl Grid.Row="1" ItemsSource="{Binding Path=Player.Bans, Mode=OneWay}" Name="dgBans" AutoCreateColumns="False" ReadOnly="True">
+                <xcdg:DataGridControl Grid.Row="1" ItemsSource="{Binding Path=Player.Bans, Mode=OneWay}" Name="dgBans"
+                                      AutoCreateColumns="False" ReadOnly="True">
 
                     <xcdg:DataGridControl.View>
-                        <xcdg:TableflowView FixedColumnCount="0"  UseDefaultHeadersFooters="False" ContainerHeight="20"  >
+                        <xcdg:TableflowView FixedColumnCount="0" UseDefaultHeadersFooters="False" ContainerHeight="20">
                             <xcdg:TableView.FixedHeaders>
                                 <DataTemplate>
                                     <xcdg:ColumnManagerRow />
@@ -70,8 +73,7 @@
                     <xcdg:DataGridControl.Columns>
 
 
-
-                        <xcdg:Column  FieldName="ServerInfo" AllowGroup="False" Title="Server">
+                        <xcdg:Column FieldName="ServerInfo" AllowGroup="False" Title="Server">
                             <xcdg:Column.CellContentTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Name}" />
@@ -80,11 +82,9 @@
                         </xcdg:Column>
 
 
-                        <xcdg:Column FieldName="MinutesLeft" AllowGroup="False" Title="Minutes left">
-                        </xcdg:Column>
+                        <xcdg:Column FieldName="MinutesLeft" AllowGroup="False" Title="Minutes left" />
 
-                        <xcdg:Column FieldName="Reason" AllowGroup="False" Title="Reason">
-                        </xcdg:Column>
+                        <xcdg:Column FieldName="Reason" AllowGroup="False" Title="Reason" />
 
                         <xcdg:Column FieldName="IsActive" AllowGroup="False" Title="Active">
                             <xcdg:Column.CellContentTemplate>
@@ -98,17 +98,16 @@
                 </xcdg:DataGridControl>
 
 
-
             </TabItem>
             <TabItem Header="Seen on">
 
 
-                <xcdg:DataGridControl Grid.Row="1" ItemsSource="{Binding Path=Player.PlayerHistory, Mode=OneWay}" Name="dgHist" AutoCreateColumns="False" ReadOnly="True">
+                <xcdg:DataGridControl Grid.Row="1" ItemsSource="{Binding Path=Player.PlayerHistory, Mode=OneWay}"
+                                      Name="dgHist" AutoCreateColumns="False" ReadOnly="True">
 
-                  
 
                     <xcdg:DataGridControl.View>
-                        <xcdg:TableflowView FixedColumnCount="0"  UseDefaultHeadersFooters="False" ContainerHeight="20"  >
+                        <xcdg:TableflowView FixedColumnCount="0" UseDefaultHeadersFooters="False" ContainerHeight="20">
                             <xcdg:TableView.FixedHeaders>
                                 <DataTemplate>
                                     <xcdg:ColumnManagerRow />
@@ -119,8 +118,7 @@
                     <xcdg:DataGridControl.Columns>
 
 
-
-                        <xcdg:Column  FieldName="Date" AllowGroup="False" Title="Date">
+                        <xcdg:Column FieldName="Date" AllowGroup="False" Title="Date">
                             <xcdg:Column.CellContentTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding ., StringFormat=\{0:dd.MM.yy HH:mm:ss\}}" />
@@ -129,26 +127,24 @@
                         </xcdg:Column>
 
 
-                        <xcdg:Column FieldName="Name" AllowGroup="False" Title="Name">
-                        </xcdg:Column>
+                        <xcdg:Column FieldName="Name" AllowGroup="False" Title="Name" />
 
-                        <xcdg:Column FieldName="IP" AllowGroup="False" Title="IP">
-                        </xcdg:Column>
+                        <xcdg:Column FieldName="IP" AllowGroup="False" Title="IP" />
 
                     </xcdg:DataGridControl.Columns>
                 </xcdg:DataGridControl>
-
 
 
             </TabItem>
             <TabItem Header="Notes">
 
 
-                <xcdg:DataGridControl Grid.Row="1" ItemsSource="{Binding Path=Player.Notes, Mode=OneWay}" Name="dgNotes" AutoCreateColumns="False" ReadOnly="True">
+                <xcdg:DataGridControl Grid.Row="1" ItemsSource="{Binding Path=Player.Notes, Mode=OneWay}"
+                                      Name="dgNotes" AutoCreateColumns="False" ReadOnly="True">
 
-                   
+
                     <xcdg:DataGridControl.View>
-                        <xcdg:TableflowView FixedColumnCount="0"  UseDefaultHeadersFooters="False" ContainerHeight="20"  >
+                        <xcdg:TableflowView FixedColumnCount="0" UseDefaultHeadersFooters="False" ContainerHeight="20">
                             <xcdg:TableView.FixedHeaders>
                                 <DataTemplate>
                                     <xcdg:ColumnManagerRow />
@@ -157,10 +153,9 @@
                         </xcdg:TableflowView>
                     </xcdg:DataGridControl.View>
                     <xcdg:DataGridControl.Columns>
-                        
 
 
-                        <xcdg:Column  FieldName="Date" AllowGroup="False" Title="Date">
+                        <xcdg:Column FieldName="Date" AllowGroup="False" Title="Date">
                             <xcdg:Column.CellContentTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding ., StringFormat=\{0:dd.MM.yy HH:mm:ss\}}" />
@@ -169,8 +164,7 @@
                         </xcdg:Column>
 
 
-                        <xcdg:Column FieldName="Text" AllowGroup="False" Title="Note">
-                        </xcdg:Column>
+                        <xcdg:Column FieldName="Text" AllowGroup="False" Title="Note" />
                     </xcdg:DataGridControl.Columns>
                 </xcdg:DataGridControl>
 

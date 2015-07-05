@@ -11,7 +11,8 @@ namespace Arma3BEClient.Models
     public class PlayerViewModel : ViewModelBase
     {
         private readonly string _userGuid;
-      
+        private Player _player;
+        private string _playerIPInfo;
 
         public PlayerViewModel(string userGuid)
         {
@@ -20,25 +21,6 @@ namespace Arma3BEClient.Models
             SaveComment = new ActionCommand(SaveUserComment);
         }
 
-        private void SaveUserComment()
-        {
-            using (var dc = new Arma3BeClientContext())
-            {
-                var dbp = dc.Player.FirstOrDefault(x => x.GUID == Player.GUID);
-                if (dbp != null)
-                {
-                    dbp.Comment = Player.Comment;
-                    dc.SaveChanges();
-                }
-            }
-
-
-            _player = null;
-            RaisePropertyChanged("Player");
-        }
-
-
-        private Player _player;
         public Player Player
         {
             get
@@ -67,8 +49,6 @@ namespace Arma3BEClient.Models
             }
         }
 
-
-        private string _playerIPInfo;
         public string PlayerIPInfo
         {
             get
@@ -81,12 +61,28 @@ namespace Arma3BEClient.Models
                         _playerIPInfo = x.Result;
                         RaisePropertyChanged("PlayerIPInfo");
                     });
-
                 }
                 return _playerIPInfo;
             }
         }
 
         public ICommand SaveComment { get; set; }
+
+        private void SaveUserComment()
+        {
+            using (var dc = new Arma3BeClientContext())
+            {
+                var dbp = dc.Player.FirstOrDefault(x => x.GUID == Player.GUID);
+                if (dbp != null)
+                {
+                    dbp.Comment = Player.Comment;
+                    dc.SaveChanges();
+                }
+            }
+
+
+            _player = null;
+            RaisePropertyChanged("Player");
+        }
     }
 }

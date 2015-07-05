@@ -9,13 +9,12 @@ namespace Arma3BEClient.Updater.Models
         public MissionList(ServerMessage message)
             : base(Parse(message.Message))
         {
-
         }
 
         private static IEnumerable<Mission> Parse(string text)
         {
             var lines = text.Split(Environment.NewLine.ToCharArray()).ToArray();
             return lines.Select(Mission.Parse).Where(p => p != null).ToList();
-        } 
+        }
     }
 }

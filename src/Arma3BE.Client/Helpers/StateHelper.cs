@@ -5,30 +5,23 @@ using Arma3BEClient.Updater.Models;
 
 namespace Arma3BEClient.Helpers
 {
-    public class StateHelper<T> where T:class
+    public class StateHelper<T> where T : class
     {
-        private List<T> _previousRequest;
-
         private ServerMessage _previousMessage;
-
-
-
+        private List<T> _previousRequest;
 
         protected bool HaveChanges(ServerMessage newMessage)
         {
             var temp = _previousMessage;
             _previousMessage = newMessage;
 
-            if (temp != null )
+            if (temp != null)
             {
-                return String.CompareOrdinal(temp.Message, newMessage.Message) != 0;
+                return string.CompareOrdinal(temp.Message, newMessage.Message) != 0;
             }
 
             return true;
         }
-
-
-        
 
         protected bool HaveChanges<TK>(List<T> newList, Func<T, TK> comparer)
         {
@@ -42,7 +35,7 @@ namespace Arma3BEClient.Helpers
                 var no = newList.OrderBy(comparer).ToList();
 
 
-                for (int i = 0; i < count; i++)
+                for (var i = 0; i < count; i++)
                 {
                     var p = po[i];
                     var n = no[i];

@@ -3,48 +3,48 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
-        Title="{Binding PlayerName, StringFormat=Ban player {0}}" 
+        Title="{Binding PlayerName, StringFormat=Ban player {0}}"
         WindowStyle="ToolWindow" SizeToContent="WidthAndHeight" ResizeMode="NoResize"
-        WindowStartupLocation="CenterScreen"
-        >
+        WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"></ColumnDefinition>
-            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
 
+        <TextBlock Grid.Row="0" Text="Player Guid" Margin="5" />
+        <TextBox Grid.Row="0" Grid.Column="1" Margin="5" Width="300" Name="tbGuid"
+                 Text="{Binding PlayerGuid, Mode=TwoWay}" IsEnabled="False" />
 
-        <TextBlock Grid.Row="0" Text="Player Guid" Margin="5"></TextBlock>
-        <TextBox Grid.Row="0" Grid.Column="1" Margin="5" Width="300" Name="tbGuid"  Text="{Binding PlayerGuid, Mode=TwoWay}" IsEnabled="False"></TextBox>
+        <TextBlock Grid.Row="1" Text="Reason" Margin="5" />
+        <xctk:WatermarkTextBox Grid.Row="1" Grid.Column="1" Margin="5" MinLines="2" Width="300"
+                               Watermark="Enter reason" Text="{Binding Reason, Mode=TwoWay}" />
 
-        <TextBlock Grid.Row="1" Text="Reason" Margin="5"></TextBlock>
-        <xctk:WatermarkTextBox Grid.Row="1" Grid.Column="1" Margin="5" MinLines="2" Width="300" Watermark="Enter reason" Text="{Binding Reason, Mode=TwoWay}"></xctk:WatermarkTextBox>
-        
 
-        <TextBlock Text="Template" Grid.Row="2" Margin="5"></TextBlock>
-        <ComboBox Grid.Row="2" Grid.Column="1" Margin="5" SelectedItem="{Binding Reason, Mode=TwoWay}" ItemsSource="{Binding Reasons, Mode=OneWay}">
-        </ComboBox>
+        <TextBlock Text="Template" Grid.Row="2" Margin="5" />
+        <ComboBox Grid.Row="2" Grid.Column="1" Margin="5" SelectedItem="{Binding Reason, Mode=TwoWay}"
+                  ItemsSource="{Binding Reasons, Mode=OneWay}" />
 
-        <TextBlock Text="Minutes" Margin="5" Grid.Row="3" ></TextBlock>
-        <xctk:LongUpDown Watermark="Minutes" Minimum="0" Grid.Row="3" Grid.Column="1" Margin="5" Name="lnMinutes" Value="{Binding Minutes, Mode=TwoWay}" ></xctk:LongUpDown>
+        <TextBlock Text="Minutes" Margin="5" Grid.Row="3" />
+        <xctk:LongUpDown Watermark="Minutes" Minimum="0" Grid.Row="3" Grid.Column="1" Margin="5" Name="lnMinutes"
+                         Value="{Binding Minutes, Mode=TwoWay}" />
 
-        <TextBlock Text="Template" Grid.Row="4" Margin="5"></TextBlock>
-        <ComboBox Grid.Row="4" Grid.Column="1" Margin="5" SelectedItem="{Binding TimeSpan, Mode=TwoWay}" Name="ts">
-        </ComboBox>
+        <TextBlock Text="Template" Grid.Row="4" Margin="5" />
+        <ComboBox Grid.Row="4" Grid.Column="1" Margin="5" SelectedItem="{Binding TimeSpan, Mode=TwoWay}" Name="ts" />
 
         <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="Ban" Margin="5 2" Padding="5 0" Click="BanClick"></Button>
-            <Button Content="Cancel" Margin="5 2" Padding="5 0" Click="CancelClick"></Button>
+            <Button Content="Ban" Margin="5 2" Padding="5 0" Click="BanClick" />
+            <Button Content="Cancel" Margin="5 2" Padding="5 0" Click="CancelClick" />
         </StackPanel>
 
     </Grid>

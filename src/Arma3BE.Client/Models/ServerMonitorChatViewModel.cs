@@ -13,22 +13,13 @@ namespace Arma3BEClient.Models
 {
     public class ServerMonitorChatViewModel : ViewModelBase
     {
+        private readonly ChatHelper _chatHelper;
         private readonly ILog _log;
         private readonly Guid _serverId;
         private readonly UpdateClient _updateClient;
-
-
-        private readonly ChatHelper _chatHelper;
         private bool _autoScroll;
         private bool _enableChat;
-
-
-        public event EventHandler<ServerMonitorChatViewModelEventArgs> ChatMessageEventHandler;
-        protected virtual void OnChatMessageEventHandler(ChatMessage e)
-        {
-            var handler = ChatMessageEventHandler;
-            if (handler != null) handler(this, new ServerMonitorChatViewModelEventArgs(e));
-        }
+        private string _inputMessage;
 
         public ServerMonitorChatViewModel(ILog log, Guid serverId, UpdateClient updateClient)
         {
@@ -52,12 +43,6 @@ namespace Arma3BEClient.Models
             });
         }
 
-        void _updateClient_ChatMessageHandler(object sender, ChatMessage e)
-        {
-            _chatHelper.RegisterChatMessage(e);
-            OnChatMessageEventHandler(e);
-        }
-
         public bool AutoScroll
         {
             get { return _autoScroll; }
@@ -78,7 +63,6 @@ namespace Arma3BEClient.Models
             }
         }
 
-        private string _inputMessage;
         public string InputMessage
         {
             get { return _inputMessage; }
@@ -89,6 +73,21 @@ namespace Arma3BEClient.Models
             }
         }
 
+        public ICommand ShowHistoryCommand { get; set; }
+        public event EventHandler<ServerMonitorChatViewModelEventArgs> ChatMessageEventHandler;
+
+        protected virtual void OnChatMessageEventHandler(ChatMessage e)
+        {
+            var handler = ChatMessageEventHandler;
+            if (handler != null) handler(this, new ServerMonitorChatViewModelEventArgs(e));
+        }
+
+        private void _updateClient_ChatMessageHandler(object sender, ChatMessage e)
+        {
+            _chatHelper.RegisterChatMessage(e);
+            OnChatMessageEventHandler(e);
+        }
+
         public void SendMessage(string rawmessage)
         {
             if (!string.IsNullOrEmpty(rawmessage))
@@ -96,13 +95,10 @@ namespace Arma3BEClient.Models
                 var adminName = SettingsStore.Instance.AdminName;
                 var message = string.Format(" -1 {0}: {1}", adminName, rawmessage);
                 _updateClient.SendCommandAsync(UpdateClient.CommandType.Say, message);
-
             }
 
             InputMessage = string.Empty;
         }
-
-        public ICommand ShowHistoryCommand { get; set; }
 
         public void SendMessage()
         {
@@ -115,11 +111,11 @@ namespace Arma3BEClient.Models
 
     public class ServerMonitorChatViewModelEventArgs : EventArgs
     {
-        public ChatMessage Message { get; private set; }
-
         public ServerMonitorChatViewModelEventArgs(ChatMessage message)
         {
             Message = message;
         }
+
+        public ChatMessage Message { get; private set; }
     }
 }

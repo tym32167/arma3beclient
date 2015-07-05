@@ -1,11 +1,12 @@
 ﻿using System.Windows;
 using System.Windows.Threading;
 using Arma3BEClient.Common.Logging;
+using log4net.Config;
 
 namespace Arma3BEClient
 {
     /// <summary>
-    /// Interaction logic for App.xaml
+    ///     Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application
     {
@@ -14,7 +15,7 @@ namespace Arma3BEClient
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            log4net.Config.XmlConfigurator.Configure();
+            XmlConfigurator.Configure();
             _logger.Info("Startup");
         }
 
@@ -23,7 +24,6 @@ namespace Arma3BEClient
             base.OnExit(e);
             _logger.Info("Exit");
         }
-
 
         private void App_OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {

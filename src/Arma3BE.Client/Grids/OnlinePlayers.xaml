@@ -1,7 +1,7 @@
 ﻿<UserControl x:Class="Arma3BEClient.Grids.OnlinePlayers"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
@@ -12,46 +12,46 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
         </Grid.RowDefinitions>
-        
-        
+
+
         <ToolBar Height="30">
             <Button Command="{Binding RefreshCommand, Mode=OneWay}">
-                <Image Source="../Icons/refresh.ico" Height="16" Width="16"></Image>
+                <Image Source="../Icons/refresh.ico" Height="16" Width="16" />
             </Button>
 
 
-            <Separator></Separator>
-            <TextBlock Margin="2" HorizontalAlignment="Right" VerticalAlignment="Center" Text="{Binding DataCount, Mode=OneWay, StringFormat=Total: {0}}"></TextBlock>
-            <Separator></Separator>
+            <Separator />
+            <TextBlock Margin="2" HorizontalAlignment="Right" VerticalAlignment="Center"
+                       Text="{Binding DataCount, Mode=OneWay, StringFormat=Total: {0}}" />
+            <Separator />
 
 
-            <TextBox Margin="2" Text="{Binding Filter, Mode=TwoWay}" Height="20" MinWidth="150"></TextBox>
-            <Button Content="Search" Margin="2" Command="{Binding FilterCommand, Mode=OneWay}"></Button>
+            <TextBox Margin="2" Text="{Binding Filter, Mode=TwoWay}" Height="20" MinWidth="150" />
+            <Button Content="Search" Margin="2" Command="{Binding FilterCommand, Mode=OneWay}" />
 
 
         </ToolBar>
 
-        <xcdg:DataGridControl Grid.Row="1" ItemsSource="{Binding Data, Mode=OneWay}" SelectedItem="{Binding SelectedPlayer, Mode=TwoWay}" AutoCreateColumns="False" ReadOnly="True" Name="dg" >
+        <xcdg:DataGridControl Grid.Row="1" ItemsSource="{Binding Data, Mode=OneWay}"
+                              SelectedItem="{Binding SelectedPlayer, Mode=TwoWay}" AutoCreateColumns="False"
+                              ReadOnly="True" Name="dg">
 
             <xcdg:DataGridControl.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Kick" Click="KickClick" >
-                    </MenuItem>
+                    <MenuItem Header="Kick" Click="KickClick" />
 
-                    <MenuItem Header="Ban" Click="BanClick" >
-                    </MenuItem>
+                    <MenuItem Header="Ban" Click="BanClick" />
 
-                    <MenuItem Header="Player Info" Click="PlayerInfo_Click" >
-                    </MenuItem>
+                    <MenuItem Header="Player Info" Click="PlayerInfo_Click" />
 
                 </ContextMenu>
             </xcdg:DataGridControl.ContextMenu>
-            
+
             <xcdg:DataGridControl.View>
-                <xcdg:TableflowView FixedColumnCount="0"  UseDefaultHeadersFooters="False" ContainerHeight="20"   >
+                <xcdg:TableflowView FixedColumnCount="0" UseDefaultHeadersFooters="False" ContainerHeight="20">
                     <xcdg:TableView.FixedHeaders>
                         <DataTemplate>
                             <xcdg:ColumnManagerRow />

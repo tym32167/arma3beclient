@@ -7,28 +7,29 @@ using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.ViewModel;
+using log4net.Config;
 
 namespace arma3beConsole
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            log4net.Config.XmlConfigurator.Configure();
+            XmlConfigurator.Configure();
             var log = new Log();
             log.Info("Startup");
 
 
             var servers = new List<ServerInfo>();
-            
+
 
             using (var dc = new Arma3BeClientContext())
             {
                 servers = dc.ServerInfo.Where(x => x.Active).ToList();
             }
 
-            var models = servers.Select(x=>OpenServerInfo(x, log)).ToList();
-            
+            var models = servers.Select(x => OpenServerInfo(x, log)).ToList();
+
 
             while (true)
             {
@@ -44,11 +45,10 @@ namespace arma3beConsole
             }
         }
 
-       
-
         private static void run(IEnumerable<ServerMonitorModel> models)
         {
-            var creators = models.Select(x => new Func<Thread>(() => new Thread(() => run(x)){IsBackground = true})).ToArray();
+            var creators =
+                models.Select(x => new Func<Thread>(() => new Thread(() => run(x)) {IsBackground = true})).ToArray();
             var threads = new Thread[creators.Length];
 
             while (true)

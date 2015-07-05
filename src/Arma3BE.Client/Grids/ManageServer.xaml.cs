@@ -4,7 +4,7 @@ using Arma3BEClient.Models;
 namespace Arma3BEClient.Grids
 {
     /// <summary>
-    /// Interaction logic for ManageServer.xaml
+    ///     Interaction logic for ManageServer.xaml
     /// </summary>
     public partial class ManageServer : UserControl
     {
@@ -13,6 +13,9 @@ namespace Arma3BEClient.Grids
             InitializeComponent();
         }
 
-        private ServerMonitorManageServerViewModel Model { get { return DataContext as ServerMonitorManageServerViewModel; } }
+        private ServerMonitorManageServerViewModel Model
+        {
+            get { return DataContext as ServerMonitorManageServerViewModel; }
+        }
     }
 }

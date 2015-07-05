@@ -64,8 +64,6 @@ namespace Arma3BEClient.Steam
         }
 
 
-
-
         public float GetDouble()
         {
             return BitConverter.ToSingle(new[]
@@ -78,13 +76,11 @@ namespace Arma3BEClient.Steam
         }
 
 
-
         public string GetStringOfByte()
         {
-            return Encoding.ASCII.GetString(new[] { _bytes[CurrentPosition++] });
+            return Encoding.ASCII.GetString(new[] {_bytes[CurrentPosition++]});
         }
 
         public int CurrentPosition { get; set; }
-
     }
 }

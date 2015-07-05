@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Helpers.Views;
 using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Updater.Models;
-using Ban = Arma3BEClient.Updater.Models.Ban;
 
 namespace Arma3BEClient.Helpers
 {
-    public class BanHelper:StateHelper<Ban>
+    public class BanHelper : StateHelper<Ban>
     {
-        private readonly ILog _log;
         private readonly Guid _currentServerId;
-        Regex replace = new Regex(@"\[[^\]^\[]*\]", RegexOptions.Compiled | RegexOptions.Multiline);
+        private readonly ILog _log;
+        private readonly Regex replace = new Regex(@"\[[^\]^\[]*\]", RegexOptions.Compiled | RegexOptions.Multiline);
 
         public BanHelper(ILog log, Guid currentServerId)
         {
@@ -23,11 +21,11 @@ namespace Arma3BEClient.Helpers
             _currentServerId = currentServerId;
         }
 
-        public bool  RegisterBans(IEnumerable<Ban> list)
+        public bool RegisterBans(IEnumerable<Ban> list)
         {
             var c = list.ToList();
-            
-            if (!HaveChanges(c, x =>x.Num)) return false;
+
+            if (!HaveChanges(c, x => x.Num)) return false;
 
 
             using (var context = new Arma3BeClientContext())
@@ -81,7 +79,7 @@ namespace Arma3BEClient.Helpers
                     if (bdb == null)
                     {
                         var player = players.FirstOrDefault(x => x.GUID == ban.GuidIp);
-                        var newBan = new Libs.ModelCompact.Ban()
+                        var newBan = new Libs.ModelCompact.Ban
                         {
                             CreateDate = DateTime.UtcNow,
                             GuidIp = ban.GuidIp,
@@ -97,17 +95,16 @@ namespace Arma3BEClient.Helpers
                         context.Bans.Add(newBan);
 
                         var comm = replace.Replace(ban.Reason, string.Empty).Trim();
-                        if (player!=null && (string.IsNullOrEmpty(player.Comment) || !player.Comment.Contains(comm)))
+                        if (player != null && (string.IsNullOrEmpty(player.Comment) || !player.Comment.Contains(comm)))
                         {
                             player.Comment = string.Format("{0} | {1}", player.Comment, comm);
                         }
 
-                      //  _log.InfoFormat("Ban added : {0}", ban);
+                        //  _log.InfoFormat("Ban added : {0}", ban);
                     }
                 }
 
                 context.SaveChanges();
-
             }
 
             return true;
@@ -124,13 +121,13 @@ namespace Arma3BEClient.Helpers
                 {
                     var p = players.FirstOrDefault(y => y.GUID == x.GuidIp);
 
-                    var ban = new BanView()
-                        {
-                            Num = x.Num,
-                            GuidIp = x.GuidIp,
-                            Reason = x.Reason,
-                            Minutesleft = x.Minutesleft,
-                        };
+                    var ban = new BanView
+                    {
+                        Num = x.Num,
+                        GuidIp = x.GuidIp,
+                        Reason = x.Reason,
+                        Minutesleft = x.Minutesleft
+                    };
 
                     if (p != null)
                     {
@@ -138,8 +135,6 @@ namespace Arma3BEClient.Helpers
                         ban.PlayerName = p.Name;
                     }
                     return ban;
-
-
                 }).ToList();
             }
         }

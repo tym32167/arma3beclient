@@ -11,13 +11,10 @@ namespace BattleNET
 {
     public enum BattlEyeConnectionResult
     {
-        [Description("Connected!")]
-        Success,
+        [Description("Connected!")] Success,
 
-        [Description("Host unreachable!")]
-        ConnectionFailed,
+        [Description("Host unreachable!")] ConnectionFailed,
 
-        [Description("Invalid login details!")]
-        InvalidLogin
+        [Description("Invalid login details!")] InvalidLogin
     }
 }

@@ -9,7 +9,7 @@ using Arma3BEClient.ViewModel;
 namespace Arma3BEClient.Grids
 {
     /// <summary>
-    /// Interaction logic for PlayersControl.xaml
+    ///     Interaction logic for PlayersControl.xaml
     /// </summary>
     public partial class PlayersControl : UserControl
     {
@@ -31,7 +31,6 @@ namespace Arma3BEClient.Grids
             }
 
 
-
             //var menu = dg.DgGenerate<PlayerView>();
 
             //foreach (var menuItem in menu.Items.OfType<MenuItem>().ToList())
@@ -45,11 +44,12 @@ namespace Arma3BEClient.Grids
             //{
             //    dg.Columns.Add(generateColumn);
             //}
-
         }
-      
 
-        private PlayerListModelView Model { get { return DataContext as PlayerListModelView; } }
+        private PlayerListModelView Model
+        {
+            get { return DataContext as PlayerListModelView; }
+        }
 
         private void BanClick(object sender, RoutedEventArgs e)
         {

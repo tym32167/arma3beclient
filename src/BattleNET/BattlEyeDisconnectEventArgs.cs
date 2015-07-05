@@ -10,6 +10,7 @@ using System;
 namespace BattleNET
 {
     public delegate void BattlEyeConnectEventHandler(BattlEyeConnectEventArgs args);
+
     public delegate void BattlEyeDisconnectEventHandler(BattlEyeDisconnectEventArgs args);
 
     public class BattlEyeConnectEventArgs : EventArgs
@@ -25,10 +26,11 @@ namespace BattleNET
         public BattlEyeConnectionResult ConnectionResult { get; private set; }
         public string Message { get; private set; }
     }
-    
+
     public class BattlEyeDisconnectEventArgs : EventArgs
     {
-        public BattlEyeDisconnectEventArgs(BattlEyeLoginCredentials loginDetails, BattlEyeDisconnectionType? disconnectionType)
+        public BattlEyeDisconnectEventArgs(BattlEyeLoginCredentials loginDetails,
+            BattlEyeDisconnectionType? disconnectionType)
         {
             LoginDetails = loginDetails;
             DisconnectionType = disconnectionType;

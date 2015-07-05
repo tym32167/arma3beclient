@@ -1,12 +1,11 @@
-﻿using System.Linq;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using Arma3BEClient.Extensions;
 using Arma3BEClient.Updater.Models;
 
 namespace Arma3BEClient.Grids
 {
     /// <summary>
-    /// Interaction logic for AdminsControl.xaml
+    ///     Interaction logic for AdminsControl.xaml
     /// </summary>
     public partial class AdminsControl : UserControl
     {

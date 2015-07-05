@@ -6,9 +6,10 @@ using GalaSoft.MvvmLight;
 
 namespace Arma3BEClient.Models
 {
-    public abstract class ServerMonitorBaseViewModel<T, TK> : ViewModelBase where T:class where TK:class 
+    public abstract class ServerMonitorBaseViewModel<T, TK> : ViewModelBase where T : class where TK : class
     {
         private readonly ICommand _refreshCommand;
+        protected IEnumerable<TK> _data;
 
         protected ServerMonitorBaseViewModel(ICommand refreshCommand)
         {
@@ -16,15 +17,24 @@ namespace Arma3BEClient.Models
             FilterCommand = new ActionCommand(UpdateData);
         }
 
-        protected IEnumerable<TK> _data;
-
         public IEnumerable<TK> Data
         {
             get { return FilterData(_data); }
         }
 
         public string Filter { get; set; }
-       
+
+        public int DataCount
+        {
+            get { return _data == null ? 0 : Data.Count(); }
+        }
+
+        public ICommand RefreshCommand
+        {
+            get { return _refreshCommand; }
+        }
+
+        public ICommand FilterCommand { get; private set; }
 
         public virtual void SetData(IEnumerable<T> initialData)
         {
@@ -41,23 +51,10 @@ namespace Arma3BEClient.Models
 
         protected abstract IEnumerable<TK> RegisterData(IEnumerable<T> initialData);
 
-        public int DataCount
-        {
-            get { return _data == null ? 0 : Data.Count(); }
-        }
-
-        public ICommand RefreshCommand
-        {
-            get { return _refreshCommand; }
-        }
-
-        public ICommand FilterCommand { get; private set; }
-
-
         protected virtual IEnumerable<TK> FilterData(IEnumerable<TK> initialData)
         {
             if (initialData == null) return initialData;
-            return initialData.Where(x=>F(x, Filter));
+            return initialData.Where(x => F(x, Filter));
         }
 
         private bool F(TK element, string initialFilter)
@@ -66,7 +63,6 @@ namespace Arma3BEClient.Models
             var filter = initialFilter.ToLower();
 
             var type = typeof (TK);
-
 
 
             var members = type.GetProperties();
@@ -90,7 +86,6 @@ namespace Arma3BEClient.Models
                         if (valueAsString.ToLower().Contains(filter)) return true;
                     }
                 }
-
             }
 
 

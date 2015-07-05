@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using Arma3BEClient.Commands;
@@ -14,11 +13,11 @@ namespace Arma3BEClient.Models
     public class ServerMonitorPlayerViewModel : ServerMonitorBaseViewModel<Player, Helpers.Views.PlayerView>
     {
         private readonly ILog _log;
-        private readonly UpdateClient _updateClient;
         internal readonly PlayerHelper _playerHelper;
+        private readonly UpdateClient _updateClient;
         private PlayerView _selectedPlayer;
 
-        public ServerMonitorPlayerViewModel(ILog log, ServerInfo serverInfo, UpdateClient updateClient )
+        public ServerMonitorPlayerViewModel(ILog log, ServerInfo serverInfo, UpdateClient updateClient)
             : base(new ActionCommand(() => updateClient.SendCommandAsync(UpdateClient.CommandType.Players)))
         {
             _log = log;
@@ -26,13 +25,13 @@ namespace Arma3BEClient.Models
             _playerHelper = new PlayerHelper(_log, serverInfo.Id, _updateClient);
         }
 
+        public ICommand KickUserCommand { get; set; }
+
         protected override IEnumerable<Helpers.Views.PlayerView> RegisterData(IEnumerable<Player> initialData)
         {
             var enumerable = initialData as IList<Player> ?? initialData.ToList();
             _playerHelper.RegisterPlayers(enumerable);
             return _playerHelper.GetPlayerView(enumerable);
         }
-
-        public ICommand KickUserCommand { get; set; }
     }
 }

@@ -1,12 +1,22 @@
-﻿using System;
-using BattleNET;
-
-namespace Arma3BEClient.Updater.Models
+﻿namespace Arma3BEClient.Updater.Models
 {
     public class ServerMessage
     {
-        private readonly int _messageId;
+        public enum MessageType
+        {
+            PlayerList,
+            BanList,
+            AdminList,
+            ChatMessage,
+            RconAdminLog,
+            PlayerLog,
+            BanLog,
+            MissionList,
+            Unknown
+        }
+
         private readonly string _message;
+        private readonly int _messageId;
 
         public ServerMessage(int messageId, string message)
         {
@@ -24,9 +34,6 @@ namespace Arma3BEClient.Updater.Models
             get { return _message; }
         }
 
-
-        public enum MessageType { PlayerList, BanList, AdminList, ChatMessage, RconAdminLog, PlayerLog, BanLog, MissionList,  Unknown }
-
         public MessageType Type
         {
             get
@@ -38,9 +45,9 @@ namespace Arma3BEClient.Updater.Models
                 if (_message.StartsWith("Missions on server:")) return MessageType.MissionList;
 
 
-
-
-                if (_message.StartsWith("(Side)") || _message.StartsWith("(Vehicle)") || (_message.StartsWith("(Global)") || _message.StartsWith("(Group)")) || (_message.StartsWith("(Command)") || _message.StartsWith("(Direct)")))
+                if (_message.StartsWith("(Side)") || _message.StartsWith("(Vehicle)") ||
+                    (_message.StartsWith("(Global)") || _message.StartsWith("(Group)")) ||
+                    (_message.StartsWith("(Command)") || _message.StartsWith("(Direct)")))
                     return MessageType.ChatMessage;
                 if (_message.StartsWith("RCon") && !_message.EndsWith("logged in"))
                     return MessageType.ChatMessage;
@@ -70,13 +77,8 @@ namespace Arma3BEClient.Updater.Models
                     return MessageType.BanLog;
 
 
-
-
-
-
                 return MessageType.Unknown;
             }
         }
-
     }
 }

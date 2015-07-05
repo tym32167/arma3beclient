@@ -7,7 +7,6 @@ using Arma3BEClient.Common.Core;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Updater.Models;
 using BattleNET;
-
 using Admin = Arma3BEClient.Updater.Models.Admin;
 
 namespace Arma3BEClient.Updater
@@ -123,12 +122,12 @@ namespace Arma3BEClient.Updater
             InitClients();
         }
 
-        void _battlEyeClient_BattlEyeDisconnected(BattlEyeDisconnectEventArgs args)
+        private void _battlEyeClient_BattlEyeDisconnected(BattlEyeDisconnectEventArgs args)
         {
             OnDisconnectHandler();
         }
 
-        void battlEyeClient_BattlEyeMessageReceived(BattlEyeMessageEventArgs args)
+        private void battlEyeClient_BattlEyeMessageReceived(BattlEyeMessageEventArgs args)
         {
             try
             {
@@ -138,21 +137,22 @@ namespace Arma3BEClient.Updater
                 {
                     ProcessMessage(message);
                 }
-
             }
             catch (Exception e)
             {
                 _log.Error(e);
             }
-
         }
 
-        void battlEyeClient_BattlEyeConnected(BattlEyeConnectEventArgs args)
+        private void battlEyeClient_BattlEyeConnected(BattlEyeConnectEventArgs args)
         {
             OnConnectHandler();
         }
 
-        public bool Connected { get { return _battlEyeClient != null && _battlEyeClient.Connected; } }
+        public bool Connected
+        {
+            get { return _battlEyeClient != null && _battlEyeClient.Connected; }
+        }
 
 
         public Task SendCommandAsync(CommandType type, string parameters = null)
@@ -267,11 +267,28 @@ namespace Arma3BEClient.Updater
 
         public enum CommandType
         {
-            Players, Bans, Admins, Say, AddBan, Ban, Kick, RemoveBan,
-            Init, Shutdown, Reassign, Restart, Lock, Unlock, Mission, Missions, RConPassword, MaxPing,
-            LoadBans, LoadScripts, LoadEvents,
+            Players,
+            Bans,
+            Admins,
+            Say,
+            AddBan,
+            Ban,
+            Kick,
+            RemoveBan,
+            Init,
+            Shutdown,
+            Reassign,
+            Restart,
+            Lock,
+            Unlock,
+            Mission,
+            Missions,
+            RConPassword,
+            MaxPing,
+            LoadBans,
+            LoadScripts,
+            LoadEvents,
         };
-
 
 
         private void ProcessMessage(ServerMessage message)
@@ -310,18 +327,18 @@ namespace Arma3BEClient.Updater
 
                 case ServerMessage.MessageType.RconAdminLog:
                     OnRConAdminLog();
-                    OnChatMessageHandler(new ChatMessage { Date = DateTime.UtcNow, Message = message.Message });
+                    OnChatMessageHandler(new ChatMessage {Date = DateTime.UtcNow, Message = message.Message});
                     break;
 
 
                 case ServerMessage.MessageType.PlayerLog:
                     OnPlayerLog();
-                    OnChatMessageHandler(new ChatMessage { Date = DateTime.UtcNow, Message = message.Message });
+                    OnChatMessageHandler(new ChatMessage {Date = DateTime.UtcNow, Message = message.Message});
                     break;
 
                 case ServerMessage.MessageType.BanLog:
                     OnBanLog();
-                    OnChatMessageHandler(new ChatMessage { Date = DateTime.UtcNow, Message = message.Message });
+                    OnChatMessageHandler(new ChatMessage {Date = DateTime.UtcNow, Message = message.Message});
                     break;
 
                 case ServerMessage.MessageType.Unknown:
@@ -343,9 +360,9 @@ namespace Arma3BEClient.Updater
 
         private void RegisterMessage(ServerMessage message)
         {
-            _log.InfoFormat("message [\nserver ip: {0}\nmessageId:{1}\n{2}\n]", _host, message.MessageId, message.Message);
+            _log.InfoFormat("message [\nserver ip: {0}\nmessageId:{1}\n{2}\n]", _host, message.MessageId,
+                message.Message);
         }
-
 
 
         public void Connect()
@@ -362,12 +379,10 @@ namespace Arma3BEClient.Updater
                 {
                     Thread.Sleep(100);
                     _battlEyeClient.Connect();
-                }) { IsBackground = true };
+                }) {IsBackground = true};
                 _thread.Start();
             }
         }
-
-
 
 
         private void InitClients()

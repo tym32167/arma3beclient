@@ -11,12 +11,11 @@ namespace Arma3BEClient.Commands
         }
 
         public abstract void Execute(object parameter);
-
         public event EventHandler CanExecuteChanged;
 
         protected virtual void OnCanExecuteChanged()
         {
-            EventHandler handler = CanExecuteChanged;
+            var handler = CanExecuteChanged;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 

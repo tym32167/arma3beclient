@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Input;
 using Arma3BEClient.Commands;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Updater;
@@ -36,11 +35,11 @@ namespace Arma3BEClient.Models
                     _updateClient.SendCommandAsync(UpdateClient.CommandType.Mission, mn);
                 }
             },
-            () => SelectedMission != null);
+                () => SelectedMission != null);
 
             RefreshCommand = new ActionCommand(() => _updateClient.SendCommandAsync(UpdateClient.CommandType.Missions));
 
-            InitCommand = new ActionCommand(async() =>
+            InitCommand = new ActionCommand(async () =>
             {
                 await _updateClient.SendCommandAsync(UpdateClient.CommandType.Init);
                 MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
@@ -72,9 +71,6 @@ namespace Arma3BEClient.Models
             });
 
 
-
-
-
             LoadBansCommand = new ActionCommand(async () =>
             {
                 await _updateClient.SendCommandAsync(UpdateClient.CommandType.LoadBans);
@@ -90,11 +86,6 @@ namespace Arma3BEClient.Models
                 await _updateClient.SendCommandAsync(UpdateClient.CommandType.LoadEvents);
                 MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
             });
-        }
-
-        private void UpdateClientOnMissionHandler(object sender, UpdateClientEventArgs<IEnumerable<Mission>> e)
-        {
-            Missions = e.Data;
         }
 
         public Mission SelectedMission
@@ -120,17 +111,19 @@ namespace Arma3BEClient.Models
 
         public ActionCommand RefreshCommand { get; set; }
         public ActionCommand SetMissionCommand { get; set; }
-
         public ActionCommand InitCommand { get; set; }
         public ActionCommand ShutdownCommand { get; set; }
         public ActionCommand ReassignCommand { get; set; }
         public ActionCommand RestartCommand { get; set; }
         public ActionCommand LockCommand { get; set; }
         public ActionCommand UnlockCommand { get; set; }
-
-
         public ActionCommand LoadBansCommand { get; set; }
         public ActionCommand LoadScriptsCommand { get; set; }
         public ActionCommand LoadEventsCommand { get; set; }
+
+        private void UpdateClientOnMissionHandler(object sender, UpdateClientEventArgs<IEnumerable<Mission>> e)
+        {
+            Missions = e.Data;
+        }
     }
 }

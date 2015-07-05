@@ -11,6 +11,6 @@ namespace BattleNET
     {
         Success,
         Error,
-        NotConnected,
+        NotConnected
     }
 }

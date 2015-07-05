@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using Arma3BEClient.Extensions;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Models;
@@ -6,7 +7,7 @@ using Arma3BEClient.Models;
 namespace Arma3BEClient.Boxes
 {
     /// <summary>
-    /// Interaction logic for PlayerViewWindow.xaml
+    ///     Interaction logic for PlayerViewWindow.xaml
     /// </summary>
     public partial class PlayerViewWindow : Window
     {
@@ -23,10 +24,10 @@ namespace Arma3BEClient.Boxes
             dgNotes.ContextMenu = dgNotes.Generate<Note>();
 
 
-            this.DataContext = _model;
+            DataContext = _model;
         }
 
-        protected override void OnClosed(System.EventArgs e)
+        protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
             _model.Cleanup();

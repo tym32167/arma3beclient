@@ -9,13 +9,9 @@ namespace Arma3BEClient.Libs.ModelCompact
         [Key]
         public int Id { get; set; }
 
-
         public int Num { get; set; }
-
         public string IP { get; set; }
-
         public int Port { get; set; }
-
         public Guid ServerId { get; set; }
 
         [ForeignKey("ServerId")]

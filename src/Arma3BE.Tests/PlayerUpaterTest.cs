@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Arma3BEClient.Updater.Models;
+using NUnit.Framework;
 
 namespace Arma3BEClient.Tests
 {
@@ -8,7 +9,9 @@ namespace Arma3BEClient.Tests
         [Test]
         public void Parse1()
         {
-            var p = Updater.Models.Player.Parse("17  188.162.228.192:63255 172  d074b6194fa864e50956a8294077f24a(OK) Cpt. JET");
+            var p =
+                Player.Parse(
+                    "17  188.162.228.192:63255 172  d074b6194fa864e50956a8294077f24a(OK) Cpt. JET");
             Assert.IsNotNull(p);
         }
     }

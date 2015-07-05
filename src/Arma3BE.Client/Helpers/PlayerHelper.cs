@@ -19,7 +19,8 @@ namespace Arma3BEClient.Helpers
         private readonly Guid _serverId;
         private readonly UpdateClient _updateClient;
 
-        private readonly Regex NameRegex = new Regex("[A-Za-zА-Яа-я0-9]+", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+        private readonly Regex NameRegex = new Regex("[A-Za-zА-Яа-я0-9]+",
+            RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
         public PlayerHelper(ILog log, Guid serverId, UpdateClient updateClient)
         {
@@ -27,8 +28,6 @@ namespace Arma3BEClient.Helpers
             _serverId = serverId;
             _updateClient = updateClient;
         }
-
-
 
         public bool RegisterPlayers(IEnumerable<Player> list)
         {
@@ -53,7 +52,7 @@ namespace Arma3BEClient.Helpers
                     {
                         if (player.Name != p.Name || player.LastIp != p.IP)
                         {
-                            context.PlayerHistory.Add(new PlayerHistory()
+                            context.PlayerHistory.Add(new PlayerHistory
                             {
                                 IP = player.LastIp,
                                 Name = player.Name,
@@ -75,8 +74,7 @@ namespace Arma3BEClient.Helpers
                 {
                     foreach (var p in newplayers)
                     {
-
-                        var np = new Libs.ModelCompact.Player()
+                        var np = new Libs.ModelCompact.Player
                         {
                             GUID = p.Guid,
                             Name = p.Name,
@@ -86,7 +84,7 @@ namespace Arma3BEClient.Helpers
 
                         context.Player.Add(np);
 
-                        context.PlayerHistory.Add(new PlayerHistory()
+                        context.PlayerHistory.Add(new PlayerHistory
                         {
                             IP = np.LastIp,
                             Name = np.Name,
@@ -104,10 +102,8 @@ namespace Arma3BEClient.Helpers
 
         public IEnumerable<PlayerView> GetPlayerView(IEnumerable<Player> list)
         {
-
             using (var context = new Arma3BeClientContext())
             {
-
                 var players = list.ToList();
                 var guids = players.Select(x => x.Guid).ToList();
 
@@ -122,7 +118,6 @@ namespace Arma3BEClient.Helpers
                     Ping = x.Ping,
                     State = x.State,
                     Port = x.Port
-
                 }).ToList();
 
                 result.ForEach(x =>
@@ -138,33 +133,30 @@ namespace Arma3BEClient.Helpers
                 var filterUsers = result.FirstOrDefault(x => !NameRegex.IsMatch(x.Name));
                 if (filterUsers != null)
                 {
-                     KickAsync(filterUsers, "bot: Fill Nickname");
+                    KickAsync(filterUsers, "bot: Fill Nickname");
                 }
-                
+
 
                 return result;
             }
         }
 
-
-
-        public async Task KickAsync(Helpers.Views.PlayerView player, string reason, bool isAuto = false)
+        public async Task KickAsync(PlayerView player, string reason, bool isAuto = false)
         {
             var totalreason = string.Format("[{0}][{1}] {2}", SettingsStore.Instance.AdminName,
-                    DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss"), reason);
+                DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss"), reason);
 
             await _updateClient.SendCommandAsync(UpdateClient.CommandType.Kick,
                 string.Format("{0} {1}", player.Num, totalreason));
 
             if (!isAuto)
             {
-
                 using (var context = new Arma3BeClientContext())
                 {
                     var user = context.Player.FirstOrDefault(x => x.GUID == player.Guid);
                     if (user != null)
                     {
-                        user.Notes.Add(new Note()
+                        user.Notes.Add(new Note
                         {
                             PlayerId = user.Id,
                             Text = string.Format("Kicked with reason: {0}", totalreason)
@@ -178,10 +170,8 @@ namespace Arma3BEClient.Helpers
             }
         }
 
-
         public async void BanGUIDOffline(string guid, string reason, long minutes, bool syncMode = false)
         {
-
             if (!syncMode)
             {
                 var totalreason = string.Format("[{0}][{1}] {2}", SettingsStore.Instance.AdminName,
@@ -197,7 +187,7 @@ namespace Arma3BEClient.Helpers
                     var user = context.Player.FirstOrDefault(x => x.GUID == guid);
                     if (user != null)
                     {
-                        user.Notes.Add(new Note()
+                        user.Notes.Add(new Note
                         {
                             PlayerId = user.Id,
                             Text = string.Format("Baned with reason: {0}", totalreason)
@@ -215,20 +205,18 @@ namespace Arma3BEClient.Helpers
             else
             {
                 _updateClient.SendCommandAsync(UpdateClient.CommandType.AddBan,
-                   string.Format("{0} {1} {2}", guid, minutes, reason));
+                    string.Format("{0} {1} {2}", guid, minutes, reason));
             }
         }
 
-
         public async void BanGUIDOnline(string num, string guid, string reason, long minutes)
         {
-
-            var totalreason = string.Format("[{0}][{1}] {2}", SettingsStore.Instance.AdminName, DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss"), reason);
+            var totalreason = string.Format("[{0}][{1}] {2}", SettingsStore.Instance.AdminName,
+                DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss"), reason);
 
 
             await _updateClient.SendCommandAsync(UpdateClient.CommandType.Ban,
                 string.Format("{0} {1} {2}", num, minutes, totalreason));
-
 
 
             using (var context = new Arma3BeClientContext())
@@ -236,7 +224,7 @@ namespace Arma3BEClient.Helpers
                 var user = context.Player.FirstOrDefault(x => x.GUID == guid);
                 if (user != null)
                 {
-                    user.Notes.Add(new Note()
+                    user.Notes.Add(new Note
                     {
                         PlayerId = user.Id,
                         Text = string.Format("Baned with reason: {0}", totalreason)
@@ -251,7 +239,6 @@ namespace Arma3BEClient.Helpers
 
             _updateClient.SendCommandAsync(UpdateClient.CommandType.Players);
             _updateClient.SendCommandAsync(UpdateClient.CommandType.Bans);
-
         }
     }
 }

@@ -15,6 +15,6 @@ namespace Arma3BEClient.Converters
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
-        } 
+        }
     }
 }

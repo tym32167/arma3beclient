@@ -4,23 +4,21 @@ using System.Configuration;
 using System.Linq;
 using System.Windows;
 using Arma3BEClient.Helpers;
-using Arma3BEClient.Models;
+using Arma3BEClient.Helpers.Views;
 using GalaSoft.MvvmLight;
-using PlayerView = Arma3BEClient.Helpers.Views.PlayerView;
 
 namespace Arma3BEClient.Boxes
 {
     /// <summary>
-    /// Interaction logic for KickPlayerWindow.xaml
+    ///     Interaction logic for KickPlayerWindow.xaml
     /// </summary>
     public partial class KickPlayerWindow : Window
     {
         private readonly PlayerHelper _playerHelper;
-        private readonly Helpers.Views.PlayerView _playerView;
+        private readonly PlayerView _playerView;
+        private readonly KickPlayerViewModel Model;
 
-        private KickPlayerViewModel Model;
-
-        public KickPlayerWindow(PlayerHelper playerHelper, Helpers.Views.PlayerView playerView)
+        public KickPlayerWindow(PlayerHelper playerHelper, PlayerView playerView)
         {
             _playerHelper = playerHelper;
             _playerView = playerView;
@@ -28,7 +26,7 @@ namespace Arma3BEClient.Boxes
 
             Model = new KickPlayerViewModel(playerView);
 
-            this.DataContext = Model;
+            DataContext = Model;
         }
 
         private async void KickClick(object sender, RoutedEventArgs e)
@@ -47,16 +45,17 @@ namespace Arma3BEClient.Boxes
     public class KickPlayerViewModel : ViewModelBase
     {
         private readonly PlayerView _playerView;
+        private string _reason;
 
-        public KickPlayerViewModel(Helpers.Views.PlayerView playerView)
+        public KickPlayerViewModel(PlayerView playerView)
         {
             _playerView = playerView;
         }
 
-
-        public PlayerView Player { get { return _playerView; } }
-
-        private string _reason;
+        public PlayerView Player
+        {
+            get { return _playerView; }
+        }
 
         public string Reason
         {
@@ -68,7 +67,6 @@ namespace Arma3BEClient.Boxes
             }
         }
 
-
         public IEnumerable<string> Reasons
         {
             get
@@ -76,7 +74,7 @@ namespace Arma3BEClient.Boxes
                 try
                 {
                     var str =
-                        ConfigurationManager.AppSettings["Kick_reasons"].Split(new[] { '|' })
+                        ConfigurationManager.AppSettings["Kick_reasons"].Split('|')
                             .Where(x => !string.IsNullOrEmpty(x))
                             .Select(x => x.Trim())
                             .ToArray();
@@ -85,7 +83,7 @@ namespace Arma3BEClient.Boxes
                 }
                 catch (Exception e)
                 {
-                    return new[] { string.Empty };
+                    return new[] {string.Empty};
                 }
             }
         }

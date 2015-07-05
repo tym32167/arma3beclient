@@ -16,7 +16,7 @@ using MessageBox = Xceed.Wpf.Toolkit.MessageBox;
 namespace Arma3BEClient
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    ///     Interaction logic for MainWindow.xaml
     /// </summary>
     // ReSharper disable once RedundantExtendsListEntry
     public partial class MainWindow : Window
@@ -44,7 +44,6 @@ namespace Arma3BEClient
         {
             Dispatcher.BeginInvoke(new Action(() =>
             {
-
                 var doc = new LayoutDocument {Title = serverInfo.Name};
 
 
@@ -62,7 +61,7 @@ namespace Arma3BEClient
                 {
                     control.Cleanup();
                     // ReSharper disable once RedundantArgumentDefaultValue
-                    _model.SetActive(serverInfo.Id, active: false);
+                    _model.SetActive(serverInfo.Id, false);
                     _model.Reload();
                 };
 
@@ -72,7 +71,6 @@ namespace Arma3BEClient
                 _model.Reload();
 
                 doc.IsActive = true;
-
             }));
         }
 
@@ -92,7 +90,6 @@ namespace Arma3BEClient
             Application.Current.Shutdown();
         }
 
-
         private void LoadedWindow(object sender, RoutedEventArgs e)
         {
             using (var dc = new Arma3BeClientContext())
@@ -101,7 +98,6 @@ namespace Arma3BEClient
                 Parallel.ForEach(servers, OpenServerInfo);
             }
         }
-
 
         private async void ExportClick(object sender, RoutedEventArgs e)
         {
@@ -121,41 +117,43 @@ namespace Arma3BEClient
             }
         }
 
-
-
-        void Export(string fname)
+        private void Export(string fname)
         {
             using (var dc = new Arma3BeClientContext())
             {
-                var list = dc.Player.ToList().GroupBy(x => x.GUID).Select(x => x.OrderByDescending(y => y.Name).First()).OrderBy(x => x.Name).Select(x =>
-                    new PlayerXML
-                    {
-                        Guid = x.GUID,
-                        LastIP = x.LastIp,
-                        LastSeen = x.LastSeen,
-                        Name = x.Name,
-                        Comment = x.Comment
-                    }).ToList();
+                var list =
+                    dc.Player.ToList()
+                        .GroupBy(x => x.GUID)
+                        .Select(x => x.OrderByDescending(y => y.Name).First())
+                        .OrderBy(x => x.Name)
+                        .Select(x =>
+                            new PlayerXML
+                            {
+                                Guid = x.GUID,
+                                LastIP = x.LastIp,
+                                LastSeen = x.LastSeen,
+                                Name = x.Name,
+                                Comment = x.Comment
+                            }).ToList();
 
 
                 using (var sw = new StreamWriter(fname))
                 {
-                    var ser = new XmlSerializer(typeof(List<PlayerXML>));
+                    var ser = new XmlSerializer(typeof (List<PlayerXML>));
                     ser.Serialize(sw, list);
                 }
             }
         }
 
-
-
-
-
-        void Import(string fname)
+        private void Import(string fname)
         {
             using (var dc = new Arma3BeClientContext())
             {
-
-                var db = dc.Player.ToList().GroupBy(x=>x.GUID).Select(x=>x.OrderByDescending(y=>y.Name).First()).ToDictionary(x => x.GUID);
+                var db =
+                    dc.Player.ToList()
+                        .GroupBy(x => x.GUID)
+                        .Select(x => x.OrderByDescending(y => y.Name).First())
+                        .ToDictionary(x => x.GUID);
                 List<PlayerXML> players;
 
                 using (var sr = new StreamReader(fname))
@@ -165,7 +163,7 @@ namespace Arma3BEClient
                 }
 
                 var toadd = new List<Player>();
-                
+
                 foreach (var p in players)
                 {
                     if (!db.ContainsKey(p.Guid))
@@ -179,7 +177,6 @@ namespace Arma3BEClient
                             Name = p.Name,
                             Id = Guid.NewGuid()
                         });
-                        
                     }
                     else
                     {
@@ -187,7 +184,6 @@ namespace Arma3BEClient
                         if (string.IsNullOrEmpty(lp.Comment) && !string.IsNullOrEmpty(p.Comment))
                         {
                             lp.Comment = p.Comment;
-                            
                         }
                     }
                 }
@@ -197,9 +193,6 @@ namespace Arma3BEClient
                 dc.SaveChanges();
             }
         }
-
-
-
 
         private async void ImportClick(object sender, RoutedEventArgs e)
         {
@@ -214,7 +207,7 @@ namespace Arma3BEClient
 
             if (res.HasValue && res.Value)
             {
-                await Task.Run(()=>Import(ofd.FileName));
+                await Task.Run(() => Import(ofd.FileName));
                 MessageBox.Show("Import finished!");
             }
         }

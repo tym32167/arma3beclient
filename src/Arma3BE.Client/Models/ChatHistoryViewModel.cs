@@ -9,9 +9,17 @@ using GalaSoft.MvvmLight;
 
 namespace Arma3BEClient.Models
 {
-    public class ChatHistoryViewModel:ViewModelBase
+    public class ChatHistoryViewModel : ViewModelBase
     {
         private readonly Guid _serverId;
+
+        private readonly Lazy<IEnumerable<ServerInfo>> _serverList = new Lazy<IEnumerable<ServerInfo>>(() =>
+        {
+            using (var dc = new Arma3BeClientContext())
+            {
+                return dc.ServerInfo.OrderBy(x => x.Name).ToList();
+            }
+        });
 
         public ChatHistoryViewModel(Guid serverId)
         {
@@ -24,7 +32,6 @@ namespace Arma3BEClient.Models
 
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-
         public string Filter { get; set; }
 
         public IEnumerable<ChatView> Log
@@ -39,7 +46,7 @@ namespace Arma3BEClient.Models
 
                     if (!string.IsNullOrEmpty(SelectedServers))
                     {
-                        var guids = SelectedServers.Split(new[] { ',' }).Select(Guid.Parse).ToArray();
+                        var guids = SelectedServers.Split(',').Select(Guid.Parse).ToArray();
                         if (guids.Length > 0)
                         {
                             log = log.Where(x => guids.Contains(x.ServerId));
@@ -64,7 +71,7 @@ namespace Arma3BEClient.Models
                         log = log.Where(x => x.Text.Contains(Filter));
                     }
 
-                    return log.OrderBy(x=>x.Date).Select(x=>new ChatView()
+                    return log.OrderBy(x => x.Date).Select(x => new ChatView
                     {
                         Id = x.Id,
                         Date = x.Date,
@@ -75,22 +82,12 @@ namespace Arma3BEClient.Models
             }
         }
 
-
-        private readonly Lazy<IEnumerable<ServerInfo>> _serverList = new Lazy<IEnumerable<ServerInfo>>(() =>
-        {
-            using (var dc = new Arma3BeClientContext())
-            {
-                return dc.ServerInfo.OrderBy(x => x.Name).ToList();
-            }
-        });
-
         public IEnumerable<ServerInfo> ServerList
         {
             get { return _serverList.Value; }
         }
 
         public string SelectedServers { get; set; }
-
         public ICommand FilterCommand { get; set; }
     }
 

@@ -3,11 +3,14 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Arma3BEClient.Annotations;
 using Arma3BEClient.Common.Attributes;
+using Arma3BEClient.Updater.Models;
 
 namespace Arma3BEClient.Helpers.Views
 {
     public class PlayerView : INotifyPropertyChanged
     {
+        private string _country;
+
         [ShowInUi]
         [EnableCopy]
         public int Num { get; set; }
@@ -19,8 +22,6 @@ namespace Arma3BEClient.Helpers.Views
         [ShowInUi]
         [EnableCopy]
         public string Comment { get; set; }
-
-        private string _country;
 
         [ShowInUi]
         [EnableCopy]
@@ -39,7 +40,7 @@ namespace Arma3BEClient.Helpers.Views
 
         [ShowInUi]
         [EnableCopy]
-        public Updater.Models.Player.PlayerState State { get; set; }
+        public Player.PlayerState State { get; set; }
 
         [ShowInUi]
         [EnableCopy]
@@ -58,14 +59,12 @@ namespace Arma3BEClient.Helpers.Views
         public int Ping { get; set; }
 
         public Guid Id { get; set; }
-        
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            var handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
     }

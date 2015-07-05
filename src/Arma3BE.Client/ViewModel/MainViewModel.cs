@@ -8,16 +8,16 @@ using GalaSoft.MvvmLight;
 namespace Arma3BEClient.ViewModel
 {
     /// <summary>
-    /// This class contains properties that the main View can data bind to.
-    /// <para>
-    /// Use the <strong>mvvminpc</strong> snippet to add bindable properties to this ViewModel.
-    /// </para>
-    /// <para>
-    /// You can also use Blend to data bind with the tool's support.
-    /// </para>
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
-    /// </para>
+    ///     This class contains properties that the main View can data bind to.
+    ///     <para>
+    ///         Use the <strong>mvvminpc</strong> snippet to add bindable properties to this ViewModel.
+    ///     </para>
+    ///     <para>
+    ///         You can also use Blend to data bind with the tool's support.
+    ///     </para>
+    ///     <para>
+    ///         See http://www.galasoft.ch/mvvm
+    ///     </para>
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
@@ -26,6 +26,14 @@ namespace Arma3BEClient.ViewModel
             InitServers();
         }
 
+        public List<ServerInfo> Servers
+        {
+            get
+            {
+                using (var context = new Arma3BeClientContext())
+                    return context.ServerInfo.Where(x => !x.Active).OrderBy(x => x.Name).ToList();
+            }
+        }
 
         private void InitServers()
         {
@@ -41,15 +49,6 @@ namespace Arma3BEClient.ViewModel
         public void Reload()
         {
             RaisePropertyChanged("Servers");
-        }
-
-        public List<ServerInfo> Servers
-        {
-            get
-            {
-                using(var context = new Arma3BeClientContext())
-                    return context.ServerInfo.Where(x=>!x.Active).OrderBy(x=>x.Name).ToList();
-            }
         }
 
         public void SetActive(Guid serverId, bool active = false)

@@ -13,52 +13,11 @@ namespace Arma3BEClient.ViewModel
 {
     public class ServerMonitorModel : DisposableViewModelBase
     {
+        private readonly bool _console;
         private readonly ServerInfo _currentServer;
         private readonly ILog _log;
-        private readonly bool _console;
         private readonly UpdateClient _updateClient;
-
         private readonly UpdateClientPeriodic _updateClientPeriodic;
-
-
-        public static Color GetMessageColor(ChatMessage message)
-        {
-            var type = message.Type;
-
-            var color = Colors.Black;
-
-
-            switch (type)
-            {
-                case ChatMessage.MessageType.Command:
-                    color = Color.FromRgb(212, 169, 24);
-                    break;
-                case ChatMessage.MessageType.Direct:
-                    color = Color.FromRgb(146, 140, 150);
-                    break;
-                case ChatMessage.MessageType.Global:
-                    color = Color.FromRgb(80, 112, 115);
-                    break;
-                case ChatMessage.MessageType.Group:
-                    color = Color.FromRgb(156, 204, 118);
-                    break;
-                case ChatMessage.MessageType.RCon:
-                    color = Color.FromRgb(252, 31, 23);
-                    break;
-                case ChatMessage.MessageType.Side:
-                    color = Color.FromRgb(25, 181, 209);
-                    break;
-                case ChatMessage.MessageType.Vehicle:
-                    color = Color.FromRgb(155, 115, 0);
-                    break;
-                default:
-                    break;
-            }
-
-            return color;
-        }
-
-
 
         public ServerMonitorModel(ServerInfo currentServer, ILog log, bool console = false)
         {
@@ -71,7 +30,6 @@ namespace Arma3BEClient.ViewModel
 
             if (string.IsNullOrEmpty(host))
             {
-
                 var message = string.Format("Host is incorrect for server {0}", _currentServer.Name);
                 _log.Error(message);
                 throw new Exception(message);
@@ -89,8 +47,6 @@ namespace Arma3BEClient.ViewModel
                 _updateClient.BanHandler += (s, e) => BansViewModel.SetData(e.Data);
                 _updateClient.AdminHandler += (s, e) => AdminsViewModel.SetData(e.Data);
             }
-
-
 
 
             _updateClient.ConnectHandler += _updateClient_ConnectHandler;
@@ -132,12 +88,59 @@ namespace Arma3BEClient.ViewModel
             _updateClientPeriodic.Start();
         }
 
-        void _updateClient_DisconnectHandler(object sender, EventArgs e)
+        public ServerInfo CurrentServer
+        {
+            get { return _currentServer; }
+        }
+
+        public bool Connected
+        {
+            get { return _updateClient.Connected; }
+        }
+
+        public static Color GetMessageColor(ChatMessage message)
+        {
+            var type = message.Type;
+
+            var color = Colors.Black;
+
+
+            switch (type)
+            {
+                case ChatMessage.MessageType.Command:
+                    color = Color.FromRgb(212, 169, 24);
+                    break;
+                case ChatMessage.MessageType.Direct:
+                    color = Color.FromRgb(146, 140, 150);
+                    break;
+                case ChatMessage.MessageType.Global:
+                    color = Color.FromRgb(80, 112, 115);
+                    break;
+                case ChatMessage.MessageType.Group:
+                    color = Color.FromRgb(156, 204, 118);
+                    break;
+                case ChatMessage.MessageType.RCon:
+                    color = Color.FromRgb(252, 31, 23);
+                    break;
+                case ChatMessage.MessageType.Side:
+                    color = Color.FromRgb(25, 181, 209);
+                    break;
+                case ChatMessage.MessageType.Vehicle:
+                    color = Color.FromRgb(155, 115, 0);
+                    break;
+                default:
+                    break;
+            }
+
+            return color;
+        }
+
+        private void _updateClient_DisconnectHandler(object sender, EventArgs e)
         {
             RaisePropertyChanged("Connected");
         }
 
-        async void _updateClient_ConnectHandler(object sender, EventArgs e)
+        private async void _updateClient_ConnectHandler(object sender, EventArgs e)
         {
             await _updateClient.SendCommandAsync(UpdateClient.CommandType.Players);
             if (!_console)
@@ -149,29 +152,6 @@ namespace Arma3BEClient.ViewModel
 
             RaisePropertyChanged("Connected");
         }
-
-
-
-        public ServerInfo CurrentServer { get { return _currentServer; } }
-        public bool Connected { get { return _updateClient.Connected; } }
-
-
-        #region ViewModels
-
-
-        public ServerMonitorSteamQueryViewModel SteamQueryViewModel { get; set; }
-
-        public ServerMonitorPlayerViewModel PlayersViewModel { get; set; }
-        public ServerMonitorBansViewModel BansViewModel { get; set; }
-        public ServerMonitorAdminsViewModel AdminsViewModel { get; set; }
-
-        public ServerMonitorChatViewModel ChatViewModel { get; set; }
-        public ServerMonitorManageServerViewModel ManageServerViewModel { get; set; }
-
-        public PlayerListModelView PlayerListModelView { get; set; }
-
-
-        #endregion
 
         public void Connect()
         {
@@ -193,5 +173,20 @@ namespace Arma3BEClient.ViewModel
             _updateClient.Disconnect();
             _updateClient.Dispose();
         }
+
+        #region ViewModels
+
+        public ServerMonitorSteamQueryViewModel SteamQueryViewModel { get; set; }
+
+        public ServerMonitorPlayerViewModel PlayersViewModel { get; set; }
+        public ServerMonitorBansViewModel BansViewModel { get; set; }
+        public ServerMonitorAdminsViewModel AdminsViewModel { get; set; }
+
+        public ServerMonitorChatViewModel ChatViewModel { get; set; }
+        public ServerMonitorManageServerViewModel ManageServerViewModel { get; set; }
+
+        public PlayerListModelView PlayerListModelView { get; set; }
+
+        #endregion
     }
 }

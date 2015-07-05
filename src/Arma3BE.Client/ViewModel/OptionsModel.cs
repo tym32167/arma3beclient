@@ -10,15 +10,15 @@ using Arma3BEClient.Contracts;
 using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Tools;
-using GalaSoft.MvvmLight;
 
 namespace Arma3BEClient.ViewModel
 {
     public class OptionsModel : DisposableViewModelBase
     {
         private readonly Arma3BeClientContext _context;
-        private ILog _log = new Log();
-        
+        private readonly ILog _log = new Log();
+        private SettingsStore _settingsStore;
+
         public OptionsModel()
         {
             _context = new Arma3BeClientContext();
@@ -27,27 +27,17 @@ namespace Arma3BEClient.ViewModel
             Servers = _context.ServerInfo.Local.Select(x => new ServerInfoModel(x)).ToList();
         }
 
-        protected override void DisposeManagedResources()
-        {
-            base.DisposeManagedResources();
-            _context.Dispose();
-        }
-
         public List<ServerInfoModel> Servers { get; set; }
 
-        private SettingsStore _settingsStore;
         public SettingsStore Settings
         {
             get { return _settingsStore ?? (_settingsStore = SettingsStore.Instance); }
-            set
-            {
-                _settingsStore = value;
-            }
+            set { _settingsStore = value; }
         }
 
         public IList<Type> NewListItemTypes
         {
-            get { return new List<Type>() {typeof (ServerInfoModel)}; }
+            get { return new List<Type> {typeof (ServerInfoModel)}; }
         }
 
         public ObservableCollection<ServerInfo> Local
@@ -55,14 +45,19 @@ namespace Arma3BEClient.ViewModel
             get { return _context.ServerInfo.Local; }
         }
 
+        protected override void DisposeManagedResources()
+        {
+            base.DisposeManagedResources();
+            _context.Dispose();
+        }
+
         public void Save()
         {
-
             try
             {
                 Settings.AdminName = Settings.AdminName.Replace(" ", string.Empty);
                 Settings.Save();
-                
+
 
                 foreach (var s in Servers)
                 {
@@ -85,7 +80,7 @@ namespace Arma3BEClient.ViewModel
         }
     }
 
-    public class ServerInfoModel 
+    public class ServerInfoModel
     {
         private readonly ServerInfo _info;
 
@@ -107,12 +102,6 @@ namespace Arma3BEClient.ViewModel
             var model = new ServerInfo();
             model.Id = Guid.Empty;
             _info = model;
-        }
-
-
-        public ServerInfo GetDbModel()
-        {
-            return _info;
         }
 
         [Required]
@@ -142,7 +131,12 @@ namespace Arma3BEClient.ViewModel
             get { return _info.Name; }
             set { _info.Name = value; }
         }
-       
+
+        public ServerInfo GetDbModel()
+        {
+            return _info;
+        }
+
         public override string ToString()
         {
             return Name;

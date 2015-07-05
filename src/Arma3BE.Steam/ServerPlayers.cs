@@ -4,7 +4,6 @@ namespace Arma3BEClient.Steam
 {
     public class ServerPlayers
     {
-
         public byte PlayerCount { get; set; }
 
         public class PlayerInfo
@@ -18,13 +17,11 @@ namespace Arma3BEClient.Steam
         public PlayerInfo[] Players { get; set; }
 
 
-
         public static ServerPlayers Parse(byte[] data)
         {
             var parser = new ResponseParser(data);
             parser.CurrentPosition += 5; //Header
             var result = new ServerPlayers();
-
 
 
             result.PlayerCount = parser.GetByte();

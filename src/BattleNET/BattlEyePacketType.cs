@@ -7,7 +7,7 @@
 
 namespace BattleNET
 {
-    enum BattlEyePacketType
+    internal enum BattlEyePacketType
     {
         Login,
         Command,

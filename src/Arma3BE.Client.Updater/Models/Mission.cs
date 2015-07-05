@@ -6,17 +6,15 @@ namespace Arma3BEClient.Updater.Models
     {
         private readonly string _name;
 
-        public string Name
-        {
-            get { return _name; }
-        }
-
-
         public Mission(string name)
         {
             _name = name;
         }
 
+        public string Name
+        {
+            get { return _name; }
+        }
 
         public static Mission Parse(string input)
         {

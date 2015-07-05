@@ -5,20 +5,18 @@ namespace Arma3BEClient.Contracts
 {
     public abstract class DisposableViewModelBase : ViewModelBase, IDisposable
     {
-         public void Dispose()
+        private bool _disposed;
+
+        public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-         ~DisposableViewModelBase()
+        ~DisposableViewModelBase()
         {
             Dispose(false);
         }
-
-
-        private bool _disposed;
-
 
         protected virtual void Dispose(bool disposing)
         {

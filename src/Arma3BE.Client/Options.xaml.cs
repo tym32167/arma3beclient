@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.Entity.Core.Common.CommandTrees;
 using System.Linq;
 using System.Windows;
 using Arma3BEClient.ViewModel;
@@ -8,7 +7,7 @@ using Xceed.Wpf.Toolkit;
 namespace Arma3BEClient
 {
     /// <summary>
-    /// Interaction logic for Options.xaml
+    ///     Interaction logic for Options.xaml
     /// </summary>
     public partial class Options : Window
     {
@@ -20,10 +19,10 @@ namespace Arma3BEClient
 
             _optionsModel = optionsModel;
 
-            this.DataContext = _optionsModel;
+            DataContext = _optionsModel;
         }
 
-        protected override void OnClosed(System.EventArgs e)
+        protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
             _optionsModel.Cleanup();

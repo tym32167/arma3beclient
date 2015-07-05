@@ -9,7 +9,7 @@ namespace Arma3BEClient.Helpers
 {
     public static class IPInfo
     {
-        public async static Task<string> Get(string ip)
+        public static async Task<string> Get(string ip)
         {
             if (string.IsNullOrEmpty(ip)) return string.Empty;
             var c = new HttpClient();
@@ -26,12 +26,11 @@ namespace Arma3BEClient.Helpers
             {
                 using (var reader = new DatabaseReader(@"IPDatabase\GeoLite2-City.mmdb"))
                 {
-
                     var city = reader.City(ip);
                     return city.Country.Name;
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return string.Empty;
             }

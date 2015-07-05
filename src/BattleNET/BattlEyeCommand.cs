@@ -10,137 +10,118 @@ using System.ComponentModel;
 namespace BattleNET
 {
     public enum BattlEyeCommand
-    {        
+    {
         /// <summary>
-        /// #init - Reload server config file loaded by –config option.
+        ///     #init - Reload server config file loaded by –config option.
         /// </summary>
-        [Description("#init")]
-        Init,
+        [Description("#init")] Init,
 
         /// <summary>
-        /// #shutdown - Shuts down the server.
+        ///     #shutdown - Shuts down the server.
         /// </summary>
-        [Description("#shutdown")]
-        Shutdown,
+        [Description("#shutdown")] Shutdown,
 
         /// <summary>
-        /// #reassign - Start over and reassign roles.
+        ///     #reassign - Start over and reassign roles.
         /// </summary>
-        [Description("#reassign")]
-        Reassign,
+        [Description("#reassign")] Reassign,
 
         /// <summary>
-        /// #restart - Restart mission.
+        ///     #restart - Restart mission.
         /// </summary>
-        [Description("#restart")]
-        Restart,
+        [Description("#restart")] Restart,
 
         /// <summary>
-        /// #lock - Locks the server, prevents new clients from joining.
+        ///     #lock - Locks the server, prevents new clients from joining.
         /// </summary>
-        [Description("#lock")]
-        Lock,
+        [Description("#lock")] Lock,
 
         /// <summary>
-        /// #unlock - Unlocks the server, allows new clients to join.
+        ///     #unlock - Unlocks the server, allows new clients to join.
         /// </summary>
-        [Description("#unlock")]
-        Unlock,
+        [Description("#unlock")] Unlock,
 
         /// <summary>
-        /// #mission [missionName] - Loads the given mission on the server.
+        ///     #mission [missionName] - Loads the given mission on the server.
         /// </summary>
-        [Description("#mission ")]
-        Mission,
+        [Description("#mission ")] Mission,
 
         /// <summary>
-        /// missions - Returns a list of the available missions on the server.
+        ///     missions - Returns a list of the available missions on the server.
         /// </summary>
-        [Description("missions")]
-        Missions,
-        
-        /// <summary>
-        /// RConPassword [password] - Changes the RCon password.
-        /// </summary>
-        [Description("RConPassword ")]
-        RConPassword,
+        [Description("missions")] Missions,
 
         /// <summary>
-        /// MaxPing [ping] - Changes the MaxPing value. If a player has a higher ping, he will be kicked from the server.
+        ///     RConPassword [password] - Changes the RCon password.
         /// </summary>
-        [Description("MaxPing ")]
-        MaxPing,
+        [Description("RConPassword ")] RConPassword,
 
         /// <summary>
-        /// kick [player#] - Kicks a player. His # can be found in the player list using the 'players' command.
+        ///     MaxPing [ping] - Changes the MaxPing value. If a player has a higher ping, he will be kicked from the server.
         /// </summary>
-        [Description("kick ")]
-        Kick,
+        [Description("MaxPing ")] MaxPing,
 
         /// <summary>
-        /// players - Displays a list of the players on the server including BE GUIDs and pings.
+        ///     kick [player#] - Kicks a player. His # can be found in the player list using the 'players' command.
         /// </summary>
-        [Description("players")]
-        Players,
+        [Description("kick ")] Kick,
 
         /// <summary>
-        /// admins - Displays a list of the admins on the server
+        ///     players - Displays a list of the players on the server including BE GUIDs and pings.
         /// </summary>
-        [Description("admins")]
-        Admins,
+        [Description("players")] Players,
 
         /// <summary>
-        /// Say [player#] [msg] - Say something to player #. specially -1 equals all players on server (e.g. 'Say -1 Hello World').
+        ///     admins - Displays a list of the admins on the server
         /// </summary>
-        [Description("Say ")]
-        Say,
+        [Description("admins")] Admins,
 
         /// <summary>
-        /// loadBans - (Re)load the BE ban list from bans.txt.
+        ///     Say [player#] [msg] - Say something to player #. specially -1 equals all players on server (e.g. 'Say -1 Hello
+        ///     World').
         /// </summary>
-        [Description("loadBans")]
-        LoadBans,
+        [Description("Say ")] Say,
 
         /// <summary>
-        /// loadScripts - Loads the scripts.txt file without the need to restart server.
+        ///     loadBans - (Re)load the BE ban list from bans.txt.
         /// </summary>
-        [Description("loadScripts")]
-        LoadScripts,
+        [Description("loadBans")] LoadBans,
 
         /// <summary>
-        /// loadEvents - (Re)load createvehicle.txt, remoteexec.txt and publicvariable.txt
+        ///     loadScripts - Loads the scripts.txt file without the need to restart server.
         /// </summary>
-        [Description("loadEvents")]
-        loadEvents,
+        [Description("loadScripts")] LoadScripts,
 
         /// <summary>
-        /// bans - Show a list of all BE server bans.
+        ///     loadEvents - (Re)load createvehicle.txt, remoteexec.txt and publicvariable.txt
         /// </summary>
-        [Description("bans")]
-        Bans,
+        [Description("loadEvents")] loadEvents,
 
         /// <summary>
-        /// ban [player #] [time in minutes] [reason] - Ban a player's BE GUID from the server. If time is not specified or 0, the ban will be permanent; if reason is not specified the player will be kicked with "Banned".
+        ///     bans - Show a list of all BE server bans.
         /// </summary>
-        [Description("ban ")]
-        Ban,
+        [Description("bans")] Bans,
 
         /// <summary>
-        /// addBan [GUID] [time in minutes] [reason] - Same as "ban", but allows to ban a player that is not currently on the server.
+        ///     ban [player #] [time in minutes] [reason] - Ban a player's BE GUID from the server. If time is not specified or 0,
+        ///     the ban will be permanent; if reason is not specified the player will be kicked with "Banned".
         /// </summary>
-        [Description("addBan ")]
-        AddBan,
+        [Description("ban ")] Ban,
 
         /// <summary>
-        /// removeBan [ban #] - Remove ban (get the ban # from the bans command).
+        ///     addBan [GUID] [time in minutes] [reason] - Same as "ban", but allows to ban a player that is not currently on the
+        ///     server.
         /// </summary>
-        [Description("removeBan ")]
-        RemoveBan,
+        [Description("addBan ")] AddBan,
 
         /// <summary>
-        /// writeBans - Removes expired bans from bans file.
+        ///     removeBan [ban #] - Remove ban (get the ban # from the bans command).
         /// </summary>
-        [Description("writeBans")]
-        WriteBans,
+        [Description("removeBan ")] RemoveBan,
+
+        /// <summary>
+        ///     writeBans - Removes expired bans from bans file.
+        /// </summary>
+        [Description("writeBans")] WriteBans
     }
 }

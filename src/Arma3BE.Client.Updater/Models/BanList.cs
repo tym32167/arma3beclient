@@ -9,7 +9,6 @@ namespace Arma3BEClient.Updater.Models
         public BanList(ServerMessage message)
             : base(Parse(message.Message))
         {
-            
         }
 
         private static IEnumerable<Ban> Parse(string text)
@@ -17,7 +16,5 @@ namespace Arma3BEClient.Updater.Models
             var lines = text.Split(Environment.NewLine.ToCharArray()).ToArray();
             return lines.Select(Ban.Parse).Where(p => p != null).ToList();
         }
-
-     
     }
 }
