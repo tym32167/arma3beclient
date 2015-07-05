@@ -59,13 +59,13 @@
     <None Include="sample_run.bat" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Arma3BEClient.Common\Arma3BEClient.Common.csproj">
+    <ProjectReference Include="..\Arma3BE.Common\Arma3BE.Common.csproj">
       <Project>{D507E532-7DE6-4028-9DBE-AA76C54CC92A}</Project>
-      <Name>Arma3BEClient.Common</Name>
+      <Name>Arma3BE.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Arma3BEClient.Updater\Arma3BEClient.Updater.csproj">
+    <ProjectReference Include="..\Arma3BE.Client.Updater\Arma3BE.Client.Updater.csproj">
       <Project>{0bca3884-712a-4a1f-b5cd-4346671af18b}</Project>
-      <Name>Arma3BEClient.Updater</Name>
+      <Name>Arma3BE.Client.Updater</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

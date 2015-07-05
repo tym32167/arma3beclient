@@ -5,21 +5,21 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleNET", "BattleNET\BattleNET.csproj", "{4FBB3734-215B-45B1-BDBC-0EFA156A6900}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BEClient", "Arma3BEClient\Arma3BEClient.csproj", "{46B9AF55-01D0-45B0-95CB-16F5B61A9F03}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BE.Client", "Arma3BE.Client\Arma3BE.Client.csproj", "{46B9AF55-01D0-45B0-95CB-16F5B61A9F03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BEClient.Updater", "Arma3BEClient.Updater\Arma3BEClient.Updater.csproj", "{0BCA3884-712A-4A1F-B5CD-4346671AF18B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BE.Client.Updater", "Arma3BE.Client.Updater\Arma3BE.Client.Updater.csproj", "{0BCA3884-712A-4A1F-B5CD-4346671AF18B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BEClient.Tests", "Arma3BEClient.Tests\Arma3BEClient.Tests.csproj", "{04AEB592-9BCB-4E4F-B4E8-A002094728CE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BE.Tests", "Arma3BE.Tests\Arma3BE.Tests.csproj", "{04AEB592-9BCB-4E4F-B4E8-A002094728CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BEClient.Common", "Arma3BEClient.Common\Arma3BEClient.Common.csproj", "{D507E532-7DE6-4028-9DBE-AA76C54CC92A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BE.Common", "Arma3BE.Common\Arma3BE.Common.csproj", "{D507E532-7DE6-4028-9DBE-AA76C54CC92A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "arma3beConsole", "arma3beConsole\arma3beConsole.csproj", "{461EF26D-3722-4A73-A582-8536B5848F01}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BE.Client.Console", "Arma3BE.Client.Console\Arma3BE.Client.Console.csproj", "{461EF26D-3722-4A73-A582-8536B5848F01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BEClient.Sheduler", "Arma3BEClient.Sheduler\Arma3BEClient.Sheduler.csproj", "{64366237-BAC0-4866-8878-39CA18D1E889}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BE.Client.Sheduler", "Arma3BE.Client.Sheduler\Arma3BE.Client.Sheduler.csproj", "{64366237-BAC0-4866-8878-39CA18D1E889}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BEClient.Libs", "Arma3BEClient.Libs\Arma3BEClient.Libs.csproj", "{E5240A50-E944-4F50-A353-2E3C9E547447}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BE.Client.Libs", "Arma3BE.Client.Libs\Arma3BE.Client.Libs.csproj", "{E5240A50-E944-4F50-A353-2E3C9E547447}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BEClient.Steam", "Arma3BEClient.Steam\Arma3BEClient.Steam.csproj", "{B2948BD4-B413-4E9D-B9ED-41261B0C56DA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BE.Steam", "Arma3BE.Steam\Arma3BE.Steam.csproj", "{B2948BD4-B413-4E9D-B9ED-41261B0C56DA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{22A6CC46-99D2-45AF-B379-3320ECE99124}"
 EndProject

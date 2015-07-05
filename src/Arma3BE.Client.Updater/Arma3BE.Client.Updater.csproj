@@ -73,9 +73,9 @@
     <Compile Include="UpdateClient.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Arma3BEClient.Common\Arma3BEClient.Common.csproj">
+    <ProjectReference Include="..\Arma3BE.Common\Arma3BE.Common.csproj">
       <Project>{d507e532-7de6-4028-9dbe-aa76c54cc92a}</Project>
-      <Name>Arma3BEClient.Common</Name>
+      <Name>Arma3BE.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\BattleNET\BattleNET.csproj">
       <Project>{4fbb3734-215b-45b1-bdbc-0efa156a6900}</Project>

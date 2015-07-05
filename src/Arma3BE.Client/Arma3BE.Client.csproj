@@ -336,21 +336,21 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Arma3BEClient.Common\Arma3BEClient.Common.csproj">
+    <ProjectReference Include="..\Arma3BE.Common\Arma3BE.Common.csproj">
       <Project>{d507e532-7de6-4028-9dbe-aa76c54cc92a}</Project>
-      <Name>Arma3BEClient.Common</Name>
+      <Name>Arma3BE.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Arma3BEClient.Libs\Arma3BEClient.Libs.csproj">
+    <ProjectReference Include="..\Arma3BE.Client.Libs\Arma3BE.Client.Libs.csproj">
       <Project>{E5240A50-E944-4F50-A353-2E3C9E547447}</Project>
-      <Name>Arma3BEClient.Libs</Name>
+      <Name>Arma3BE.Client.Libs</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Arma3BEClient.Steam\Arma3BEClient.Steam.csproj">
+    <ProjectReference Include="..\Arma3BE.Steam\Arma3BE.Steam.csproj">
       <Project>{b2948bd4-b413-4e9d-b9ed-41261b0c56da}</Project>
-      <Name>Arma3BEClient.Steam</Name>
+      <Name>Arma3BE.Steam</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Arma3BEClient.Updater\Arma3BEClient.Updater.csproj">
+    <ProjectReference Include="..\Arma3BE.Client.Updater\Arma3BE.Client.Updater.csproj">
       <Project>{0bca3884-712a-4a1f-b5cd-4346671af18b}</Project>
-      <Name>Arma3BEClient.Updater</Name>
+      <Name>Arma3BE.Client.Updater</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

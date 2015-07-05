@@ -71,9 +71,9 @@
     <Compile Include="PlayerUpaterTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Arma3BEClient.Updater\Arma3BEClient.Updater.csproj">
+    <ProjectReference Include="..\Arma3BE.Client.Updater\Arma3BE.Client.Updater.csproj">
       <Project>{0bca3884-712a-4a1f-b5cd-4346671af18b}</Project>
-      <Name>Arma3BEClient.Updater</Name>
+      <Name>Arma3BE.Client.Updater</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
