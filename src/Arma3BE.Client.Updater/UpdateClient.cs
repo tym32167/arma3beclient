@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Arma3BEClient.Common.Core;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Updater.Models;
 using BattleNET;
@@ -11,9 +12,9 @@ using Admin = Arma3BEClient.Updater.Models.Admin;
 
 namespace Arma3BEClient.Updater
 {
-    public class UpdateClient : IDisposable
-    {  
-        private readonly string _host; 
+    public sealed class UpdateClient : DisposeObject
+    {
+        private readonly string _host;
         private readonly int _port;
         private readonly string _password;
         private readonly ILog _log;
@@ -23,12 +24,12 @@ namespace Arma3BEClient.Updater
 
         private Thread _thread;
 
-        private object _lock = new object();
+        private readonly object _lock = new object();
 
-        public event EventHandler<IEnumerable<Player>> PlayerHandler;
-        public event EventHandler<IEnumerable<Ban>> BanHandler;
-        public event EventHandler<IEnumerable<Admin>> AdminHandler;
-        public event EventHandler<IEnumerable<Mission>> MissionHandler;
+        public event EventHandler<UpdateClientEventArgs<IEnumerable<Player>>> PlayerHandler;
+        public event EventHandler<UpdateClientEventArgs<IEnumerable<Ban>>> BanHandler;
+        public event EventHandler<UpdateClientEventArgs<IEnumerable<Admin>>> AdminHandler;
+        public event EventHandler<UpdateClientEventArgs<IEnumerable<Mission>>> MissionHandler;
 
         public event EventHandler<ChatMessage> ChatMessageHandler;
 
@@ -42,73 +43,73 @@ namespace Arma3BEClient.Updater
         public event EventHandler DisconnectHandler;
 
 
-        protected virtual void OnMissionHandler(IEnumerable<Mission> e)
+        private void OnMissionHandler(IEnumerable<Mission> e)
         {
-            EventHandler<IEnumerable<Mission>> handler = MissionHandler;
-            if (handler != null) handler(this, e);
+            var handler = MissionHandler;
+            if (handler != null) handler(this, new UpdateClientEventArgs<IEnumerable<Mission>>(e));
         }
 
-        protected virtual void OnConnectingHandler()
+        private void OnConnectingHandler()
         {
             EventHandler handler = ConnectingHandler;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
-        protected virtual void OnBanLog()
+        private void OnBanLog()
         {
             EventHandler<EventArgs> handler = BanLog;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
-        protected virtual void OnPlayerLog()
+        private void OnPlayerLog()
         {
             EventHandler<EventArgs> handler = PlayerLog;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
-        protected virtual void OnRConAdminLog()
+        private void OnRConAdminLog()
         {
             EventHandler<EventArgs> handler = RConAdminLog;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
-        protected virtual void OnAdminHandler(IEnumerable<Admin> e)
+        private void OnAdminHandler(IEnumerable<Admin> e)
         {
-            EventHandler<IEnumerable<Admin>> handler = AdminHandler;
-            if (handler != null) handler(this, e);
+            var handler = AdminHandler;
+            if (handler != null) handler(this, new UpdateClientEventArgs<IEnumerable<Admin>>(e));
         }
 
-        protected virtual void OnChatMessageHandler(ChatMessage e)
+        private void OnChatMessageHandler(ChatMessage e)
         {
             EventHandler<ChatMessage> handler = ChatMessageHandler;
             if (handler != null) handler(this, e);
         }
 
 
-        protected virtual void OnBanHandler(IEnumerable<Ban> e)
+        private void OnBanHandler(IEnumerable<Ban> e)
         {
-            EventHandler<IEnumerable<Ban>> handler = BanHandler;
-            if (handler != null) handler(this, e);
+            var handler = BanHandler;
+            if (handler != null) handler(this, new UpdateClientEventArgs<IEnumerable<Ban>>(e));
         }
 
-        protected virtual void OnDisconnectHandler()
+        private void OnDisconnectHandler()
         {
             EventHandler handler = DisconnectHandler;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
 
-        protected virtual void OnConnectHandler()
+        private void OnConnectHandler()
         {
             EventHandler handler = ConnectHandler;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
 
-        protected virtual void OnPlayerHandler(IEnumerable<Player> e)
+        private void OnPlayerHandler(IEnumerable<Player> e)
         {
-            EventHandler<IEnumerable<Player>> handler = PlayerHandler;
-            if (handler != null) handler(this, e);
+            var handler = PlayerHandler;
+            if (handler != null) handler(this, new UpdateClientEventArgs<IEnumerable<Player>>(e));
         }
 
 
@@ -156,7 +157,7 @@ namespace Arma3BEClient.Updater
 
         public Task SendCommandAsync(CommandType type, string parameters = null)
         {
-            return Task.Run(()=>SendCommand(type, parameters));
+            return Task.Run(() => SendCommand(type, parameters));
         }
 
 
@@ -420,8 +421,10 @@ namespace Arma3BEClient.Updater
             }
         }
 
-        public void Dispose()
+
+        protected override void DisposeUnManagedResources()
         {
+            base.DisposeUnManagedResources();
             try
             {
                 Disposed = true;
@@ -436,10 +439,16 @@ namespace Arma3BEClient.Updater
                 _battlEyeClient = null;
             }
         }
+    }
 
-        ~UpdateClient()
+
+    public class UpdateClientEventArgs<T> : EventArgs
+    {
+        public T Data { get; private set; }
+
+        public UpdateClientEventArgs(T data)
         {
-            if (!Disposed) Dispose();
+            Data = data;
         }
     }
 }

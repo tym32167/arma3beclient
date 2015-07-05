@@ -6,6 +6,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Windows;
 using Arma3BEClient.Common.Logging;
+using Arma3BEClient.Contracts;
 using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Tools;
@@ -13,7 +14,7 @@ using GalaSoft.MvvmLight;
 
 namespace Arma3BEClient.ViewModel
 {
-    public class OptionsModel : ViewModelBase
+    public class OptionsModel : DisposableViewModelBase
     {
         private readonly Arma3BeClientContext _context;
         private ILog _log = new Log();
@@ -26,16 +27,13 @@ namespace Arma3BEClient.ViewModel
             Servers = _context.ServerInfo.Local.Select(x => new ServerInfoModel(x)).ToList();
         }
 
-        public override void Cleanup()
+        protected override void DisposeManagedResources()
         {
+            base.DisposeManagedResources();
             _context.Dispose();
-            base.Cleanup();
         }
-        
 
         public List<ServerInfoModel> Servers { get; set; }
-
-
 
         private SettingsStore _settingsStore;
         public SettingsStore Settings
@@ -46,7 +44,6 @@ namespace Arma3BEClient.ViewModel
                 _settingsStore = value;
             }
         }
-
 
         public IList<Type> NewListItemTypes
         {

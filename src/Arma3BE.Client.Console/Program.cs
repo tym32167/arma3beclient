@@ -90,7 +90,7 @@ namespace arma3beConsole
 
             model.ChatViewModel.ChatMessageEventHandler += (s, e) =>
             {
-                Console.WriteLine(@"{0} {1:t}:{2}", model.CurrentServer.Name, e.Date.ToLocalTime(), e.Message);
+                Console.WriteLine(@"{0} {1:t}:{2}", model.CurrentServer.Name, e.Message.Date.ToLocalTime(), e.Message);
                 Console.WriteLine();
             };
 

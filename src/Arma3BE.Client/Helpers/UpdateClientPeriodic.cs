@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Threading;
+using Arma3BEClient.Common.Core;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Updater;
 
 namespace Arma3BEClient.Helpers
 {
-    public class UpdateClientPeriodic : IDisposable
+    public class UpdateClientPeriodic : DisposeObject
     {
         private readonly UpdateClient _updateClient;
         private readonly ILog _log;
@@ -96,8 +97,10 @@ namespace Arma3BEClient.Helpers
             _updateTimerKeepAlive.Change(0, 300000);
         }
 
-        public void Dispose()
+        protected override void DisposeManagedResources()
         {
+            base.DisposeManagedResources();
+
             //_updateTimerPlayers.Dispose();
             //_updateTimerBans.Dispose();
             //_updateTimerAdmins.Dispose();

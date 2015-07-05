@@ -23,11 +23,11 @@ namespace Arma3BEClient.Models
         private bool _enableChat;
 
 
-        public event EventHandler<ChatMessage> ChatMessageEventHandler;
+        public event EventHandler<ServerMonitorChatViewModelEventArgs> ChatMessageEventHandler;
         protected virtual void OnChatMessageEventHandler(ChatMessage e)
         {
-            EventHandler<ChatMessage> handler = ChatMessageEventHandler;
-            if (handler != null) handler(this, e);
+            var handler = ChatMessageEventHandler;
+            if (handler != null) handler(this, new ServerMonitorChatViewModelEventArgs(e));
         }
 
         public ServerMonitorChatViewModel(ILog log, Guid serverId, UpdateClient updateClient)
@@ -78,8 +78,6 @@ namespace Arma3BEClient.Models
             }
         }
 
-
-
         private string _inputMessage;
         public string InputMessage
         {
@@ -112,6 +110,16 @@ namespace Arma3BEClient.Models
             {
                 SendMessage(InputMessage);
             }
+        }
+    }
+
+    public class ServerMonitorChatViewModelEventArgs : EventArgs
+    {
+        public ChatMessage Message { get; private set; }
+
+        public ServerMonitorChatViewModelEventArgs(ChatMessage message)
+        {
+            Message = message;
         }
     }
 }

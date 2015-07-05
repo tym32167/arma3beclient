@@ -26,16 +26,16 @@ namespace Arma3BEClient.Chat
             InitBox();
         }
 
-        void _model_ChatMessageEventHandler(object sender, Updater.Models.ChatMessage e)
+        void _model_ChatMessageEventHandler(object sender, ServerMonitorChatViewModelEventArgs e)
         {
             Dispatcher.Invoke(() =>
             {
                 if (!Model.EnableChat) return;
-                var type = e.Type;
+                var type = e.Message.Type;
                 if (type != ChatMessage.MessageType.Unknown)
-                    AppendText(paragraph, ChatScrollViewer, e);
+                    AppendText(paragraph, ChatScrollViewer, e.Message);
                 else
-                    AppendText(msgConsole, ConsoleScrollViewer, e);
+                    AppendText(msgConsole, ConsoleScrollViewer, e.Message);
             });
         }
 

@@ -92,9 +92,9 @@ namespace Arma3BEClient.Models
             });
         }
 
-        private void UpdateClientOnMissionHandler(object sender, IEnumerable<Mission> enumerable)
+        private void UpdateClientOnMissionHandler(object sender, UpdateClientEventArgs<IEnumerable<Mission>> e)
         {
-            Missions = enumerable;
+            Missions = e.Data;
         }
 
         public Mission SelectedMission

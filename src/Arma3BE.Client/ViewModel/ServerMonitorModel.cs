@@ -2,24 +2,24 @@
 using System.Windows.Media;
 using Arma3BEClient.Commands;
 using Arma3BEClient.Common.Logging;
+using Arma3BEClient.Contracts;
 using Arma3BEClient.Helpers;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Models;
 using Arma3BEClient.Updater;
 using Arma3BEClient.Updater.Models;
-using GalaSoft.MvvmLight;
 
 namespace Arma3BEClient.ViewModel
 {
-    public class ServerMonitorModel : ViewModelBase
+    public class ServerMonitorModel : DisposableViewModelBase
     {
         private readonly ServerInfo _currentServer;
         private readonly ILog _log;
         private readonly bool _console;
         private readonly UpdateClient _updateClient;
-        
+
         private readonly UpdateClientPeriodic _updateClientPeriodic;
-        
+
 
         public static Color GetMessageColor(ChatMessage message)
         {
@@ -81,13 +81,13 @@ namespace Arma3BEClient.ViewModel
             SteamQueryViewModel = new ServerMonitorSteamQueryViewModel(_currentServer.Host, _currentServer.Port, _log);
 
             _updateClient = new UpdateClient(host, _currentServer.Port, _currentServer.Password, _log);
-            
-            _updateClient.PlayerHandler += (s, e) => PlayersViewModel.SetData(e);
+
+            _updateClient.PlayerHandler += (s, e) => PlayersViewModel.SetData(e.Data);
 
             if (!console)
             {
-                _updateClient.BanHandler += (s, e) => BansViewModel.SetData(e);
-                _updateClient.AdminHandler += (s, e) => AdminsViewModel.SetData(e);
+                _updateClient.BanHandler += (s, e) => BansViewModel.SetData(e.Data);
+                _updateClient.AdminHandler += (s, e) => AdminsViewModel.SetData(e.Data);
             }
 
 
@@ -114,7 +114,7 @@ namespace Arma3BEClient.ViewModel
             }
 
             _updateClient.ConnectingHandler += (s, e) => RaisePropertyChanged("Connected");
-            
+
 
             PlayersViewModel = new ServerMonitorPlayerViewModel(_log, currentServer, _updateClient);
 
@@ -150,8 +150,8 @@ namespace Arma3BEClient.ViewModel
             RaisePropertyChanged("Connected");
         }
 
-       
-        
+
+
         public ServerInfo CurrentServer { get { return _currentServer; } }
         public bool Connected { get { return _updateClient.Connected; } }
 
@@ -169,7 +169,7 @@ namespace Arma3BEClient.ViewModel
         public ServerMonitorManageServerViewModel ManageServerViewModel { get; set; }
 
         public PlayerListModelView PlayerListModelView { get; set; }
-       
+
 
         #endregion
 
@@ -186,14 +186,12 @@ namespace Arma3BEClient.ViewModel
             }
         }
 
-        
-        public override void Cleanup()
+        protected override void DisposeManagedResources()
         {
-            base.Cleanup();
+            base.DisposeManagedResources();
             _updateClientPeriodic.Dispose();
             _updateClient.Disconnect();
             _updateClient.Dispose();
         }
-        
     }
 }

@@ -179,6 +179,8 @@
     </Compile>
     <Compile Include="Commands\ActionCommand.cs" />
     <Compile Include="Commands\BaseCommand.cs" />
+    <Compile Include="Contracts\DisposableUserControl.cs" />
+    <Compile Include="Contracts\DisposableViewModelBase.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter .cs" />
     <Compile Include="Converters\BoolToVisibilityConverterInverse.cs" />
     <Compile Include="Converters\BrushColorConverter.cs" />
@@ -355,7 +357,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Boxes\BoxesGrids\" />
-    <Folder Include="Contracts\" />
     <Folder Include="DataSources\" />
   </ItemGroup>
   <ItemGroup>
