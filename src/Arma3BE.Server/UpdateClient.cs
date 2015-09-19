@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Core;
 using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Updater.Models;
 using BattleNET;
 
-namespace Arma3BEClient.Updater
+namespace Arma3BE.Server
 {
     public sealed class UpdateClient : DisposeObject
     {

@@ -3,8 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
+using Arma3BE.Server.Models;
 using Arma3BEClient.Models;
-using Arma3BEClient.Updater.Models;
 using Arma3BEClient.ViewModel;
 
 namespace Arma3BEClient.Boxes

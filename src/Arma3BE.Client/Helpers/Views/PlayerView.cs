@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Arma3BEClient.Annotations;
+using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Attributes;
-using Arma3BEClient.Updater.Models;
+using Arma3BEClient.Properties;
 
 namespace Arma3BEClient.Helpers.Views
 {

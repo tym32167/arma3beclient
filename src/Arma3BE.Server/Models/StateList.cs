@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace Arma3BEClient.Updater.Models
+namespace Arma3BE.Server.Models
 {
     public abstract class StateList<T> : IEnumerable<T>
     {

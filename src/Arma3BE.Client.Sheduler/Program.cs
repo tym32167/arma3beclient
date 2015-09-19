@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
+using Arma3BE.Server;
 using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Updater;
 
 namespace Arma3BEClient.Sheduler
 {

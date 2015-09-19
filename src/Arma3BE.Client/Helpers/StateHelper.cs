@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Arma3BEClient.Updater.Models;
+using Arma3BE.Server.Models;
 
 namespace Arma3BEClient.Helpers
 {

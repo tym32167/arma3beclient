@@ -58,19 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Admin.cs" />
-    <Compile Include="Models\AdminList.cs" />
-    <Compile Include="Models\Ban.cs" />
-    <Compile Include="Models\BanList.cs" />
-    <Compile Include="Models\ChatMessage.cs" />
-    <Compile Include="Models\Mission.cs" />
-    <Compile Include="Models\MissionList.cs" />
-    <Compile Include="Models\Player.cs" />
-    <Compile Include="Models\PlayerList.cs" />
-    <Compile Include="Models\ServerMessage.cs" />
-    <Compile Include="Models\StateList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UpdateClient.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Arma3BE.Common\Arma3BE.Common.csproj">

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
+using Arma3BE.Server.Models;
 using Arma3BEClient.Extensions;
-using Arma3BEClient.Updater.Models;
 
 namespace Arma3BEClient.Grids
 {

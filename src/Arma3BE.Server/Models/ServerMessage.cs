@@ -1,4 +1,4 @@
-﻿namespace Arma3BEClient.Updater.Models
+﻿namespace Arma3BE.Server.Models
 {
     public class ServerMessage
     {

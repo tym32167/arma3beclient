@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Windows.Input;
+using Arma3BE.Server;
+using Arma3BE.Server.Models;
 using Arma3BEClient.Boxes;
 using Arma3BEClient.Commands;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Helpers;
 using Arma3BEClient.Libs.Tools;
-using Arma3BEClient.Updater;
-using Arma3BEClient.Updater.Models;
 using GalaSoft.MvvmLight;
 
 namespace Arma3BEClient.Models

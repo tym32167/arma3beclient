@@ -1,8 +1,8 @@
 ﻿using System;
+using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
-using Arma3BEClient.Updater.Models;
 
 namespace Arma3BEClient.Helpers
 {

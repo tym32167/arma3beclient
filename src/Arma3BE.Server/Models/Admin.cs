@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 using Arma3BEClient.Common.Attributes;
 
-namespace Arma3BEClient.Updater.Models
+namespace Arma3BE.Server.Models
 {
     public class Admin
     {

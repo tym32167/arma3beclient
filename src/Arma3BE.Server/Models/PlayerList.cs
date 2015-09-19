@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Arma3BEClient.Updater.Models
+namespace Arma3BE.Server.Models
 {
     public class PlayerList : StateList<Player>
     {

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Arma3BE.Server;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Helpers.Views;
 using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Tools;
-using Arma3BEClient.Updater;
-using Player = Arma3BEClient.Updater.Models.Player;
+using Player = Arma3BE.Server.Models.Player;
 
 namespace Arma3BEClient.Helpers
 {

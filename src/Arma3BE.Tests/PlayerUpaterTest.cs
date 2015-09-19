@@ -1,4 +1,4 @@
-﻿using Arma3BEClient.Updater.Models;
+﻿using Arma3BE.Server.Models;
 using NUnit.Framework;
 
 namespace Arma3BEClient.Tests
