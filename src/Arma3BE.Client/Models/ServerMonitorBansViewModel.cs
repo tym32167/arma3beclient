@@ -71,9 +71,9 @@ namespace Arma3BEClient.Models
             {
                 if (_data == null) return new List<BanView>();
 
-                using (var dc = new Arma3BeClientContext())
+                using (var dc = new Arma3BERepository())
                 {
-                    var dbBans = dc.Bans.Where(x => x.ServerInfo.Active && x.IsActive && x.MinutesLeft == 0).ToList();
+                    var dbBans = dc.GetActivePermBans();
 
                     var data = _data.ToList();
 

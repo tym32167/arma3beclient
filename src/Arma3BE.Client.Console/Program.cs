@@ -20,12 +20,12 @@ namespace arma3beConsole
             log.Info("Startup");
 
 
-            var servers = new List<ServerInfo>();
+            IEnumerable<ServerInfo> servers;
 
 
-            using (var dc = new Arma3BeClientContext())
+            using (var dc = new Arma3BERepository())
             {
-                servers = dc.ServerInfo.Where(x => x.Active).ToList();
+                servers = dc.GetActiveServerInfo();
             }
 
             var models = servers.Select(x => OpenServerInfo(x, log)).ToList();

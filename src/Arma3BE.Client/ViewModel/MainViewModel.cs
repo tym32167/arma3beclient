@@ -30,8 +30,8 @@ namespace Arma3BEClient.ViewModel
         {
             get
             {
-                using (var context = new Arma3BeClientContext())
-                    return context.ServerInfo.Where(x => !x.Active).OrderBy(x => x.Name).ToList();
+                using (var repo = new Arma3BERepository())
+                    return repo.GetNotActiveServerInfo().OrderBy(x => x.Name).ToList();
             }
         }
 
@@ -53,14 +53,9 @@ namespace Arma3BEClient.ViewModel
 
         public void SetActive(Guid serverId, bool active = false)
         {
-            using (var context = new Arma3BeClientContext())
+            using (var repo = new Arma3BERepository())
             {
-                var server = context.ServerInfo.FirstOrDefault(x => x.Id == serverId);
-                if (server != null)
-                {
-                    server.Active = active;
-                    context.SaveChanges();
-                }
+                repo.SetServerInfoActive(serverId, active);
             }
         }
     }

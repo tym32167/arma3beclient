@@ -27,21 +27,9 @@ namespace Arma3BEClient.Models
             {
                 if (_player == null)
                 {
-                    using (var dc = new Arma3BeClientContext())
+                    using (var dc = new Arma3BERepository())
                     {
-                        var player = dc.Player.FirstOrDefault(x => x.GUID == _userGuid);
-                        if (player != null)
-                        {
-                            player.Bans = player.Bans.ToList();
-                            foreach (var ban in player.Bans)
-                            {
-                                ban.ServerInfo = ban.ServerInfo;
-                            }
-
-                            player.Notes = player.Notes.ToList();
-                            player.PlayerHistory = player.PlayerHistory.ToList();
-                        }
-
+                        var player = dc.GetPlayerInfo(_userGuid);
                         _player = player;
                     }
                 }
@@ -70,16 +58,10 @@ namespace Arma3BEClient.Models
 
         private void SaveUserComment()
         {
-            using (var dc = new Arma3BeClientContext())
+            using (var repo = new Arma3BERepository())
             {
-                var dbp = dc.Player.FirstOrDefault(x => x.GUID == Player.GUID);
-                if (dbp != null)
-                {
-                    dbp.Comment = Player.Comment;
-                    dc.SaveChanges();
-                }
+                 repo.UpdatePlayerComment(Player.GUID, Player.Comment);
             }
-
 
             _player = null;
             RaisePropertyChanged("Player");

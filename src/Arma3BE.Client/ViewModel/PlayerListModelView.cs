@@ -7,6 +7,7 @@ using Arma3BEClient.Commands;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Helpers;
 using Arma3BEClient.Libs.Context;
+using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Models;
 using GalaSoft.MvvmLight;
 
@@ -70,7 +71,7 @@ namespace Arma3BEClient.ViewModel
 
         public void Refresh()
         {
-            using (var context = new Arma3BeClientContext())
+            using (var repo = new Arma3BERepository())
             {
                 var opts = SelectedOptions.Split(',');
 
@@ -81,22 +82,26 @@ namespace Arma3BEClient.ViewModel
                 var searchNotes = opts.Contains("Notes");
                 var searchComment = opts.Contains("Comment");
 
-                var result = context.Player.AsQueryable();
+                IEnumerable<Player> result;
+
                 if (!string.IsNullOrEmpty(Filter))
                 {
-                    result = result.Where(x =>
-                        (searchGuid && x.GUID == Filter)
-                        ||
-                        (searchComment && x.Comment.Contains(Filter))
-                        ||
-                        (searchName && x.Name.Contains(Filter))
-                        ||
-                        (searchNotes && x.Notes.Any(y => y.Text.Contains(Filter)))
-                        ||
-                        (searchIP && x.LastIp.Contains(Filter))
-                        ||
-                        (searchLastNames && x.PlayerHistory.Any(y => y.Name.Contains(Filter)))
-                        );
+                    result = repo.GetPlayers(x =>
+                         (searchGuid && x.GUID == Filter)
+                         ||
+                         (searchComment && x.Comment.Contains(Filter))
+                         ||
+                         (searchName && x.Name.Contains(Filter))
+                         ||
+                         (searchNotes && x.Notes.Any(y => y.Text.Contains(Filter)))
+                         ||
+                         (searchIP && x.LastIp.Contains(Filter))
+                         ||
+                         (searchLastNames && x.PlayerHistory.Any(y => y.Name.Contains(Filter))));
+                }
+                else
+                {
+                    result = repo.GetAllPlayers();
                 }
 
                 var r = result.Select(x => new PlayerView

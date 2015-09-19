@@ -92,9 +92,9 @@ namespace Arma3BEClient
 
         private void LoadedWindow(object sender, RoutedEventArgs e)
         {
-            using (var dc = new Arma3BeClientContext())
+            using (var r = new Arma3BERepository())
             {
-                var servers = dc.ServerInfo.Where(x => x.Active).ToList();
+                var servers = r.GetActiveServerInfo();
                 Parallel.ForEach(servers, OpenServerInfo);
             }
         }
@@ -119,10 +119,10 @@ namespace Arma3BEClient
 
         private void Export(string fname)
         {
-            using (var dc = new Arma3BeClientContext())
+            using (var repo = new Arma3BERepository())
             {
                 var list =
-                    dc.Player.ToList()
+                    repo.GetAllPlayers()
                         .GroupBy(x => x.GUID)
                         .Select(x => x.OrderByDescending(y => y.Name).First())
                         .OrderBy(x => x.Name)
@@ -147,10 +147,10 @@ namespace Arma3BEClient
 
         private void Import(string fname)
         {
-            using (var dc = new Arma3BeClientContext())
+            using (var repo = new Arma3BERepository())
             {
                 var db =
-                    dc.Player.ToList()
+                    repo.GetAllPlayers()
                         .GroupBy(x => x.GUID)
                         .Select(x => x.OrderByDescending(y => y.Name).First())
                         .ToDictionary(x => x.GUID);
@@ -188,9 +188,7 @@ namespace Arma3BEClient
                     }
                 }
 
-                dc.Player.AddRange(toadd);
-
-                dc.SaveChanges();
+                repo.AddPlayers(toadd);
             }
         }
 

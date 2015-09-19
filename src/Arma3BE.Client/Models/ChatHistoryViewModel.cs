@@ -15,9 +15,9 @@ namespace Arma3BEClient.Models
 
         private readonly Lazy<IEnumerable<ServerInfo>> _serverList = new Lazy<IEnumerable<ServerInfo>>(() =>
         {
-            using (var dc = new Arma3BeClientContext())
+            using (var repo = new Arma3BERepository())
             {
-                return dc.ServerInfo.OrderBy(x => x.Name).ToList();
+                return repo.GetServerInfo().OrderBy(x => x.Name).ToList();
             }
         });
 
@@ -38,38 +38,9 @@ namespace Arma3BEClient.Models
         {
             get
             {
-                using (var dc = new Arma3BeClientContext())
+                using (var dc = new Arma3BERepository())
                 {
-                    //var log = dc.ChatLog.Where(x => x.ServerId == _serverId);
-
-                    var log = dc.ChatLog.AsQueryable();
-
-                    if (!string.IsNullOrEmpty(SelectedServers))
-                    {
-                        var guids = SelectedServers.Split(',').Select(Guid.Parse).ToArray();
-                        if (guids.Length > 0)
-                        {
-                            log = log.Where(x => guids.Contains(x.ServerId));
-                        }
-                    }
-
-
-                    if (StartDate.HasValue)
-                    {
-                        var date = StartDate.Value;
-                        log = log.Where(x => x.Date >= date);
-                    }
-
-                    if (EndDate.HasValue)
-                    {
-                        var date = EndDate.Value;
-                        log = log.Where(x => x.Date <= date);
-                    }
-
-                    if (!string.IsNullOrEmpty(Filter))
-                    {
-                        log = log.Where(x => x.Text.Contains(Filter));
-                    }
+                    var log = dc.GetChatLogs(SelectedServers, StartDate, EndDate, Filter);
 
                     return log.OrderBy(x => x.Date).Select(x => new ChatView
                     {
@@ -81,6 +52,8 @@ namespace Arma3BEClient.Models
                 }
             }
         }
+
+        
 
         public IEnumerable<ServerInfo> ServerList
         {
