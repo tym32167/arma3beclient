@@ -68,7 +68,7 @@ namespace Arma3BEClient.Sheduler
                         continue;
                     }
                     var result = string.Format(" -1 {0}: {1}", adminname, message);
-                    uc.SendCommand(BEServer.CommandType.Say, result);
+                    uc.SendCommand(CommandType.Say, result);
                     Console.WriteLine(message);
 
                     Thread.Sleep(interval*1000);

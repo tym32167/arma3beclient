@@ -10,33 +10,8 @@ using BattleNET;
 
 namespace Arma3BE.Server
 {
-    public sealed class BEServer : DisposeObject
+    public sealed class BEServer : DisposeObject, IBEServer
     {
-        public enum CommandType
-        {
-            Players,
-            Bans,
-            Admins,
-            Say,
-            AddBan,
-            Ban,
-            Kick,
-            RemoveBan,
-            Init,
-            Shutdown,
-            Reassign,
-            Restart,
-            Lock,
-            Unlock,
-            Mission,
-            Missions,
-            RConPassword,
-            MaxPing,
-            LoadBans,
-            LoadScripts,
-            LoadEvents
-        };
-
         private readonly string _host;
 
         private readonly object _lock = new object();

@@ -32,58 +32,58 @@ namespace Arma3BEClient.Models
                 if (m != null)
                 {
                     var mn = m.Name;
-                    _beServer.SendCommandAsync(BEServer.CommandType.Mission, mn);
+                    _beServer.SendCommandAsync(CommandType.Mission, mn);
                 }
             },
                 () => SelectedMission != null);
 
-            RefreshCommand = new ActionCommand(() => _beServer.SendCommandAsync(BEServer.CommandType.Missions));
+            RefreshCommand = new ActionCommand(() => _beServer.SendCommandAsync(CommandType.Missions));
 
             InitCommand = new ActionCommand(async () =>
             {
-                await _beServer.SendCommandAsync(BEServer.CommandType.Init);
+                await _beServer.SendCommandAsync(CommandType.Init);
                 MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
             });
             ShutdownCommand = new ActionCommand(async () =>
             {
-                await _beServer.SendCommandAsync(BEServer.CommandType.Shutdown);
+                await _beServer.SendCommandAsync(CommandType.Shutdown);
                 MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
             });
             ReassignCommand = new ActionCommand(async () =>
             {
-                await _beServer.SendCommandAsync(BEServer.CommandType.Reassign);
+                await _beServer.SendCommandAsync(CommandType.Reassign);
                 MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
             });
             RestartCommand = new ActionCommand(async () =>
             {
-                await _beServer.SendCommandAsync(BEServer.CommandType.Restart);
+                await _beServer.SendCommandAsync(CommandType.Restart);
                 MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
             });
             LockCommand = new ActionCommand(async () =>
             {
-                await _beServer.SendCommandAsync(BEServer.CommandType.Lock);
+                await _beServer.SendCommandAsync(CommandType.Lock);
                 MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
             });
             UnlockCommand = new ActionCommand(async () =>
             {
-                await _beServer.SendCommandAsync(BEServer.CommandType.Unlock);
+                await _beServer.SendCommandAsync(CommandType.Unlock);
                 MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
             });
 
 
             LoadBansCommand = new ActionCommand(async () =>
             {
-                await _beServer.SendCommandAsync(BEServer.CommandType.LoadBans);
+                await _beServer.SendCommandAsync(CommandType.LoadBans);
                 MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
             });
             LoadScriptsCommand = new ActionCommand(async () =>
             {
-                await _beServer.SendCommandAsync(BEServer.CommandType.LoadScripts);
+                await _beServer.SendCommandAsync(CommandType.LoadScripts);
                 MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
             });
             LoadEventsCommand = new ActionCommand(async () =>
             {
-                await _beServer.SendCommandAsync(BEServer.CommandType.LoadEvents);
+                await _beServer.SendCommandAsync(CommandType.LoadEvents);
                 MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
             });
         }

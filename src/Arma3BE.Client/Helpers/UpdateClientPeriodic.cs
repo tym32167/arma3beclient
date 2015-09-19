@@ -27,7 +27,7 @@ namespace Arma3BEClient.Helpers
             //    {
             //        if (_beServer.Connected)
             //        {
-            //            _beServer.SendCommand(BEServer.CommandType.Players);
+            //            _beServer.SendCommand(CommandType.Players);
 
             //        }
             //    }
@@ -43,7 +43,7 @@ namespace Arma3BEClient.Helpers
             //    {
             //        if (_beServer.Connected)
             //        {
-            //            _beServer.SendCommand(BEServer.CommandType.Bans);
+            //            _beServer.SendCommand(CommandType.Bans);
 
             //        }
             //    }
@@ -59,7 +59,7 @@ namespace Arma3BEClient.Helpers
             //    {
             //        if (_beServer.Connected)
             //        {
-            //            _beServer.SendCommand(BEServer.CommandType.Admins);
+            //            _beServer.SendCommand(CommandType.Admins);
 
             //        }
             //    }

@@ -23,7 +23,7 @@ namespace Arma3BEClient.Models
         private readonly BEServer _beServer;
 
         public ServerMonitorBansViewModel(ILog log, Guid serverInfoId, BEServer beServer)
-            : base(new ActionCommand(() => beServer.SendCommandAsync(BEServer.CommandType.Bans)))
+            : base(new ActionCommand(() => beServer.SendCommandAsync(CommandType.Bans)))
         {
             _log = log;
             _serverInfoId = serverInfoId;
@@ -49,7 +49,7 @@ namespace Arma3BEClient.Models
                             Thread.Sleep(10);
                         }
 
-                        _beServer.SendCommandAsync(BEServer.CommandType.Bans);
+                        _beServer.SendCommandAsync(CommandType.Bans);
                     }) {IsBackground = true};
 
                     t.Start();
@@ -113,8 +113,8 @@ namespace Arma3BEClient.Models
 
         public async void RemoveBan(BanView si)
         {
-            await _beServer.SendCommandAsync(BEServer.CommandType.RemoveBan, si.Num.ToString());
-            await _beServer.SendCommandAsync(BEServer.CommandType.Bans);
+            await _beServer.SendCommandAsync(CommandType.RemoveBan, si.Num.ToString());
+            await _beServer.SendCommandAsync(CommandType.Bans);
         }
 
         public override void SetData(IEnumerable<Ban> initialData)

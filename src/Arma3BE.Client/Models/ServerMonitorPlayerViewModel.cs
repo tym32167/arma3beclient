@@ -18,7 +18,7 @@ namespace Arma3BEClient.Models
         private PlayerView _selectedPlayer;
 
         public ServerMonitorPlayerViewModel(ILog log, ServerInfo serverInfo, BEServer beServer)
-            : base(new ActionCommand(() => beServer.SendCommandAsync(BEServer.CommandType.Players)))
+            : base(new ActionCommand(() => beServer.SendCommandAsync(CommandType.Players)))
         {
             _log = log;
             _beServer = beServer;

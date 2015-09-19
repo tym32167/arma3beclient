@@ -53,18 +53,18 @@ namespace Arma3BEClient.ViewModel
 
             if (!console)
             {
-                _beServer.RConAdminLog += (s, e) => _beServer.SendCommandAsync(BEServer.CommandType.Admins);
+                _beServer.RConAdminLog += (s, e) => _beServer.SendCommandAsync(CommandType.Admins);
             }
 
-            _beServer.PlayerLog += (s, e) => _beServer.SendCommandAsync(BEServer.CommandType.Players);
+            _beServer.PlayerLog += (s, e) => _beServer.SendCommandAsync(CommandType.Players);
 
 
             if (!console)
             {
                 _beServer.BanLog += async (s, e) =>
                 {
-                    await _beServer.SendCommandAsync(BEServer.CommandType.Players);
-                    await _beServer.SendCommandAsync(BEServer.CommandType.Bans);
+                    await _beServer.SendCommandAsync(CommandType.Players);
+                    await _beServer.SendCommandAsync(CommandType.Bans);
                 };
             }
 
@@ -77,7 +77,7 @@ namespace Arma3BEClient.ViewModel
             {
                 BansViewModel = new ServerMonitorBansViewModel(_log, currentServer.Id, _beServer);
                 AdminsViewModel = new ServerMonitorAdminsViewModel(_log, currentServer,
-                    new ActionCommand(() => _beServer.SendCommandAsync(BEServer.CommandType.Admins)));
+                    new ActionCommand(() => _beServer.SendCommandAsync(CommandType.Admins)));
                 ManageServerViewModel = new ServerMonitorManageServerViewModel(_log, currentServer.Id, _beServer);
                 PlayerListModelView = new PlayerListModelView(_log, _beServer, currentServer.Id);
             }
@@ -138,12 +138,12 @@ namespace Arma3BEClient.ViewModel
 
         private async void BeServerConnectHandler(object sender, EventArgs e)
         {
-            await _beServer.SendCommandAsync(BEServer.CommandType.Players);
+            await _beServer.SendCommandAsync(CommandType.Players);
             if (!_console)
             {
-                await _beServer.SendCommandAsync(BEServer.CommandType.Bans);
-                await _beServer.SendCommandAsync(BEServer.CommandType.Admins);
-                await _beServer.SendCommandAsync(BEServer.CommandType.Missions);
+                await _beServer.SendCommandAsync(CommandType.Bans);
+                await _beServer.SendCommandAsync(CommandType.Admins);
+                await _beServer.SendCommandAsync(CommandType.Missions);
             }
 
             RaisePropertyChanged("Connected");

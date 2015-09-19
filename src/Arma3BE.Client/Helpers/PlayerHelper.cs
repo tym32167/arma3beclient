@@ -146,7 +146,7 @@ namespace Arma3BEClient.Helpers
             var totalreason = string.Format("[{0}][{1}] {2}", SettingsStore.Instance.AdminName,
                 DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss"), reason);
 
-            await _beServer.SendCommandAsync(BEServer.CommandType.Kick,
+            await _beServer.SendCommandAsync(CommandType.Kick,
                 string.Format("{0} {1}", player.Num, totalreason));
 
             if (!isAuto)
@@ -166,7 +166,7 @@ namespace Arma3BEClient.Helpers
                         context.SaveChanges();
                     }
                 }
-                await _beServer.SendCommandAsync(BEServer.CommandType.Players);
+                await _beServer.SendCommandAsync(CommandType.Players);
             }
         }
 
@@ -178,7 +178,7 @@ namespace Arma3BEClient.Helpers
                     DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss"), reason);
 
 
-                await _beServer.SendCommandAsync(BEServer.CommandType.AddBan,
+                await _beServer.SendCommandAsync(CommandType.AddBan,
                     string.Format("{0} {1} {2}", guid, minutes, totalreason));
 
 
@@ -200,11 +200,11 @@ namespace Arma3BEClient.Helpers
                 }
 
 
-                _beServer.SendCommandAsync(BEServer.CommandType.Bans);
+                _beServer.SendCommandAsync(CommandType.Bans);
             }
             else
             {
-                _beServer.SendCommandAsync(BEServer.CommandType.AddBan,
+                _beServer.SendCommandAsync(CommandType.AddBan,
                     string.Format("{0} {1} {2}", guid, minutes, reason));
             }
         }
@@ -215,7 +215,7 @@ namespace Arma3BEClient.Helpers
                 DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss"), reason);
 
 
-            await _beServer.SendCommandAsync(BEServer.CommandType.Ban,
+            await _beServer.SendCommandAsync(CommandType.Ban,
                 string.Format("{0} {1} {2}", num, minutes, totalreason));
 
 
@@ -237,8 +237,8 @@ namespace Arma3BEClient.Helpers
             }
 
 
-            _beServer.SendCommandAsync(BEServer.CommandType.Players);
-            _beServer.SendCommandAsync(BEServer.CommandType.Bans);
+            _beServer.SendCommandAsync(CommandType.Players);
+            _beServer.SendCommandAsync(CommandType.Bans);
         }
     }
 }
