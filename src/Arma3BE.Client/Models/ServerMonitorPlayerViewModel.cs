@@ -14,15 +14,15 @@ namespace Arma3BEClient.Models
     {
         private readonly ILog _log;
         internal readonly PlayerHelper _playerHelper;
-        private readonly UpdateClient _updateClient;
+        private readonly BEServer _beServer;
         private PlayerView _selectedPlayer;
 
-        public ServerMonitorPlayerViewModel(ILog log, ServerInfo serverInfo, UpdateClient updateClient)
-            : base(new ActionCommand(() => updateClient.SendCommandAsync(UpdateClient.CommandType.Players)))
+        public ServerMonitorPlayerViewModel(ILog log, ServerInfo serverInfo, BEServer beServer)
+            : base(new ActionCommand(() => beServer.SendCommandAsync(BEServer.CommandType.Players)))
         {
             _log = log;
-            _updateClient = updateClient;
-            _playerHelper = new PlayerHelper(_log, serverInfo.Id, _updateClient);
+            _beServer = beServer;
+            _playerHelper = new PlayerHelper(_log, serverInfo.Id, _beServer);
         }
 
         public ICommand KickUserCommand { get; set; }

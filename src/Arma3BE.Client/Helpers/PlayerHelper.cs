@@ -17,16 +17,16 @@ namespace Arma3BEClient.Helpers
     {
         private readonly ILog _log;
         private readonly Guid _serverId;
-        private readonly UpdateClient _updateClient;
+        private readonly BEServer _beServer;
 
         private readonly Regex NameRegex = new Regex("[A-Za-zА-Яа-я0-9]+",
             RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
-        public PlayerHelper(ILog log, Guid serverId, UpdateClient updateClient)
+        public PlayerHelper(ILog log, Guid serverId, BEServer beServer)
         {
             _log = log;
             _serverId = serverId;
-            _updateClient = updateClient;
+            _beServer = beServer;
         }
 
         public bool RegisterPlayers(IEnumerable<Player> list)
@@ -146,7 +146,7 @@ namespace Arma3BEClient.Helpers
             var totalreason = string.Format("[{0}][{1}] {2}", SettingsStore.Instance.AdminName,
                 DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss"), reason);
 
-            await _updateClient.SendCommandAsync(UpdateClient.CommandType.Kick,
+            await _beServer.SendCommandAsync(BEServer.CommandType.Kick,
                 string.Format("{0} {1}", player.Num, totalreason));
 
             if (!isAuto)
@@ -166,7 +166,7 @@ namespace Arma3BEClient.Helpers
                         context.SaveChanges();
                     }
                 }
-                await _updateClient.SendCommandAsync(UpdateClient.CommandType.Players);
+                await _beServer.SendCommandAsync(BEServer.CommandType.Players);
             }
         }
 
@@ -178,7 +178,7 @@ namespace Arma3BEClient.Helpers
                     DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss"), reason);
 
 
-                await _updateClient.SendCommandAsync(UpdateClient.CommandType.AddBan,
+                await _beServer.SendCommandAsync(BEServer.CommandType.AddBan,
                     string.Format("{0} {1} {2}", guid, minutes, totalreason));
 
 
@@ -200,11 +200,11 @@ namespace Arma3BEClient.Helpers
                 }
 
 
-                _updateClient.SendCommandAsync(UpdateClient.CommandType.Bans);
+                _beServer.SendCommandAsync(BEServer.CommandType.Bans);
             }
             else
             {
-                _updateClient.SendCommandAsync(UpdateClient.CommandType.AddBan,
+                _beServer.SendCommandAsync(BEServer.CommandType.AddBan,
                     string.Format("{0} {1} {2}", guid, minutes, reason));
             }
         }
@@ -215,7 +215,7 @@ namespace Arma3BEClient.Helpers
                 DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss"), reason);
 
 
-            await _updateClient.SendCommandAsync(UpdateClient.CommandType.Ban,
+            await _beServer.SendCommandAsync(BEServer.CommandType.Ban,
                 string.Format("{0} {1} {2}", num, minutes, totalreason));
 
 
@@ -237,8 +237,8 @@ namespace Arma3BEClient.Helpers
             }
 
 
-            _updateClient.SendCommandAsync(UpdateClient.CommandType.Players);
-            _updateClient.SendCommandAsync(UpdateClient.CommandType.Bans);
+            _beServer.SendCommandAsync(BEServer.CommandType.Players);
+            _beServer.SendCommandAsync(BEServer.CommandType.Bans);
         }
     }
 }

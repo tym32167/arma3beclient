@@ -43,7 +43,7 @@
     <Compile Include="Models\ServerMessage.cs" />
     <Compile Include="Models\StateList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UpdateClient.cs" />
+    <Compile Include="BEServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Arma3BE.Common\Arma3BE.Common.csproj">

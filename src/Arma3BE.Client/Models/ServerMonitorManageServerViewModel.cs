@@ -13,17 +13,17 @@ namespace Arma3BEClient.Models
     {
         private readonly ILog _log;
         private readonly Guid _serverId;
-        private readonly UpdateClient _updateClient;
+        private readonly BEServer _beServer;
         private IEnumerable<Mission> _missions;
         private Mission _selectedMission;
 
-        public ServerMonitorManageServerViewModel(ILog log, Guid serverId, UpdateClient updateClient)
+        public ServerMonitorManageServerViewModel(ILog log, Guid serverId, BEServer beServer)
         {
             _log = log;
             _serverId = serverId;
-            _updateClient = updateClient;
+            _beServer = beServer;
 
-            _updateClient.MissionHandler += UpdateClientOnMissionHandler;
+            _beServer.MissionHandler += BeServerOnMissionHandler;
 
 
             SetMissionCommand = new ActionCommand(() =>
@@ -32,58 +32,58 @@ namespace Arma3BEClient.Models
                 if (m != null)
                 {
                     var mn = m.Name;
-                    _updateClient.SendCommandAsync(UpdateClient.CommandType.Mission, mn);
+                    _beServer.SendCommandAsync(BEServer.CommandType.Mission, mn);
                 }
             },
                 () => SelectedMission != null);
 
-            RefreshCommand = new ActionCommand(() => _updateClient.SendCommandAsync(UpdateClient.CommandType.Missions));
+            RefreshCommand = new ActionCommand(() => _beServer.SendCommandAsync(BEServer.CommandType.Missions));
 
             InitCommand = new ActionCommand(async () =>
             {
-                await _updateClient.SendCommandAsync(UpdateClient.CommandType.Init);
+                await _beServer.SendCommandAsync(BEServer.CommandType.Init);
                 MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
             });
             ShutdownCommand = new ActionCommand(async () =>
             {
-                await _updateClient.SendCommandAsync(UpdateClient.CommandType.Shutdown);
+                await _beServer.SendCommandAsync(BEServer.CommandType.Shutdown);
                 MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
             });
             ReassignCommand = new ActionCommand(async () =>
             {
-                await _updateClient.SendCommandAsync(UpdateClient.CommandType.Reassign);
+                await _beServer.SendCommandAsync(BEServer.CommandType.Reassign);
                 MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
             });
             RestartCommand = new ActionCommand(async () =>
             {
-                await _updateClient.SendCommandAsync(UpdateClient.CommandType.Restart);
+                await _beServer.SendCommandAsync(BEServer.CommandType.Restart);
                 MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
             });
             LockCommand = new ActionCommand(async () =>
             {
-                await _updateClient.SendCommandAsync(UpdateClient.CommandType.Lock);
+                await _beServer.SendCommandAsync(BEServer.CommandType.Lock);
                 MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
             });
             UnlockCommand = new ActionCommand(async () =>
             {
-                await _updateClient.SendCommandAsync(UpdateClient.CommandType.Unlock);
+                await _beServer.SendCommandAsync(BEServer.CommandType.Unlock);
                 MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
             });
 
 
             LoadBansCommand = new ActionCommand(async () =>
             {
-                await _updateClient.SendCommandAsync(UpdateClient.CommandType.LoadBans);
+                await _beServer.SendCommandAsync(BEServer.CommandType.LoadBans);
                 MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
             });
             LoadScriptsCommand = new ActionCommand(async () =>
             {
-                await _updateClient.SendCommandAsync(UpdateClient.CommandType.LoadScripts);
+                await _beServer.SendCommandAsync(BEServer.CommandType.LoadScripts);
                 MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
             });
             LoadEventsCommand = new ActionCommand(async () =>
             {
-                await _updateClient.SendCommandAsync(UpdateClient.CommandType.LoadEvents);
+                await _beServer.SendCommandAsync(BEServer.CommandType.LoadEvents);
                 MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
             });
         }
@@ -121,7 +121,7 @@ namespace Arma3BEClient.Models
         public ActionCommand LoadScriptsCommand { get; set; }
         public ActionCommand LoadEventsCommand { get; set; }
 
-        private void UpdateClientOnMissionHandler(object sender, UpdateClientEventArgs<IEnumerable<Mission>> e)
+        private void BeServerOnMissionHandler(object sender, UpdateClientEventArgs<IEnumerable<Mission>> e)
         {
             Missions = e.Data;
         }

@@ -16,18 +16,18 @@ namespace Arma3BEClient.ViewModel
     {
         private readonly ILog _log;
         private readonly Guid _serverId;
-        private readonly UpdateClient _updateClient;
+        private readonly BEServer _beServer;
         private int _playerCount;
         internal PlayerHelper _playerHelper;
         private ICommand _refreshCommand;
 
-        public PlayerListModelView(ILog log, UpdateClient updateClient, Guid serverId)
+        public PlayerListModelView(ILog log, BEServer beServer, Guid serverId)
         {
             _log = log;
-            _updateClient = updateClient;
+            _beServer = beServer;
             _serverId = serverId;
 
-            _playerHelper = new PlayerHelper(_log, serverId, _updateClient);
+            _playerHelper = new PlayerHelper(_log, serverId, _beServer);
             SelectedOptions = "Name,IP,Guid,Comment";
         }
 

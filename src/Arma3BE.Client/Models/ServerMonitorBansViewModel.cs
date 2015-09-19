@@ -20,17 +20,17 @@ namespace Arma3BEClient.Models
         private readonly ILog _log;
         private readonly PlayerHelper _playerHelper;
         private readonly Guid _serverInfoId;
-        private readonly UpdateClient _updateClient;
+        private readonly BEServer _beServer;
 
-        public ServerMonitorBansViewModel(ILog log, Guid serverInfoId, UpdateClient updateClient)
-            : base(new ActionCommand(() => updateClient.SendCommandAsync(UpdateClient.CommandType.Bans)))
+        public ServerMonitorBansViewModel(ILog log, Guid serverInfoId, BEServer beServer)
+            : base(new ActionCommand(() => beServer.SendCommandAsync(BEServer.CommandType.Bans)))
         {
             _log = log;
             _serverInfoId = serverInfoId;
-            _updateClient = updateClient;
+            _beServer = beServer;
             _helper = new BanHelper(_log, serverInfoId);
 
-            _playerHelper = new PlayerHelper(_log, serverInfoId, _updateClient);
+            _playerHelper = new PlayerHelper(_log, serverInfoId, _beServer);
 
 
             SyncBans = new ActionCommand(() =>
@@ -49,7 +49,7 @@ namespace Arma3BEClient.Models
                             Thread.Sleep(10);
                         }
 
-                        _updateClient.SendCommandAsync(UpdateClient.CommandType.Bans);
+                        _beServer.SendCommandAsync(BEServer.CommandType.Bans);
                     }) {IsBackground = true};
 
                     t.Start();
@@ -113,8 +113,8 @@ namespace Arma3BEClient.Models
 
         public async void RemoveBan(BanView si)
         {
-            await _updateClient.SendCommandAsync(UpdateClient.CommandType.RemoveBan, si.Num.ToString());
-            await _updateClient.SendCommandAsync(UpdateClient.CommandType.Bans);
+            await _beServer.SendCommandAsync(BEServer.CommandType.RemoveBan, si.Num.ToString());
+            await _beServer.SendCommandAsync(BEServer.CommandType.Bans);
         }
 
         public override void SetData(IEnumerable<Ban> initialData)

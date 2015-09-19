@@ -56,7 +56,7 @@ namespace Arma3BEClient.Sheduler
             Console.WriteLine(interval);
 
 
-            using (var uc = new UpdateClient(host, port, password, new FakeLog()))
+            using (var uc = new BEServer(host, port, password, new FakeLog()))
             {
                 while (true)
                 {
@@ -68,7 +68,7 @@ namespace Arma3BEClient.Sheduler
                         continue;
                     }
                     var result = string.Format(" -1 {0}: {1}", adminname, message);
-                    uc.SendCommand(UpdateClient.CommandType.Say, result);
+                    uc.SendCommand(BEServer.CommandType.Say, result);
                     Console.WriteLine(message);
 
                     Thread.Sleep(interval*1000);

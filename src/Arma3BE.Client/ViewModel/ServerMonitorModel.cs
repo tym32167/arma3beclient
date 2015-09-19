@@ -15,7 +15,7 @@ namespace Arma3BEClient.ViewModel
     {
         private readonly bool _console;
         private readonly ILog _log;
-        private readonly UpdateClient _updateClient;
+        private readonly BEServer _beServer;
         private readonly UpdateClientPeriodic _updateClientPeriodic;
 
         public ServerMonitorModel(ServerInfo currentServer, ILog log, bool console = false)
@@ -37,53 +37,53 @@ namespace Arma3BEClient.ViewModel
 
             SteamQueryViewModel = new ServerMonitorSteamQueryViewModel(CurrentServer.Host, CurrentServer.Port, _log);
 
-            _updateClient = new UpdateClient(host, CurrentServer.Port, CurrentServer.Password, _log);
+            _beServer = new BEServer(host, CurrentServer.Port, CurrentServer.Password, _log);
 
-            _updateClient.PlayerHandler += (s, e) => PlayersViewModel.SetData(e.Data);
+            _beServer.PlayerHandler += (s, e) => PlayersViewModel.SetData(e.Data);
 
             if (!console)
             {
-                _updateClient.BanHandler += (s, e) => BansViewModel.SetData(e.Data);
-                _updateClient.AdminHandler += (s, e) => AdminsViewModel.SetData(e.Data);
+                _beServer.BanHandler += (s, e) => BansViewModel.SetData(e.Data);
+                _beServer.AdminHandler += (s, e) => AdminsViewModel.SetData(e.Data);
             }
 
 
-            _updateClient.ConnectHandler += _updateClient_ConnectHandler;
-            _updateClient.DisconnectHandler += _updateClient_DisconnectHandler;
+            _beServer.ConnectHandler += BeServerConnectHandler;
+            _beServer.DisconnectHandler += BeServerDisconnectHandler;
 
             if (!console)
             {
-                _updateClient.RConAdminLog += (s, e) => _updateClient.SendCommandAsync(UpdateClient.CommandType.Admins);
+                _beServer.RConAdminLog += (s, e) => _beServer.SendCommandAsync(BEServer.CommandType.Admins);
             }
 
-            _updateClient.PlayerLog += (s, e) => _updateClient.SendCommandAsync(UpdateClient.CommandType.Players);
+            _beServer.PlayerLog += (s, e) => _beServer.SendCommandAsync(BEServer.CommandType.Players);
 
 
             if (!console)
             {
-                _updateClient.BanLog += async (s, e) =>
+                _beServer.BanLog += async (s, e) =>
                 {
-                    await _updateClient.SendCommandAsync(UpdateClient.CommandType.Players);
-                    await _updateClient.SendCommandAsync(UpdateClient.CommandType.Bans);
+                    await _beServer.SendCommandAsync(BEServer.CommandType.Players);
+                    await _beServer.SendCommandAsync(BEServer.CommandType.Bans);
                 };
             }
 
-            _updateClient.ConnectingHandler += (s, e) => RaisePropertyChanged("Connected");
+            _beServer.ConnectingHandler += (s, e) => RaisePropertyChanged("Connected");
 
 
-            PlayersViewModel = new ServerMonitorPlayerViewModel(_log, currentServer, _updateClient);
+            PlayersViewModel = new ServerMonitorPlayerViewModel(_log, currentServer, _beServer);
 
             if (!console)
             {
-                BansViewModel = new ServerMonitorBansViewModel(_log, currentServer.Id, _updateClient);
+                BansViewModel = new ServerMonitorBansViewModel(_log, currentServer.Id, _beServer);
                 AdminsViewModel = new ServerMonitorAdminsViewModel(_log, currentServer,
-                    new ActionCommand(() => _updateClient.SendCommandAsync(UpdateClient.CommandType.Admins)));
-                ManageServerViewModel = new ServerMonitorManageServerViewModel(_log, currentServer.Id, _updateClient);
-                PlayerListModelView = new PlayerListModelView(_log, _updateClient, currentServer.Id);
+                    new ActionCommand(() => _beServer.SendCommandAsync(BEServer.CommandType.Admins)));
+                ManageServerViewModel = new ServerMonitorManageServerViewModel(_log, currentServer.Id, _beServer);
+                PlayerListModelView = new PlayerListModelView(_log, _beServer, currentServer.Id);
             }
 
-            ChatViewModel = new ServerMonitorChatViewModel(_log, currentServer.Id, _updateClient);
-            _updateClientPeriodic = new UpdateClientPeriodic(_updateClient, log);
+            ChatViewModel = new ServerMonitorChatViewModel(_log, currentServer.Id, _beServer);
+            _updateClientPeriodic = new UpdateClientPeriodic(_beServer, log);
             _updateClientPeriodic.Start();
         }
 
@@ -91,7 +91,7 @@ namespace Arma3BEClient.ViewModel
 
         public bool Connected
         {
-            get { return _updateClient.Connected; }
+            get { return _beServer.Connected; }
         }
 
         public static Color GetMessageColor(ChatMessage message)
@@ -131,19 +131,19 @@ namespace Arma3BEClient.ViewModel
             return color;
         }
 
-        private void _updateClient_DisconnectHandler(object sender, EventArgs e)
+        private void BeServerDisconnectHandler(object sender, EventArgs e)
         {
             RaisePropertyChanged("Connected");
         }
 
-        private async void _updateClient_ConnectHandler(object sender, EventArgs e)
+        private async void BeServerConnectHandler(object sender, EventArgs e)
         {
-            await _updateClient.SendCommandAsync(UpdateClient.CommandType.Players);
+            await _beServer.SendCommandAsync(BEServer.CommandType.Players);
             if (!_console)
             {
-                await _updateClient.SendCommandAsync(UpdateClient.CommandType.Bans);
-                await _updateClient.SendCommandAsync(UpdateClient.CommandType.Admins);
-                await _updateClient.SendCommandAsync(UpdateClient.CommandType.Missions);
+                await _beServer.SendCommandAsync(BEServer.CommandType.Bans);
+                await _beServer.SendCommandAsync(BEServer.CommandType.Admins);
+                await _beServer.SendCommandAsync(BEServer.CommandType.Missions);
             }
 
             RaisePropertyChanged("Connected");
@@ -153,8 +153,8 @@ namespace Arma3BEClient.ViewModel
         {
             try
             {
-                if (!_updateClient.Connected)
-                    _updateClient.Connect();
+                if (!_beServer.Connected)
+                    _beServer.Connect();
             }
             catch (Exception ex)
             {
@@ -166,8 +166,8 @@ namespace Arma3BEClient.ViewModel
         {
             base.DisposeManagedResources();
             _updateClientPeriodic.Dispose();
-            _updateClient.Disconnect();
-            _updateClient.Dispose();
+            _beServer.Disconnect();
+            _beServer.Dispose();
         }
 
         #region ViewModels

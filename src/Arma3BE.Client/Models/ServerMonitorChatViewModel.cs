@@ -16,22 +16,22 @@ namespace Arma3BEClient.Models
         private readonly ChatHelper _chatHelper;
         private readonly ILog _log;
         private readonly Guid _serverId;
-        private readonly UpdateClient _updateClient;
+        private readonly BEServer _beServer;
         private bool _autoScroll;
         private bool _enableChat;
         private string _inputMessage;
 
-        public ServerMonitorChatViewModel(ILog log, Guid serverId, UpdateClient updateClient)
+        public ServerMonitorChatViewModel(ILog log, Guid serverId, BEServer beServer)
         {
             _log = log;
             _serverId = serverId;
-            _updateClient = updateClient;
+            _beServer = beServer;
 
             AutoScroll = true;
             EnableChat = true;
 
             _chatHelper = new ChatHelper(_log, _serverId);
-            _updateClient.ChatMessageHandler += _updateClient_ChatMessageHandler;
+            _beServer.ChatMessageHandler += BeServerChatMessageHandler;
 
             ShowHistoryCommand = new ActionCommand(() =>
             {
@@ -82,7 +82,7 @@ namespace Arma3BEClient.Models
             if (handler != null) handler(this, new ServerMonitorChatViewModelEventArgs(e));
         }
 
-        private void _updateClient_ChatMessageHandler(object sender, ChatMessage e)
+        private void BeServerChatMessageHandler(object sender, ChatMessage e)
         {
             _chatHelper.RegisterChatMessage(e);
             OnChatMessageEventHandler(e);
@@ -94,7 +94,7 @@ namespace Arma3BEClient.Models
             {
                 var adminName = SettingsStore.Instance.AdminName;
                 var message = string.Format(" -1 {0}: {1}", adminName, rawmessage);
-                _updateClient.SendCommandAsync(UpdateClient.CommandType.Say, message);
+                _beServer.SendCommandAsync(BEServer.CommandType.Say, message);
             }
 
             InputMessage = string.Empty;

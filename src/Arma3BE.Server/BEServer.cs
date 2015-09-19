@@ -10,7 +10,7 @@ using BattleNET;
 
 namespace Arma3BE.Server
 {
-    public sealed class UpdateClient : DisposeObject
+    public sealed class BEServer : DisposeObject
     {
         public enum CommandType
         {
@@ -48,7 +48,7 @@ namespace Arma3BE.Server
         private Thread _thread;
 
 
-        public UpdateClient(string host, int port, string password, ILog log)
+        public BEServer(string host, int port, string password, ILog log)
         {
             _host = host;
             _port = port;

@@ -9,15 +9,15 @@ namespace Arma3BEClient.Helpers
     public class UpdateClientPeriodic : DisposeObject
     {
         private readonly ILog _log;
-        private readonly UpdateClient _updateClient;
+        private readonly BEServer _beServer;
         //private readonly Timer _updateTimerPlayers;
         //private readonly Timer _updateTimerBans;
         //private readonly Timer _updateTimerAdmins;
         private readonly Timer _updateTimerKeepAlive;
 
-        public UpdateClientPeriodic(UpdateClient updateClient, ILog log)
+        public UpdateClientPeriodic(BEServer beServer, ILog log)
         {
-            _updateClient = updateClient;
+            _beServer = beServer;
             _log = log;
 
 
@@ -25,9 +25,9 @@ namespace Arma3BEClient.Helpers
             //{
             //    try
             //    {
-            //        if (_updateClient.Connected)
+            //        if (_beServer.Connected)
             //        {
-            //            _updateClient.SendCommand(UpdateClient.CommandType.Players);
+            //            _beServer.SendCommand(BEServer.CommandType.Players);
 
             //        }
             //    }
@@ -41,9 +41,9 @@ namespace Arma3BEClient.Helpers
             //{
             //    try
             //    {
-            //        if (_updateClient.Connected)
+            //        if (_beServer.Connected)
             //        {
-            //            _updateClient.SendCommand(UpdateClient.CommandType.Bans);
+            //            _beServer.SendCommand(BEServer.CommandType.Bans);
 
             //        }
             //    }
@@ -57,9 +57,9 @@ namespace Arma3BEClient.Helpers
             //{
             //    try
             //    {
-            //        if (_updateClient.Connected)
+            //        if (_beServer.Connected)
             //        {
-            //            _updateClient.SendCommand(UpdateClient.CommandType.Admins);
+            //            _beServer.SendCommand(BEServer.CommandType.Admins);
 
             //        }
             //    }
@@ -74,10 +74,10 @@ namespace Arma3BEClient.Helpers
             {
                 try
                 {
-                    if (!_updateClient.Connected && !_updateClient.Disposed)
+                    if (!_beServer.Connected && !_beServer.Disposed)
                     {
-                        _updateClient.Disconnect();
-                        _updateClient.Connect();
+                        _beServer.Disconnect();
+                        _beServer.Connect();
                     }
                 }
                 catch (Exception e)
