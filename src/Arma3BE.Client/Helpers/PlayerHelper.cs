@@ -133,7 +133,9 @@ namespace Arma3BEClient.Helpers
                 var filterUsers = result.FirstOrDefault(x => !NameRegex.IsMatch(x.Name));
                 if (filterUsers != null)
                 {
+#pragma warning disable 4014
                     KickAsync(filterUsers, "bot: Fill Nickname");
+#pragma warning restore 4014
                 }
 
 
@@ -200,12 +202,16 @@ namespace Arma3BEClient.Helpers
                 }
 
 
+#pragma warning disable 4014
                 _beServer.SendCommandAsync(CommandType.Bans);
+#pragma warning restore 4014
             }
             else
             {
+#pragma warning disable 4014
                 _beServer.SendCommandAsync(CommandType.AddBan,
-                    string.Format("{0} {1} {2}", guid, minutes, reason));
+#pragma warning restore 4014
+                    $"{guid} {minutes} {reason}");
             }
         }
 
@@ -237,7 +243,9 @@ namespace Arma3BEClient.Helpers
             }
 
 
+#pragma warning disable 4014
             _beServer.SendCommandAsync(CommandType.Players);
+
             _beServer.SendCommandAsync(CommandType.Bans);
         }
     }

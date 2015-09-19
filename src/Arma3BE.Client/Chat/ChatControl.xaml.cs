@@ -46,7 +46,7 @@ namespace Arma3BEClient.Chat
             Model.SendMessage();
         }
 
-        private void KeyDown(object sender, KeyEventArgs e)
+        private new void KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {

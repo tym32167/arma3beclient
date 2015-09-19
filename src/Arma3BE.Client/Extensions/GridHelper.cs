@@ -45,7 +45,7 @@ namespace Arma3BEClient.Extensions
                                     Clipboard.SetText(val.ToString());
                                 }
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                             }
                         }
@@ -126,7 +126,7 @@ namespace Arma3BEClient.Extensions
                                     Clipboard.SetText(val.ToString());
                                 }
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                             }
                         }

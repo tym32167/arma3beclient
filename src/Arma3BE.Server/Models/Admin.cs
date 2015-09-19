@@ -59,7 +59,7 @@ namespace Arma3BE.Server.Models
 
                 return null;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }

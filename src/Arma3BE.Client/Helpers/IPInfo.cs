@@ -30,7 +30,7 @@ namespace Arma3BEClient.Helpers
                     return city.Country.Name;
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return string.Empty;
             }

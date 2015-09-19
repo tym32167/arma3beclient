@@ -77,7 +77,7 @@ namespace Arma3BEClient.Boxes
 
                     return str;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return new[] {string.Empty};
                 }
