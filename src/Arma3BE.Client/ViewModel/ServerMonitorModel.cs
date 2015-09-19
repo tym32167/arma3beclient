@@ -15,7 +15,7 @@ namespace Arma3BEClient.ViewModel
     {
         private readonly bool _console;
         private readonly ILog _log;
-        private readonly BEServer _beServer;
+        private readonly IBEServer _beServer;
         private readonly UpdateClientPeriodic _updateClientPeriodic;
 
         public ServerMonitorModel(ServerInfo currentServer, ILog log, bool console = false)

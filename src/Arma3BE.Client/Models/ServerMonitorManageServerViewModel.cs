@@ -13,11 +13,11 @@ namespace Arma3BEClient.Models
     {
         private readonly ILog _log;
         private readonly Guid _serverId;
-        private readonly BEServer _beServer;
+        private readonly IBEServer _beServer;
         private IEnumerable<Mission> _missions;
         private Mission _selectedMission;
 
-        public ServerMonitorManageServerViewModel(ILog log, Guid serverId, BEServer beServer)
+        public ServerMonitorManageServerViewModel(ILog log, Guid serverId, IBEServer beServer)
         {
             _log = log;
             _serverId = serverId;

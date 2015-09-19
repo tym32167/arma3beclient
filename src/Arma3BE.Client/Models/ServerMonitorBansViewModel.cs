@@ -20,9 +20,9 @@ namespace Arma3BEClient.Models
         private readonly ILog _log;
         private readonly PlayerHelper _playerHelper;
         private readonly Guid _serverInfoId;
-        private readonly BEServer _beServer;
+        private readonly IBEServer _beServer;
 
-        public ServerMonitorBansViewModel(ILog log, Guid serverInfoId, BEServer beServer)
+        public ServerMonitorBansViewModel(ILog log, Guid serverInfoId, IBEServer beServer)
             : base(new ActionCommand(() => beServer.SendCommandAsync(CommandType.Bans)))
         {
             _log = log;

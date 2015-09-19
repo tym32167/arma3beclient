@@ -26,5 +26,6 @@ namespace Arma3BE.Server
         void Disconnect();
 
         bool Connected { get; }
+        bool Disposed { get; }
     }
 }

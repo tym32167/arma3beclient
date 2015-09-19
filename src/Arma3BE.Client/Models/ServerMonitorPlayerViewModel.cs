@@ -14,10 +14,10 @@ namespace Arma3BEClient.Models
     {
         private readonly ILog _log;
         internal readonly PlayerHelper _playerHelper;
-        private readonly BEServer _beServer;
+        private readonly IBEServer _beServer;
         private PlayerView _selectedPlayer;
 
-        public ServerMonitorPlayerViewModel(ILog log, ServerInfo serverInfo, BEServer beServer)
+        public ServerMonitorPlayerViewModel(ILog log, ServerInfo serverInfo, IBEServer beServer)
             : base(new ActionCommand(() => beServer.SendCommandAsync(CommandType.Players)))
         {
             _log = log;

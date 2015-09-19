@@ -16,12 +16,12 @@ namespace Arma3BEClient.ViewModel
     {
         private readonly ILog _log;
         private readonly Guid _serverId;
-        private readonly BEServer _beServer;
+        private readonly IBEServer _beServer;
         private int _playerCount;
         internal PlayerHelper _playerHelper;
         private ICommand _refreshCommand;
 
-        public PlayerListModelView(ILog log, BEServer beServer, Guid serverId)
+        public PlayerListModelView(ILog log, IBEServer beServer, Guid serverId)
         {
             _log = log;
             _beServer = beServer;

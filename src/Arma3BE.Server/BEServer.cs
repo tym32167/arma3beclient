@@ -57,103 +57,6 @@ namespace Arma3BE.Server
         public event EventHandler DisconnectHandler;
 
 
-        private void OnMissionHandler(IEnumerable<Mission> e)
-        {
-            var handler = MissionHandler;
-            if (handler != null) handler(this, new UpdateClientEventArgs<IEnumerable<Mission>>(e));
-        }
-
-        private void OnConnectingHandler()
-        {
-            var handler = ConnectingHandler;
-            if (handler != null) handler(this, EventArgs.Empty);
-        }
-
-        private void OnBanLog()
-        {
-            var handler = BanLog;
-            if (handler != null) handler(this, EventArgs.Empty);
-        }
-
-        private void OnPlayerLog()
-        {
-            var handler = PlayerLog;
-            if (handler != null) handler(this, EventArgs.Empty);
-        }
-
-        private void OnRConAdminLog()
-        {
-            var handler = RConAdminLog;
-            if (handler != null) handler(this, EventArgs.Empty);
-        }
-
-        private void OnAdminHandler(IEnumerable<Admin> e)
-        {
-            var handler = AdminHandler;
-            if (handler != null) handler(this, new UpdateClientEventArgs<IEnumerable<Admin>>(e));
-        }
-
-        private void OnChatMessageHandler(ChatMessage e)
-        {
-            var handler = ChatMessageHandler;
-            if (handler != null) handler(this, e);
-        }
-
-
-        private void OnBanHandler(IEnumerable<Ban> e)
-        {
-            var handler = BanHandler;
-            if (handler != null) handler(this, new UpdateClientEventArgs<IEnumerable<Ban>>(e));
-        }
-
-        private void OnDisconnectHandler()
-        {
-            var handler = DisconnectHandler;
-            if (handler != null) handler(this, EventArgs.Empty);
-        }
-
-
-        private void OnConnectHandler()
-        {
-            var handler = ConnectHandler;
-            if (handler != null) handler(this, EventArgs.Empty);
-        }
-
-
-        private void OnPlayerHandler(IEnumerable<Player> e)
-        {
-            var handler = PlayerHandler;
-            if (handler != null) handler(this, new UpdateClientEventArgs<IEnumerable<Player>>(e));
-        }
-
-        private void _battlEyeClient_BattlEyeDisconnected(BattlEyeDisconnectEventArgs args)
-        {
-            OnDisconnectHandler();
-        }
-
-        private void battlEyeClient_BattlEyeMessageReceived(BattlEyeMessageEventArgs args)
-        {
-            try
-            {
-                var message = new ServerMessage(args.Id, args.Message);
-
-                lock (_lock)
-                {
-                    ProcessMessage(message);
-                }
-            }
-            catch (Exception e)
-            {
-                _log.Error(e);
-            }
-        }
-
-        private void battlEyeClient_BattlEyeConnected(BattlEyeConnectEventArgs args)
-        {
-            OnConnectHandler();
-        }
-
-
         public Task SendCommandAsync(CommandType type, string parameters = null)
         {
             return Task.Run(() => SendCommand(type, parameters));
@@ -164,8 +67,7 @@ namespace Arma3BE.Server
         {
             lock (_lock)
             {
-                _log.Info(string.Format("SERVER: {0}:{1} - TRY TO RCON COMMAND {2} WITH PARAMS {3}", _host, _port, type,
-                    parameters));
+                _log.Info($"SERVER: {_host}:{_port} - TRY TO RCON COMMAND {type} WITH PARAMS {parameters}");
 
 
                 if (!Connected)
@@ -256,11 +158,138 @@ namespace Arma3BE.Server
                     case CommandType.LoadScripts:
                         _battlEyeClient.SendCommand(BattlEyeCommand.LoadScripts);
                         break;
-
-                    default:
-                        break;
                 }
             }
+        }
+
+
+        public void Connect()
+        {
+            _log.Info($"{_host}:{_port} Update client - connect");
+
+            InitClients();
+
+            if (_battlEyeClient != null && !_battlEyeClient.Connected)
+            {
+                OnConnectingHandler();
+                if (_thread != null && _thread.IsAlive) _thread.Abort();
+                _thread = new Thread(state =>
+                {
+                    Thread.Sleep(100);
+                    _battlEyeClient.Connect();
+                }) {IsBackground = true};
+                _thread.Start();
+            }
+        }
+
+        public void Disconnect()
+        {
+            _log.Info($"{_host}:{_port} Update client - Disconnect");
+            try
+            {
+                ReleaseClient();
+            }
+            catch
+            {
+                // ignored
+            }
+        }
+
+
+        private void OnMissionHandler(IEnumerable<Mission> e)
+        {
+            var handler = MissionHandler;
+            handler?.Invoke(this, new UpdateClientEventArgs<IEnumerable<Mission>>(e));
+        }
+
+        private void OnConnectingHandler()
+        {
+            var handler = ConnectingHandler;
+            handler?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnBanLog()
+        {
+            var handler = BanLog;
+            handler?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnPlayerLog()
+        {
+            var handler = PlayerLog;
+            handler?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnRConAdminLog()
+        {
+            var handler = RConAdminLog;
+            handler?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnAdminHandler(IEnumerable<Admin> e)
+        {
+            var handler = AdminHandler;
+            handler?.Invoke(this, new UpdateClientEventArgs<IEnumerable<Admin>>(e));
+        }
+
+        private void OnChatMessageHandler(ChatMessage e)
+        {
+            var handler = ChatMessageHandler;
+            handler?.Invoke(this, e);
+        }
+
+
+        private void OnBanHandler(IEnumerable<Ban> e)
+        {
+            var handler = BanHandler;
+            handler?.Invoke(this, new UpdateClientEventArgs<IEnumerable<Ban>>(e));
+        }
+
+        private void OnDisconnectHandler()
+        {
+            var handler = DisconnectHandler;
+            handler?.Invoke(this, EventArgs.Empty);
+        }
+
+
+        private void OnConnectHandler()
+        {
+            var handler = ConnectHandler;
+            handler?.Invoke(this, EventArgs.Empty);
+        }
+
+
+        private void OnPlayerHandler(IEnumerable<Player> e)
+        {
+            var handler = PlayerHandler;
+            handler?.Invoke(this, new UpdateClientEventArgs<IEnumerable<Player>>(e));
+        }
+
+        private void _battlEyeClient_BattlEyeDisconnected(BattlEyeDisconnectEventArgs args)
+        {
+            OnDisconnectHandler();
+        }
+
+        private void battlEyeClient_BattlEyeMessageReceived(BattlEyeMessageEventArgs args)
+        {
+            try
+            {
+                var message = new ServerMessage(args.Id, args.Message);
+
+                lock (_lock)
+                {
+                    ProcessMessage(message);
+                }
+            }
+            catch (Exception e)
+            {
+                _log.Error(e);
+            }
+        }
+
+        private void battlEyeClient_BattlEyeConnected(BattlEyeConnectEventArgs args)
+        {
+            OnConnectHandler();
         }
 
 
@@ -323,8 +352,6 @@ namespace Arma3BE.Server
 
                     OnChatMessageHandler(unknownMessage);
                     break;
-                default:
-                    break;
             }
 
             RegisterMessage(message);
@@ -338,29 +365,9 @@ namespace Arma3BE.Server
         }
 
 
-        public void Connect()
-        {
-            _log.Info(string.Format("{0}:{1} Update client - connect", _host, _port));
-
-            InitClients();
-
-            if (_battlEyeClient != null && !_battlEyeClient.Connected)
-            {
-                OnConnectingHandler();
-                if (_thread != null && _thread.IsAlive) _thread.Abort();
-                _thread = new Thread(state =>
-                {
-                    Thread.Sleep(100);
-                    _battlEyeClient.Connect();
-                }) {IsBackground = true};
-                _thread.Start();
-            }
-        }
-
-
         private void InitClients()
         {
-            _log.Info(string.Format("{0}:{1} Update client - InitClients", _host, _port));
+            _log.Info($"{_host}:{_port} Update client - InitClients");
             lock (_lock)
             {
                 if (_battlEyeClient != null) ReleaseClient();
@@ -376,7 +383,7 @@ namespace Arma3BE.Server
 
         private void ReleaseClient()
         {
-            _log.Info(string.Format("{0}:{1} Update client - ReleaseClient", _host, _port));
+            _log.Info($"{_host}:{_port} Update client - ReleaseClient");
             lock (_lock)
             {
                 if (_battlEyeClient != null)
@@ -397,18 +404,6 @@ namespace Arma3BE.Server
             }
         }
 
-        public void Disconnect()
-        {
-            _log.Info(string.Format("{0}:{1} Update client - Disconnect", _host, _port));
-            try
-            {
-                ReleaseClient();
-            }
-            catch
-            {
-            }
-        }
-
 
         protected override void DisposeUnManagedResources()
         {
@@ -419,7 +414,7 @@ namespace Arma3BE.Server
 
                 ReleaseClient();
 
-                if (_thread != null) _thread.Abort();
+                _thread?.Abort();
                 GC.SuppressFinalize(this);
             }
             finally

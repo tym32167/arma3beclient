@@ -17,12 +17,12 @@ namespace Arma3BEClient.Helpers
     {
         private readonly ILog _log;
         private readonly Guid _serverId;
-        private readonly BEServer _beServer;
+        private readonly IBEServer _beServer;
 
         private readonly Regex NameRegex = new Regex("[A-Za-zА-Яа-я0-9]+",
             RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
-        public PlayerHelper(ILog log, Guid serverId, BEServer beServer)
+        public PlayerHelper(ILog log, Guid serverId, IBEServer beServer)
         {
             _log = log;
             _serverId = serverId;
