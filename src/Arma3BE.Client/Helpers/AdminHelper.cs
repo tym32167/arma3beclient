@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
@@ -16,35 +15,12 @@ namespace Arma3BEClient.Helpers
             _currentServer = currentServer;
         }
 
-        public bool RegisterAdmins(IEnumerable<Admin> list)
+        public void RegisterAdmins(IEnumerable<Admin> list)
         {
-            var l = list.ToList();
-
-            var ips = l.Select(x => x.IP).ToList();
-
-            using (var context = new Arma3BeClientContext())
+            using (var repo = new Arma3BERepository())
             {
-                var adminsdb = context.Admins.Where(x => x.ServerId == _currentServer.Id && ips.Contains(x.IP)).ToList();
-
-                foreach (var admin in l)
-                {
-                    var db = adminsdb.FirstOrDefault(x => x.IP == admin.IP /* && x.Port == admin.Port*/);
-                    if (db == null)
-                    {
-                        context.Admins.Add(new Libs.ModelCompact.Admin
-                        {
-                            ServerId = _currentServer.Id,
-                            IP = admin.IP,
-                            Port = admin.Port,
-                            Num = admin.Num
-                        });
-                    }
-                }
-
-                context.SaveChanges();
+                repo.AddOrUpdate(list, _currentServer.Id);
             }
-
-            return true;
         }
     }
 }

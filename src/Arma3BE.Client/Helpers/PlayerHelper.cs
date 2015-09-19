@@ -145,11 +145,11 @@ namespace Arma3BEClient.Helpers
 
         public async Task KickAsync(PlayerView player, string reason, bool isAuto = false)
         {
-            var totalreason = string.Format("[{0}][{1}] {2}", SettingsStore.Instance.AdminName,
-                DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss"), reason);
+            var totalreason =
+                $"[{SettingsStore.Instance.AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
 
             await _beServer.SendCommandAsync(CommandType.Kick,
-                string.Format("{0} {1}", player.Num, totalreason));
+                $"{player.Num} {totalreason}");
 
             if (!isAuto)
             {
@@ -161,10 +161,10 @@ namespace Arma3BEClient.Helpers
                         user.Notes.Add(new Note
                         {
                             PlayerId = user.Id,
-                            Text = string.Format("Kicked with reason: {0}", totalreason)
+                            Text = $"Kicked with reason: {totalreason}"
                         });
 
-                        user.Comment = string.Format("{0} | {1}", user.Comment, reason);
+                        user.Comment = $"{user.Comment} | {reason}";
                         context.SaveChanges();
                     }
                 }
@@ -176,12 +176,12 @@ namespace Arma3BEClient.Helpers
         {
             if (!syncMode)
             {
-                var totalreason = string.Format("[{0}][{1}] {2}", SettingsStore.Instance.AdminName,
-                    DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss"), reason);
+                var totalreason =
+                    $"[{SettingsStore.Instance.AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
 
 
                 await _beServer.SendCommandAsync(CommandType.AddBan,
-                    string.Format("{0} {1} {2}", guid, minutes, totalreason));
+                    $"{guid} {minutes} {totalreason}");
 
 
                 using (var context = new Arma3BeClientContext())
@@ -217,12 +217,12 @@ namespace Arma3BEClient.Helpers
 
         public async void BanGUIDOnline(string num, string guid, string reason, long minutes)
         {
-            var totalreason = string.Format("[{0}][{1}] {2}", SettingsStore.Instance.AdminName,
-                DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss"), reason);
+            var totalreason =
+                $"[{SettingsStore.Instance.AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
 
 
             await _beServer.SendCommandAsync(CommandType.Ban,
-                string.Format("{0} {1} {2}", num, minutes, totalreason));
+                $"{num} {minutes} {totalreason}");
 
 
             using (var context = new Arma3BeClientContext())
@@ -233,10 +233,10 @@ namespace Arma3BEClient.Helpers
                     user.Notes.Add(new Note
                     {
                         PlayerId = user.Id,
-                        Text = string.Format("Baned with reason: {0}", totalreason)
+                        Text = $"Baned with reason: {totalreason}"
                     });
 
-                    user.Comment = string.Format("{0} | {1}", user.Comment, reason);
+                    user.Comment = $"{user.Comment} | {reason}";
 
                     context.SaveChanges();
                 }

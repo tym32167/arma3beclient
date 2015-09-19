@@ -66,7 +66,7 @@ namespace Arma3BEClient.Helpers
 
                                 if (string.IsNullOrEmpty(player.Comment) || !player.Comment.Contains(comm))
                                 {
-                                    player.Comment = string.Format("{0} | {1}", player.Comment, comm);
+                                    player.Comment = $"{player.Comment} | {comm}";
                                 }
                             }
                         }
@@ -97,7 +97,7 @@ namespace Arma3BEClient.Helpers
                         var comm = replace.Replace(ban.Reason, string.Empty).Trim();
                         if (player != null && (string.IsNullOrEmpty(player.Comment) || !player.Comment.Contains(comm)))
                         {
-                            player.Comment = string.Format("{0} | {1}", player.Comment, comm);
+                            player.Comment = $"{player.Comment} | {comm}";
                         }
 
                         //  _log.InfoFormat("Ban added : {0}", ban);

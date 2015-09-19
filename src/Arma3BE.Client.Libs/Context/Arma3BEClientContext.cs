@@ -1,4 +1,7 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 using Arma3BEClient.Libs.ModelCompact;
 
 namespace Arma3BEClient.Libs.Context
@@ -29,5 +32,40 @@ namespace Arma3BEClient.Libs.Context
 
     internal class DbInitializer : CreateDatabaseIfNotExists<Arma3BeClientContext>
     {
+    }
+
+    public class Arma3BERepository : IDisposable
+    {
+        public void AddOrUpdate(IEnumerable<Arma3BE.Server.Models.Admin> admins, Guid serverId)
+        {
+            var l = admins.ToList();
+            var ips = l.Select(x => x.IP).ToList();
+
+            using (var context = new Arma3BeClientContext())
+            {
+                var adminsdb = context.Admins.Where(x => x.ServerId == serverId && ips.Contains(x.IP)).ToList();
+
+                foreach (var admin in l)
+                {
+                    var db = adminsdb.FirstOrDefault(x => x.IP == admin.IP);
+                    if (db == null)
+                    {
+                        context.Admins.Add(new Admin
+                        {
+                            ServerId = serverId,
+                            IP = admin.IP,
+                            Port = admin.Port,
+                            Num = admin.Num
+                        });
+                    }
+                }
+
+                context.SaveChanges();
+            }
+        }
+
+        public void Dispose()
+        {
+        }
     }
 }

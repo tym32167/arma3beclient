@@ -63,6 +63,10 @@
       <Project>{d507e532-7de6-4028-9dbe-aa76c54cc92a}</Project>
       <Name>Arma3BE.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Server\Arma3BE.Server.csproj">
+      <Project>{992fab3c-6505-41e4-a4d0-4d0657661695}</Project>
+      <Name>Arma3BE.Server</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
