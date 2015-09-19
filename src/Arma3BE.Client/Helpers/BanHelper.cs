@@ -24,13 +24,14 @@ namespace Arma3BEClient.Helpers
         public bool RegisterBans(IEnumerable<Ban> list)
         {
             var c = list.ToList();
+            var userIds = c.Select(x => x.GuidIp).Distinct().ToArray();
 
             if (!HaveChanges(c, x => x.Num)) return false;
 
 
             using (var context = new Arma3BeClientContext())
             {
-                var db = context.Bans.Where(x => x.IsActive && x.ServerId == _currentServerId).ToList();
+                var db = context.Bans.Where(x => x.IsActive && x.ServerId == _currentServerId && userIds.Contains(x.GuidIp)).ToList();
 
                 var ids = c.Select(x => x.GuidIp).ToList();
                 ids.AddRange(db.Select(x => x.GuidIp).ToList());
@@ -61,8 +62,6 @@ namespace Arma3BEClient.Helpers
                                 var ind2 = comm.LastIndexOf(']');
 
                                 if (ind1 > -1 && ind2 > ind1) comm = comm.Remove(ind1, ind2 - ind1 + 1).Trim();
-
-                                //var comm = replace.Replace(ban.Reason, string.Empty).Trim();
 
                                 if (string.IsNullOrEmpty(player.Comment) || !player.Comment.Contains(comm))
                                 {
@@ -99,8 +98,6 @@ namespace Arma3BEClient.Helpers
                         {
                             player.Comment = $"{player.Comment} | {comm}";
                         }
-
-                        //  _log.InfoFormat("Ban added : {0}", ban);
                     }
                 }
 

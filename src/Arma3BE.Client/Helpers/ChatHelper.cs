@@ -19,19 +19,9 @@ namespace Arma3BEClient.Helpers
 
         public bool RegisterChatMessage(ChatMessage message)
         {
-            if (message.Type != ChatMessage.MessageType.Unknown)
+            using (var repo = new Arma3BERepository())
             {
-                using (var context = new Arma3BeClientContext())
-                {
-                    context.ChatLog.Add(new ChatLog
-                    {
-                        Date = message.Date,
-                        ServerId = _currentServerId,
-                        Text = message.Message
-                    });
-
-                    context.SaveChangesAsync();
-                }
+                repo.AddOrUpdate(message, _currentServerId);
             }
 
             return true;

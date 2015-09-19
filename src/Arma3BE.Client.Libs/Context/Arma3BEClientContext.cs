@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using Arma3BE.Server.Models;
 using Arma3BEClient.Libs.ModelCompact;
+using Admin = Arma3BEClient.Libs.ModelCompact.Admin;
+using Ban = Arma3BEClient.Libs.ModelCompact.Ban;
+using Player = Arma3BEClient.Libs.ModelCompact.Player;
 
 namespace Arma3BEClient.Libs.Context
 {
@@ -61,6 +65,21 @@ namespace Arma3BEClient.Libs.Context
                 }
 
                 context.SaveChanges();
+            }
+        }
+
+        public void AddOrUpdate(ChatMessage message, Guid serverId)
+        {
+            using (var context = new Arma3BeClientContext())
+            {
+                context.ChatLog.Add(new ChatLog
+                {
+                    Date = message.Date,
+                    ServerId = serverId,
+                    Text = message.Message
+                });
+
+                context.SaveChangesAsync();
             }
         }
 
