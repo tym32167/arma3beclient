@@ -14,7 +14,7 @@ namespace Arma3BEClient.Steam
             EndPoint = endPoint;
         }
 
-        public IPEndPoint EndPoint { get; private set; }
+        public IPEndPoint EndPoint { get; }
 
 
         public ServerRulesResult GetServerRulesSync(GetServerInfoSettings settings)
@@ -27,12 +27,12 @@ namespace Arma3BEClient.Steam
 
                 client.Connect(EndPoint);
                 var requestPacket = new List<byte>();
-                requestPacket.AddRange(new Byte[] {0xFF, 0xFF, 0xFF, 0xFF, 0x56});
+                requestPacket.AddRange(new byte[] {0xFF, 0xFF, 0xFF, 0xFF, 0x56});
                 requestPacket.AddRange(BitConverter.GetBytes(-1));
                 client.Send(requestPacket.ToArray(), requestPacket.ToArray().Length);
-                byte[] responseData = client.Receive(ref localEndpoint);
+                var responseData = client.Receive(ref localEndpoint);
                 requestPacket.Clear();
-                requestPacket.AddRange(new Byte[] {0xFF, 0xFF, 0xFF, 0xFF, 0x56});
+                requestPacket.AddRange(new byte[] {0xFF, 0xFF, 0xFF, 0xFF, 0x56});
                 requestPacket.AddRange(responseData.Skip(5).Take(4));
                 client.Send(requestPacket.ToArray(), requestPacket.ToArray().Length);
                 responseData = client.Receive(ref localEndpoint);
@@ -52,13 +52,13 @@ namespace Arma3BEClient.Steam
                 client.Connect(EndPoint);
 
                 var requestPacket = new List<byte>();
-                requestPacket.AddRange(new Byte[] {0xFF, 0xFF, 0xFF, 0xFF, 0x55});
+                requestPacket.AddRange(new byte[] {0xFF, 0xFF, 0xFF, 0xFF, 0x55});
                 requestPacket.AddRange(BitConverter.GetBytes(-1));
 
                 client.Send(requestPacket.ToArray(), requestPacket.ToArray().Length);
-                byte[] responseData = client.Receive(ref localEndpoint);
+                var responseData = client.Receive(ref localEndpoint);
                 requestPacket.Clear();
-                requestPacket.AddRange(new Byte[] {0xFF, 0xFF, 0xFF, 0xFF, 0x55});
+                requestPacket.AddRange(new byte[] {0xFF, 0xFF, 0xFF, 0xFF, 0x55});
                 requestPacket.AddRange(responseData.Skip(5).Take(4));
                 client.Send(requestPacket.ToArray(), requestPacket.ToArray().Length);
                 responseData = client.Receive(ref localEndpoint);
@@ -78,13 +78,13 @@ namespace Arma3BEClient.Steam
 
                 client.Connect(EndPoint);
                 var requestPacket = new List<byte>();
-                requestPacket.AddRange(new Byte[] {0xFF, 0xFF, 0xFF, 0xFF});
+                requestPacket.AddRange(new byte[] {0xFF, 0xFF, 0xFF, 0xFF});
                 requestPacket.Add(0x54);
                 requestPacket.AddRange(Encoding.ASCII.GetBytes("Source Engine Query"));
                 requestPacket.Add(0x00);
                 var requestData = requestPacket.ToArray();
                 client.Send(requestData, requestData.Length);
-                byte[] data = client.Receive(ref localEndPoint);
+                var data = client.Receive(ref localEndPoint);
                 return ServerInfoResult.Parse(data);
             }
         }

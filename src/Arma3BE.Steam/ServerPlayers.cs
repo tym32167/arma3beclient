@@ -6,14 +6,6 @@ namespace Arma3BEClient.Steam
     {
         public byte PlayerCount { get; set; }
 
-        public class PlayerInfo
-        {
-            public byte N { get; set; }
-            public string Name { get; set; }
-            public long Score { get; set; }
-            public TimeSpan Time { get; set; }
-        }
-
         public PlayerInfo[] Players { get; set; }
 
 
@@ -47,6 +39,14 @@ namespace Arma3BEClient.Steam
 
 
             return result;
+        }
+
+        public class PlayerInfo
+        {
+            public byte N { get; set; }
+            public string Name { get; set; }
+            public long Score { get; set; }
+            public TimeSpan Time { get; set; }
         }
     }
 }

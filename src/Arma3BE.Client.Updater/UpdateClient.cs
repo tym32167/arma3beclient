@@ -7,23 +7,63 @@ using Arma3BEClient.Common.Core;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Updater.Models;
 using BattleNET;
-using Admin = Arma3BEClient.Updater.Models.Admin;
 
 namespace Arma3BEClient.Updater
 {
     public sealed class UpdateClient : DisposeObject
     {
-        private readonly string _host;
-        private readonly int _port;
-        private readonly string _password;
-        private readonly ILog _log;
-        private BattlEyeClient _battlEyeClient;
+        public enum CommandType
+        {
+            Players,
+            Bans,
+            Admins,
+            Say,
+            AddBan,
+            Ban,
+            Kick,
+            RemoveBan,
+            Init,
+            Shutdown,
+            Reassign,
+            Restart,
+            Lock,
+            Unlock,
+            Mission,
+            Missions,
+            RConPassword,
+            MaxPing,
+            LoadBans,
+            LoadScripts,
+            LoadEvents
+        };
 
-        public bool Disposed { get; set; }
+        private readonly string _host;
+
+        private readonly object _lock = new object();
+        private readonly ILog _log;
+        private readonly string _password;
+        private readonly int _port;
+        private BattlEyeClient _battlEyeClient;
 
         private Thread _thread;
 
-        private readonly object _lock = new object();
+
+        public UpdateClient(string host, int port, string password, ILog log)
+        {
+            _host = host;
+            _port = port;
+            _password = password;
+            _log = log;
+
+            InitClients();
+        }
+
+        public bool Disposed { get; set; }
+
+        public bool Connected
+        {
+            get { return _battlEyeClient != null && _battlEyeClient.Connected; }
+        }
 
         public event EventHandler<UpdateClientEventArgs<IEnumerable<Player>>> PlayerHandler;
         public event EventHandler<UpdateClientEventArgs<IEnumerable<Ban>>> BanHandler;
@@ -50,25 +90,25 @@ namespace Arma3BEClient.Updater
 
         private void OnConnectingHandler()
         {
-            EventHandler handler = ConnectingHandler;
+            var handler = ConnectingHandler;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
         private void OnBanLog()
         {
-            EventHandler<EventArgs> handler = BanLog;
+            var handler = BanLog;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
         private void OnPlayerLog()
         {
-            EventHandler<EventArgs> handler = PlayerLog;
+            var handler = PlayerLog;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
         private void OnRConAdminLog()
         {
-            EventHandler<EventArgs> handler = RConAdminLog;
+            var handler = RConAdminLog;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
@@ -80,7 +120,7 @@ namespace Arma3BEClient.Updater
 
         private void OnChatMessageHandler(ChatMessage e)
         {
-            EventHandler<ChatMessage> handler = ChatMessageHandler;
+            var handler = ChatMessageHandler;
             if (handler != null) handler(this, e);
         }
 
@@ -93,14 +133,14 @@ namespace Arma3BEClient.Updater
 
         private void OnDisconnectHandler()
         {
-            EventHandler handler = DisconnectHandler;
+            var handler = DisconnectHandler;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
 
         private void OnConnectHandler()
         {
-            EventHandler handler = ConnectHandler;
+            var handler = ConnectHandler;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
@@ -109,17 +149,6 @@ namespace Arma3BEClient.Updater
         {
             var handler = PlayerHandler;
             if (handler != null) handler(this, new UpdateClientEventArgs<IEnumerable<Player>>(e));
-        }
-
-
-        public UpdateClient(string host, int port, string password, ILog log)
-        {
-            _host = host;
-            _port = port;
-            _password = password;
-            _log = log;
-
-            InitClients();
         }
 
         private void _battlEyeClient_BattlEyeDisconnected(BattlEyeDisconnectEventArgs args)
@@ -147,11 +176,6 @@ namespace Arma3BEClient.Updater
         private void battlEyeClient_BattlEyeConnected(BattlEyeConnectEventArgs args)
         {
             OnConnectHandler();
-        }
-
-        public bool Connected
-        {
-            get { return _battlEyeClient != null && _battlEyeClient.Connected; }
         }
 
 
@@ -265,32 +289,6 @@ namespace Arma3BEClient.Updater
         }
 
 
-        public enum CommandType
-        {
-            Players,
-            Bans,
-            Admins,
-            Say,
-            AddBan,
-            Ban,
-            Kick,
-            RemoveBan,
-            Init,
-            Shutdown,
-            Reassign,
-            Restart,
-            Lock,
-            Unlock,
-            Mission,
-            Missions,
-            RConPassword,
-            MaxPing,
-            LoadBans,
-            LoadScripts,
-            LoadEvents,
-        };
-
-
         private void ProcessMessage(ServerMessage message)
         {
             switch (message.Type)
@@ -316,7 +314,7 @@ namespace Arma3BEClient.Updater
                     break;
 
                 case ServerMessage.MessageType.ChatMessage:
-                    var chatMessage = new ChatMessage()
+                    var chatMessage = new ChatMessage
                     {
                         Date = DateTime.UtcNow,
                         Message = message.Message
@@ -342,7 +340,7 @@ namespace Arma3BEClient.Updater
                     break;
 
                 case ServerMessage.MessageType.Unknown:
-                    var unknownMessage = new ChatMessage()
+                    var unknownMessage = new ChatMessage
                     {
                         Date = DateTime.UtcNow,
                         Message = message.Message
@@ -375,7 +373,7 @@ namespace Arma3BEClient.Updater
             {
                 OnConnectingHandler();
                 if (_thread != null && _thread.IsAlive) _thread.Abort();
-                _thread = new Thread((state) =>
+                _thread = new Thread(state =>
                 {
                     Thread.Sleep(100);
                     _battlEyeClient.Connect();
@@ -459,11 +457,11 @@ namespace Arma3BEClient.Updater
 
     public class UpdateClientEventArgs<T> : EventArgs
     {
-        public T Data { get; private set; }
-
         public UpdateClientEventArgs(T data)
         {
             Data = data;
         }
+
+        public T Data { get; private set; }
     }
 }

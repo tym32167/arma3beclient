@@ -14,31 +14,30 @@ namespace Arma3BEClient.ViewModel
     public class ServerMonitorModel : DisposableViewModelBase
     {
         private readonly bool _console;
-        private readonly ServerInfo _currentServer;
         private readonly ILog _log;
         private readonly UpdateClient _updateClient;
         private readonly UpdateClientPeriodic _updateClientPeriodic;
 
         public ServerMonitorModel(ServerInfo currentServer, ILog log, bool console = false)
         {
-            _currentServer = currentServer;
+            CurrentServer = currentServer;
             _log = log;
             _console = console;
 
 
-            var host = IPInfo.GetIPAddress(_currentServer.Host);
+            var host = IPInfo.GetIPAddress(CurrentServer.Host);
 
             if (string.IsNullOrEmpty(host))
             {
-                var message = string.Format("Host is incorrect for server {0}", _currentServer.Name);
+                var message = string.Format("Host is incorrect for server {0}", CurrentServer.Name);
                 _log.Error(message);
                 throw new Exception(message);
             }
 
 
-            SteamQueryViewModel = new ServerMonitorSteamQueryViewModel(_currentServer.Host, _currentServer.Port, _log);
+            SteamQueryViewModel = new ServerMonitorSteamQueryViewModel(CurrentServer.Host, CurrentServer.Port, _log);
 
-            _updateClient = new UpdateClient(host, _currentServer.Port, _currentServer.Password, _log);
+            _updateClient = new UpdateClient(host, CurrentServer.Port, CurrentServer.Password, _log);
 
             _updateClient.PlayerHandler += (s, e) => PlayersViewModel.SetData(e.Data);
 
@@ -88,10 +87,7 @@ namespace Arma3BEClient.ViewModel
             _updateClientPeriodic.Start();
         }
 
-        public ServerInfo CurrentServer
-        {
-            get { return _currentServer; }
-        }
+        public ServerInfo CurrentServer { get; }
 
         public bool Connected
         {

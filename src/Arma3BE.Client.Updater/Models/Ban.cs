@@ -5,52 +5,35 @@ namespace Arma3BEClient.Updater.Models
 {
     public class Ban
     {
-        private readonly string _guidIp;
-        private readonly int _minutesleft;
-        private readonly int _num;
-        private readonly string _reason;
-
         public Ban(int num, string guidIp, int minutesleft, string reason)
         {
-            _num = num;
-            _guidIp = guidIp;
-            _minutesleft = minutesleft;
-            _reason = reason;
+            Num = num;
+            GuidIp = guidIp;
+            Minutesleft = minutesleft;
+            Reason = reason;
         }
 
-        public int Num
-        {
-            get { return _num; }
-        }
+        public int Num { get; }
 
-        public string GuidIp
-        {
-            get { return _guidIp; }
-        }
+        public string GuidIp { get; }
 
-        public int Minutesleft
-        {
-            get { return _minutesleft; }
-        }
+        public int Minutesleft { get; }
 
-        public string Reason
-        {
-            get { return _reason; }
-        }
+        public string Reason { get; }
 
         protected bool Equals(Ban other)
         {
-            return _num == other._num && string.Equals(_guidIp, other._guidIp) && string.Equals(_reason, other._reason);
+            return Num == other.Num && string.Equals(GuidIp, other.GuidIp) && string.Equals(Reason, other.Reason);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                var hashCode = _num;
-                hashCode = (hashCode*397) ^ (_guidIp != null ? _guidIp.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ _minutesleft;
-                hashCode = (hashCode*397) ^ (_reason != null ? _reason.GetHashCode() : 0);
+                var hashCode = Num;
+                hashCode = (hashCode*397) ^ (GuidIp != null ? GuidIp.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ Minutesleft;
+                hashCode = (hashCode*397) ^ (Reason != null ? Reason.GetHashCode() : 0);
                 return hashCode;
             }
         }

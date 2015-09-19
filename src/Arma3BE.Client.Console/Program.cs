@@ -11,7 +11,7 @@ using log4net.Config;
 
 namespace arma3beConsole
 {
-    internal class Program 
+    internal class Program
     {
         private static void Main(string[] args)
         {

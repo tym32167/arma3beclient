@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Arma3BEClient.Steam
+﻿namespace Arma3BEClient.Steam
 {
     public class ServerInfoResult
     {

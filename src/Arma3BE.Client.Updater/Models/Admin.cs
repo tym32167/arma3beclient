@@ -6,50 +6,37 @@ namespace Arma3BEClient.Updater.Models
 {
     public class Admin
     {
-        private readonly string _ip;
-        private readonly int _num;
-        private readonly int _port;
-
         public Admin(int num, string ip, int port)
         {
-            _num = num;
-            _ip = ip;
-            _port = port;
+            Num = num;
+            IP = ip;
+            Port = port;
         }
 
         [ShowInUi]
         [EnableCopy]
-        public int Num
-        {
-            get { return _num; }
-        }
+        public int Num { get; }
 
         [ShowInUi]
         [EnableCopy]
-        public string IP
-        {
-            get { return _ip; }
-        }
+        public string IP { get; }
 
         [ShowInUi]
         [EnableCopy]
-        public int Port
-        {
-            get { return _port; }
-        }
+        public int Port { get; }
 
         protected bool Equals(Admin other)
         {
-            return _num == other._num && string.Equals(_ip, other._ip) && _port == other._port;
+            return Num == other.Num && string.Equals(IP, other.IP) && Port == other.Port;
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                var hashCode = _num;
-                hashCode = (hashCode*397) ^ (_ip != null ? _ip.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ _port;
+                var hashCode = Num;
+                hashCode = (hashCode*397) ^ (IP != null ? IP.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ Port;
                 return hashCode;
             }
         }

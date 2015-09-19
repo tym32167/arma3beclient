@@ -13,14 +13,16 @@ namespace Arma3BEClient.Steam
             _bytes = bytes;
         }
 
-        public byte GetByte()
-        {
-            return _bytes[CurrentPosition++];
-        }
-
         public bool BytesLeft
         {
             get { return _bytes.Length - 1 >= CurrentPosition; }
+        }
+
+        public int CurrentPosition { get; set; }
+
+        public byte GetByte()
+        {
+            return _bytes[CurrentPosition++];
         }
 
         public string GetStringToTermination()
@@ -42,7 +44,7 @@ namespace Arma3BEClient.Steam
             return Encoding.UTF8.GetString(buffer.ToArray());
         }
 
-        public Int32 GetShort()
+        public int GetShort()
         {
             return BitConverter.ToUInt16(new[]
             {
@@ -52,14 +54,14 @@ namespace Arma3BEClient.Steam
         }
 
 
-        public Int64 GetLong()
+        public long GetLong()
         {
             return BitConverter.ToInt32(new[]
             {
                 _bytes[CurrentPosition++],
                 _bytes[CurrentPosition++],
                 _bytes[CurrentPosition++],
-                _bytes[CurrentPosition++],
+                _bytes[CurrentPosition++]
             }, 0);
         }
 
@@ -71,7 +73,7 @@ namespace Arma3BEClient.Steam
                 _bytes[CurrentPosition++],
                 _bytes[CurrentPosition++],
                 _bytes[CurrentPosition++],
-                _bytes[CurrentPosition++],
+                _bytes[CurrentPosition++]
             }, 0);
         }
 
@@ -80,7 +82,5 @@ namespace Arma3BEClient.Steam
         {
             return Encoding.ASCII.GetString(new[] {_bytes[CurrentPosition++]});
         }
-
-        public int CurrentPosition { get; set; }
     }
 }

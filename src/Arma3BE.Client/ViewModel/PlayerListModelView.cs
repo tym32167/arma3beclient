@@ -19,7 +19,6 @@ namespace Arma3BEClient.ViewModel
         private readonly UpdateClient _updateClient;
         private int _playerCount;
         internal PlayerHelper _playerHelper;
-        private List<PlayerView> _players = new List<PlayerView>();
         private ICommand _refreshCommand;
 
         public PlayerListModelView(ILog log, UpdateClient updateClient, Guid serverId)
@@ -49,10 +48,7 @@ namespace Arma3BEClient.ViewModel
             get { return _refreshCommand ?? (_refreshCommand = new ActionCommand(Refresh)); }
         }
 
-        public List<PlayerView> Players
-        {
-            get { return _players; }
-        }
+        public List<PlayerView> Players { get; private set; } = new List<PlayerView>();
 
         public string SelectedOptions { get; set; }
 
@@ -115,7 +111,7 @@ namespace Arma3BEClient.ViewModel
 
                 PlayerCount = r.Count;
 
-                _players = r;
+                Players = r;
             }
 
             RaisePropertyChanged("Players");

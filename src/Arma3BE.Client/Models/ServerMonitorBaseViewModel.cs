@@ -8,12 +8,11 @@ namespace Arma3BEClient.Models
 {
     public abstract class ServerMonitorBaseViewModel<T, TK> : ViewModelBase where T : class where TK : class
     {
-        private readonly ICommand _refreshCommand;
         protected IEnumerable<TK> _data;
 
         protected ServerMonitorBaseViewModel(ICommand refreshCommand)
         {
-            _refreshCommand = refreshCommand;
+            RefreshCommand = refreshCommand;
             FilterCommand = new ActionCommand(UpdateData);
         }
 
@@ -29,10 +28,7 @@ namespace Arma3BEClient.Models
             get { return _data == null ? 0 : Data.Count(); }
         }
 
-        public ICommand RefreshCommand
-        {
-            get { return _refreshCommand; }
-        }
+        public ICommand RefreshCommand { get; }
 
         public ICommand FilterCommand { get; private set; }
 

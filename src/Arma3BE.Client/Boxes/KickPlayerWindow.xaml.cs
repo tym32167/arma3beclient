@@ -44,18 +44,14 @@ namespace Arma3BEClient.Boxes
 
     public class KickPlayerViewModel : ViewModelBase
     {
-        private readonly PlayerView _playerView;
         private string _reason;
 
         public KickPlayerViewModel(PlayerView playerView)
         {
-            _playerView = playerView;
+            Player = playerView;
         }
 
-        public PlayerView Player
-        {
-            get { return _playerView; }
-        }
+        public PlayerView Player { get; }
 
         public string Reason
         {

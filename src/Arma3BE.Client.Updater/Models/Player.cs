@@ -11,81 +11,52 @@ namespace Arma3BEClient.Updater.Models
             Ingame
         }
 
-        private readonly string _guid;
-        private readonly string _ip;
-        private readonly string _name;
-        private readonly int _num;
-        private readonly int _ping;
-        private readonly int _port;
-        private readonly PlayerState _state;
-
         public Player(int num, string ip, int port, int ping, string guid, string name, PlayerState state)
         {
-            _num = num;
-            _ip = ip;
-            _port = port;
-            _ping = ping;
-            _guid = guid;
-            _name = name;
-            _state = state;
+            Num = num;
+            IP = ip;
+            Port = port;
+            Ping = ping;
+            Guid = guid;
+            Name = name;
+            State = state;
         }
 
-        public int Num
-        {
-            get { return _num; }
-        }
+        public int Num { get; }
 
-        public string IP
-        {
-            get { return _ip; }
-        }
+        public string IP { get; }
 
-        public int Port
-        {
-            get { return _port; }
-        }
+        public int Port { get; }
 
-        public int Ping
-        {
-            get { return _ping; }
-        }
+        public int Ping { get; }
 
-        public string Guid
-        {
-            get { return _guid; }
-        }
+        public string Guid { get; }
 
-        public string Name
-        {
-            get { return _name; }
-        }
+        public string Name { get; }
 
-        public PlayerState State
-        {
-            get { return _state; }
-        }
+        public PlayerState State { get; }
 
         protected bool Equals(Player other)
         {
-            return _num == other._num
-                   && string.Equals(_ip, other._ip)
-                   && _port == other._port
-                   && string.Equals(_guid, other._guid)
-                   && string.Equals(_name, other._name)
-                   && _state == other._state;
+            return Num == other.Num
+                   && string.Equals(IP, other.IP)
+                   && Port == other.Port
+                   && string.Equals(Guid, other.Guid)
+                   && string.Equals(Name, other.Name)
+                   && State == other.State;
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                var hashCode = _num;
-                hashCode = (hashCode*397) ^ (_ip != null ? _ip.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ _port;
-                hashCode = (hashCode*397) ^ _ping;
-                hashCode = (hashCode*397) ^ (_guid != null ? _guid.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (_name != null ? _name.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (int) _state;
+                var hashCode = Num;
+                hashCode = (hashCode*397) ^ (IP != null ? IP.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ Port;
+                hashCode = (hashCode*397) ^ Ping;
+                hashCode = (hashCode*397) ^ (Guid != null ? Guid.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (Name != null ? Name.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (int) State;
                 return hashCode;
             }
         }
