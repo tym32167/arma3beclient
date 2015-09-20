@@ -119,7 +119,7 @@ namespace Arma3BEClient
 
         private void Export(string fname)
         {
-            using (var repo = new Arma3BERepository())
+            using (var repo = new PlayerRepository())
             {
                 var list =
                     repo.GetAllPlayers()
@@ -147,7 +147,7 @@ namespace Arma3BEClient
 
         private void Import(string fname)
         {
-            using (var repo = new Arma3BERepository())
+            using (var repo = new PlayerRepository())
             {
                 var db =
                     repo.GetAllPlayers()
