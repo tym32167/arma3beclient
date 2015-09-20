@@ -7,6 +7,8 @@ namespace Arma3BE.Server
 {
     public interface IBEServer : IDisposable
     {
+        bool Connected { get; }
+        bool Disposed { get; }
         event EventHandler<UpdateClientEventArgs<IEnumerable<Player>>> PlayerHandler;
         event EventHandler<UpdateClientEventArgs<IEnumerable<Ban>>> BanHandler;
         event EventHandler<UpdateClientEventArgs<IEnumerable<Admin>>> AdminHandler;
@@ -24,8 +26,5 @@ namespace Arma3BE.Server
 
         void Connect();
         void Disconnect();
-
-        bool Connected { get; }
-        bool Disposed { get; }
     }
 }

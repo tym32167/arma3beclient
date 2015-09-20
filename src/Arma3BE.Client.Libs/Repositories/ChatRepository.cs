@@ -1,9 +1,10 @@
 using System;
 using System.Linq;
 using Arma3BE.Server.Models;
+using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
 
-namespace Arma3BEClient.Libs.Context
+namespace Arma3BEClient.Libs.Repositories
 {
     public class ChatRepository : IDisposable
     {
@@ -25,8 +26,6 @@ namespace Arma3BEClient.Libs.Context
                 context.SaveChangesAsync();
             }
         }
-
-
 
 
         public IQueryable<ChatLog> GetChatLogs(string selectedServers, DateTime? startDate, DateTime? endDate,

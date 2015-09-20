@@ -31,7 +31,9 @@ namespace Arma3BEClient.Helpers
 
             using (var context = new Arma3BeClientContext())
             {
-                var db = context.Bans.Where(x => x.IsActive && x.ServerId == _currentServerId && userIds.Contains(x.GuidIp)).ToList();
+                var db =
+                    context.Bans.Where(x => x.IsActive && x.ServerId == _currentServerId && userIds.Contains(x.GuidIp))
+                        .ToList();
 
                 var ids = c.Select(x => x.GuidIp).ToList();
                 ids.AddRange(db.Select(x => x.GuidIp).ToList());

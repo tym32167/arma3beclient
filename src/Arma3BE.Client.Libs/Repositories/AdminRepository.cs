@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Admin = Arma3BE.Server.Models.Admin;
+using Arma3BE.Server.Models;
+using Arma3BEClient.Libs.Context;
 
-namespace Arma3BEClient.Libs.Context
+namespace Arma3BEClient.Libs.Repositories
 {
     public class AdminRepository : IDisposable
     {

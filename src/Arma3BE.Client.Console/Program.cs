@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Repositories;
 using Arma3BEClient.ViewModel;
 using log4net.Config;
 

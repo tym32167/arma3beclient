@@ -1,8 +1,5 @@
 ﻿using System.Data.Entity;
 using Arma3BEClient.Libs.ModelCompact;
-using Admin = Arma3BEClient.Libs.ModelCompact.Admin;
-using Ban = Arma3BEClient.Libs.ModelCompact.Ban;
-using Player = Arma3BEClient.Libs.ModelCompact.Player;
 
 namespace Arma3BEClient.Libs.Context
 {

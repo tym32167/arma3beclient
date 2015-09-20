@@ -15,9 +15,9 @@ namespace Arma3BEClient.Helpers
 {
     public class PlayerHelper : StateHelper<Player>
     {
+        private readonly IBEServer _beServer;
         private readonly ILog _log;
         private readonly Guid _serverId;
-        private readonly IBEServer _beServer;
 
         private readonly Regex NameRegex = new Regex("[A-Za-zА-Яа-я0-9]+",
             RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);

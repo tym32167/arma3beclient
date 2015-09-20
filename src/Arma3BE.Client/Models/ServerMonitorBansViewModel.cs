@@ -10,17 +10,17 @@ using Arma3BEClient.Commands;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Helpers;
 using Arma3BEClient.Helpers.Views;
-using Arma3BEClient.Libs.Context;
+using Arma3BEClient.Libs.Repositories;
 
 namespace Arma3BEClient.Models
 {
     public class ServerMonitorBansViewModel : ServerMonitorBaseViewModel<Ban, BanView>
     {
+        private readonly IBEServer _beServer;
         private readonly BanHelper _helper;
         private readonly ILog _log;
         private readonly PlayerHelper _playerHelper;
         private readonly Guid _serverInfoId;
-        private readonly IBEServer _beServer;
 
         public ServerMonitorBansViewModel(ILog log, Guid serverInfoId, IBEServer beServer)
             : base(new ActionCommand(() => beServer.SendCommandAsync(CommandType.Bans)))

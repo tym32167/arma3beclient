@@ -12,9 +12,9 @@ namespace Arma3BEClient.Models
 {
     public class ServerMonitorPlayerViewModel : ServerMonitorBaseViewModel<Player, Helpers.Views.PlayerView>
     {
+        private readonly IBEServer _beServer;
         private readonly ILog _log;
         internal readonly PlayerHelper _playerHelper;
-        private readonly IBEServer _beServer;
         private PlayerView _selectedPlayer;
 
         public ServerMonitorPlayerViewModel(ILog log, ServerInfo serverInfo, IBEServer beServer)

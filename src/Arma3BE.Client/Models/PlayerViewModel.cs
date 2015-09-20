@@ -1,9 +1,8 @@
-﻿using System.Linq;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Arma3BEClient.Commands;
 using Arma3BEClient.Helpers;
-using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Repositories;
 using GalaSoft.MvvmLight;
 
 namespace Arma3BEClient.Models
@@ -60,7 +59,7 @@ namespace Arma3BEClient.Models
         {
             using (var repo = new PlayerRepository())
             {
-                 repo.UpdatePlayerComment(Player.GUID, Player.Comment);
+                repo.UpdatePlayerComment(Player.GUID, Player.Comment);
             }
 
             _player = null;

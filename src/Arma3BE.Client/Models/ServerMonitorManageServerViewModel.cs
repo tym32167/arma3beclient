@@ -11,9 +11,9 @@ namespace Arma3BEClient.Models
 {
     public class ServerMonitorManageServerViewModel : ViewModelBase
     {
+        private readonly IBEServer _beServer;
         private readonly ILog _log;
         private readonly Guid _serverId;
-        private readonly IBEServer _beServer;
         private IEnumerable<Mission> _missions;
         private Mission _selectedMission;
 

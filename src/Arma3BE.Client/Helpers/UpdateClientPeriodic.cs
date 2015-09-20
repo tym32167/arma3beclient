@@ -8,8 +8,8 @@ namespace Arma3BEClient.Helpers
 {
     public class UpdateClientPeriodic : DisposeObject
     {
-        private readonly ILog _log;
         private readonly IBEServer _beServer;
+        private readonly ILog _log;
         //private readonly Timer _updateTimerPlayers;
         //private readonly Timer _updateTimerBans;
         //private readonly Timer _updateTimerAdmins;

@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
 
-namespace Arma3BEClient.Libs.Context
+namespace Arma3BEClient.Libs.Repositories
 {
     public class ServerInfoRepository : IDisposable
     {

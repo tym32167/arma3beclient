@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using Arma3BEClient.Commands;
-using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Repositories;
 using GalaSoft.MvvmLight;
 
 namespace Arma3BEClient.Models
@@ -53,7 +53,6 @@ namespace Arma3BEClient.Models
             }
         }
 
-        
 
         public IEnumerable<ServerInfo> ServerList
         {

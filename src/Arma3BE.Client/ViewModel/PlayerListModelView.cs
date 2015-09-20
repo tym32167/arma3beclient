@@ -6,8 +6,8 @@ using Arma3BE.Server;
 using Arma3BEClient.Commands;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Helpers;
-using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Repositories;
 using Arma3BEClient.Models;
 using GalaSoft.MvvmLight;
 
@@ -15,9 +15,9 @@ namespace Arma3BEClient.ViewModel
 {
     public class PlayerListModelView : ViewModelBase
     {
+        private readonly IBEServer _beServer;
         private readonly ILog _log;
         private readonly Guid _serverId;
-        private readonly IBEServer _beServer;
         private int _playerCount;
         internal PlayerHelper _playerHelper;
         private ICommand _refreshCommand;
@@ -87,17 +87,17 @@ namespace Arma3BEClient.ViewModel
                 if (!string.IsNullOrEmpty(Filter))
                 {
                     result = repo.GetPlayers(x =>
-                         (searchGuid && x.GUID == Filter)
-                         ||
-                         (searchComment && x.Comment.Contains(Filter))
-                         ||
-                         (searchName && x.Name.Contains(Filter))
-                         ||
-                         (searchNotes && x.Notes.Any(y => y.Text.Contains(Filter)))
-                         ||
-                         (searchIP && x.LastIp.Contains(Filter))
-                         ||
-                         (searchLastNames && x.PlayerHistory.Any(y => y.Name.Contains(Filter))));
+                        (searchGuid && x.GUID == Filter)
+                        ||
+                        (searchComment && x.Comment.Contains(Filter))
+                        ||
+                        (searchName && x.Name.Contains(Filter))
+                        ||
+                        (searchNotes && x.Notes.Any(y => y.Text.Contains(Filter)))
+                        ||
+                        (searchIP && x.LastIp.Contains(Filter))
+                        ||
+                        (searchLastNames && x.PlayerHistory.Any(y => y.Name.Contains(Filter))));
                 }
                 else
                 {

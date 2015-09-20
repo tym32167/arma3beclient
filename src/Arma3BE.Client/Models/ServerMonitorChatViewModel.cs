@@ -13,10 +13,10 @@ namespace Arma3BEClient.Models
 {
     public class ServerMonitorChatViewModel : ViewModelBase
     {
+        private readonly IBEServer _beServer;
         private readonly ChatHelper _chatHelper;
         private readonly ILog _log;
         private readonly Guid _serverId;
-        private readonly IBEServer _beServer;
         private bool _autoScroll;
         private bool _enableChat;
         private string _inputMessage;
