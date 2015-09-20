@@ -8,6 +8,7 @@ using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Helpers.Views;
 using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Repositories;
 using Arma3BEClient.Libs.Tools;
 using Player = Arma3BE.Server.Models.Player;
 
@@ -38,12 +39,15 @@ namespace Arma3BEClient.Helpers
                 return false;
             }
 
-            using (var context = new Arma3BeClientContext())
+            using (var context = new PlayerRepository())
             {
                 var guids = players.Select(x => x.Guid).ToList();
 
-                var playersInDb = context.Player.Where(x => guids.Contains(x.GUID)).ToList();
+                var playersInDb = context.GetPlayers(guids);
                 var dbGuids = playersInDb.Select(x => x.GUID).ToList();
+
+                var historyToAdd = new List<PlayerHistory>();
+                var playerToUpdate = new List<Libs.ModelCompact.Player>();
 
                 foreach (var player in playersInDb)
                 {
@@ -52,7 +56,9 @@ namespace Arma3BEClient.Helpers
                     {
                         if (player.Name != p.Name || player.LastIp != p.IP)
                         {
-                            context.PlayerHistory.Add(new PlayerHistory
+
+
+                            historyToAdd.Add(new PlayerHistory
                             {
                                 IP = player.LastIp,
                                 Name = player.Name,
@@ -65,6 +71,7 @@ namespace Arma3BEClient.Helpers
                         }
 
                         player.LastSeen = DateTime.UtcNow;
+                        playerToUpdate.Add(player);
                     }
                 }
 
@@ -82,9 +89,9 @@ namespace Arma3BEClient.Helpers
                             LastIp = p.IP
                         };
 
-                        context.Player.Add(np);
+                        playerToUpdate.Add(np);
 
-                        context.PlayerHistory.Add(new PlayerHistory
+                        historyToAdd.Add(new PlayerHistory
                         {
                             IP = np.LastIp,
                             Name = np.Name,
@@ -94,7 +101,8 @@ namespace Arma3BEClient.Helpers
                     }
                 }
 
-                context.SaveChanges();
+                context.AddOrUpdate(playerToUpdate);
+                context.AddHistory(historyToAdd);
             }
 
             return true;
@@ -102,12 +110,12 @@ namespace Arma3BEClient.Helpers
 
         public IEnumerable<PlayerView> GetPlayerView(IEnumerable<Player> list)
         {
-            using (var context = new Arma3BeClientContext())
+            using (var context = new PlayerRepository())
             {
                 var players = list.ToList();
                 var guids = players.Select(x => x.Guid).ToList();
 
-                var playersInDb = context.Player.Where(x => guids.Contains(x.GUID)).ToList();
+                var playersInDb = context.GetPlayers(guids);
 
                 var result = players.Select(x => new PlayerView
                 {
@@ -153,19 +161,15 @@ namespace Arma3BEClient.Helpers
 
             if (!isAuto)
             {
-                using (var context = new Arma3BeClientContext())
+                using (var context = new PlayerRepository())
                 {
-                    var user = context.Player.FirstOrDefault(x => x.GUID == player.Guid);
+                    var user = context.GetPlayer(player.Guid);
                     if (user != null)
                     {
-                        user.Notes.Add(new Note
-                        {
-                            PlayerId = user.Id,
-                            Text = $"Kicked with reason: {totalreason}"
-                        });
 
+                        context.AddNotes(user.Id, $"Kicked with reason: {totalreason}");
                         user.Comment = $"{user.Comment} | {reason}";
-                        context.SaveChanges();
+                        context.UpdatePlayerComment(user.GUID, user.Comment);
                     }
                 }
                 await _beServer.SendCommandAsync(CommandType.Players);
@@ -184,9 +188,9 @@ namespace Arma3BEClient.Helpers
                     $"{guid} {minutes} {totalreason}");
 
 
-                using (var context = new Arma3BeClientContext())
+                using (var context = new PlayerRepository())
                 {
-                    var user = context.Player.FirstOrDefault(x => x.GUID == guid);
+                    var user = context.GetPlayer(guid);
                     if (user != null)
                     {
                         user.Notes.Add(new Note
@@ -196,8 +200,7 @@ namespace Arma3BEClient.Helpers
                         });
 
                         user.Comment = string.Format("{0} | {1}", user.Comment, reason);
-
-                        context.SaveChanges();
+                        context.UpdatePlayerComment(user.GUID, user.Comment);
                     }
                 }
 
@@ -215,7 +218,7 @@ namespace Arma3BEClient.Helpers
             }
         }
 
-        public async void BanGUIDOnline(string num, string guid, string reason, long minutes)
+        public async void BanGuidOnline(string num, string guid, string reason, long minutes)
         {
             var totalreason =
                 $"[{SettingsStore.Instance.AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
@@ -225,20 +228,14 @@ namespace Arma3BEClient.Helpers
                 $"{num} {minutes} {totalreason}");
 
 
-            using (var context = new Arma3BeClientContext())
+            using (var context = new PlayerRepository())
             {
-                var user = context.Player.FirstOrDefault(x => x.GUID == guid);
+                var user = context.GetPlayer(guid);
                 if (user != null)
                 {
-                    user.Notes.Add(new Note
-                    {
-                        PlayerId = user.Id,
-                        Text = $"Baned with reason: {totalreason}"
-                    });
-
+                    context.AddNotes(user.Id, $"Baned with reason: {totalreason}");
                     user.Comment = $"{user.Comment} | {reason}";
-
-                    context.SaveChanges();
+                    context.UpdatePlayerComment(user.GUID, user.Comment);
                 }
             }
 

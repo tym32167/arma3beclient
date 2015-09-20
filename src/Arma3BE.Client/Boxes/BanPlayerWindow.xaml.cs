@@ -150,7 +150,7 @@ namespace Arma3BEClient.Boxes
             if (Minutes != null)
             {
                 if (_isOnline)
-                    _playerHelper.BanGUIDOnline(_playerNum, _playerGuid, Reason, Minutes.Value);
+                    _playerHelper.BanGuidOnline(_playerNum, _playerGuid, Reason, Minutes.Value);
                 else
                     _playerHelper.BanGUIDOffline(_playerGuid, Reason, Minutes.Value);
             }

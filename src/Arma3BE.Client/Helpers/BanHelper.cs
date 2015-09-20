@@ -6,6 +6,7 @@ using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Helpers.Views;
 using Arma3BEClient.Libs.Context;
+using Arma3BEClient.Libs.Repositories;
 
 namespace Arma3BEClient.Helpers
 {
@@ -23,87 +24,110 @@ namespace Arma3BEClient.Helpers
 
         public bool RegisterBans(IEnumerable<Ban> list)
         {
-            var c = list.ToList();
-            var userIds = c.Select(x => x.GuidIp).Distinct().ToArray();
+            var bans = list.ToList();
+            var userIds = bans.Select(x => x.GuidIp).Distinct().ToArray();
 
-            if (!HaveChanges(c, x => x.Num)) return false;
+            if (!HaveChanges(bans, x => x.Num)) return false;
 
 
-            using (var context = new Arma3BeClientContext())
+            using (var banRepository = new BanRepository())
             {
-                var db =
-                    context.Bans.Where(x => x.IsActive && x.ServerId == _currentServerId && userIds.Contains(x.GuidIp))
-                        .ToList();
-
-                var ids = c.Select(x => x.GuidIp).ToList();
-                ids.AddRange(db.Select(x => x.GuidIp).ToList());
-                ids = ids.Distinct().ToList();
-
-                var players = context.Player.Where(x => ids.Contains(x.GUID)).ToList();
-
-                foreach (var ban in db)
+                using (var playerRepository = new PlayerRepository())
                 {
-                    var actual = c.FirstOrDefault(x => x.GuidIp == ban.GuidIp);
-                    if (actual == null)
+                    var db =
+                        banRepository.GetActiveBans(_currentServerId, userIds);
+
+                    var ids = bans.Select(x => x.GuidIp).ToList();
+
+                    ids.AddRange(db.Select(x => x.GuidIp).ToList());
+                    ids = ids.Distinct().ToList();
+
+                    var players = playerRepository.GetPlayers(ids.ToArray());
+
+                    var bansToUpdate = new List<Libs.ModelCompact.Ban>();
+                    var bansToAdd = new List<Libs.ModelCompact.Ban>();
+                    var playersToUpdateComments = new Dictionary<Guid, string>();
+
+
+                    foreach (var ban in db)
                     {
-                        ban.IsActive = false;
-                    }
-                    else
-                    {
-                        ban.MinutesLeft = actual.Minutesleft;
-                        if (ban.PlayerId == null)
+                        var actual = bans.FirstOrDefault(x => x.GuidIp == ban.GuidIp);
+                        if (actual == null)
                         {
-                            var player = players.FirstOrDefault(x => x.GUID == ban.GuidIp);
-                            if (player != null && !string.IsNullOrEmpty(ban.Reason))
+                            ban.IsActive = false;
+                        }
+                        else
+                        {
+                            ban.MinutesLeft = actual.Minutesleft;
+                            if (ban.PlayerId == null)
                             {
-                                ban.PlayerId = player.Id;
-
-                                var comm = ban.Reason;
-
-                                var ind1 = comm.IndexOf('[');
-                                var ind2 = comm.LastIndexOf(']');
-
-                                if (ind1 > -1 && ind2 > ind1) comm = comm.Remove(ind1, ind2 - ind1 + 1).Trim();
-
-                                if (string.IsNullOrEmpty(player.Comment) || !player.Comment.Contains(comm))
+                                var player = players.FirstOrDefault(x => x.GUID == ban.GuidIp);
+                                if (player != null && !string.IsNullOrEmpty(ban.Reason))
                                 {
-                                    player.Comment = $"{player.Comment} | {comm}";
+                                    ban.PlayerId = player.Id;
+
+                                    var comm = ban.Reason;
+
+                                    var ind1 = comm.IndexOf('[');
+                                    var ind2 = comm.LastIndexOf(']');
+
+                                    if (ind1 > -1 && ind2 > ind1) comm = comm.Remove(ind1, ind2 - ind1 + 1).Trim();
+
+                                    if (string.IsNullOrEmpty(player.Comment) || !player.Comment.Contains(comm))
+                                    {
+                                        player.Comment = $"{player.Comment} | {comm}";
+
+                                        if (!playersToUpdateComments.ContainsKey(player.Id))
+                                            playersToUpdateComments.Add(player.Id, player.Comment);
+                                        else
+                                            playersToUpdateComments[player.Id] = player.Comment;
+                                    }
                                 }
                             }
                         }
+
+                        bansToUpdate.Add(ban);
                     }
-                }
 
-                foreach (var ban in c)
-                {
-                    var bdb = db.FirstOrDefault(x => x.ServerId == _currentServerId && x.GuidIp == ban.GuidIp);
-                    if (bdb == null)
+                    foreach (var ban in bans)
                     {
-                        var player = players.FirstOrDefault(x => x.GUID == ban.GuidIp);
-                        var newBan = new Libs.ModelCompact.Ban
+                        var bdb = db.FirstOrDefault(x => x.ServerId == _currentServerId && x.GuidIp == ban.GuidIp);
+                        if (bdb == null)
                         {
-                            CreateDate = DateTime.UtcNow,
-                            GuidIp = ban.GuidIp,
-                            IsActive = true,
-                            Minutes = ban.Minutesleft,
-                            MinutesLeft = ban.Minutesleft,
-                            Num = ban.Num,
-                            Reason = ban.Reason,
-                            ServerId = _currentServerId,
-                            Player = player
-                        };
+                            var player = players.FirstOrDefault(x => x.GUID == ban.GuidIp);
+                            var newBan = new Libs.ModelCompact.Ban
+                            {
+                                CreateDate = DateTime.UtcNow,
+                                GuidIp = ban.GuidIp,
+                                IsActive = true,
+                                Minutes = ban.Minutesleft,
+                                MinutesLeft = ban.Minutesleft,
+                                Num = ban.Num,
+                                Reason = ban.Reason,
+                                ServerId = _currentServerId,
+                                Player = player
+                            };
 
-                        context.Bans.Add(newBan);
+                            bansToAdd.Add(newBan);
 
-                        var comm = replace.Replace(ban.Reason, string.Empty).Trim();
-                        if (player != null && (string.IsNullOrEmpty(player.Comment) || !player.Comment.Contains(comm)))
-                        {
-                            player.Comment = $"{player.Comment} | {comm}";
+                            var comm = replace.Replace(ban.Reason, string.Empty).Trim();
+                            if (player != null &&
+                                (string.IsNullOrEmpty(player.Comment) || !player.Comment.Contains(comm)))
+                            {
+                                player.Comment = $"{player.Comment} | {comm}";
+
+                                if (!playersToUpdateComments.ContainsKey(player.Id))
+                                    playersToUpdateComments.Add(player.Id, player.Comment);
+                                else
+                                    playersToUpdateComments[player.Id] = player.Comment;
+                            }
                         }
                     }
-                }
 
-                context.SaveChanges();
+                    banRepository.AddOrUpdate(bansToAdd);
+                    banRepository.AddOrUpdate(bansToUpdate);
+                    playerRepository.UpdateCommant(playersToUpdateComments);
+                }
             }
 
             return true;
@@ -111,12 +135,13 @@ namespace Arma3BEClient.Helpers
 
         public IEnumerable<BanView> GetBanView(IEnumerable<Ban> list)
         {
-            using (var context = new Arma3BeClientContext())
+            using (var context = new PlayerRepository())
             {
-                var guids = list.Select(x => x.GuidIp).ToList();
-                var players = context.Player.Where(x => guids.Contains(x.GUID)).ToList();
+                var bans = list as Ban[] ?? list.ToArray();
+                var guids = bans.Select(x => x.GuidIp).ToArray();
+                var players = context.GetPlayers(guids);
 
-                return list.Select(x =>
+                return bans.Select(x =>
                 {
                     var p = players.FirstOrDefault(y => y.GUID == x.GuidIp);
 

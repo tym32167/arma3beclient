@@ -36,13 +36,13 @@ namespace Arma3BEClient.Grids
             //foreach (var menuItem in menu.Items.OfType<MenuItem>().ToList())
             //{
             //    menu.Items.Remove(menuItem);
-            //    dg.ContextMenu.Items.Add(menuItem);
+            //    dg.ContextMenu.Items.AddOrUpdate(menuItem);
             //}
 
 
             //foreach (var generateColumn in GridHelper.DgGenerateColumns<PlayerView>())
             //{
-            //    dg.Columns.Add(generateColumn);
+            //    dg.Columns.AddOrUpdate(generateColumn);
             //}
         }
 
