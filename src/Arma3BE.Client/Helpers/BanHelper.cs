@@ -105,7 +105,7 @@ namespace Arma3BEClient.Helpers
                                 Num = ban.Num,
                                 Reason = ban.Reason,
                                 ServerId = _currentServerId,
-                                Player = player
+                                PlayerId = player.Id
                             };
 
                             bansToAdd.Add(newBan);

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
@@ -111,7 +112,7 @@ namespace Arma3BEClient.Libs.Repositories
             }
         }
 
-        public Player GetPlayer(string guid)
+        public PlayerDto GetPlayer(string guid)
         {
             using (var dc = new Arma3BeClientContext())
             {
@@ -131,5 +132,24 @@ namespace Arma3BEClient.Libs.Repositories
                 dc.SaveChanges();
             }
         }
+    }
+
+
+    public class PlayerDto
+    {
+        public PlayerDto()
+        {
+            this.LastSeen = DateTime.UtcNow;
+        }
+
+        [Key]
+        public System.Guid Id { get; set; }
+
+        public string GUID { get; set; }
+        public string Name { get; set; }
+        public string Comment { get; set; }
+
+        public string LastIp { get; set; }
+        public DateTime LastSeen { get; set; }
     }
 }

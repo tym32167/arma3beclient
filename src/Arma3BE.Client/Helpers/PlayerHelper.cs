@@ -193,13 +193,8 @@ namespace Arma3BEClient.Helpers
                     var user = context.GetPlayer(guid);
                     if (user != null)
                     {
-                        user.Notes.Add(new Note
-                        {
-                            PlayerId = user.Id,
-                            Text = string.Format("Baned with reason: {0}", totalreason)
-                        });
-
-                        user.Comment = string.Format("{0} | {1}", user.Comment, reason);
+                        context.AddNotes(user.Id, $"Baned with reason: {totalreason}");
+                        user.Comment = $"{user.Comment} | {reason}";
                         context.UpdatePlayerComment(user.GUID, user.Comment);
                     }
                 }

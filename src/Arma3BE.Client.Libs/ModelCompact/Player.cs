@@ -10,33 +10,21 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Arma3BEClient.Libs.Repositories;
 
 namespace Arma3BEClient.Libs.ModelCompact
 {
-    public partial class Player
+    public partial class Player : PlayerDto
     {
         public Player()
         {
-            this.LastSeen = DateTime.UtcNow;
-
             this.Notes = new HashSet<Note>();
             this.PlayerHistory = new HashSet<PlayerHistory>();
            // this.Sessions = new HashSet<Sessions>();
         }
-    
-        [Key]
-        public System.Guid Id { get; set; }
-
-        public string GUID { get; set; }
-        public string Name { get; set; }
-        public string Comment { get; set; }
-        public string LastIp { get; set; }
-        public DateTime LastSeen { get; set; }
+        
         public virtual ICollection<Note> Notes { get; set; }
         public virtual ICollection<Ban> Bans { get; set; }
         public virtual ICollection<PlayerHistory> PlayerHistory { get; set; }
-
-
-        
     }
 }
