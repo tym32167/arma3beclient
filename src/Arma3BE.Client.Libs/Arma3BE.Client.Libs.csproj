@@ -43,6 +43,7 @@
     <Compile Include="Context\ContextManager.cs" />
     <Compile Include="Context\IContext.cs" />
     <Compile Include="Context\IContextManager.cs" />
+    <Compile Include="Context\ServerInfoRepository.cs" />
     <Compile Include="ModelCompact\Admin.cs" />
     <Compile Include="ModelCompact\Ban.cs" />
     <Compile Include="ModelCompact\ChatLog.cs" />

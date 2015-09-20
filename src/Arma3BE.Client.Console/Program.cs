@@ -13,7 +13,7 @@ namespace arma3beConsole
 {
     internal class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
             XmlConfigurator.Configure();
             var log = new Log();
@@ -23,7 +23,7 @@ namespace arma3beConsole
             IEnumerable<ServerInfo> servers;
 
 
-            using (var dc = new Arma3BERepository())
+            using (var dc = new ServerInfoRepository())
             {
                 servers = dc.GetActiveServerInfo();
             }
@@ -35,7 +35,7 @@ namespace arma3beConsole
             {
                 try
                 {
-                    var t = Task.Run(() => run(models));
+                    var t = Task.Run(() => Run(models));
                     t.Wait();
                 }
                 catch (Exception ex)
@@ -45,10 +45,10 @@ namespace arma3beConsole
             }
         }
 
-        private static void run(IEnumerable<ServerMonitorModel> models)
+        private static void Run(IEnumerable<ServerMonitorModel> models)
         {
             var creators =
-                models.Select(x => new Func<Thread>(() => new Thread(() => run(x)) {IsBackground = true})).ToArray();
+                models.Select(x => new Func<Thread>(() => new Thread(() => Run(x)) {IsBackground = true})).ToArray();
             var threads = new Thread[creators.Length];
 
             while (true)
@@ -58,7 +58,7 @@ namespace arma3beConsole
                     var t = threads[i];
                     if (t == null || !t.IsAlive)
                     {
-                        if (t != null) t.Abort();
+                        t?.Abort();
                         var creator = creators[i];
                         t = creator();
                         t.Start();
@@ -71,7 +71,7 @@ namespace arma3beConsole
             }
         }
 
-        private static void run(ServerMonitorModel model)
+        private static void Run(ServerMonitorModel model)
         {
             while (true)
             {

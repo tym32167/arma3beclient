@@ -1,11 +1,11 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Libs.ModelCompact;
-using Admin = Arma3BEClient.Libs.ModelCompact.Admin;
+using Admin = Arma3BE.Server.Models.Admin;
 using Ban = Arma3BEClient.Libs.ModelCompact.Ban;
 using Player = Arma3BEClient.Libs.ModelCompact.Player;
 
@@ -13,7 +13,11 @@ namespace Arma3BEClient.Libs.Context
 {
     public class Arma3BERepository : IDisposable
     {
-        public void AddOrUpdate(IEnumerable<Arma3BE.Server.Models.Admin> admins, Guid serverId)
+        public void Dispose()
+        {
+        }
+
+        public void AddOrUpdate(IEnumerable<Admin> admins, Guid serverId)
         {
             var l = admins.ToList();
             var ips = l.Select(x => x.IP).ToList();
@@ -27,7 +31,7 @@ namespace Arma3BEClient.Libs.Context
                     var db = adminsdb.FirstOrDefault(x => x.IP == admin.IP);
                     if (db == null)
                     {
-                        context.Admins.Add(new Admin
+                        context.Admins.Add(new ModelCompact.Admin
                         {
                             ServerId = serverId,
                             IP = admin.IP,
@@ -56,42 +60,6 @@ namespace Arma3BEClient.Libs.Context
             }
         }
 
-        public IEnumerable<ServerInfo> GetActiveServerInfo()
-        {
-            using (var dc = new Arma3BeClientContext())
-            {
-                return dc.ServerInfo.Where(x => x.Active).ToList();
-            }
-        }
-
-        public IEnumerable<ServerInfo> GetServerInfo()
-        {
-            using (var dc = new Arma3BeClientContext())
-            {
-                return dc.ServerInfo.ToList();
-            }
-        }
-
-        public void SetServerInfoActive (Guid serverInfoId, bool active)
-        {
-            using (var dc = new Arma3BeClientContext())
-            {
-                var server = dc.ServerInfo.FirstOrDefault(x => x.Id == serverInfoId);
-                if (server != null)
-                {
-                    server.Active = active;
-                    dc.SaveChanges();
-                }
-            }
-        }
-
-        public IEnumerable<ServerInfo> GetNotActiveServerInfo()
-        {
-            using (var dc = new Arma3BeClientContext())
-            {
-                return dc.ServerInfo.Where(x => !x.Active).ToList();
-            }
-        }
 
         public IEnumerable<Player> GetAllPlayers()
         {
@@ -111,7 +79,7 @@ namespace Arma3BEClient.Libs.Context
         }
 
 
-        public IEnumerable<Player> GetPlayers(System.Linq.Expressions.Expression<Func<Player, bool>> expression)
+        public IEnumerable<Player> GetPlayers(Expression<Func<Player, bool>> expression)
         {
             using (var dc = new Arma3BeClientContext())
             {
@@ -120,11 +88,11 @@ namespace Arma3BEClient.Libs.Context
         }
 
 
-        public IQueryable<ChatLog> GetChatLogs(string selectedServers, DateTime? startDate, DateTime? endDate, string filter)
+        public IQueryable<ChatLog> GetChatLogs(string selectedServers, DateTime? startDate, DateTime? endDate,
+            string filter)
         {
             using (var dc = new Arma3BeClientContext())
             {
-
                 var log = dc.ChatLog.AsQueryable();
 
                 if (!string.IsNullOrEmpty(selectedServers))
@@ -161,7 +129,13 @@ namespace Arma3BEClient.Libs.Context
         {
             using (var dc = new Arma3BeClientContext())
             {
-                return dc.Player.Where(x => x.GUID == guid).Include(x=>x.Bans).Include(x=>x.Bans.Select(b=>b.ServerInfo)).Include(x=>x.Notes).Include(x=>x.PlayerHistory).FirstOrDefault();
+                return
+                    dc.Player.Where(x => x.GUID == guid)
+                        .Include(x => x.Bans)
+                        .Include(x => x.Bans.Select(b => b.ServerInfo))
+                        .Include(x => x.Notes)
+                        .Include(x => x.PlayerHistory)
+                        .FirstOrDefault();
             }
         }
 
@@ -184,10 +158,6 @@ namespace Arma3BEClient.Libs.Context
                     dc.SaveChanges();
                 }
             }
-        }
-
-        public void Dispose()
-        {
         }
     }
 }

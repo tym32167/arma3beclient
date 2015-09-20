@@ -15,7 +15,7 @@ namespace Arma3BEClient.Models
 
         private readonly Lazy<IEnumerable<ServerInfo>> _serverList = new Lazy<IEnumerable<ServerInfo>>(() =>
         {
-            using (var repo = new Arma3BERepository())
+            using (var repo = new ServerInfoRepository())
             {
                 return repo.GetServerInfo().OrderBy(x => x.Name).ToList();
             }

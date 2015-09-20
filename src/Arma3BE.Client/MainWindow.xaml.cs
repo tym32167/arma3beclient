@@ -92,7 +92,7 @@ namespace Arma3BEClient
 
         private void LoadedWindow(object sender, RoutedEventArgs e)
         {
-            using (var r = new Arma3BERepository())
+            using (var r = new ServerInfoRepository())
             {
                 var servers = r.GetActiveServerInfo();
                 Parallel.ForEach(servers, OpenServerInfo);
