@@ -17,7 +17,7 @@ namespace Arma3BEClient.Helpers
 
         public void RegisterAdmins(IEnumerable<Admin> list)
         {
-            using (var repo = new Arma3BERepository())
+            using (var repo = new AdminRepository())
             {
                 repo.AddOrUpdate(list, _currentServer.Id);
             }

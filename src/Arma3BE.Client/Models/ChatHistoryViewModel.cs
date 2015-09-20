@@ -38,7 +38,7 @@ namespace Arma3BEClient.Models
         {
             get
             {
-                using (var dc = new Arma3BERepository())
+                using (var dc = new ChatRepository())
                 {
                     var log = dc.GetChatLogs(SelectedServers, StartDate, EndDate, Filter);
 

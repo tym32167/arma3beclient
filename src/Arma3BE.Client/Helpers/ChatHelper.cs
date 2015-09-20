@@ -19,7 +19,7 @@ namespace Arma3BEClient.Helpers
 
         public bool RegisterChatMessage(ChatMessage message)
         {
-            using (var repo = new Arma3BERepository())
+            using (var repo = new ChatRepository())
             {
                 repo.AddOrUpdate(message, _currentServerId);
             }

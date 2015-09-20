@@ -38,7 +38,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Context\Arma3BEClientContext.cs" />
-    <Compile Include="Context\Arma3BERepository.cs" />
+    <Compile Include="Context\AdminRepository.cs" />
+    <Compile Include="Context\BanRepository.cs" />
+    <Compile Include="Context\ChatRepository.cs" />
     <Compile Include="Context\Context.cs" />
     <Compile Include="Context\ContextManager.cs" />
     <Compile Include="Context\IContext.cs" />
