@@ -27,6 +27,14 @@ namespace Arma3BEClient.Libs.Repositories
             }
         }
 
+        public bool HaveChatLogs(Guid serverId)
+        {
+            using (var dc = new Arma3BeClientContext())
+            {
+                return dc.ChatLog.Any(x => x.ServerId == serverId);
+            }
+        }
+
 
         public IQueryable<ChatLog> GetChatLogs(string selectedServers, DateTime? startDate, DateTime? endDate,
             string filter)

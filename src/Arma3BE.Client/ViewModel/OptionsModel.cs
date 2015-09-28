@@ -1,30 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
-using System.Data.Entity;
 using System.Linq;
 using System.Windows;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Contracts;
-using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Repositories;
 using Arma3BEClient.Libs.Tools;
 
 namespace Arma3BEClient.ViewModel
 {
     public class OptionsModel : DisposableViewModelBase
     {
-        private readonly Arma3BeClientContext _context;
         private readonly ILog _log = new Log();
         private SettingsStore _settingsStore;
 
         public OptionsModel()
         {
-            _context = new Arma3BeClientContext();
-            _context.ServerInfo.Load();
-
-            Servers = _context.ServerInfo.Local.Select(x => new ServerInfoModel(x)).ToList();
+            using (var servierInfoRepository = new ServerInfoRepository())
+            {
+                Servers = servierInfoRepository.GetServerInfo().Select(x => new ServerInfoModel(x)).ToList();
+            }
         }
 
         public List<ServerInfoModel> Servers { get; set; }
@@ -40,17 +37,6 @@ namespace Arma3BEClient.ViewModel
             get { return new List<Type> {typeof (ServerInfoModel)}; }
         }
 
-        public ObservableCollection<ServerInfo> Local
-        {
-            get { return _context.ServerInfo.Local; }
-        }
-
-        protected override void DisposeManagedResources()
-        {
-            base.DisposeManagedResources();
-            _context.Dispose();
-        }
-
         public void Save()
         {
             try
@@ -58,19 +44,27 @@ namespace Arma3BEClient.ViewModel
                 Settings.AdminName = Settings.AdminName.Replace(" ", string.Empty);
                 Settings.Save();
 
-
-                foreach (var s in Servers)
+                using (var servierInfoRepository = new ServerInfoRepository())
                 {
-                    var m = s.GetDbModel();
-                    if (m.Id == Guid.Empty)
+                    var all = servierInfoRepository.GetServerInfo();
+
+                    var todelete = all.Where(x => Servers.All(s => s.GetDbModel().Id != x.Id));
+
+                    foreach (var serverInfo in todelete)
                     {
-                        m.Id = Guid.NewGuid();
-                        _context.ServerInfo.Add(m);
+                        servierInfoRepository.Remove(serverInfo.Id);
+                    }
+
+                    foreach (var s in Servers)
+                    {
+                        var m = s.GetDbModel();
+                        if (m.Id == Guid.Empty)
+                        {
+                            m.Id = Guid.NewGuid();
+                        }
+                        servierInfoRepository.AddOrUpdate(m);
                     }
                 }
-
-
-                _context.SaveChanges();
             }
             catch (Exception e)
             {

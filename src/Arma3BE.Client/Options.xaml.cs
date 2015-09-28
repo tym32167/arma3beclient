@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
+using Arma3BEClient.Libs.Repositories;
 using Arma3BEClient.ViewModel;
+using Xceed.Wpf.AvalonDock.Layout;
 using Xceed.Wpf.Toolkit;
 
 namespace Arma3BEClient
@@ -31,14 +33,7 @@ namespace Arma3BEClient
         private void ServerDeleted(object sender, ItemEventArgs e)
         {
             var model = e.Item as ServerInfoModel;
-            var dbm = model.GetDbModel();
-
-            if (dbm.Id != Guid.Empty)
-            {
-                _optionsModel.Local.Remove(dbm);
-            }
-
-            _optionsModel.Servers.Remove(e.Item as ServerInfoModel);
+            _optionsModel.Servers.Remove(model);
         }
 
         private void ServerAdded(object sender, ItemEventArgs e)
@@ -52,7 +47,12 @@ namespace Arma3BEClient
             var dbm = model.GetDbModel();
             if (dbm.Id != Guid.Empty)
             {
-                if (dbm.ChatLog.Any()) e.Cancel = true;
+                using (var chat = new ChatRepository())
+                {
+                    if (chat.HaveChatLogs(dbm.Id)) e.Cancel = true;
+                    
+                }
+                
             }
         }
 
