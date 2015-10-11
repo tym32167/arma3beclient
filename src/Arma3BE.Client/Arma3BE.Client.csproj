@@ -73,6 +73,14 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.3.3.0\lib\net45\Castle.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Castle.Windsor, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
@@ -210,6 +218,7 @@
     <Compile Include="Helpers\UpdateClientPeriodic.cs" />
     <Compile Include="Helpers\Views\BanView.cs" />
     <Compile Include="Helpers\Views\PlayerView.cs" />
+    <Compile Include="IoC\CoreInstaller.cs" />
     <Compile Include="Models\ChatHistoryViewModel.cs" />
     <Compile Include="Models\Export\PlayerXML.cs" />
     <Compile Include="Models\PlayerView.cs" />
