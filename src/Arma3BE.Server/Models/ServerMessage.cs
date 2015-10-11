@@ -1,19 +1,23 @@
-﻿namespace Arma3BE.Server.Models
+﻿using System.Collections.Generic;
+using System.Linq;
+using Arma3BE.Server.Messaging;
+using Arma3BE.Server.Messaging.Recognizers;
+
+namespace Arma3BE.Server.Models
 {
     public class ServerMessage
     {
-        public enum MessageType
+        private static IEnumerable<IServerMessageRecognizer> _recognizers = new IServerMessageRecognizer[]
         {
-            PlayerList,
-            BanList,
-            AdminList,
-            ChatMessage,
-            RconAdminLog,
-            PlayerLog,
-            BanLog,
-            MissionList,
-            Unknown
-        }
+            new AdminListRecognizer(), 
+            new BanListRecognizer(), 
+            new BanLogRecognizer(), 
+            new ChatMessageRecognizer(), 
+            new MissionsListRecognizer(), 
+            new PlayerListRecognizer(), 
+            new PlayerLogRecognizer(), 
+            new RconAdminLogRecognizer(), 
+        };
 
         public ServerMessage(int messageId, string message)
         {
@@ -25,50 +29,13 @@
 
         public string Message { get; }
 
-        public MessageType Type
+        public ServerMessageType Type
         {
             get
             {
-                if (Message.Contains("Players on server:")) return MessageType.PlayerList;
-                if (Message.StartsWith("GUID Bans:") || Message.StartsWith("IP Bans:")) return MessageType.BanList;
-                if (Message.StartsWith("Connected RCon admins:")) return MessageType.AdminList;
-
-                if (Message.StartsWith("Missions on server:")) return MessageType.MissionList;
-
-
-                if (Message.StartsWith("(Side)") || Message.StartsWith("(Vehicle)") ||
-                    (Message.StartsWith("(Global)") || Message.StartsWith("(Group)")) ||
-                    (Message.StartsWith("(Command)") || Message.StartsWith("(Direct)")))
-                    return MessageType.ChatMessage;
-                if (Message.StartsWith("RCon") && !Message.EndsWith("logged in"))
-                    return MessageType.ChatMessage;
-
-                if (Message.StartsWith("RCon admin") && Message.EndsWith("logged in"))
-                    return MessageType.RconAdminLog;
-
-                if (Message.StartsWith("Player") && (
-                    //_message.Contains("connected")
-                    //||
-                    Message.Contains("disconnected")
-                    ||
-                    Message.Contains("is losing connection")
-                    ))
-
-                    return MessageType.PlayerLog;
-
-
-                if (Message.StartsWith("Verified GUID"))
-                    return MessageType.PlayerLog;
-
-
-                if (Message.StartsWith("Player") && (
-                    Message.Contains("kicked")
-                    ))
-
-                    return MessageType.BanLog;
-
-
-                return MessageType.Unknown;
+                var matches = _recognizers.Where(x => x.CanRecognize(this)).ToArray();
+                if (matches.Length == 1) return matches[0].GetMessageType(this);
+                return ServerMessageType.Unknown;
             }
         }
     }

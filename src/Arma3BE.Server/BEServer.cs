@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Arma3BE.Server.Messaging;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Core;
 using Arma3BEClient.Common.Logging;
@@ -297,27 +298,27 @@ namespace Arma3BE.Server
         {
             switch (message.Type)
             {
-                case ServerMessage.MessageType.PlayerList:
+                case ServerMessageType.PlayerList:
                     var list = new PlayerList(message);
                     OnPlayerHandler(list);
                     break;
-                case ServerMessage.MessageType.BanList:
+                case ServerMessageType.BanList:
                     var banList = new BanList(message);
                     OnBanHandler(banList);
                     break;
 
 
-                case ServerMessage.MessageType.AdminList:
+                case ServerMessageType.AdminList:
                     var adminList = new AdminList(message);
                     OnAdminHandler(adminList);
                     break;
 
-                case ServerMessage.MessageType.MissionList:
+                case ServerMessageType.MissionList:
                     var missinlist = new MissionList(message);
                     OnMissionHandler(missinlist);
                     break;
 
-                case ServerMessage.MessageType.ChatMessage:
+                case ServerMessageType.ChatMessage:
                     var chatMessage = new ChatMessage
                     {
                         Date = DateTime.UtcNow,
@@ -327,23 +328,23 @@ namespace Arma3BE.Server
                     OnChatMessageHandler(chatMessage);
                     break;
 
-                case ServerMessage.MessageType.RconAdminLog:
+                case ServerMessageType.RconAdminLog:
                     OnRConAdminLog();
                     OnChatMessageHandler(new ChatMessage {Date = DateTime.UtcNow, Message = message.Message});
                     break;
 
 
-                case ServerMessage.MessageType.PlayerLog:
+                case ServerMessageType.PlayerLog:
                     OnPlayerLog();
                     OnChatMessageHandler(new ChatMessage {Date = DateTime.UtcNow, Message = message.Message});
                     break;
 
-                case ServerMessage.MessageType.BanLog:
+                case ServerMessageType.BanLog:
                     OnBanLog();
                     OnChatMessageHandler(new ChatMessage {Date = DateTime.UtcNow, Message = message.Message});
                     break;
 
-                case ServerMessage.MessageType.Unknown:
+                case ServerMessageType.Unknown:
                     var unknownMessage = new ChatMessage
                     {
                         Date = DateTime.UtcNow,

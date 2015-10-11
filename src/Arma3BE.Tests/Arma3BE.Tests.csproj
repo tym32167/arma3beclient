@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PlayerUpaterTest.cs" />
+    <Compile Include="ServerMessages\Recognizers\ServerMessage_PlayerList_Test.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Arma3BE.Client.Libs\Arma3BE.Client.Libs.csproj">

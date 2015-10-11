@@ -33,11 +33,21 @@
   <ItemGroup>
     <Compile Include="CommandType.cs" />
     <Compile Include="IBEServer.cs" />
+    <Compile Include="Messaging\Recognizers\AdminListRecognizer.cs" />
+    <Compile Include="Messaging\Recognizers\BanListRecognizer.cs" />
+    <Compile Include="Messaging\Recognizers\BanLogRecognizer.cs" />
+    <Compile Include="Messaging\Recognizers\ChatMessageRecognizer.cs" />
+    <Compile Include="Messaging\IServerMessageRecognizer.cs" />
+    <Compile Include="Messaging\Recognizers\MissionsListRecognizer.cs" />
+    <Compile Include="Messaging\Recognizers\PlayerListRecognizer.cs" />
+    <Compile Include="Messaging\Recognizers\PlayerLogRecognizer.cs" />
+    <Compile Include="Messaging\Recognizers\RconAdminLogRecognizer.cs" />
     <Compile Include="Models\Admin.cs" />
     <Compile Include="Models\AdminList.cs" />
     <Compile Include="Models\Ban.cs" />
     <Compile Include="Models\BanList.cs" />
     <Compile Include="Models\ChatMessage.cs" />
+    <Compile Include="Messaging\ServerMessageType.cs" />
     <Compile Include="Models\Mission.cs" />
     <Compile Include="Models\MissionList.cs" />
     <Compile Include="Models\Player.cs" />
