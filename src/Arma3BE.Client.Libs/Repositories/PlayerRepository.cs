@@ -43,7 +43,7 @@ namespace Arma3BEClient.Libs.Repositories
         }
 
 
-        public IEnumerable<Player> GetPlayers(IEnumerable<string> guids)
+        public IEnumerable<PlayerDto> GetPlayers(IEnumerable<string> guids)
         {
             using (var dc = new Arma3BeClientContext())
             {
@@ -94,11 +94,21 @@ namespace Arma3BEClient.Libs.Repositories
             }
         }
 
-        public void AddOrUpdate(IEnumerable<Player> players)
+        public void AddOrUpdate(IEnumerable<PlayerDto> players)
         {
+            var playerList = players.Select(x => new Player()
+            {
+                Id = x.Id,
+                Comment = x.Comment,
+                GUID = x.GUID,
+                LastIp = x.LastIp,
+                LastSeen = x.LastSeen,
+                Name = x.Name,
+            }).ToArray();
+
             using (var dc = new Arma3BeClientContext())
             {
-                dc.Player.AddOrUpdate(players.ToArray());
+                dc.Player.AddOrUpdate(playerList);
                 dc.SaveChanges();
             }
         }
@@ -139,11 +149,11 @@ namespace Arma3BEClient.Libs.Repositories
     {
         public PlayerDto()
         {
-            this.LastSeen = DateTime.UtcNow;
+            LastSeen = DateTime.UtcNow;
         }
 
         [Key]
-        public System.Guid Id { get; set; }
+        public Guid Id { get; set; }
 
         public string GUID { get; set; }
         public string Name { get; set; }

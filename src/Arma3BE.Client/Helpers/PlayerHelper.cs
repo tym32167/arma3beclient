@@ -47,7 +47,7 @@ namespace Arma3BEClient.Helpers
                 var dbGuids = playersInDb.Select(x => x.GUID).ToList();
 
                 var historyToAdd = new List<PlayerHistory>();
-                var playerToUpdate = new List<Libs.ModelCompact.Player>();
+                var playerToUpdate = new List<PlayerDto>();
 
                 foreach (var player in playersInDb)
                 {
