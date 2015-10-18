@@ -15,7 +15,7 @@ namespace Arma3BEClient.Chat
     /// </summary>
     public partial class ChatControl : UserControl
     {
-        private Paragraph paragraph;
+        private Paragraph _paragraph;
 
         public ChatControl()
         {
@@ -23,10 +23,7 @@ namespace Arma3BEClient.Chat
             InitBox();
         }
 
-        private ServerMonitorChatViewModel Model
-        {
-            get { return DataContext as ServerMonitorChatViewModel; }
-        }
+        private ServerMonitorChatViewModel Model => DataContext as ServerMonitorChatViewModel;
 
         private void _model_ChatMessageEventHandler(object sender, ServerMonitorChatViewModelEventArgs e)
         {
@@ -35,7 +32,7 @@ namespace Arma3BEClient.Chat
                 if (!Model.EnableChat) return;
                 var type = e.Message.Type;
                 if (type != ChatMessage.MessageType.Unknown)
-                    AppendText(paragraph, ChatScrollViewer, e.Message);
+                    AppendText(_paragraph, ChatScrollViewer, e.Message);
                 else
                     AppendText(msgConsole, ConsoleScrollViewer, e.Message);
             });
@@ -58,20 +55,20 @@ namespace Arma3BEClient.Chat
         private void InitBox()
         {
             msgBox.Document.Blocks.Clear();
-            paragraph = new Paragraph();
+            _paragraph = new Paragraph();
 
-            msgBox.Document.Blocks.Add(paragraph);
+            msgBox.Document.Blocks.Add(_paragraph);
         }
 
         public void AppendText(Paragraph p, ScrollViewer scroll, ChatMessage message)
         {
-            var text = string.Format("[ {0:HH:mm:ss} ]  {1}\n", message.Date, message.Message);
+            var text = $"[ {message.Date:HH:mm:ss} ]  {message.Message}\n";
             var color = ServerMonitorModel.GetMessageColor(message);
 
             var brush = new SolidColorBrush(color);
             var span = new Span {Foreground = brush};
             span.Inlines.Add(text);
-            paragraph.Inlines.Add(span);
+            _paragraph.Inlines.Add(span);
 
             if (Model.AutoScroll)
                 scroll.ScrollToEnd();
@@ -79,7 +76,7 @@ namespace Arma3BEClient.Chat
 
         public void AppendText(TextBox block, ScrollViewer scroll, ChatMessage message)
         {
-            var text = string.Format("[ {0:HH:mm:ss} ]  {1}\n", message.Date, message.Message);
+            var text = $"[ {message.Date:HH:mm:ss} ]  {message.Message}\n";
             block.Text += text;
 
             if (Model.AutoScroll)
