@@ -93,7 +93,7 @@ namespace Arma3BEClient.Models
             if (!string.IsNullOrEmpty(rawmessage))
             {
                 var adminName = SettingsStore.Instance.AdminName;
-                var message = string.Format(" -1 {0}: {1}", adminName, rawmessage);
+                var message = $" -1 {adminName}: {rawmessage}";
                 _beServer.SendCommandAsync(CommandType.Say, message);
             }
 
