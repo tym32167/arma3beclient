@@ -16,7 +16,7 @@ namespace Arma3BEClient.Libs.Repositories
         {
         }
 
-        public IEnumerable<Player> GetAllPlayers()
+        public IEnumerable<PlayerDto> GetAllPlayers()
         {
             using (var dc = new Arma3BeClientContext())
             {
@@ -24,15 +24,16 @@ namespace Arma3BEClient.Libs.Repositories
             }
         }
 
-        public void AddPlayers(IEnumerable<Player> players)
+        public void AddPlayers(IEnumerable<PlayerDto> players)
         {
+            var playerList = players.Select(Map).ToArray();
+
             using (var dc = new Arma3BeClientContext())
             {
-                dc.Player.AddRange(players);
+                dc.Player.AddRange(playerList);
                 dc.SaveChanges();
             }
         }
-
 
         public IEnumerable<PlayerDto> GetPlayers(Expression<Func<Player, bool>> expression)
         {
@@ -42,7 +43,6 @@ namespace Arma3BEClient.Libs.Repositories
             }
         }
 
-
         public IEnumerable<PlayerDto> GetPlayers(IEnumerable<string> guids)
         {
             using (var dc = new Arma3BeClientContext())
@@ -51,6 +51,13 @@ namespace Arma3BEClient.Libs.Repositories
             }
         }
 
+        public PlayerDto GetPlayer(string guid)
+        {
+            using (var dc = new Arma3BeClientContext())
+            {
+                return dc.Player.FirstOrDefault(x => x.GUID == guid);
+            }
+        }
 
         public Player GetPlayerInfo(string guid)
         {
@@ -96,15 +103,7 @@ namespace Arma3BEClient.Libs.Repositories
 
         public void AddOrUpdate(IEnumerable<PlayerDto> players)
         {
-            var playerList = players.Select(x => new Player()
-            {
-                Id = x.Id,
-                Comment = x.Comment,
-                GUID = x.GUID,
-                LastIp = x.LastIp,
-                LastSeen = x.LastSeen,
-                Name = x.Name,
-            }).ToArray();
+            var playerList = players.Select(Map).ToArray();
 
             using (var dc = new Arma3BeClientContext())
             {
@@ -122,14 +121,6 @@ namespace Arma3BEClient.Libs.Repositories
             }
         }
 
-        public PlayerDto GetPlayer(string guid)
-        {
-            using (var dc = new Arma3BeClientContext())
-            {
-                return dc.Player.FirstOrDefault(x => x.GUID == guid);
-            }
-        }
-
         public void AddNotes(Guid id, string s)
         {
             using (var dc = new Arma3BeClientContext())
@@ -141,6 +132,20 @@ namespace Arma3BEClient.Libs.Repositories
                 });
                 dc.SaveChanges();
             }
+        }
+
+
+        private Player Map(PlayerDto source)
+        {
+            return new Player()
+            {
+                Id = source.Id,
+                Comment = source.Comment,
+                GUID = source.GUID,
+                LastIp = source.LastIp,
+                LastSeen = source.LastSeen,
+                Name = source.Name
+            };
         }
     }
 
