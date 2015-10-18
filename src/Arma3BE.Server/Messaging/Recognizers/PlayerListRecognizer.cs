@@ -1,5 +1,5 @@
 using System;
-using System.Text.RegularExpressions;
+using Arma3BE.Server.Messaging.Recognizers.Core;
 using Arma3BE.Server.Models;
 
 namespace Arma3BE.Server.Messaging.Recognizers
@@ -34,7 +34,7 @@ namespace Arma3BE.Server.Messaging.Recognizers
 
             for (; i < (lines.Length - 1); i++)
             {
-                if (Player.Parse(lines[i]) == null || !CanRecognizePlayerLine(lines[i]))
+                if (Player.Parse(lines[i]) == null || !CanRecognizeLine(lines[i]))
                 {
                     return false;
                 }
@@ -49,7 +49,7 @@ namespace Arma3BE.Server.Messaging.Recognizers
             return true;
         }
 
-        public bool CanRecognizePlayerLine(string line)
+        public bool CanRecognizeLine(string line)
         {
             var lines = line.Split(" \t".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             if (lines.Length < 5) return false;
@@ -57,16 +57,11 @@ namespace Arma3BE.Server.Messaging.Recognizers
             int test;
             if (!Int32.TryParse(lines[0], out test)) return false;
 
-            if (!RegexIpAndPort.IsMatch(lines[1])) return false;
-            if (lines[1].Split(".:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length != 5) return false;
+            if (!IPAndPortValidator.IsIPAndPort(lines[1])) return false;
 
             if (!Int32.TryParse(lines[2], out test)) return false;
 
             return true;
         }
-
-        private static readonly Regex RegexIpAndPort = new Regex(
-            @"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):([\d]+)",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase);
     }
 }

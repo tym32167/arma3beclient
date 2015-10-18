@@ -38,6 +38,7 @@
     <Compile Include="Messaging\Recognizers\BanLogRecognizer.cs" />
     <Compile Include="Messaging\Recognizers\ChatMessageRecognizer.cs" />
     <Compile Include="Messaging\IServerMessageRecognizer.cs" />
+    <Compile Include="Messaging\Recognizers\Core\IPAndPortValidator.cs" />
     <Compile Include="Messaging\Recognizers\MissionsListRecognizer.cs" />
     <Compile Include="Messaging\Recognizers\PlayerListRecognizer.cs" />
     <Compile Include="Messaging\Recognizers\PlayerLogRecognizer.cs" />

@@ -16,7 +16,7 @@ namespace Arma3BEClient.Tests.ServerMessages.Recognizers
         public void Line_Correct_Test(string line)
         {
             var recognizer = new PlayerListRecognizer();
-            Assert.IsTrue(recognizer.CanRecognizePlayerLine(line));
+            Assert.IsTrue(recognizer.CanRecognizeLine(line));
         }
 
         [Test]
@@ -26,7 +26,7 @@ namespace Arma3BEClient.Tests.ServerMessages.Recognizers
         public void Line_Not_Correct_Test(string line)
         {
             var recognizer = new PlayerListRecognizer();
-            Assert.IsFalse(recognizer.CanRecognizePlayerLine(line));
+            Assert.IsFalse(recognizer.CanRecognizeLine(line));
         }
     }
 }
