@@ -1,13 +1,13 @@
 ﻿/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * BattleNET v1.3 - BattlEye Library and Client            *
+ * BattleNET v1.3.2 - BattlEye Library and Client            *
  *                                                         *
- *  Copyright (C) 2013 by it's authors.                    *
+ *  Copyright (C) 2015 by it's authors.                    *
  *  Some rights reserved. See license.txt, authors.txt.    *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 namespace BattleNET
 {
-    internal enum BattlEyePacketType
+    enum BattlEyePacketType
     {
         Login,
         Command,
