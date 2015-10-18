@@ -34,7 +34,7 @@ namespace Arma3BEClient.Libs.Repositories
         }
 
 
-        public IEnumerable<Player> GetPlayers(Expression<Func<Player, bool>> expression)
+        public IEnumerable<PlayerDto> GetPlayers(Expression<Func<Player, bool>> expression)
         {
             using (var dc = new Arma3BeClientContext())
             {

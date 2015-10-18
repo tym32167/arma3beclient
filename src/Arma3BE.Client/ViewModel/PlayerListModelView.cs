@@ -82,7 +82,7 @@ namespace Arma3BEClient.ViewModel
                 var searchNotes = opts.Contains("Notes");
                 var searchComment = opts.Contains("Comment");
 
-                IEnumerable<Player> result;
+                IEnumerable<PlayerDto> result;
 
                 if (!string.IsNullOrEmpty(Filter))
                 {
