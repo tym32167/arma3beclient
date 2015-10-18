@@ -5,7 +5,7 @@ namespace Arma3BE.Server.Messaging.Recognizers.Core
 {
     public class IPAndPortValidator
     {
-        public static bool IsIPAndPort(string value)
+        public static bool Validate(string value)
         {
             if (string.IsNullOrEmpty(value)) return false;
 

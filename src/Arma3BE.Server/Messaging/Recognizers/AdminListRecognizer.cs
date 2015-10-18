@@ -52,7 +52,7 @@ namespace Arma3BE.Server.Messaging.Recognizers
             int test;
             if (!Int32.TryParse(lines[0], out test)) return false;
 
-            if (!IPAndPortValidator.IsIPAndPort(lines[1])) return false;
+            if (!IPAndPortValidator.Validate(lines[1])) return false;
 
             return true;
         }

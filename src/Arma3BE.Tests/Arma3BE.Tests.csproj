@@ -71,6 +71,8 @@
     <Compile Include="PlayerUpaterTest.cs" />
     <Compile Include="ServerMessages\Recognizers\AdminListLineRecognizerTest.cs" />
     <Compile Include="ServerMessages\Recognizers\AdminListRecognizerTest.cs" />
+    <Compile Include="ServerMessages\Recognizers\BanListLineRecognizerTest.cs" />
+    <Compile Include="ServerMessages\Recognizers\BanListRecognizerTest.cs" />
     <Compile Include="ServerMessages\Recognizers\PlayerListLineRecognizerTest.cs" />
     <Compile Include="ServerMessages\Recognizers\PlayerListRecognizerTest.cs" />
   </ItemGroup>
