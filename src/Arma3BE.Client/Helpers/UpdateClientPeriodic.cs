@@ -94,7 +94,7 @@ namespace Arma3BEClient.Helpers
             //_updateTimerAdmins.Change(800, 120000);
             //_updateTimerKeepAlive.Change(300654, 300000);
 
-            _updateTimerKeepAlive.Change(0, 300000);
+            _updateTimerKeepAlive.Change(8000, 300000);
         }
 
         protected override void DisposeManagedResources()

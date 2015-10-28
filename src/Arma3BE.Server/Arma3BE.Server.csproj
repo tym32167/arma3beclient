@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CommandType.cs" />
+    <Compile Include="IBattlEyeClientFactory.cs" />
     <Compile Include="IBEServer.cs" />
     <Compile Include="Messaging\Recognizers\AdminListRecognizer.cs" />
     <Compile Include="Messaging\Recognizers\BanListRecognizer.cs" />

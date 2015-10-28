@@ -16,7 +16,7 @@ using System.Threading;
 
 namespace BattleNET
 {
-    public class BattlEyeClient
+    public class BattlEyeClient : IBattlEyeClient
     {
         private Socket socket;
         private DateTime packetSent;

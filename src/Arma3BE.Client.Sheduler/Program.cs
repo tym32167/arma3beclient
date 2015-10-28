@@ -56,7 +56,7 @@ namespace Arma3BEClient.Sheduler
             Console.WriteLine(interval);
 
 
-            using (var uc = new BEServer(host, port, password, new FakeLog()))
+            using (var uc = new BEServer(host, port, password, new FakeLog(), new BattlEyeClientFactory(new FakeLog())))
             {
                 while (true)
                 {

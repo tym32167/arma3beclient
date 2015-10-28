@@ -17,21 +17,21 @@ namespace Arma3BE.Server
 
         private readonly object _lock = new object();
         private readonly ILog _log;
+        private readonly IBattlEyeClientFactory _battlEyeClientFactory;
         private readonly string _password;
         private readonly int _port;
-        private BattlEyeClient _battlEyeClient;
-
-        private Thread _thread;
+        private IBattlEyeClient _battlEyeClient;
 
 
-        public BEServer(string host, int port, string password, ILog log)
+        public BEServer(string host, int port, string password, ILog log, IBattlEyeClientFactory battlEyeClientFactory)
         {
             _host = host;
             _port = port;
             _password = password;
             _log = log;
+            _battlEyeClientFactory = battlEyeClientFactory;
 
-            InitClients();
+           InitClients();
         }
 
         public bool Disposed { get; set; }
@@ -168,32 +168,13 @@ namespace Arma3BE.Server
         {
             _log.Info($"{_host}:{_port} Update client - connect");
 
-            InitClients();
-
-            if (_battlEyeClient != null && !_battlEyeClient.Connected)
-            {
-                OnConnectingHandler();
-                if (_thread != null && _thread.IsAlive) _thread.Abort();
-                _thread = new Thread(state =>
-                {
-                    Thread.Sleep(100);
-                    _battlEyeClient.Connect();
-                }) {IsBackground = true};
-                _thread.Start();
-            }
+            _battlEyeClient.Connect();
         }
 
         public void Disconnect()
         {
             _log.Info($"{_host}:{_port} Update client - Disconnect");
-            try
-            {
-                ReleaseClient();
-            }
-            catch
-            {
-                // ignored
-            }
+            _battlEyeClient.Disconnect();
         }
 
 
@@ -361,8 +342,8 @@ namespace Arma3BE.Server
 
         private void RegisterMessage(ServerMessage message)
         {
-            _log.InfoFormat("message [\nserver ip: {0}\nmessageId:{1}\n{2}\n]", _host, message.MessageId,
-                message.Message);
+            //_log.InfoFormat("message [\nserver ip: {0}\nmessageId:{1}\n{2}\n]", _host, message.MessageId,
+            //    message.Message);
         }
 
 
@@ -374,7 +355,7 @@ namespace Arma3BE.Server
                 if (_battlEyeClient != null) ReleaseClient();
 
                 var credentials = new BattlEyeLoginCredentials(IPAddress.Parse(_host), _port, _password);
-                _battlEyeClient = new BattlEyeClient(credentials);
+                _battlEyeClient = _battlEyeClientFactory.Create(credentials);  
                 _battlEyeClient.ReconnectOnPacketLoss = true;
                 _battlEyeClient.BattlEyeConnected += battlEyeClient_BattlEyeConnected;
                 _battlEyeClient.BattlEyeDisconnected += _battlEyeClient_BattlEyeDisconnected;
@@ -412,10 +393,7 @@ namespace Arma3BE.Server
             try
             {
                 Disposed = true;
-
                 ReleaseClient();
-
-                _thread?.Abort();
                 GC.SuppressFinalize(this);
             }
             finally
