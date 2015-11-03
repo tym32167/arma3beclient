@@ -71,7 +71,7 @@ namespace Arma3BE.Server.Models
 
         public override string ToString()
         {
-            return string.Format("NUM {0}\tGUIDIP {1}\tML {2}\tREASON {3}", Num, GuidIp, Minutesleft, Reason);
+            return $"NUM {Num}\tGUIDIP {GuidIp}\tML {Minutesleft}\tREASON {Reason}";
         }
 
         public override bool Equals(object obj)

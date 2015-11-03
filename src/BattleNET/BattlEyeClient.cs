@@ -257,7 +257,7 @@ namespace BattleNET
         {
             keepRunning = false;
 
-            if (socket.Connected)
+            if (socket!=null && socket.Connected)
             {
                 socket.Shutdown(SocketShutdown.Both);
                 socket.Close();

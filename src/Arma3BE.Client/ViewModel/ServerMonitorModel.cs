@@ -29,7 +29,7 @@ namespace Arma3BEClient.ViewModel
 
             if (string.IsNullOrEmpty(host))
             {
-                var message = string.Format("Host is incorrect for server {0}", CurrentServer.Name);
+                var message = $"Host is incorrect for server {CurrentServer.Name}";
                 _log.Error(message);
                 throw new Exception(message);
             }
