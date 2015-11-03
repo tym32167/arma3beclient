@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Helpers.Views;
-using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.Repositories;
 
 namespace Arma3BEClient.Helpers
@@ -27,7 +26,8 @@ namespace Arma3BEClient.Helpers
             var bans = list.ToList();
             var userIds = bans.Select(x => x.GuidIp).Distinct().ToArray();
 
-            if (!HaveChanges(bans, x => x.Num)) return false;
+            if (!HaveChanges(bans, x => x.Num, (x, y) => x.GuidIp == y.GuidIp && x.Reason == y.Reason && x.Num == y.Num))
+                return false;
 
 
             using (var banRepository = new BanRepository())
@@ -95,6 +95,9 @@ namespace Arma3BEClient.Helpers
                         if (bdb == null)
                         {
                             var player = players.FirstOrDefault(x => x.GUID == ban.GuidIp);
+
+                            if (player == null) continue;
+                            
                             var newBan = new Libs.ModelCompact.Ban
                             {
                                 CreateDate = DateTime.UtcNow,

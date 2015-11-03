@@ -23,7 +23,7 @@ namespace Arma3BEClient.Helpers
             return true;
         }
 
-        protected bool HaveChanges<TK>(List<T> newList, Func<T, TK> comparer)
+        protected bool HaveChanges<TK>(List<T> newList, Func<T, TK> orderer, Func<T, T, bool> comparer = null )
         {
             var temp = _previousRequest;
             _previousRequest = newList;
@@ -31,8 +31,8 @@ namespace Arma3BEClient.Helpers
             if (temp != null && temp.Count == newList.Count)
             {
                 var count = temp.Count;
-                var po = temp.OrderBy(comparer).ToList();
-                var no = newList.OrderBy(comparer).ToList();
+                var po = temp.OrderBy(orderer).ToList();
+                var no = newList.OrderBy(orderer).ToList();
 
 
                 for (var i = 0; i < count; i++)
@@ -40,9 +40,19 @@ namespace Arma3BEClient.Helpers
                     var p = po[i];
                     var n = no[i];
 
-                    if (!p.Equals(n))
+                    if (comparer != null)
                     {
-                        return true;
+                        if (!comparer(p, n))
+                        {
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        if (!p.Equals(n))
+                        {
+                            return true;
+                        }
                     }
                 }
                 return false;

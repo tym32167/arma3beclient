@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
 using System.Threading;
-using System.Threading.Tasks;
 using Arma3BEClient.Common.Logging;
 using BattleNET;
 
@@ -28,29 +27,11 @@ namespace Arma3BE.Server
 
     public class ThreadSafeBattleEyeClient : IBattlEyeClient
     {
+        private static int Instances;
         private readonly IBattlEyeClient _battlEyeClient;
         private readonly ILog _log;
-        private ConcurrentQueue<CommandPacket>  _commandPackets = new ConcurrentQueue<CommandPacket>();
+        private readonly ConcurrentQueue<CommandPacket> _commandPackets = new ConcurrentQueue<CommandPacket>();
         private Thread ProcessThread;
-
-
-        private static int Instances = 0;
-
-        private void MainLoop()
-        {
-            while (true)
-            {
-                if (!_commandPackets.IsEmpty && _battlEyeClient.Connected)
-                {
-                    CommandPacket packet;
-                    if (_commandPackets.TryDequeue(out packet))
-                    {
-                        _battlEyeClient.SendCommand(packet.BattlEyeCommand, packet.Parameters);
-                    }
-                }
-                Thread.Sleep(300);
-            }
-        }
 
         public ThreadSafeBattleEyeClient(IBattlEyeClient battlEyeClient, ILog log)
         {
@@ -60,7 +41,6 @@ namespace Arma3BE.Server
             _battlEyeClient.BattlEyeMessageReceived += OnBattlEyeMessageReceived;
             _battlEyeClient.BattlEyeDisconnected += OnBattlEyeDisconnected;
 
-            
 
             Instances++;
         }
@@ -70,21 +50,19 @@ namespace Arma3BE.Server
         public bool ReconnectOnPacketLoss
         {
             get { return _battlEyeClient.ReconnectOnPacketLoss; }
-            set { _battlEyeClient.ReconnectOnPacketLoss = value; } 
+            set { _battlEyeClient.ReconnectOnPacketLoss = value; }
         }
 
         public int SendCommand(BattlEyeCommand command, string parameters = "")
         {
-
             _commandPackets.Enqueue(new CommandPacket(command, parameters));
-            //_battlEyeClient.SendCommand(command, parameters);
             return 0;
         }
 
         public void Disconnect()
         {
-            ProcessThread.Abort();
-            _battlEyeClient.Disconnect();
+            if (ProcessThread!=null && ProcessThread.IsAlive) ProcessThread.Abort();
+            _battlEyeClient?.Disconnect();
         }
 
         public BattlEyeConnectionResult Connect()
@@ -99,6 +77,24 @@ namespace Arma3BE.Server
         public event BattlEyeMessageEventHandler BattlEyeMessageReceived;
         public event BattlEyeConnectEventHandler BattlEyeConnected;
         public event BattlEyeDisconnectEventHandler BattlEyeDisconnected;
+
+        private void MainLoop()
+        {
+            while (true)
+            {
+                if (!_commandPackets.IsEmpty && _battlEyeClient.Connected)
+                {
+                    CommandPacket packet;
+                    if (_commandPackets.TryDequeue(out packet))
+                    {
+
+                        _log.Info($"Send command {packet.BattlEyeCommand}");
+                        _battlEyeClient.SendCommand(packet.BattlEyeCommand, packet.Parameters);
+                    }
+                }
+                Thread.Sleep(300);
+            }
+        }
 
         protected virtual void OnBattlEyeMessageReceived(BattlEyeMessageEventArgs message)
         {
