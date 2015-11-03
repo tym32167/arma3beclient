@@ -1,7 +1,9 @@
-﻿using Arma3BE.Server;
+﻿using System.Windows;
+using Arma3BE.Server;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
+using GalaSoft.MvvmLight;
 
 namespace Arma3BEClient.IoC
 {
@@ -11,6 +13,16 @@ namespace Arma3BEClient.IoC
         {
             container.Register(
                 Component.For<IBEServer>().ImplementedBy<BEServer>());
+
+
+            container.Register(
+                Classes.FromThisAssembly().BasedOn<Window>()
+                .WithServiceSelf());
+
+
+            container.Register(
+                Classes.FromThisAssembly().BasedOn<ViewModelBase>()
+                .WithServiceSelf());
         }
     }
 }

@@ -23,11 +23,11 @@ namespace Arma3BEClient
     {
         private readonly MainViewModel _model;
 
-        public MainWindow()
+        public MainWindow(MainViewModel model)
         {
             InitializeComponent();
 
-            _model = new MainViewModel();
+            _model = model;
             DataContext = _model;
         }
 

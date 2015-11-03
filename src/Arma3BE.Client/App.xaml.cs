@@ -26,6 +26,10 @@ namespace Arma3BEClient
             XmlConfigurator.Configure();
             _logger.Info("Startup");
             ConfigureContainer();
+
+
+            
+            Container.Resolve<MainWindow>().Show();
         }
 
         protected override void OnExit(ExitEventArgs e)
