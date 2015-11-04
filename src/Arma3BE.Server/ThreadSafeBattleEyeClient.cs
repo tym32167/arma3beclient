@@ -7,11 +7,10 @@ namespace Arma3BE.Server
 {
     public class ThreadSafeBattleEyeClient : IBattlEyeClient
     {
-        private static int Instances;
         private readonly IBattlEyeClient _battlEyeClient;
         private readonly ILog _log;
         private readonly ConcurrentQueue<CommandPacket> _commandPackets = new ConcurrentQueue<CommandPacket>();
-        private Thread ProcessThread;
+        private Thread _processThread;
 
         public ThreadSafeBattleEyeClient(IBattlEyeClient battlEyeClient, ILog log)
         {
@@ -20,9 +19,6 @@ namespace Arma3BE.Server
             _battlEyeClient.BattlEyeConnected += OnBattlEyeConnected;
             _battlEyeClient.BattlEyeMessageReceived += OnBattlEyeMessageReceived;
             _battlEyeClient.BattlEyeDisconnected += OnBattlEyeDisconnected;
-
-
-            Instances++;
         }
 
         public bool Connected => _battlEyeClient.Connected;
@@ -41,16 +37,16 @@ namespace Arma3BE.Server
 
         public void Disconnect()
         {
-            if (ProcessThread!=null && ProcessThread.IsAlive) ProcessThread.Abort();
+            if (_processThread != null && _processThread.IsAlive) _processThread.Abort();
             _battlEyeClient?.Disconnect();
         }
 
         public BattlEyeConnectionResult Connect()
         {
-            ProcessThread?.Abort();
+            _processThread?.Abort();
 
-            ProcessThread = new Thread(MainLoop);
-            ProcessThread.Start();
+            _processThread = new Thread(MainLoop) {IsBackground = true};
+            _processThread.Start();
             return _battlEyeClient.Connect();
         }
 
@@ -62,34 +58,33 @@ namespace Arma3BE.Server
         {
             while (true)
             {
+                if (_battlEyeClient == null || !_battlEyeClient.Connected)
+                    break;
+
                 if (!_commandPackets.IsEmpty && _battlEyeClient.Connected)
                 {
                     CommandPacket packet;
                     if (_commandPackets.TryDequeue(out packet))
                     {
-
-                        _log.Info($"Send command {packet.BattlEyeCommand}");
                         _battlEyeClient.SendCommand(packet.BattlEyeCommand, packet.Parameters);
                     }
                 }
+
                 Thread.Sleep(300);
             }
         }
 
-        protected virtual void OnBattlEyeMessageReceived(BattlEyeMessageEventArgs message)
+        private void OnBattlEyeMessageReceived(BattlEyeMessageEventArgs message)
         {
-            _log.InfoFormat("message [\nmessage id: {0}\nmessage:{1}\n]", message.Id, message.Message);
-
-
             BattlEyeMessageReceived?.Invoke(message);
         }
 
-        protected virtual void OnBattlEyeConnected(BattlEyeConnectEventArgs args)
+        private void OnBattlEyeConnected(BattlEyeConnectEventArgs args)
         {
             BattlEyeConnected?.Invoke(args);
         }
 
-        protected virtual void OnBattlEyeDisconnected(BattlEyeDisconnectEventArgs args)
+        private void OnBattlEyeDisconnected(BattlEyeDisconnectEventArgs args)
         {
             BattlEyeDisconnected?.Invoke(args);
         }
