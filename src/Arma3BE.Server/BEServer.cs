@@ -168,13 +168,13 @@ namespace Arma3BE.Server
         {
             _log.Info($"{_host}:{_port} Update client - connect");
 
-            _battlEyeClient.Connect();
+            _battlEyeClient?.Connect();
         }
 
         public void Disconnect()
         {
             _log.Info($"{_host}:{_port} Update client - Disconnect");
-            _battlEyeClient.Disconnect();
+            _battlEyeClient?.Disconnect();
         }
 
 
