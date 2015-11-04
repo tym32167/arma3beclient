@@ -2,17 +2,14 @@
 using System.Collections.Generic;
 using System.Data.Entity.Migrations;
 using System.Linq;
+using Arma3BEClient.Common.Core;
 using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
 
 namespace Arma3BEClient.Libs.Repositories
 {
-    public class BanRepository : IDisposable
+    public class BanRepository : DisposeObject
     {
-        public void Dispose()
-        {
-        }
-
         public IEnumerable<Ban> GetActiveBans(Guid serverId, string[] playerGuids)
         {
             using (var context = new Arma3BeClientContext())

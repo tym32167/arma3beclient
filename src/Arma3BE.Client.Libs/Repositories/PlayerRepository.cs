@@ -5,17 +5,14 @@ using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Linq.Expressions;
+using Arma3BEClient.Common.Core;
 using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
 
 namespace Arma3BEClient.Libs.Repositories
 {
-    public class PlayerRepository : IDisposable
+    public class PlayerRepository : DisposeObject
     {
-        public void Dispose()
-        {
-        }
-
         public IEnumerable<PlayerDto> GetAllPlayers()
         {
             using (var dc = new Arma3BeClientContext())

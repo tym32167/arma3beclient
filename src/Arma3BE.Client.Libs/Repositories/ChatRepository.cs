@@ -1,17 +1,14 @@
 using System;
 using System.Linq;
 using Arma3BE.Server.Models;
+using Arma3BEClient.Common.Core;
 using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
 
 namespace Arma3BEClient.Libs.Repositories
 {
-    public class ChatRepository : IDisposable
+    public class ChatRepository : DisposeObject
     {
-        public void Dispose()
-        {
-        }
-
         public void AddOrUpdate(ChatMessage message, Guid serverId)
         {
             using (var context = new Arma3BeClientContext())

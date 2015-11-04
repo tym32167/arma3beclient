@@ -2,16 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Arma3BE.Server.Models;
+using Arma3BEClient.Common.Core;
 using Arma3BEClient.Libs.Context;
 
 namespace Arma3BEClient.Libs.Repositories
 {
-    public class AdminRepository : IDisposable
+    public class AdminRepository : DisposeObject
     {
-        public void Dispose()
-        {
-        }
-
         public void AddOrUpdate(IEnumerable<Admin> admins, Guid serverId)
         {
             var l = admins.ToList();
