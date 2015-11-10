@@ -1,3 +1,4 @@
+using System.Timers;
 using Arma3BEClient.Common.Logging;
 using BattleNET;
 
@@ -10,7 +11,9 @@ namespace Arma3BE.Server
         private readonly ILog _log;
         private readonly BattlEyeLoginCredentials _credentials;
 
-        private object _lock = new object();
+        private readonly System.Timers.Timer _timer;
+
+        private readonly object _lock = new object();
 
 
         public BEConnectedWatcher(IBattlEyeClientFactory battlEyeClientFactory, ILog log, BattlEyeLoginCredentials credentials)
@@ -20,18 +23,48 @@ namespace Arma3BE.Server
             _credentials = credentials;
 
             Init();
+
+
+            _timer = new Timer(5000);
+            _timer.Elapsed += _timer_Elapsed;
+            _timer.Start();
+        }
+
+
+        private int _numAttempts = 0;
+        private void _timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            if (_battlEyeClient == null || !_battlEyeClient.Connected)
+            {
+                _numAttempts++;
+            }
+            else
+            {
+                _numAttempts = 0;
+            }
+
+            _log.Info($"ATTEMPTS {_numAttempts} FOR {_credentials.Host}:{_credentials.Port}");
+            if (_numAttempts > 5)
+            {
+                _numAttempts = 0;
+                _log.Info($"RECREATE CLIENT FOR {_credentials.Host}:{_credentials.Port}");
+                Release();
+                Init();
+            }
         }
 
         private void Init()
         {
             lock (_lock)
             {
-                Release();
+                _log.Info($"Init {_credentials.Host}:{_credentials.Port}");
 
                 _battlEyeClient = _battlEyeClientFactory.Create(_credentials);
                 _battlEyeClient.BattlEyeConnected += OnBattlEyeConnected;
                 _battlEyeClient.BattlEyeMessageReceived += OnBattlEyeMessageReceived;
                 _battlEyeClient.BattlEyeDisconnected += OnBattlEyeDisconnected;
+
+                _battlEyeClient.Connect();
             }
         }
 
@@ -39,6 +72,7 @@ namespace Arma3BE.Server
         {
             lock (_lock)
             {
+                _log.Info($"Release {_credentials.Host}:{_credentials.Port}");
                 if (_battlEyeClient != null)
                 {
                     _battlEyeClient.BattlEyeConnected -= OnBattlEyeConnected;

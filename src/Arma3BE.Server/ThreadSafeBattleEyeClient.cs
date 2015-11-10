@@ -45,7 +45,7 @@ namespace Arma3BE.Server
         {
             _processThread?.Abort();
 
-            _processThread = new Thread(MainLoop) {IsBackground = true};
+            _processThread = new Thread(MainLoop) { IsBackground = true };
             _processThread.Start();
             return _battlEyeClient.Connect();
         }
@@ -59,7 +59,7 @@ namespace Arma3BE.Server
             while (true)
             {
                 if (_battlEyeClient == null || !_battlEyeClient.Connected)
-                    break;
+                    continue;
 
                 if (!_commandPackets.IsEmpty && _battlEyeClient.Connected)
                 {
@@ -81,7 +81,8 @@ namespace Arma3BE.Server
 
         private void OnBattlEyeConnected(BattlEyeConnectEventArgs args)
         {
-            BattlEyeConnected?.Invoke(args);
+            if (Connected)
+                BattlEyeConnected?.Invoke(args);
         }
 
         private void OnBattlEyeDisconnected(BattlEyeDisconnectEventArgs args)
