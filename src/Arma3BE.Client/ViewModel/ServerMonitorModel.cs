@@ -37,7 +37,7 @@ namespace Arma3BEClient.ViewModel
 
             SteamQueryViewModel = new ServerMonitorSteamQueryViewModel(CurrentServer.Host, CurrentServer.Port, _log);
 
-            _beServer = new BEServer(host, CurrentServer.Port, CurrentServer.Password, _log, new BattlEyeClientFactory(_log));
+            _beServer = new BEServer(host, CurrentServer.Port, CurrentServer.Password, _log, new WatcherBEClientFactory(_log));
 
             _beServer.PlayerHandler += (s, e) => PlayersViewModel.SetData(e.Data);
 

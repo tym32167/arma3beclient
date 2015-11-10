@@ -22,4 +22,19 @@ namespace Arma3BE.Server
             return new ThreadSafeBattleEyeClient(new BattlEyeClient(credentials), _log);
         }
     }
+
+    public class WatcherBEClientFactory : IBattlEyeClientFactory
+    {
+        private readonly ILog _log;
+
+        public WatcherBEClientFactory(ILog log)
+        {
+            _log = log;
+        }
+
+        public IBattlEyeClient Create(BattlEyeLoginCredentials credentials)
+        {
+            return new BEConnectedWatcher(new BattlEyeClientFactory(_log), _log, credentials);
+        }
+    }
 }
