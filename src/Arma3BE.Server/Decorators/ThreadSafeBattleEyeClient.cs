@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Runtime.InteropServices;
 using System.Threading;
 using Arma3BEClient.Common.Core;
 using Arma3BEClient.Common.Logging;
@@ -22,7 +23,8 @@ namespace Arma3BE.Server.Decorators
             _battlEyeClient.BattlEyeDisconnected += OnBattlEyeDisconnected;
         }
 
-        public bool Connected => _battlEyeClient.Connected;
+        public bool Connected => _battlEyeClient.Connected
+                                 && _processThread != null && _processThread.IsAlive;
 
         public bool ReconnectOnPacketLoss
         {
@@ -32,7 +34,8 @@ namespace Arma3BE.Server.Decorators
 
         public int SendCommand(BattlEyeCommand command, string parameters = "")
         {
-            _commandPackets.Enqueue(new CommandPacket(command, parameters));
+            if (_commandPackets.Count < 10)
+                _commandPackets.Enqueue(new CommandPacket(command, parameters));
             return 0;
         }
 

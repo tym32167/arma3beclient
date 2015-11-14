@@ -25,7 +25,8 @@ namespace Arma3BE.Server.Decorators
 
         private void OnBattlEyeMessageReceived(BattlEyeMessageEventArgs message)
         {
-            BattlEyeMessageReceived?.Invoke(message);
+            if (message != null && !string.IsNullOrEmpty(message.Message))
+                BattlEyeMessageReceived?.Invoke(message);
         }
 
         private void OnBattlEyeConnected(BattlEyeConnectEventArgs args)

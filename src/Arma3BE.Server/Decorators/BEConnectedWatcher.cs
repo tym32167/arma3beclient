@@ -44,12 +44,16 @@ namespace Arma3BE.Server.Decorators
                 _numAttempts = 0;
             }
 
-            _log.Info($"ATTEMPTS {_numAttempts} FOR {_credentials.Host}:{_credentials.Port}");
+            //_log.Info($"ATTEMPTS {_numAttempts} FOR {_credentials.Host}:{_credentials.Port}");
             if (_numAttempts > 5)
             {
                 _numAttempts = 0;
                 _log.Info($"RECREATE CLIENT FOR {_credentials.Host}:{_credentials.Port}");
+
                 Release();
+
+                OnBattlEyeDisconnected(new BattlEyeDisconnectEventArgs(_credentials, BattlEyeDisconnectionType.ConnectionLost));
+
                 Init();
             }
         }
