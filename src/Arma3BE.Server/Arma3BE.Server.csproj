@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{992FAB3C-6505-41E4-A4D0-4D0657661695}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Arma3BE.Server</RootNamespace>
+    <AssemblyName>Arma3BE.Server</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Decorators\BattlEyeClientProxy.cs" />
+    <Compile Include="Decorators\BEConnectedWatcher.cs" />
+    <Compile Include="CommandType.cs" />
+    <Compile Include="IBattlEyeClientFactory.cs" />
+    <Compile Include="IBEServer.cs" />
+    <Compile Include="Messaging\Recognizers\AdminListRecognizer.cs" />
+    <Compile Include="Messaging\Recognizers\BanListRecognizer.cs" />
+    <Compile Include="Messaging\Recognizers\BanLogRecognizer.cs" />
+    <Compile Include="Messaging\Recognizers\ChatMessageRecognizer.cs" />
+    <Compile Include="Messaging\IServerMessageRecognizer.cs" />
+    <Compile Include="Messaging\Recognizers\Core\GUIDValidator.cs" />
+    <Compile Include="Messaging\Recognizers\Core\IPAndPortValidator.cs" />
+    <Compile Include="Messaging\Recognizers\MissionsListRecognizer.cs" />
+    <Compile Include="Messaging\Recognizers\PlayerListRecognizer.cs" />
+    <Compile Include="Messaging\Recognizers\PlayerLogRecognizer.cs" />
+    <Compile Include="Messaging\Recognizers\RconAdminLogRecognizer.cs" />
+    <Compile Include="Models\Admin.cs" />
+    <Compile Include="Models\AdminList.cs" />
+    <Compile Include="Models\Ban.cs" />
+    <Compile Include="Models\BanList.cs" />
+    <Compile Include="Models\ChatMessage.cs" />
+    <Compile Include="Messaging\ServerMessageType.cs" />
+    <Compile Include="Models\Mission.cs" />
+    <Compile Include="Models\MissionList.cs" />
+    <Compile Include="Models\Player.cs" />
+    <Compile Include="Models\PlayerList.cs" />
+    <Compile Include="Models\ServerMessage.cs" />
+    <Compile Include="Models\StateList.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="BEServer.cs" />
+    <Compile Include="Decorators\ThreadSafeBattleEyeClient.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Arma3BE.Common\Arma3BE.Common.csproj">
+      <Project>{D507E532-7DE6-4028-9DBE-AA76C54CC92A}</Project>
+      <Name>Arma3BE.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BattleNET\BattleNET.csproj">
+      <Project>{4FBB3734-215B-45B1-BDBC-0EFA156A6900}</Project>
+      <Name>BattleNET</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
