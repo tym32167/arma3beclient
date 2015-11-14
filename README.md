@@ -1,6 +1,9 @@
 <h2 align="center">Arma 3 BattlEye Tool</h2>
 <p>This program is designed specifically for the <a href="http://tehgam.com/">TEHGAM</a> community, with the main intended purpose of managing players and bans through the BattlEye protocol.</p>
  [![Build status](https://ci.appveyor.com/api/projects/status/vvhqm0ma4rb6pk5h?svg=true)](https://ci.appveyor.com/project/ArtemMuradov/arma3beclient)
+ 
+ [![Coverity Scan Build Status](https://scan.coverity.com/projects/6990/badge.svg)](https://scan.coverity.com/projects/tym32167-arma3beclient)
+ 
 <h3>Screenshots</h3>
 <table border="1">
   <tr>
