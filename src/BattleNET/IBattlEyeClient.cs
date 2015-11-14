@@ -1,6 +1,8 @@
-﻿namespace BattleNET
+﻿using System;
+
+namespace BattleNET
 {
-    public interface IBattlEyeClient
+    public interface IBattlEyeClient : IDisposable
     {
         bool Connected { get; }
         bool ReconnectOnPacketLoss { get; set; }

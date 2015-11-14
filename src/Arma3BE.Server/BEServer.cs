@@ -342,8 +342,8 @@ namespace Arma3BE.Server
 
         private void RegisterMessage(ServerMessage message)
         {
-            //_log.InfoFormat("message [\nserver ip: {0}\nmessageId:{1}\n{2}\n]", _host, message.MessageId,
-            //    message.Message);
+            _log.InfoFormat("message [\nserver ip: {0}\nmessageId:{1}\n{2}\n]", _host, message.MessageId,
+                message.Message);
         }
 
 
@@ -377,6 +377,8 @@ namespace Arma3BE.Server
                         _battlEyeClient.BattlEyeConnected -= battlEyeClient_BattlEyeConnected;
                         _battlEyeClient.BattlEyeDisconnected -= _battlEyeClient_BattlEyeDisconnected;
                         _battlEyeClient.BattlEyeMessageReceived -= battlEyeClient_BattlEyeMessageReceived;
+
+                        _battlEyeClient.Dispose();
                     }
                     finally
                     {

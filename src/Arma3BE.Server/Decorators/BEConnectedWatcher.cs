@@ -1,10 +1,11 @@
 using System.Timers;
+using Arma3BEClient.Common.Core;
 using Arma3BEClient.Common.Logging;
 using BattleNET;
 
-namespace Arma3BE.Server
+namespace Arma3BE.Server.Decorators
 {
-    public class BEConnectedWatcher : IBattlEyeClient
+    public class BEConnectedWatcher :DisposeObject, IBattlEyeClient
     {
         private IBattlEyeClient _battlEyeClient;
         private readonly IBattlEyeClientFactory _battlEyeClientFactory;
@@ -80,8 +81,10 @@ namespace Arma3BE.Server
                     _battlEyeClient.BattlEyeDisconnected -= OnBattlEyeDisconnected;
 
                     if (_battlEyeClient.Connected) _battlEyeClient.Disconnect();
-                }
 
+                    _battlEyeClient.Dispose();
+                }
+                
                 _battlEyeClient = null;
             }
         }
@@ -132,5 +135,22 @@ namespace Arma3BE.Server
             BattlEyeDisconnected?.Invoke(args);
         }
 
+        protected override void DisposeManagedResources()
+        {
+            if (_battlEyeClient != null)
+            {
+                lock (_lock)
+                {
+                    _timer.Stop();
+                    if (_battlEyeClient != null)
+                    {
+                        Release();
+                    }
+                }
+            }
+
+            
+            base.DisposeManagedResources();
+        }
     }
 }

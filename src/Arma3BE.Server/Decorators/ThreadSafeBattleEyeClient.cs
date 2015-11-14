@@ -1,11 +1,12 @@
 using System.Collections.Concurrent;
 using System.Threading;
+using Arma3BEClient.Common.Core;
 using Arma3BEClient.Common.Logging;
 using BattleNET;
 
-namespace Arma3BE.Server
+namespace Arma3BE.Server.Decorators
 {
-    public class ThreadSafeBattleEyeClient : IBattlEyeClient
+    public class ThreadSafeBattleEyeClient : DisposeObject, IBattlEyeClient
     {
         private readonly IBattlEyeClient _battlEyeClient;
         private readonly ILog _log;

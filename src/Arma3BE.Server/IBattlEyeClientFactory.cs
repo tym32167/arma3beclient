@@ -1,4 +1,5 @@
-﻿using Arma3BEClient.Common.Logging;
+﻿using Arma3BE.Server.Decorators;
+using Arma3BEClient.Common.Logging;
 using BattleNET;
 
 namespace Arma3BE.Server
@@ -19,7 +20,7 @@ namespace Arma3BE.Server
 
         public IBattlEyeClient Create(BattlEyeLoginCredentials credentials)
         {
-            return new ThreadSafeBattleEyeClient(new BattlEyeClient(credentials), _log);
+            return new ThreadSafeBattleEyeClient(new BattlEyeClientProxy(new BattlEyeClient(credentials)), _log);
         }
     }
 
