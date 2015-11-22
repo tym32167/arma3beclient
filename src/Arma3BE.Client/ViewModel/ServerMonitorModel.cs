@@ -16,14 +16,12 @@ namespace Arma3BEClient.ViewModel
         private readonly IBEServer _beServer;
         private readonly bool _console;
         private readonly ILog _log;
-        private readonly UpdateClientPeriodic _updateClientPeriodic;
 
         public ServerMonitorModel(ServerInfo currentServer, ILog log, bool console = false)
         {
             CurrentServer = currentServer;
             _log = log;
             _console = console;
-
 
             var host = IPInfo.GetIPAddress(CurrentServer.Host);
 
@@ -33,7 +31,6 @@ namespace Arma3BEClient.ViewModel
                 _log.Error(message);
                 throw new Exception(message);
             }
-
 
             SteamQueryViewModel = new ServerMonitorSteamQueryViewModel(CurrentServer.Host, CurrentServer.Port, _log);
 
@@ -47,7 +44,6 @@ namespace Arma3BEClient.ViewModel
                 _beServer.AdminHandler += (s, e) => AdminsViewModel.SetData(e.Data);
             }
 
-
             _beServer.ConnectHandler += BeServerConnectHandler;
             _beServer.DisconnectHandler += BeServerDisconnectHandler;
 
@@ -57,7 +53,6 @@ namespace Arma3BEClient.ViewModel
             }
 
             _beServer.PlayerLog += (s, e) => _beServer.SendCommandAsync(CommandType.Players);
-
 
             if (!console)
             {
@@ -69,7 +64,6 @@ namespace Arma3BEClient.ViewModel
             }
 
             _beServer.ConnectingHandler += (s, e) => RaisePropertyChanged("Connected");
-
 
             PlayersViewModel = new ServerMonitorPlayerViewModel(_log, currentServer, _beServer);
 
@@ -83,8 +77,6 @@ namespace Arma3BEClient.ViewModel
             }
 
             ChatViewModel = new ServerMonitorChatViewModel(_log, currentServer.Id, _beServer);
-            _updateClientPeriodic = new UpdateClientPeriodic(_beServer, log);
-            _updateClientPeriodic.Start();
         }
 
         public ServerInfo CurrentServer { get; }
@@ -99,7 +91,6 @@ namespace Arma3BEClient.ViewModel
             var type = message.Type;
 
             var color = Colors.Black;
-
 
             switch (type)
             {
@@ -165,7 +156,6 @@ namespace Arma3BEClient.ViewModel
         protected override void DisposeManagedResources()
         {
             base.DisposeManagedResources();
-            _updateClientPeriodic.Dispose();
             _beServer.Disconnect();
             _beServer.Dispose();
         }
