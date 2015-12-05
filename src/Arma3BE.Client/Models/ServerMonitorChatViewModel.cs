@@ -33,7 +33,8 @@ namespace Arma3BEClient.Models
             _chatHelper = new ChatHelper(_log, _serverId);
             _beServer.ChatMessageHandler += BeServerChatMessageHandler;
             _beServer.PlayerLog += _beServer_PlayerLog;
-
+            _beServer.RConAdminLog += _beServer_PlayerLog;
+            _beServer.BanLog += _beServer_PlayerLog;
 
             ShowHistoryCommand = new ActionCommand(() =>
             {
