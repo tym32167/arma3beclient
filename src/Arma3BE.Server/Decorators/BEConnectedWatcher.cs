@@ -30,7 +30,7 @@ namespace Arma3BE.Server.Decorators
 
             Init();
 
-            _timer = new Timer(_timer_Elapsed, null, 5000, 15000);
+            _timer = new Timer(_timer_Elapsed, null, 5000, 10000);
         }
 
         public bool ReconnectOnPacketLoss
@@ -62,8 +62,6 @@ namespace Arma3BE.Server.Decorators
 
         private void _timer_Elapsed(object state)
         {
-            SendCommand(BattlEyeCommand.Players);
-
             if (_battlEyeClient == null || !_battlEyeClient.Connected)
             {
                 _numAttempts++;
@@ -75,7 +73,9 @@ namespace Arma3BE.Server.Decorators
 
             var lastReceivedSpan = DateTime.Now - _lastReceived;
 
-            _log.Info($"ATTEMPTS {_numAttempts} FOR {_credentials.Host}:{_credentials.Port} WITH LAST RECEIVED {lastReceivedSpan}");
+            if (lastReceivedSpan.TotalMinutes > 10) SendCommand(BattlEyeCommand.Players);
+
+            //_log.Info($"ATTEMPTS {_numAttempts} FOR {_credentials.Host}:{_credentials.Port} WITH LAST RECEIVED {lastReceivedSpan}");
             if (_numAttempts > 5 || lastReceivedSpan.TotalMinutes > 15)
             {
                 _numAttempts = 0;

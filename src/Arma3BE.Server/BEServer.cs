@@ -162,7 +162,6 @@ namespace Arma3BE.Server
             }
         }
 
-
         public void Connect()
         {
             _log.Info($"{_host}:{_port} Update client - connect");
@@ -316,18 +315,14 @@ namespace Arma3BE.Server
 
                 case ServerMessageType.RconAdminLog:
                     OnRConAdminLog(logMessage);
-                    OnChatMessageHandler(new ChatMessage {Date = DateTime.UtcNow, Message = message.Message});
                     break;
-
 
                 case ServerMessageType.PlayerLog:
                     OnPlayerLog(logMessage);
-                    OnChatMessageHandler(new ChatMessage {Date = DateTime.UtcNow, Message = message.Message});
                     break;
 
                 case ServerMessageType.BanLog:
                     OnBanLog(logMessage);
-                    OnChatMessageHandler(new ChatMessage {Date = DateTime.UtcNow, Message = message.Message});
                     break;
 
                 case ServerMessageType.Unknown:
@@ -350,7 +345,6 @@ namespace Arma3BE.Server
             _log.InfoFormat("message [\nserver ip: {0}\nmessageId:{1}\n{2}\n]", _host, message.MessageId,
                 message.Message);
         }
-
 
         private void InitClients()
         {
