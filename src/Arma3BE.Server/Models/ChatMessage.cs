@@ -2,7 +2,7 @@
 
 namespace Arma3BE.Server.Models
 {
-    public class ChatMessage
+    public class ChatMessage : MessageBase
     {
         public enum MessageType
         {
@@ -15,9 +15,6 @@ namespace Arma3BE.Server.Models
             Command,
             RCon
         }
-
-        public DateTime Date { get; set; }
-        public string Message { get; set; }
 
         public MessageType Type
         {
@@ -35,5 +32,16 @@ namespace Arma3BE.Server.Models
                 return MessageType.Unknown;
             }
         }
+    }
+
+    public class LogMessage : MessageBase
+    {
+        
+    }
+
+    public abstract class MessageBase
+    {
+        public DateTime Date { get; set; }
+        public string Message { get; set; }
     }
 }

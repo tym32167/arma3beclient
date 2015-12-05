@@ -14,9 +14,9 @@ namespace Arma3BE.Server
         event EventHandler<UpdateClientEventArgs<IEnumerable<Admin>>> AdminHandler;
         event EventHandler<UpdateClientEventArgs<IEnumerable<Mission>>> MissionHandler;
         event EventHandler<ChatMessage> ChatMessageHandler;
-        event EventHandler<EventArgs> RConAdminLog;
-        event EventHandler<EventArgs> PlayerLog;
-        event EventHandler<EventArgs> BanLog;
+        event EventHandler<LogMessage> RConAdminLog;
+        event EventHandler<LogMessage> PlayerLog;
+        event EventHandler<LogMessage> BanLog;
         event EventHandler ConnectHandler;
         event EventHandler ConnectingHandler;
         event EventHandler DisconnectHandler;

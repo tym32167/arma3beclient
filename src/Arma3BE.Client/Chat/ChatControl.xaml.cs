@@ -74,7 +74,7 @@ namespace Arma3BEClient.Chat
                 scroll.ScrollToEnd();
         }
 
-        public void AppendText(TextBox block, ScrollViewer scroll, ChatMessage message)
+        public void AppendText(TextBox block, ScrollViewer scroll, MessageBase message)
         {
             var text = $"[ {message.Date:HH:mm:ss} ]  {message.Message}\n";
             block.Text += text;
@@ -86,6 +86,16 @@ namespace Arma3BEClient.Chat
         private void ToolBar_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             Model.ChatMessageEventHandler += _model_ChatMessageEventHandler;
+            Model.LogMessageEventHandler += Model_LogMessageEventHandler;
+        }
+
+        private void Model_LogMessageEventHandler(object sender, ServerMonitorLogViewModelEventArgs e)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                if (!Model.EnableChat) return;
+                AppendText(msgConsole, ConsoleScrollViewer, e.Message);
+            });
         }
 
         private void ClearAll_Click(object sender, RoutedEventArgs e)

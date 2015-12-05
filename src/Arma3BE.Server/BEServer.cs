@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using Arma3BE.Server.Messaging;
 using Arma3BE.Server.Models;
@@ -13,11 +12,11 @@ namespace Arma3BE.Server
 {
     public sealed class BEServer : DisposeObject, IBEServer
     {
+        private readonly IBattlEyeClientFactory _battlEyeClientFactory;
         private readonly string _host;
 
         private readonly object _lock = new object();
         private readonly ILog _log;
-        private readonly IBattlEyeClientFactory _battlEyeClientFactory;
         private readonly string _password;
         private readonly int _port;
         private IBattlEyeClient _battlEyeClient;
@@ -31,7 +30,7 @@ namespace Arma3BE.Server
             _log = log;
             _battlEyeClientFactory = battlEyeClientFactory;
 
-           InitClients();
+            InitClients();
         }
 
         public bool Disposed { get; set; }
@@ -49,9 +48,9 @@ namespace Arma3BE.Server
         public event EventHandler<ChatMessage> ChatMessageHandler;
 
 
-        public event EventHandler<EventArgs> RConAdminLog;
-        public event EventHandler<EventArgs> PlayerLog;
-        public event EventHandler<EventArgs> BanLog;
+        public event EventHandler<LogMessage> RConAdminLog;
+        public event EventHandler<LogMessage> PlayerLog;
+        public event EventHandler<LogMessage> BanLog;
 
         public event EventHandler ConnectHandler;
         public event EventHandler ConnectingHandler;
@@ -190,22 +189,22 @@ namespace Arma3BE.Server
             handler?.Invoke(this, EventArgs.Empty);
         }
 
-        private void OnBanLog()
+        private void OnBanLog(LogMessage message)
         {
             var handler = BanLog;
-            handler?.Invoke(this, EventArgs.Empty);
+            handler?.Invoke(this, message);
         }
 
-        private void OnPlayerLog()
+        private void OnPlayerLog(LogMessage message)
         {
             var handler = PlayerLog;
-            handler?.Invoke(this, EventArgs.Empty);
+            handler?.Invoke(this, message);
         }
 
-        private void OnRConAdminLog()
+        private void OnRConAdminLog(LogMessage message)
         {
             var handler = RConAdminLog;
-            handler?.Invoke(this, EventArgs.Empty);
+            handler?.Invoke(this, message);
         }
 
         private void OnAdminHandler(IEnumerable<Admin> e)
@@ -277,6 +276,12 @@ namespace Arma3BE.Server
 
         private void ProcessMessage(ServerMessage message)
         {
+            var logMessage = new LogMessage
+            {
+                Date = DateTime.UtcNow,
+                Message = message.Message
+            };
+
             switch (message.Type)
             {
                 case ServerMessageType.PlayerList:
@@ -310,29 +315,29 @@ namespace Arma3BE.Server
                     break;
 
                 case ServerMessageType.RconAdminLog:
-                    OnRConAdminLog();
+                    OnRConAdminLog(logMessage);
                     OnChatMessageHandler(new ChatMessage {Date = DateTime.UtcNow, Message = message.Message});
                     break;
 
 
                 case ServerMessageType.PlayerLog:
-                    OnPlayerLog();
+                    OnPlayerLog(logMessage);
                     OnChatMessageHandler(new ChatMessage {Date = DateTime.UtcNow, Message = message.Message});
                     break;
 
                 case ServerMessageType.BanLog:
-                    OnBanLog();
+                    OnBanLog(logMessage);
                     OnChatMessageHandler(new ChatMessage {Date = DateTime.UtcNow, Message = message.Message});
                     break;
 
                 case ServerMessageType.Unknown:
-                    var unknownMessage = new ChatMessage
-                    {
-                        Date = DateTime.UtcNow,
-                        Message = message.Message
-                    };
+                    //var unknownMessage = new ChatMessage
+                    //{
+                    //    Date = DateTime.UtcNow,
+                    //    Message = message.Message
+                    //};
 
-                    OnChatMessageHandler(unknownMessage);
+                    //OnChatMessageHandler(unknownMessage);
                     break;
             }
 
@@ -355,7 +360,7 @@ namespace Arma3BE.Server
                 if (_battlEyeClient != null) ReleaseClient();
 
                 var credentials = new BattlEyeLoginCredentials(IPAddress.Parse(_host), _port, _password);
-                _battlEyeClient = _battlEyeClientFactory.Create(credentials);  
+                _battlEyeClient = _battlEyeClientFactory.Create(credentials);
                 _battlEyeClient.ReconnectOnPacketLoss = true;
                 _battlEyeClient.BattlEyeConnected += battlEyeClient_BattlEyeConnected;
                 _battlEyeClient.BattlEyeDisconnected += _battlEyeClient_BattlEyeDisconnected;
