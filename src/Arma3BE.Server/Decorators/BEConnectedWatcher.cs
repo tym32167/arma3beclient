@@ -73,7 +73,7 @@ namespace Arma3BE.Server.Decorators
 
             var lastReceivedSpan = DateTime.Now - _lastReceived;
 
-            if (lastReceivedSpan.TotalMinutes > 10) SendCommand(BattlEyeCommand.Players);
+            if (lastReceivedSpan.TotalMinutes > 10 && _numAttempts == 0) SendCommand(BattlEyeCommand.Players);
 
             //_log.Info($"ATTEMPTS {_numAttempts} FOR {_credentials.Host}:{_credentials.Port} WITH LAST RECEIVED {lastReceivedSpan}");
             if (_numAttempts > 5 || lastReceivedSpan.TotalMinutes > 15)
