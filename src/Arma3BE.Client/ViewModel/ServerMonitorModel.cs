@@ -83,10 +83,7 @@ namespace Arma3BEClient.ViewModel
 
         public ServerInfo CurrentServer { get; }
 
-        public bool Connected
-        {
-            get { return _beServer.Connected; }
-        }
+        public bool Connected => _beServer.Connected;
 
         public static Color GetMessageColor(ChatMessage message)
         {
@@ -135,9 +132,9 @@ namespace Arma3BEClient.ViewModel
 
             if (!_console)
             {
-                await _beServer.SendCommandAsync(CommandType.Bans);
                 await _beServer.SendCommandAsync(CommandType.Admins);
                 await _beServer.SendCommandAsync(CommandType.Missions);
+                await _beServer.SendCommandAsync(CommandType.Bans);
             }
 
             RaisePropertyChanged("Connected");
