@@ -24,22 +24,19 @@ namespace Arma3BE.Server.Decorators
             _battlEyeClient.BattlEyeMessageReceived += OnBattlEyeMessageReceived;
             _battlEyeClient.BattlEyeDisconnected += OnBattlEyeDisconnected;
 
-            _timer = new Timer(MainLoop, null, 1000, 2000);
+            _timer = new Timer(MainLoop, null, 1000, 1000);
             _log.Info($"ThreadSafeBattleEyeClient Init");
         }
 
         public bool Connected => _battlEyeClient.Connected;
 
-        public bool ReconnectOnPacketLoss
-        {
-            get { return _battlEyeClient.ReconnectOnPacketLoss; }
-            set { _battlEyeClient.ReconnectOnPacketLoss = value; }
-        }
-
         public int SendCommand(BattlEyeCommand command, string parameters = "")
         {
-            if (_commandPackets.Count < 10)
+            if (_commandPackets.Count < 1000)
+            {
                 _commandPackets.Enqueue(new CommandPacket(command, parameters));
+                _log.Info($"ThreadSafeBattleEyeClient Saving {command} WITH {parameters}");
+            }
             return 0;
         }
 

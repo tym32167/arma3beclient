@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using Arma3BEClient.Common.Core;
 using Arma3BEClient.Common.Logging;
 using BattleNET;
@@ -28,15 +29,8 @@ namespace Arma3BE.Server.Decorators
             _log = log;
             _credentials = credentials;
 
-            Init();
-
             _timer = new Timer(_timer_Elapsed, null, 5000, 10000);
-        }
-
-        public bool ReconnectOnPacketLoss
-        {
-            get { return _battlEyeClient.ReconnectOnPacketLoss; }
-            set { _battlEyeClient.ReconnectOnPacketLoss = value; }
+            Init();
         }
 
         public int SendCommand(BattlEyeCommand command, string parameters = "")
@@ -101,8 +95,6 @@ namespace Arma3BE.Server.Decorators
                 _battlEyeClient.BattlEyeConnected += OnBattlEyeConnected;
                 _battlEyeClient.BattlEyeMessageReceived += OnBattlEyeMessageReceived;
                 _battlEyeClient.BattlEyeDisconnected += OnBattlEyeDisconnected;
-
-                _battlEyeClient.Connect();
             }
         }
 
@@ -145,6 +137,8 @@ namespace Arma3BE.Server.Decorators
 
         protected override void DisposeManagedResources()
         {
+            _timer.Dispose();
+
             if (_battlEyeClient != null)
             {
                 lock (_lock)
@@ -153,12 +147,9 @@ namespace Arma3BE.Server.Decorators
                     {
                         Release();
                     }
-
-                    _timer.Dispose();
                 }
             }
-
-
+            
             base.DisposeManagedResources();
         }
     }

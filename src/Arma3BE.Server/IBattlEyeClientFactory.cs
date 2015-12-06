@@ -20,7 +20,10 @@ namespace Arma3BE.Server
 
         public IBattlEyeClient Create(BattlEyeLoginCredentials credentials)
         {
-            return new ThreadSafeBattleEyeClient(new BattlEyeClientProxy(new BattlEyeClient(credentials)), _log);
+            return new ThreadSafeBattleEyeClient(new BattlEyeClientProxy(new BattlEyeClient(credentials)
+            {
+                ReconnectOnPacketLoss = true
+            }), _log);
         }
     }
 

@@ -355,7 +355,6 @@ namespace Arma3BE.Server
 
                 var credentials = new BattlEyeLoginCredentials(IPAddress.Parse(_host), _port, _password);
                 _battlEyeClient = _battlEyeClientFactory.Create(credentials);
-                _battlEyeClient.ReconnectOnPacketLoss = true;
                 _battlEyeClient.BattlEyeConnected += battlEyeClient_BattlEyeConnected;
                 _battlEyeClient.BattlEyeDisconnected += _battlEyeClient_BattlEyeDisconnected;
                 _battlEyeClient.BattlEyeMessageReceived += battlEyeClient_BattlEyeMessageReceived;
@@ -386,7 +385,6 @@ namespace Arma3BE.Server
                 }
             }
         }
-
 
         protected override void DisposeUnManagedResources()
         {

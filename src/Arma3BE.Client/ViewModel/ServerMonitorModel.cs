@@ -77,6 +77,8 @@ namespace Arma3BEClient.ViewModel
             }
 
             ChatViewModel = new ServerMonitorChatViewModel(_log, currentServer.Id, _beServer);
+
+            Connect();
         }
 
         public ServerInfo CurrentServer { get; }
