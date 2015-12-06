@@ -32,7 +32,7 @@ namespace Arma3BE.Server.Decorators
 
         public int SendCommand(BattlEyeCommand command, string parameters = "")
         {
-            if (_commandPackets.Count < 1000)
+            if (_battlEyeClient != null && _battlEyeClient.Connected && _commandPackets.Count < 1000)
             {
                 _commandPackets.Enqueue(new CommandPacket(command, parameters));
                 _log.Info($"ThreadSafeBattleEyeClient Saving {command} WITH {parameters}");
