@@ -130,6 +130,7 @@ namespace Arma3BEClient.ViewModel
         private async void BeServerConnectHandler(object sender, EventArgs e)
         {
             await _beServer.SendCommandAsync(CommandType.Players);
+
             if (!_console)
             {
                 await _beServer.SendCommandAsync(CommandType.Bans);
