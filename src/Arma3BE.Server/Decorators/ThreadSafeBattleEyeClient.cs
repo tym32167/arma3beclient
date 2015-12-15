@@ -78,7 +78,6 @@ namespace Arma3BE.Server.Decorators
             {
                 lock (_lock)
                 {
-                    var dt = DateTime.UtcNow;
                     BattlEyeMessageReceived?.Invoke(message);
                 }
             }
