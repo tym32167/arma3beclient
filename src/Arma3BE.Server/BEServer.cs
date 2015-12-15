@@ -57,10 +57,10 @@ namespace Arma3BE.Server
         public event EventHandler DisconnectHandler;
 
 
-        public Task SendCommandAsync(CommandType type, string parameters = null)
-        {
-            return Task.Run(() => SendCommand(type, parameters));
-        }
+        //public Task SendCommandAsync(CommandType type, string parameters = null)
+        //{
+        //    return Task.Run(() => SendCommand(type, parameters));
+        //}
 
 
         public void SendCommand(CommandType type, string parameters = null)

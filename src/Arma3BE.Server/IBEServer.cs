@@ -21,8 +21,8 @@ namespace Arma3BE.Server
         event EventHandler ConnectingHandler;
         event EventHandler DisconnectHandler;
 
-        Task SendCommandAsync(CommandType type, string parameters = null);
-        //void SendCommand(CommandType type, string parameters = null);
+        //Task SendCommandAsync(CommandType type, string parameters = null);
+        void SendCommand(CommandType type, string parameters = null);
 
         void Connect();
         void Disconnect();

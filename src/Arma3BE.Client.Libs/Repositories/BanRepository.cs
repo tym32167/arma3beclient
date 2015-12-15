@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Arma3BEClient.Common.Core;
 using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
@@ -24,7 +26,10 @@ namespace Arma3BEClient.Libs.Repositories
         {
             using (var dc = new Arma3BeClientContext())
             {
-                return dc.Bans.Where(x => x.ServerInfo.Active && x.IsActive && x.MinutesLeft == 0).ToList();
+                return dc.Bans
+                    .Where(x => x.ServerInfo.Active && x.IsActive && x.MinutesLeft == 0)
+                    .Include(x=>x.Player)
+                    .ToList();
             }
         }
 

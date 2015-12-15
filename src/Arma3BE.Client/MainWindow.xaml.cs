@@ -44,7 +44,7 @@ namespace Arma3BEClient
         {
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                var doc = new LayoutDocument {Title = serverInfo.Name};
+                var doc = new LayoutDocument { Title = serverInfo.Name };
 
 
                 var control = new ServerInfoControl(serverInfo);
@@ -79,7 +79,7 @@ namespace Arma3BEClient
             var orig = e.OriginalSource as FrameworkElement;
             if (orig != null && orig.DataContext is ServerInfo)
             {
-                var serverInfo = (ServerInfo) orig.DataContext;
+                var serverInfo = (ServerInfo)orig.DataContext;
                 OpenServerInfo(serverInfo);
             }
         }
@@ -139,7 +139,7 @@ namespace Arma3BEClient
 
                 using (var sw = new StreamWriter(fname))
                 {
-                    var ser = new XmlSerializer(typeof (List<PlayerXML>));
+                    var ser = new XmlSerializer(typeof(List<PlayerXML>));
                     ser.Serialize(sw, list);
                 }
             }
@@ -158,8 +158,8 @@ namespace Arma3BEClient
 
                 using (var sr = new StreamReader(fname))
                 {
-                    var ser = new XmlSerializer(typeof (List<PlayerXML>));
-                    players = (List<PlayerXML>) ser.Deserialize(sr);
+                    var ser = new XmlSerializer(typeof(List<PlayerXML>));
+                    players = (List<PlayerXML>)ser.Deserialize(sr);
                 }
 
                 var toadd = new List<Player>();

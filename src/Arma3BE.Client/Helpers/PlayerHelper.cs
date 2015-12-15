@@ -142,7 +142,7 @@ namespace Arma3BEClient.Helpers
                 if (filterUsers != null)
                 {
 #pragma warning disable 4014
-                    KickAsync(filterUsers, "bot: Fill Nickname");
+                    Kick(filterUsers, "bot: Fill Nickname");
 #pragma warning restore 4014
                 }
 
@@ -151,12 +151,12 @@ namespace Arma3BEClient.Helpers
             }
         }
 
-        public async Task KickAsync(PlayerView player, string reason, bool isAuto = false)
+        public void Kick(PlayerView player, string reason, bool isAuto = false)
         {
             var totalreason =
                 $"[{SettingsStore.Instance.AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
 
-            await _beServer.SendCommandAsync(CommandType.Kick,
+            _beServer.SendCommand(CommandType.Kick,
                 $"{player.Num} {totalreason}");
 
             if (!isAuto)
@@ -172,11 +172,11 @@ namespace Arma3BEClient.Helpers
                         context.UpdatePlayerComment(user.GUID, user.Comment);
                     }
                 }
-                await _beServer.SendCommandAsync(CommandType.Players);
+                _beServer.SendCommand(CommandType.Players);
             }
         }
 
-        public async void BanGUIDOffline(string guid, string reason, long minutes, bool syncMode = false)
+        public void BanGUIDOffline(string guid, string reason, long minutes, bool syncMode = false)
         {
             if (!syncMode)
             {
@@ -184,7 +184,7 @@ namespace Arma3BEClient.Helpers
                     $"[{SettingsStore.Instance.AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
 
 
-                await _beServer.SendCommandAsync(CommandType.AddBan,
+                _beServer.SendCommand(CommandType.AddBan,
                     $"{guid} {minutes} {totalreason}");
 
 
@@ -201,13 +201,13 @@ namespace Arma3BEClient.Helpers
 
 
 #pragma warning disable 4014
-                _beServer.SendCommandAsync(CommandType.Bans);
+                _beServer.SendCommand(CommandType.Bans);
 #pragma warning restore 4014
             }
             else
             {
 #pragma warning disable 4014
-                _beServer.SendCommandAsync(CommandType.AddBan,
+                _beServer.SendCommand(CommandType.AddBan,
 #pragma warning restore 4014
                     $"{guid} {minutes} {reason}");
             }
@@ -219,7 +219,7 @@ namespace Arma3BEClient.Helpers
                 $"[{SettingsStore.Instance.AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
 
 
-            await _beServer.SendCommandAsync(CommandType.Ban,
+            _beServer.SendCommand(CommandType.Ban,
                 $"{num} {minutes} {totalreason}");
 
 
@@ -236,9 +236,9 @@ namespace Arma3BEClient.Helpers
 
 
 #pragma warning disable 4014
-            _beServer.SendCommandAsync(CommandType.Players);
+            _beServer.SendCommand(CommandType.Players);
 
-            _beServer.SendCommandAsync(CommandType.Bans);
+            _beServer.SendCommand(CommandType.Bans);
         }
     }
 }

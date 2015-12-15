@@ -29,9 +29,9 @@ namespace Arma3BEClient.Boxes
             DataContext = Model;
         }
 
-        private async void KickClick(object sender, RoutedEventArgs e)
+        private void KickClick(object sender, RoutedEventArgs e)
         {
-            await _playerHelper.KickAsync(_playerView, tbReason.Text);
+            _playerHelper.Kick(_playerView, tbReason.Text);
             Close();
         }
 
