@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Threading.Tasks;
 using Arma3BE.Server.Messaging;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Core;
@@ -65,100 +64,97 @@ namespace Arma3BE.Server
 
         public void SendCommand(CommandType type, string parameters = null)
         {
-            lock (_lock)
+            _log.Info($"SERVER: {_host}:{_port} - TRY TO RCON COMMAND {type} WITH PARAMS {parameters}");
+
+
+            if (!Connected)
             {
-                _log.Info($"SERVER: {_host}:{_port} - TRY TO RCON COMMAND {type} WITH PARAMS {parameters}");
+                Connect();
+                return;
+            }
+
+            switch (type)
+            {
+                case CommandType.Players:
+                    _battlEyeClient.SendCommand(BattlEyeCommand.Players);
+                    break;
+                case CommandType.Bans:
+                    _battlEyeClient.SendCommand(BattlEyeCommand.Bans);
+                    break;
+                case CommandType.Admins:
+                    _battlEyeClient.SendCommand(BattlEyeCommand.admins);
+                    break;
+
+                case CommandType.Say:
+                    _battlEyeClient.SendCommand(BattlEyeCommand.Say, parameters);
+                    break;
+                case CommandType.AddBan:
+                    if (!string.IsNullOrEmpty(parameters))
+                        _battlEyeClient.SendCommand(BattlEyeCommand.AddBan, parameters);
+                    break;
+
+                case CommandType.Ban:
+                    if (!string.IsNullOrEmpty(parameters))
+                        _battlEyeClient.SendCommand(BattlEyeCommand.Ban, parameters);
+                    break;
+
+                case CommandType.Kick:
+                    if (!string.IsNullOrEmpty(parameters))
+                        _battlEyeClient.SendCommand(BattlEyeCommand.Kick, parameters);
+                    break;
 
 
-                if (!Connected)
-                {
-                    Connect();
-                    return;
-                }
+                case CommandType.RemoveBan:
+                    if (!string.IsNullOrEmpty(parameters))
+                        _battlEyeClient.SendCommand(BattlEyeCommand.RemoveBan, parameters);
+                    break;
 
-                switch (type)
-                {
-                    case CommandType.Players:
-                        _battlEyeClient.SendCommand(BattlEyeCommand.Players);
-                        break;
-                    case CommandType.Bans:
-                        _battlEyeClient.SendCommand(BattlEyeCommand.Bans);
-                        break;
-                    case CommandType.Admins:
-                        _battlEyeClient.SendCommand(BattlEyeCommand.admins);
-                        break;
+                case CommandType.Missions:
+                    _battlEyeClient.SendCommand(BattlEyeCommand.Missions);
+                    break;
 
-                    case CommandType.Say:
-                        _battlEyeClient.SendCommand(BattlEyeCommand.Say, parameters);
-                        break;
-                    case CommandType.AddBan:
-                        if (!string.IsNullOrEmpty(parameters))
-                            _battlEyeClient.SendCommand(BattlEyeCommand.AddBan, parameters);
-                        break;
-
-                    case CommandType.Ban:
-                        if (!string.IsNullOrEmpty(parameters))
-                            _battlEyeClient.SendCommand(BattlEyeCommand.Ban, parameters);
-                        break;
-
-                    case CommandType.Kick:
-                        if (!string.IsNullOrEmpty(parameters))
-                            _battlEyeClient.SendCommand(BattlEyeCommand.Kick, parameters);
-                        break;
+                case CommandType.Mission:
+                    if (!string.IsNullOrEmpty(parameters))
+                        _battlEyeClient.SendCommand(BattlEyeCommand.Mission, parameters);
+                    break;
 
 
-                    case CommandType.RemoveBan:
-                        if (!string.IsNullOrEmpty(parameters))
-                            _battlEyeClient.SendCommand(BattlEyeCommand.RemoveBan, parameters);
-                        break;
+                case CommandType.Init:
+                    _battlEyeClient.SendCommand(BattlEyeCommand.Init);
+                    break;
 
-                    case CommandType.Missions:
-                        _battlEyeClient.SendCommand(BattlEyeCommand.Missions);
-                        break;
+                case CommandType.Shutdown:
+                    _battlEyeClient.SendCommand(BattlEyeCommand.Shutdown);
+                    break;
 
-                    case CommandType.Mission:
-                        if (!string.IsNullOrEmpty(parameters))
-                            _battlEyeClient.SendCommand(BattlEyeCommand.Mission, parameters);
-                        break;
+                case CommandType.Reassign:
+                    _battlEyeClient.SendCommand(BattlEyeCommand.Reassign);
+                    break;
 
+                case CommandType.Restart:
+                    _battlEyeClient.SendCommand(BattlEyeCommand.Restart);
+                    break;
 
-                    case CommandType.Init:
-                        _battlEyeClient.SendCommand(BattlEyeCommand.Init);
-                        break;
+                case CommandType.Lock:
+                    _battlEyeClient.SendCommand(BattlEyeCommand.Lock);
+                    break;
 
-                    case CommandType.Shutdown:
-                        _battlEyeClient.SendCommand(BattlEyeCommand.Shutdown);
-                        break;
-
-                    case CommandType.Reassign:
-                        _battlEyeClient.SendCommand(BattlEyeCommand.Reassign);
-                        break;
-
-                    case CommandType.Restart:
-                        _battlEyeClient.SendCommand(BattlEyeCommand.Restart);
-                        break;
-
-                    case CommandType.Lock:
-                        _battlEyeClient.SendCommand(BattlEyeCommand.Lock);
-                        break;
-
-                    case CommandType.Unlock:
-                        _battlEyeClient.SendCommand(BattlEyeCommand.Unlock);
-                        break;
+                case CommandType.Unlock:
+                    _battlEyeClient.SendCommand(BattlEyeCommand.Unlock);
+                    break;
 
 
-                    case CommandType.LoadBans:
-                        _battlEyeClient.SendCommand(BattlEyeCommand.LoadBans);
-                        break;
+                case CommandType.LoadBans:
+                    _battlEyeClient.SendCommand(BattlEyeCommand.LoadBans);
+                    break;
 
-                    case CommandType.LoadEvents:
-                        _battlEyeClient.SendCommand(BattlEyeCommand.loadEvents);
-                        break;
+                case CommandType.LoadEvents:
+                    _battlEyeClient.SendCommand(BattlEyeCommand.loadEvents);
+                    break;
 
-                    case CommandType.LoadScripts:
-                        _battlEyeClient.SendCommand(BattlEyeCommand.LoadScripts);
-                        break;
-                }
+                case CommandType.LoadScripts:
+                    _battlEyeClient.SendCommand(BattlEyeCommand.LoadScripts);
+                    break;
             }
         }
 

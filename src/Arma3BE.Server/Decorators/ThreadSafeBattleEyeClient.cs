@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Concurrent;
 using System.Threading;
 using Arma3BEClient.Common.Core;
@@ -9,6 +10,9 @@ namespace Arma3BE.Server.Decorators
     public class ThreadSafeBattleEyeClient : DisposeObject, IBattlEyeClient
     {
         private readonly ConcurrentQueue<CommandPacket> _commandPackets = new ConcurrentQueue<CommandPacket>();
+
+
+        private readonly ConcurrentQueue<BattlEyeMessageEventArgs> _messages = new ConcurrentQueue<BattlEyeMessageEventArgs>();
 
 
         private readonly object _lock = new object();
@@ -24,7 +28,7 @@ namespace Arma3BE.Server.Decorators
             _battlEyeClient.BattlEyeMessageReceived += OnBattlEyeMessageReceived;
             _battlEyeClient.BattlEyeDisconnected += OnBattlEyeDisconnected;
 
-            _timer = new Timer(MainLoop, null, 1000, 1000);
+            _timer = new Timer(Process, null, 1000, 1000);
             _log.Info($"ThreadSafeBattleEyeClient Init");
         }
 
@@ -60,7 +64,27 @@ namespace Arma3BE.Server.Decorators
         public event BattlEyeConnectEventHandler BattlEyeConnected;
         public event BattlEyeDisconnectEventHandler BattlEyeDisconnected;
 
-        private void MainLoop(object state)
+
+        private void Process(object state)
+        {
+            ProcessRecieveMessages();
+            ProcessSendMessages();
+        }
+
+        private void ProcessRecieveMessages()
+        {
+            BattlEyeMessageEventArgs message;
+            if (_messages.TryDequeue(out message))
+            {
+                lock (_lock)
+                {
+                    var dt = DateTime.UtcNow;
+                    BattlEyeMessageReceived?.Invoke(message);
+                }
+            }
+        }
+
+        private void ProcessSendMessages()
         {
             if (_battlEyeClient == null || !_battlEyeClient.Connected)
                 return;
@@ -85,7 +109,8 @@ namespace Arma3BE.Server.Decorators
 
         private void OnBattlEyeMessageReceived(BattlEyeMessageEventArgs message)
         {
-            BattlEyeMessageReceived?.Invoke(message);
+            if (!string.IsNullOrEmpty(message.Message) && _messages.Count < 1000)
+                _messages.Enqueue(message);
         }
 
         private void OnBattlEyeConnected(BattlEyeConnectEventArgs args)

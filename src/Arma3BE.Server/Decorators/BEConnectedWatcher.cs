@@ -17,7 +17,7 @@ namespace Arma3BE.Server.Decorators
 
         private readonly Timer _timer;
         private IBattlEyeClient _battlEyeClient;
-        private DateTime _lastReceived = DateTime.Now;
+        private DateTime _lastReceived = DateTime.UtcNow;
         private int _numAttempts;
 
         public bool Connected => _battlEyeClient != null && _battlEyeClient.Connected;
@@ -65,15 +65,13 @@ namespace Arma3BE.Server.Decorators
                 _numAttempts = 0;
             }
 
-            var lastReceivedSpan = DateTime.Now - _lastReceived;
-
-            if (lastReceivedSpan.TotalMinutes > 10 && _numAttempts == 0) SendCommand(BattlEyeCommand.Players);
+            var lastReceivedSpan = DateTime.UtcNow - _lastReceived;
 
             //_log.Info($"ATTEMPTS {_numAttempts} FOR {_credentials.Host}:{_credentials.Port} WITH LAST RECEIVED {lastReceivedSpan}");
-            if (_numAttempts > 5 && lastReceivedSpan.TotalMinutes > 5)
+            if (_numAttempts > 5 || lastReceivedSpan.TotalMinutes > 15)
             {
                 _numAttempts = 0;
-                _lastReceived = DateTime.Now;
+                _lastReceived = DateTime.UtcNow;
                 _log.Info($"RECREATE CLIENT FOR {_credentials.Host}:{_credentials.Port} WITH LAST RECEIVED {lastReceivedSpan}");
 
                 Release();
@@ -122,7 +120,7 @@ namespace Arma3BE.Server.Decorators
 
         private void OnBattlEyeMessageReceived(BattlEyeMessageEventArgs message)
         {
-            _lastReceived = DateTime.Now;
+            _lastReceived = DateTime.UtcNow;
             BattlEyeMessageReceived?.Invoke(message);
         }
 
