@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
+using System.Threading.Tasks;
 using Arma3BEClient.Common.Core;
 using Arma3BEClient.Common.Logging;
 using BattleNET;
@@ -10,10 +11,7 @@ namespace Arma3BE.Server.Decorators
     public class ThreadSafeBattleEyeClient : DisposeObject, IBattlEyeClient
     {
         private readonly ConcurrentQueue<CommandPacket> _commandPackets = new ConcurrentQueue<CommandPacket>();
-
-
         private readonly ConcurrentQueue<BattlEyeMessageEventArgs> _messages = new ConcurrentQueue<BattlEyeMessageEventArgs>();
-
 
         private readonly object _lock = new object();
         private readonly ILog _log;
@@ -67,8 +65,8 @@ namespace Arma3BE.Server.Decorators
 
         private void Process(object state)
         {
-            ProcessRecieveMessages();
-            ProcessSendMessages();
+            Task.Factory.StartNew(ProcessRecieveMessages);
+            Task.Factory.StartNew(ProcessSendMessages);
         }
 
         private void ProcessRecieveMessages()
