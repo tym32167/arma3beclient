@@ -46,7 +46,6 @@ namespace Arma3BEClient
             {
                 var doc = new LayoutDocument { Title = serverInfo.Name };
 
-
                 var control = new ServerInfoControl(serverInfo);
 
                 doc.Content = control;
