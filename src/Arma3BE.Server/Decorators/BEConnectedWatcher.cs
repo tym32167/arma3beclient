@@ -1,105 +1,36 @@
-using System.Timers;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Arma3BEClient.Common.Core;
 using Arma3BEClient.Common.Logging;
 using BattleNET;
 
 namespace Arma3BE.Server.Decorators
 {
-    public class BEConnectedWatcher :DisposeObject, IBattlEyeClient
+    public class BEConnectedWatcher : DisposeObject, IBattlEyeClient
     {
-        private IBattlEyeClient _battlEyeClient;
         private readonly IBattlEyeClientFactory _battlEyeClientFactory;
-        private readonly ILog _log;
         private readonly BattlEyeLoginCredentials _credentials;
 
-        private readonly System.Timers.Timer _timer;
-
         private readonly object _lock = new object();
+        private readonly ILog _log;
 
+        private readonly Timer _timer;
+        private IBattlEyeClient _battlEyeClient;
+        private DateTime _lastReceived = DateTime.UtcNow;
+        private int _numAttempts;
 
-        public BEConnectedWatcher(IBattlEyeClientFactory battlEyeClientFactory, ILog log, BattlEyeLoginCredentials credentials)
+        public bool Connected => _battlEyeClient != null && _battlEyeClient.Connected;
+
+        public BEConnectedWatcher(IBattlEyeClientFactory battlEyeClientFactory, ILog log,
+            BattlEyeLoginCredentials credentials)
         {
             _battlEyeClientFactory = battlEyeClientFactory;
             _log = log;
             _credentials = credentials;
 
+            _timer = new Timer(_timer_Elapsed, null, 5000, 10000);
             Init();
-
-
-            _timer = new Timer(5000);
-            _timer.Elapsed += _timer_Elapsed;
-            _timer.Start();
-        }
-
-
-        private int _numAttempts = 0;
-        private void _timer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            if (_battlEyeClient == null || !_battlEyeClient.Connected)
-            {
-                _numAttempts++;
-            }
-            else
-            {
-                _numAttempts = 0;
-            }
-
-            //_log.Info($"ATTEMPTS {_numAttempts} FOR {_credentials.Host}:{_credentials.Port}");
-            if (_numAttempts > 5)
-            {
-                _numAttempts = 0;
-                _log.Info($"RECREATE CLIENT FOR {_credentials.Host}:{_credentials.Port}");
-
-                Release();
-
-                OnBattlEyeDisconnected(new BattlEyeDisconnectEventArgs(_credentials, BattlEyeDisconnectionType.ConnectionLost));
-
-                Init();
-            }
-        }
-
-        private void Init()
-        {
-            lock (_lock)
-            {
-                _log.Info($"Init {_credentials.Host}:{_credentials.Port}");
-
-                _battlEyeClient = _battlEyeClientFactory.Create(_credentials);
-                _battlEyeClient.BattlEyeConnected += OnBattlEyeConnected;
-                _battlEyeClient.BattlEyeMessageReceived += OnBattlEyeMessageReceived;
-                _battlEyeClient.BattlEyeDisconnected += OnBattlEyeDisconnected;
-
-                _battlEyeClient.Connect();
-            }
-        }
-
-        private void Release()
-        {
-            lock (_lock)
-            {
-                _log.Info($"Release {_credentials.Host}:{_credentials.Port}");
-                if (_battlEyeClient != null)
-                {
-                    _battlEyeClient.BattlEyeConnected -= OnBattlEyeConnected;
-                    _battlEyeClient.BattlEyeMessageReceived -= OnBattlEyeMessageReceived;
-                    _battlEyeClient.BattlEyeDisconnected -= OnBattlEyeDisconnected;
-
-                    if (_battlEyeClient.Connected) _battlEyeClient.Disconnect();
-
-                    _battlEyeClient.Dispose();
-                }
-                
-                _battlEyeClient = null;
-            }
-        }
-
-        public bool Connected => _battlEyeClient.Connected;
-
-
-        public bool ReconnectOnPacketLoss
-        {
-            get { return _battlEyeClient.ReconnectOnPacketLoss; }
-            set { _battlEyeClient.ReconnectOnPacketLoss = value; }
         }
 
         public int SendCommand(BattlEyeCommand command, string parameters = "")
@@ -123,9 +54,73 @@ namespace Arma3BE.Server.Decorators
         public event BattlEyeConnectEventHandler BattlEyeConnected;
         public event BattlEyeDisconnectEventHandler BattlEyeDisconnected;
 
+        private void _timer_Elapsed(object state)
+        {
+            if (_battlEyeClient == null || !_battlEyeClient.Connected)
+            {
+                _numAttempts++;
+            }
+            else
+            {
+                _numAttempts = 0;
+            }
+
+            var lastReceivedSpan = DateTime.UtcNow - _lastReceived;
+
+            //_log.Info($"ATTEMPTS {_numAttempts} FOR {_credentials.Host}:{_credentials.Port} WITH LAST RECEIVED {lastReceivedSpan}");
+            if (_numAttempts > 5 || lastReceivedSpan.TotalMinutes > 15)
+            {
+                _numAttempts = 0;
+                _lastReceived = DateTime.UtcNow;
+                _log.Info($"RECREATE CLIENT FOR {_credentials.Host}:{_credentials.Port} WITH LAST RECEIVED {lastReceivedSpan}");
+
+                Release();
+
+                OnBattlEyeDisconnected(new BattlEyeDisconnectEventArgs(_credentials,
+                    BattlEyeDisconnectionType.ConnectionLost));
+
+                Init();
+                Connect();
+            }
+        }
+
+        private void Init()
+        {
+            lock (_lock)
+            {
+                _log.Info($"Init {_credentials.Host}:{_credentials.Port}");
+
+                _battlEyeClient = _battlEyeClientFactory.Create(_credentials);
+                _battlEyeClient.BattlEyeConnected += OnBattlEyeConnected;
+                _battlEyeClient.BattlEyeMessageReceived += OnBattlEyeMessageReceived;
+                _battlEyeClient.BattlEyeDisconnected += OnBattlEyeDisconnected;
+            }
+        }
+
+        private void Release()
+        {
+            lock (_lock)
+            {
+                _log.Info($"Release {_credentials.Host}:{_credentials.Port}");
+                if (_battlEyeClient != null)
+                {
+                    _battlEyeClient.BattlEyeConnected -= OnBattlEyeConnected;
+                    _battlEyeClient.BattlEyeMessageReceived -= OnBattlEyeMessageReceived;
+                    _battlEyeClient.BattlEyeDisconnected -= OnBattlEyeDisconnected;
+
+                    if (_battlEyeClient.Connected) _battlEyeClient.Disconnect();
+
+                    _battlEyeClient.Dispose();
+                }
+
+                _battlEyeClient = null;
+            }
+        }
+
 
         private void OnBattlEyeMessageReceived(BattlEyeMessageEventArgs message)
         {
+            _lastReceived = DateTime.UtcNow;
             BattlEyeMessageReceived?.Invoke(message);
         }
 
@@ -141,18 +136,18 @@ namespace Arma3BE.Server.Decorators
 
         protected override void DisposeManagedResources()
         {
+            _timer.Dispose();
+
             if (_battlEyeClient != null)
             {
                 lock (_lock)
                 {
-                    _timer.Stop();
                     if (_battlEyeClient != null)
                     {
                         Release();
                     }
                 }
             }
-
             
             base.DisposeManagedResources();
         }

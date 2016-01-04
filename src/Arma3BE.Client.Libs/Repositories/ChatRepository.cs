@@ -1,4 +1,5 @@
 using System;
+using System.Data.Entity;
 using System.Linq;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Core;
@@ -66,7 +67,7 @@ namespace Arma3BEClient.Libs.Repositories
                 {
                     log = log.Where(x => x.Text.Contains(filter));
                 }
-                return log;
+                return log.Include(x=>x.ServerInfo).ToArray().AsQueryable();
             }
         }
     }

@@ -32,6 +32,9 @@ namespace Arma3BEClient.Models
 
             _chatHelper = new ChatHelper(_log, _serverId);
             _beServer.ChatMessageHandler += BeServerChatMessageHandler;
+            _beServer.PlayerLog += _beServer_PlayerLog;
+            _beServer.RConAdminLog += _beServer_PlayerLog;
+            _beServer.BanLog += _beServer_PlayerLog;
 
             ShowHistoryCommand = new ActionCommand(() =>
             {
@@ -41,6 +44,11 @@ namespace Arma3BEClient.Models
                 wnd.Show();
                 wnd.Activate();
             });
+        }
+
+        private void _beServer_PlayerLog(object sender, LogMessage e)
+        {
+            OnLogMessageEventHandler(e);
         }
 
         public bool AutoScroll
@@ -75,6 +83,7 @@ namespace Arma3BEClient.Models
 
         public ICommand ShowHistoryCommand { get; set; }
         public event EventHandler<ServerMonitorChatViewModelEventArgs> ChatMessageEventHandler;
+        public event EventHandler<ServerMonitorLogViewModelEventArgs> LogMessageEventHandler;
 
         protected virtual void OnChatMessageEventHandler(ChatMessage e)
         {
@@ -94,7 +103,7 @@ namespace Arma3BEClient.Models
             {
                 var adminName = SettingsStore.Instance.AdminName;
                 var message = $" -1 {adminName}: {rawmessage}";
-                _beServer.SendCommandAsync(CommandType.Say, message);
+                _beServer.SendCommand(CommandType.Say, message);
             }
 
             InputMessage = string.Empty;
@@ -107,6 +116,11 @@ namespace Arma3BEClient.Models
                 SendMessage(InputMessage);
             }
         }
+
+        protected virtual void OnLogMessageEventHandler(LogMessage e)
+        {
+            LogMessageEventHandler?.Invoke(this, new ServerMonitorLogViewModelEventArgs(e));
+        }
     }
 
     public class ServerMonitorChatViewModelEventArgs : EventArgs
@@ -117,5 +131,15 @@ namespace Arma3BEClient.Models
         }
 
         public ChatMessage Message { get; private set; }
+    }
+
+    public class ServerMonitorLogViewModelEventArgs : EventArgs
+    {
+        public ServerMonitorLogViewModelEventArgs(LogMessage message)
+        {
+            Message = message;
+        }
+
+        public LogMessage Message { get; private set; }
     }
 }

@@ -69,7 +69,7 @@ Players on server:
         {
             var serverMessage = new ServerMessage(0, message);
             var recognizer = new PlayerListRecognizer();
-            Assert.IsTrue(recognizer.CanRecognize(serverMessage));
+            Assert.IsTrue(recognizer.CanRecognize(serverMessage), message);
         }
 
 
@@ -107,6 +107,23 @@ Players on server:
 5   95.24.235.69:2304     0    d0ee5caf1b8b6282349e79fb998c2ee2(OK) Frenzy (Lobby)
 7   213.141.128.143:2304  0    d0ee5caf1b8b6282349e79fb998c2ee2(OK) Горизонт
 8   95.59.46.59:17540     62   wrongGUID")]
+        [TestCase(@"  Players on server:
+[#] [IP Address]:[Port] [Ping] [GUID] [Name]
+--------------------------------------------------
+0   91.205.239.21:17686   62   2dc735a435d2233fb3948c7c82404e41(OK) CounterDICH
+1   95.159.128.39:2304    172  bf9dbe54b3410e4fbe404f80e8617223(OK) Legat_65 (Lobby)
+2   5.141.21.46:1900      47   d9803ab5ad9a722c2f166f4fea6fe10f(OK) BRATKA (Lobby)
+3   188.162.39.71:2304    94   419bacf8763cc9eb1b6177be2a9290e8(OK) Fifth
+4   94.181.1.156:2304     62   c7aa892d03ead23945ff69d37def2efa(OK) Sonik(RUS)
+5   93.177.9.191:2304     -1   - Timoshin-Yura (Lobby)
+6   134.255.154.197:2304  93   1e1452707e7fef39a0ae0c47651c9011(OK) Slon
+7   93.85.44.97:35341     125  692dda5c6c00ce4b10d708dc5010b1f7(OK) Yura
+8   5.141.211.207:45960   78   bc89eafdcb6399d254acff8ef39a4609(OK) О""Коннор 91
+10  46.233.227.59:2304    78   21b52f31435522b611f54777743c96cb(OK) IceSemper
+11  93.78.72.213:2304     93   de103916dc7ba345e301257652520f2c(OK) dimon
+12  195.9.228.197:2304    15   6f6004645ec54a569b2f37f0f7eb0cb9(OK) ShiZZZ
+17  95.143.214.217:53021  31   c16bb1c316407e04368edc3765e558cc(OK) Leshiy
+(13 players in total)")]
         public void List_NOT_CORECT_Test(string message)
         {
             var serverMessage = new ServerMessage(0, message);

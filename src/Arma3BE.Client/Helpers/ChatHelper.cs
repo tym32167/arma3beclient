@@ -18,6 +18,7 @@ namespace Arma3BEClient.Helpers
 
         public bool RegisterChatMessage(ChatMessage message)
         {
+            if (message.Type != ChatMessage.MessageType.Unknown)
             using (var repo = new ChatRepository())
             {
                 repo.AddOrUpdate(message, _currentServerId);

@@ -1,6 +1,7 @@
+using System;
 using System.Collections.Concurrent;
-using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using Arma3BEClient.Common.Core;
 using Arma3BEClient.Common.Logging;
 using BattleNET;
@@ -9,10 +10,13 @@ namespace Arma3BE.Server.Decorators
 {
     public class ThreadSafeBattleEyeClient : DisposeObject, IBattlEyeClient
     {
-        private readonly IBattlEyeClient _battlEyeClient;
-        private readonly ILog _log;
         private readonly ConcurrentQueue<CommandPacket> _commandPackets = new ConcurrentQueue<CommandPacket>();
-        private Thread _processThread;
+        private readonly ConcurrentQueue<BattlEyeMessageEventArgs> _messages = new ConcurrentQueue<BattlEyeMessageEventArgs>();
+
+        private readonly object _lock = new object();
+        private readonly ILog _log;
+        private readonly Timer _timer;
+        private IBattlEyeClient _battlEyeClient;
 
         public ThreadSafeBattleEyeClient(IBattlEyeClient battlEyeClient, ILog log)
         {
@@ -21,66 +25,89 @@ namespace Arma3BE.Server.Decorators
             _battlEyeClient.BattlEyeConnected += OnBattlEyeConnected;
             _battlEyeClient.BattlEyeMessageReceived += OnBattlEyeMessageReceived;
             _battlEyeClient.BattlEyeDisconnected += OnBattlEyeDisconnected;
+
+            _timer = new Timer(Process, null, 1000, 1000);
+            _log.Info($"ThreadSafeBattleEyeClient Init");
         }
 
-        public bool Connected => _battlEyeClient.Connected
-                                 && _processThread != null && _processThread.IsAlive;
-
-        public bool ReconnectOnPacketLoss
-        {
-            get { return _battlEyeClient.ReconnectOnPacketLoss; }
-            set { _battlEyeClient.ReconnectOnPacketLoss = value; }
-        }
+        public bool Connected => _battlEyeClient.Connected;
 
         public int SendCommand(BattlEyeCommand command, string parameters = "")
         {
-            if (_commandPackets.Count < 10)
+            if (_battlEyeClient != null && _battlEyeClient.Connected && _commandPackets.Count < 1000)
+            {
                 _commandPackets.Enqueue(new CommandPacket(command, parameters));
+                _log.Info($"ThreadSafeBattleEyeClient Saving {command} WITH {parameters}");
+            }
             return 0;
         }
 
         public void Disconnect()
         {
-            if (_processThread != null && _processThread.IsAlive) _processThread.Abort();
-            _battlEyeClient?.Disconnect();
+            lock (_lock)
+            {
+                _battlEyeClient?.Disconnect();
+            }
         }
 
         public BattlEyeConnectionResult Connect()
         {
-            _processThread?.Abort();
-
-            _processThread = new Thread(MainLoop) { IsBackground = true };
-            _processThread.Start();
-            return _battlEyeClient.Connect();
+            lock (_lock)
+            {
+                return _battlEyeClient.Connect();
+            }
         }
 
         public event BattlEyeMessageEventHandler BattlEyeMessageReceived;
         public event BattlEyeConnectEventHandler BattlEyeConnected;
         public event BattlEyeDisconnectEventHandler BattlEyeDisconnected;
 
-        private void MainLoop()
-        {
-            while (true)
-            {
-                if (_battlEyeClient == null || !_battlEyeClient.Connected)
-                    continue;
 
-                if (!_commandPackets.IsEmpty && _battlEyeClient.Connected)
+        private void Process(object state)
+        {
+            Task.Factory.StartNew(ProcessRecieveMessages);
+            Task.Factory.StartNew(ProcessSendMessages);
+        }
+
+        private void ProcessRecieveMessages()
+        {
+            BattlEyeMessageEventArgs message;
+            if (_messages.TryDequeue(out message))
+            {
+                lock (_lock)
                 {
-                    CommandPacket packet;
-                    if (_commandPackets.TryDequeue(out packet))
+                    BattlEyeMessageReceived?.Invoke(message);
+                }
+            }
+        }
+
+        private void ProcessSendMessages()
+        {
+            if (_battlEyeClient == null || !_battlEyeClient.Connected)
+                return;
+
+            if (!_commandPackets.IsEmpty && _battlEyeClient.Connected)
+            {
+                CommandPacket packet;
+
+                if (_commandPackets.TryDequeue(out packet))
+                {
+                    lock (_lock)
                     {
-                        _battlEyeClient.SendCommand(packet.BattlEyeCommand, packet.Parameters);
+                        if (_battlEyeClient != null && _battlEyeClient.Connected)
+                        {
+                            _battlEyeClient.SendCommand(packet.BattlEyeCommand, packet.Parameters);
+                            _log.Info($"ThreadSafeBattleEyeClient Sending {packet.BattlEyeCommand} WITH {packet.Parameters}");
+                        }
                     }
                 }
-
-                Thread.Sleep(300);
             }
         }
 
         private void OnBattlEyeMessageReceived(BattlEyeMessageEventArgs message)
         {
-            BattlEyeMessageReceived?.Invoke(message);
+            if (!string.IsNullOrEmpty(message.Message) && _messages.Count < 1000)
+                _messages.Enqueue(message);
         }
 
         private void OnBattlEyeConnected(BattlEyeConnectEventArgs args)
@@ -92,6 +119,28 @@ namespace Arma3BE.Server.Decorators
         private void OnBattlEyeDisconnected(BattlEyeDisconnectEventArgs args)
         {
             BattlEyeDisconnected?.Invoke(args);
+        }
+
+        protected override void DisposeManagedResources()
+        {
+            _timer.Dispose();
+
+            if (_battlEyeClient != null)
+            {
+                lock (_lock)
+                {
+                    if (_battlEyeClient != null)
+                    {
+                        if (_battlEyeClient.Connected)
+                            _battlEyeClient.Disconnect();
+                        _battlEyeClient.Dispose();
+                        _battlEyeClient = null;
+                    }
+                }
+            }
+            base.DisposeManagedResources();
+
+            _log.Info($"ThreadSafeBattleEyeClient DisposeManagedResources");
         }
 
         private class CommandPacket

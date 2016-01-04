@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Arma3BE.Server;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Helpers.Views;
-using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using Arma3BEClient.Libs.Tools;
@@ -56,8 +54,6 @@ namespace Arma3BEClient.Helpers
                     {
                         if (player.Name != p.Name || player.LastIp != p.IP)
                         {
-
-
                             historyToAdd.Add(new PlayerHistory
                             {
                                 IP = player.LastIp,
@@ -142,7 +138,7 @@ namespace Arma3BEClient.Helpers
                 if (filterUsers != null)
                 {
 #pragma warning disable 4014
-                    KickAsync(filterUsers, "bot: Fill Nickname");
+                    Kick(filterUsers, "bot: Fill Nickname");
 #pragma warning restore 4014
                 }
 
@@ -151,12 +147,12 @@ namespace Arma3BEClient.Helpers
             }
         }
 
-        public async Task KickAsync(PlayerView player, string reason, bool isAuto = false)
+        public void Kick(PlayerView player, string reason, bool isAuto = false)
         {
             var totalreason =
                 $"[{SettingsStore.Instance.AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
 
-            await _beServer.SendCommandAsync(CommandType.Kick,
+            _beServer.SendCommand(CommandType.Kick,
                 $"{player.Num} {totalreason}");
 
             if (!isAuto)
@@ -166,17 +162,16 @@ namespace Arma3BEClient.Helpers
                     var user = context.GetPlayer(player.Guid);
                     if (user != null)
                     {
-
                         context.AddNotes(user.Id, $"Kicked with reason: {totalreason}");
                         user.Comment = $"{user.Comment} | {reason}";
                         context.UpdatePlayerComment(user.GUID, user.Comment);
                     }
                 }
-                await _beServer.SendCommandAsync(CommandType.Players);
+                _beServer.SendCommand(CommandType.Players);
             }
         }
 
-        public async void BanGUIDOffline(string guid, string reason, long minutes, bool syncMode = false)
+        public void BanGUIDOffline(string guid, string reason, long minutes, bool syncMode = false)
         {
             if (!syncMode)
             {
@@ -184,7 +179,7 @@ namespace Arma3BEClient.Helpers
                     $"[{SettingsStore.Instance.AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
 
 
-                await _beServer.SendCommandAsync(CommandType.AddBan,
+                _beServer.SendCommand(CommandType.AddBan,
                     $"{guid} {minutes} {totalreason}");
 
 
@@ -201,13 +196,13 @@ namespace Arma3BEClient.Helpers
 
 
 #pragma warning disable 4014
-                _beServer.SendCommandAsync(CommandType.Bans);
+                _beServer.SendCommand(CommandType.Bans);
 #pragma warning restore 4014
             }
             else
             {
 #pragma warning disable 4014
-                _beServer.SendCommandAsync(CommandType.AddBan,
+                _beServer.SendCommand(CommandType.AddBan,
 #pragma warning restore 4014
                     $"{guid} {minutes} {reason}");
             }
@@ -219,7 +214,7 @@ namespace Arma3BEClient.Helpers
                 $"[{SettingsStore.Instance.AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
 
 
-            await _beServer.SendCommandAsync(CommandType.Ban,
+            _beServer.SendCommand(CommandType.Ban,
                 $"{num} {minutes} {totalreason}");
 
 
@@ -236,9 +231,9 @@ namespace Arma3BEClient.Helpers
 
 
 #pragma warning disable 4014
-            _beServer.SendCommandAsync(CommandType.Players);
+            _beServer.SendCommand(CommandType.Players);
 
-            _beServer.SendCommandAsync(CommandType.Bans);
+            _beServer.SendCommand(CommandType.Bans);
         }
     }
 }
