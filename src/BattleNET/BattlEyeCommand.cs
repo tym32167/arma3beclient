@@ -1,7 +1,7 @@
 ﻿/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * BattleNET v1.3 - BattlEye Library and Client            *
+ * BattleNET v1.3.2 - BattlEye Library and Client            *
  *                                                         *
- *  Copyright (C) 2013 by it's authors.                    *
+ *  Copyright (C) 2015 by it's authors.                    *
  *  Some rights reserved. See license.txt, authors.txt.    *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -84,12 +84,6 @@ namespace BattleNET
         Players,
 
         /// <summary>
-        /// admins - Displays a list of the admins on the server
-        /// </summary>
-        [Description("admins")]
-        Admins,
-
-        /// <summary>
         /// Say [player#] [msg] - Say something to player #. specially -1 equals all players on server (e.g. 'Say -1 Hello World').
         /// </summary>
         [Description("Say ")]
@@ -142,5 +136,11 @@ namespace BattleNET
         /// </summary>
         [Description("writeBans")]
         WriteBans,
+		
+        /// <summary>
+        /// admins - Gets connected RCON clients.
+        /// </summary>
+        [Description("admins")]
+        admins,
     }
 }
