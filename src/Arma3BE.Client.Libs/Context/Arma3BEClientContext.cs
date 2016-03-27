@@ -1,5 +1,6 @@
 ﻿using System.Data.Entity;
 using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Tools;
 
 namespace Arma3BEClient.Libs.Context
 {
@@ -12,7 +13,7 @@ namespace Arma3BEClient.Libs.Context
                 db.Database.Initialize(false);
         }
 
-        public Arma3BeClientContext() : base("name=Arma3BEClientEntities")
+        public Arma3BeClientContext() : base(new ConnectionFactory().Create(), true)
         {
         }
 
