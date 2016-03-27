@@ -288,7 +288,6 @@ namespace Arma3BE.Server
                     OnBanHandler(banList);
                     break;
 
-
                 case ServerMessageType.AdminList:
                     var adminList = new AdminList(message);
                     OnAdminHandler(adminList);

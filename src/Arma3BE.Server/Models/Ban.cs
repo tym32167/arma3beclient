@@ -39,7 +39,7 @@ namespace Arma3BE.Server.Models
         }
 
 
-        private static Regex compidelRegex = new Regex(@"(\d{1,3})[ ]+([^ ]+)[ ]+([^ ]+)[ ]+(.*)",
+        private static Regex compidelRegex = new Regex(@"(\d{1,5})[ ]+([^ ]+)[ ]+([^ ]+)[ ]+(.*)",
                     RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public static Ban Parse(string input)
