@@ -41,13 +41,13 @@ namespace Arma3BE.Server.Models
             }
         }
 
+        private static Regex compidelRegex = new Regex(@"(\d{1,3})[ ]+(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):([\d]+)",
+                    RegexOptions.Compiled | RegexOptions.IgnoreCase);
         public static Admin Parse(string input)
         {
             try
             {
-                var regex = new Regex(@"(\d{1,3})[ ]+(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):([\d]+)",
-                    RegexOptions.Compiled | RegexOptions.IgnoreCase);
-                var match = regex.Match(input);
+                var match = compidelRegex.Match(input);
 
                 if (match.Success || match.Groups.Count != 6)
                 {

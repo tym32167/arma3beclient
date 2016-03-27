@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using Arma3BEClient.Common.Core;
 using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;

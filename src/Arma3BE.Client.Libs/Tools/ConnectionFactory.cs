@@ -1,6 +1,5 @@
 ﻿using System.Configuration;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Data.SqlServerCe;
 
 namespace Arma3BEClient.Libs.Tools
