@@ -288,7 +288,6 @@ namespace Arma3BE.Server
                     OnBanHandler(banList);
                     break;
 
-
                 case ServerMessageType.AdminList:
                     var adminList = new AdminList(message);
                     OnAdminHandler(adminList);
@@ -338,8 +337,7 @@ namespace Arma3BE.Server
 
         private void RegisterMessage(ServerMessage message)
         {
-            _log.InfoFormat("message [\nserver ip: {0}\nmessageId:{1}\n{2}\n]", _host, message.MessageId,
-                message.Message);
+            _log.Info($"message [\nserver ip: {_host}\nmessageId:{message.MessageId}\n{message.Message}\n]");
         }
 
         private void InitClients()

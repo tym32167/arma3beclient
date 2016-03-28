@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleNET", "BattleNET\BattleNET.csproj", "{4FBB3734-215B-45B1-BDBC-0EFA156A6900}"
 EndProject
@@ -37,6 +37,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{459FC375-2A8A-4766-9567-540DF4029A53}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BE.Infrastructure.Common", "Arma3BE.Infrastructure.Common\Arma3BE.Infrastructure.Common.csproj", "{E17CCDE1-E438-486A-BF27-6D9C553C9431}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Global", "Global", "{44D8CBB8-B667-461A-AA90-267147BA7055}"
+	ProjectSection(SolutionItems) = preProject
+		GlobalAssemblyInfo.cs = GlobalAssemblyInfo.cs
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
