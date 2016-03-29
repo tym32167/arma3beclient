@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Arma3BE.Server;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Helpers.Views;
@@ -28,7 +29,12 @@ namespace Arma3BEClient.Helpers
             _beServer = beServer;
         }
 
-        public bool RegisterPlayers(IEnumerable<Player> list)
+        public void RegisterPlayers(IEnumerable<Player> list)
+        {
+            Task.Run(() => RegisterPlayersInternal(list));
+        }
+
+        public bool RegisterPlayersInternal(IEnumerable<Player> list)
         {
             var players = list.ToList();
 

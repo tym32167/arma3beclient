@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Helpers.Views;
@@ -21,7 +22,12 @@ namespace Arma3BEClient.Helpers
             _currentServerId = currentServerId;
         }
 
-        public bool RegisterBans(IEnumerable<Ban> list)
+        public void RegisterBans(IEnumerable<Ban> list)
+        {
+            Task.Run(() => RegisterBansInternal(list));
+        }
+
+        private bool RegisterBansInternal(IEnumerable<Ban> list)
         {
             var bans = list.ToList();
             var userIds = bans.Select(x => x.GuidIp).Distinct().ToArray();
@@ -35,7 +41,7 @@ namespace Arma3BEClient.Helpers
                 using (var playerRepository = new PlayerRepository())
                 {
                     var db =
-                        banRepository.GetActiveBans(_currentServerId, userIds);
+                        banRepository.GetActiveBans(_currentServerId);
 
                     var ids = bans.Select(x => x.GuidIp).ToList();
 
@@ -51,14 +57,22 @@ namespace Arma3BEClient.Helpers
 
                     foreach (var ban in db)
                     {
+                        bool needUpdate = false;
+
                         var actual = bans.FirstOrDefault(x => x.GuidIp == ban.GuidIp);
                         if (actual == null)
                         {
                             ban.IsActive = false;
+                            needUpdate = true;
                         }
                         else
                         {
-                            ban.MinutesLeft = actual.Minutesleft;
+                            if (ban.MinutesLeft != actual.Minutesleft)
+                            {
+                                ban.MinutesLeft = actual.Minutesleft;
+                                needUpdate = true;
+                            }
+
                             if (ban.PlayerId == null)
                             {
                                 var player = players.FirstOrDefault(x => x.GUID == ban.GuidIp);
@@ -82,11 +96,14 @@ namespace Arma3BEClient.Helpers
                                         else
                                             playersToUpdateComments[player.Id] = player.Comment;
                                     }
+
+                                    needUpdate = true;
                                 }
                             }
                         }
 
-                        bansToUpdate.Add(ban);
+                        if (needUpdate)
+                            bansToUpdate.Add(ban);
                     }
 
                     foreach (var ban in bans)
