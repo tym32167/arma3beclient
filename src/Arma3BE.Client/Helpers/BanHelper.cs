@@ -54,7 +54,6 @@ namespace Arma3BEClient.Helpers
                     var bansToAdd = new List<Libs.ModelCompact.Ban>();
                     var playersToUpdateComments = new Dictionary<Guid, string>();
 
-
                     foreach (var ban in db)
                     {
                         bool needUpdate = false;
@@ -112,8 +111,6 @@ namespace Arma3BEClient.Helpers
                         if (bdb == null)
                         {
                             var player = players.FirstOrDefault(x => x.GUID == ban.GuidIp);
-
-                            if (player == null) continue;
                             
                             var newBan = new Libs.ModelCompact.Ban
                             {
@@ -125,7 +122,7 @@ namespace Arma3BEClient.Helpers
                                 Num = ban.Num,
                                 Reason = ban.Reason,
                                 ServerId = _currentServerId,
-                                PlayerId = player.Id
+                                PlayerId = player?.Id
                             };
 
                             bansToAdd.Add(newBan);
