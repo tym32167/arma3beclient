@@ -61,7 +61,7 @@ namespace Arma3BE.Server.Messaging.Recognizers
 
             if (!Int32.TryParse(lines[2], out test)) return false;
 
-            if (!GUIDValidator.Validate(lines[3].Replace("(OK)", string.Empty))) return false;
+            if (!GUIDValidator.Validate(lines[3].Replace("(OK)", string.Empty).Replace("(?)", string.Empty))) return false;
 
             return true;
         }
