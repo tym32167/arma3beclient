@@ -43,7 +43,7 @@ namespace Arma3BEClient.Helpers
                 return false;
             }
 
-            using (var context = new PlayerRepository())
+            using (var context = PlayerRepositoryFactory.Create())
             {
                 var guids = players.Select(x => x.Guid).ToList();
 
@@ -58,6 +58,7 @@ namespace Arma3BEClient.Helpers
                     var p = players.FirstOrDefault(x => x.Guid == player.GUID);
                     if (p != null)
                     {
+                        bool needUpdate = false;
                         if (player.Name != p.Name || player.LastIp != p.IP)
                         {
                             historyToAdd.Add(new PlayerHistory
@@ -70,9 +71,16 @@ namespace Arma3BEClient.Helpers
 
                             player.Name = p.Name;
                             player.LastIp = p.IP;
+
+                            needUpdate = true;
+                        }
+                        if ((DateTime.UtcNow - player.LastSeen).TotalHours > 2)
+                        {
+                            player.LastSeen = DateTime.UtcNow;
+                            needUpdate = true;
                         }
 
-                        player.LastSeen = DateTime.UtcNow;
+                        if (needUpdate)
                         playerToUpdate.Add(player);
                     }
                 }
@@ -112,7 +120,7 @@ namespace Arma3BEClient.Helpers
 
         public IEnumerable<PlayerView> GetPlayerView(IEnumerable<Player> list)
         {
-            using (var context = new PlayerRepository())
+            using (var context = PlayerRepositoryFactory.Create())
             {
                 var players = list.ToList();
                 var guids = players.Select(x => x.Guid).ToList();
@@ -163,7 +171,7 @@ namespace Arma3BEClient.Helpers
 
             if (!isAuto)
             {
-                using (var context = new PlayerRepository())
+                using (var context = PlayerRepositoryFactory.Create())
                 {
                     var user = context.GetPlayer(player.Guid);
                     if (user != null)
@@ -189,7 +197,7 @@ namespace Arma3BEClient.Helpers
                     $"{guid} {minutes} {totalreason}");
 
 
-                using (var context = new PlayerRepository())
+                using (var context = PlayerRepositoryFactory.Create())
                 {
                     var user = context.GetPlayer(guid);
                     if (user != null)
@@ -224,7 +232,7 @@ namespace Arma3BEClient.Helpers
                 $"{num} {minutes} {totalreason}");
 
 
-            using (var context = new PlayerRepository())
+            using (var context = PlayerRepositoryFactory.Create())
             {
                 var user = context.GetPlayer(guid);
                 if (user != null)

@@ -38,7 +38,7 @@ namespace Arma3BEClient.Helpers
 
             using (var banRepository = new BanRepository())
             {
-                using (var playerRepository = new PlayerRepository())
+                using (var playerRepository = PlayerRepositoryFactory.Create())
                 {
                     var db =
                         banRepository.GetActiveBans(_currentServerId);
@@ -152,7 +152,7 @@ namespace Arma3BEClient.Helpers
 
         public IEnumerable<BanView> GetBanView(IEnumerable<Ban> list)
         {
-            using (var context = new PlayerRepository())
+            using (var context = PlayerRepositoryFactory.Create())
             {
                 var bans = list as Ban[] ?? list.ToArray();
                 var guids = bans.Select(x => x.GuidIp).ToArray();
