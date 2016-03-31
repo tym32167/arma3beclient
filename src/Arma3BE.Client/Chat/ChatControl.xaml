@@ -51,11 +51,12 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition  Width="Auto" />
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <ScrollViewer Grid.ColumnSpan="2" Name="ChatScrollViewer">
+                    <ScrollViewer Grid.ColumnSpan="3" Name="ChatScrollViewer">
 
                         <RichTextBox Name="msgBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                      IsReadOnly="True" IsReadOnlyCaretVisible="False"
@@ -69,10 +70,11 @@
 
                     </ScrollViewer>
 
+                    <ComboBox Grid.Row="1" Grid.Column="0" Margin="2" ItemsSource="{Binding Players, Mode=OneWay}" DisplayMemberPath="Name" SelectedValue="{Binding SelectedPlayer, Mode=TwoWay}"></ComboBox>
 
-                    <TextBox Name="tbNewMessage" Grid.Row="1" Grid.Column="0" Margin="2"
+                    <TextBox Name="tbNewMessage" Grid.Row="1" Grid.Column="1" Margin="2"
                              Text="{Binding InputMessage, Mode=TwoWay}" KeyDown="KeyDown" Height="20" />
-                    <Button Grid.Row="1" Grid.Column="1" Content="Send" Margin="2" Click="SendMessage" />
+                    <Button Grid.Row="1" Grid.Column="2" Content="Send" Margin="2" Click="SendMessage" />
 
                 </Grid>
 

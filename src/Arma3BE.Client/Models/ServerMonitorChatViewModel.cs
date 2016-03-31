@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 using Arma3BE.Server;
 using Arma3BE.Server.Models;
@@ -20,6 +22,7 @@ namespace Arma3BEClient.Models
         private bool _autoScroll;
         private bool _enableChat;
         private string _inputMessage;
+        private List<Player> _players = new List<Player>();
 
         public ServerMonitorChatViewModel(ILog log, Guid serverId, IBEServer beServer)
         {
@@ -35,6 +38,7 @@ namespace Arma3BEClient.Models
             _beServer.PlayerLog += _beServer_PlayerLog;
             _beServer.RConAdminLog += _beServer_PlayerLog;
             _beServer.BanLog += _beServer_PlayerLog;
+            _beServer.PlayerHandler += _beServer_PlayerHandler;
 
             ShowHistoryCommand = new ActionCommand(() =>
             {
@@ -46,9 +50,52 @@ namespace Arma3BEClient.Models
             });
         }
 
+        private void _beServer_PlayerHandler(object sender, UpdateClientEventArgs<System.Collections.Generic.IEnumerable<Player>> e)
+        {
+            var newItems = new List<Player>();
+            var global = new Player(-1, null, 0, 0, null, "GLOBAL", Player.PlayerState.Ingame);
+            newItems.Add(global);
+            newItems.AddRange(e.Data.OrderBy(x=>x.Name));
+
+            var selected = SelectedPlayer;
+
+            Players = newItems;
+
+            if (selected != null)
+            {
+                var newSelected = Players.FirstOrDefault(x => x.Num == selected.Num && x.Name == selected.Name);
+                if (newSelected != null) SelectedPlayer = newSelected;
+            }
+            else
+            {
+                SelectedPlayer = global;
+            }
+        }
+
         private void _beServer_PlayerLog(object sender, LogMessage e)
         {
             OnLogMessageEventHandler(e);
+        }
+
+        public List<Player> Players
+        {
+            get { return _players; }
+            set
+            {
+                _players = value;
+                RaisePropertyChanged("Players");
+            }
+        }
+
+        private Player _selectedPlayer;
+        public Player SelectedPlayer
+        {
+            get { return _selectedPlayer; }
+            set
+            {
+                _selectedPlayer = value;
+                RaisePropertyChanged("SelectedPlayer");
+            }
         }
 
         public bool AutoScroll
@@ -102,7 +149,15 @@ namespace Arma3BEClient.Models
             if (!string.IsNullOrEmpty(rawmessage))
             {
                 var adminName = SettingsStore.Instance.AdminName;
-                var message = $" -1 {adminName}: {rawmessage}";
+
+                var selectedPlayer = SelectedPlayer;
+                var destinationNum = -1;
+                if (selectedPlayer != null)
+                {
+                    destinationNum = selectedPlayer.Num;
+                }
+
+                var message = $" {destinationNum} {adminName}: {rawmessage}";
                 _beServer.SendCommand(CommandType.Say, message);
             }
 
