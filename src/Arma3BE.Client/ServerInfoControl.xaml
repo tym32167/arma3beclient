@@ -80,7 +80,7 @@
 
         <StatusBar Grid.Row="1" Grid.ColumnSpan="3" Height="20">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Connected"
+                <TextBlock Text="Connected" Foreground="DarkGreen"
                            Visibility="{Binding Connected, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
                 <TextBlock Foreground="Red" Text="Disonnected"
                            Visibility="{Binding Connected, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverterInverse}}" />

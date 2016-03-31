@@ -3,8 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:Arma3BEClient.Converters"
              mc:Ignorable="d" DataContextChanged="ToolBar_DataContextChanged" HorizontalAlignment="Stretch"
              VerticalAlignment="Stretch">
+
+    <UserControl.Resources>
+        <converters:PlayerNumberToColorConverter x:Uid="local:PlayerNumberToColorConverter"
+                                              x:Key="PlayerNumberToColorConverter" />
+    </UserControl.Resources>
+
+
     <Grid>
 
         <Grid.RowDefinitions>
@@ -70,7 +78,20 @@
 
                     </ScrollViewer>
 
-                    <ComboBox Grid.Row="1" Grid.Column="0" Margin="2" ItemsSource="{Binding Players, Mode=OneWay}" DisplayMemberPath="Name" SelectedValue="{Binding SelectedPlayer, Mode=TwoWay}"></ComboBox>
+                    <ComboBox Grid.Row="1" Grid.Column="0" Margin="2" ItemsSource="{Binding Players, Mode=OneWay}" 
+                              SelectedValue="{Binding SelectedPlayer, Mode=TwoWay}">
+
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+
+                                <TextBlock Text="{Binding Path=Name}" Foreground="{Binding Path=Num, Converter={StaticResource PlayerNumberToColorConverter}}">
+                                    </TextBlock>
+                                
+                            </DataTemplate>
+
+                        </ComboBox.ItemTemplate>
+
+                    </ComboBox>
 
                     <TextBox Name="tbNewMessage" Grid.Row="1" Grid.Column="1" Margin="2"
                              Text="{Binding InputMessage, Mode=TwoWay}" KeyDown="KeyDown" Height="20" />
