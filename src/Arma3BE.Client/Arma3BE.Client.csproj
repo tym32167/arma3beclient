@@ -211,6 +211,7 @@
     <Compile Include="Converters\BoolToVisibilityConverterInverse.cs" />
     <Compile Include="Converters\BrushColorConverter.cs" />
     <Compile Include="Converters\InverseBooleanConverter.cs" />
+    <Compile Include="Converters\PlayerNumberToColorConverter.cs" />
     <Compile Include="Extensions\GridHelper.cs" />
     <Compile Include="Grids\AdminsControl.xaml.cs">
       <DependentUpon>AdminsControl.xaml</DependentUpon>
