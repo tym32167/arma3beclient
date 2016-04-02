@@ -161,7 +161,7 @@ namespace Arma3BEClient.Helpers
                 var badNicknames = ConfigurationManager.AppSettings["Bad_Nicknames"];
                 if (!string.IsNullOrEmpty(badNicknames))
                 {
-                    var names = badNicknames.ToLower().Split('|').ToDictionary(x=>x);
+                    var names = badNicknames.ToLower().Split('|').Distinct().ToDictionary(x=>x);
 
 
                     var bad = 
