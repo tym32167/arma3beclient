@@ -39,6 +39,10 @@ namespace Arma3BEClient.Models
             _beServer.RConAdminLog += _beServer_PlayerLog;
             _beServer.BanLog += _beServer_PlayerLog;
             _beServer.PlayerHandler += _beServer_PlayerHandler;
+            
+            var global = new Player(-1, null, 0, 0, null, "GLOBAL", Player.PlayerState.Ingame);
+            Players = new List<Player> { global }; 
+            SelectedPlayer = global;
 
             ShowHistoryCommand = new ActionCommand(() =>
             {

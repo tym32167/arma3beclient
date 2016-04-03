@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using Arma3BEClient.Helpers.Views;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using Arma3BEClient.Libs.Tools;
+using Castle.Windsor.Installer;
 using Player = Arma3BE.Server.Models.Player;
 
 namespace Arma3BEClient.Helpers
@@ -153,6 +155,21 @@ namespace Arma3BEClient.Helpers
                 {
 #pragma warning disable 4014
                     Kick(filterUsers, "bot: Fill Nickname");
+#pragma warning restore 4014
+                }
+
+                var badNicknames = ConfigurationManager.AppSettings["Bad_Nicknames"];
+                if (!string.IsNullOrEmpty(badNicknames))
+                {
+                    var names = badNicknames.ToLower().Split('|').Distinct().ToDictionary(x=>x);
+
+
+                    var bad = 
+                        result.FirstOrDefault(x =>!string.IsNullOrEmpty(x.Name) && names.ContainsKey(x.Name.ToLower()));
+
+                    if (bad != null)
+#pragma warning disable 4014
+                        Kick(bad, "bot: Bad Nickname");
 #pragma warning restore 4014
                 }
 

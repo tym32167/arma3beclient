@@ -24,6 +24,9 @@ namespace Arma3BEClient.Helpers.Views
         public string Comment { get; set; }
 
         [ShowInUi]
+        public bool CanBeAdmin { get; set; }
+
+        [ShowInUi]
         [EnableCopy]
         public string Country
         {
