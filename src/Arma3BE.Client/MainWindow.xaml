@@ -4,9 +4,10 @@
         xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         Loaded="LoadedWindow"
-        Title="Arma 3 BattlEye Tool – TEHGAM.COM"
+        Title="TEHGAM.COM - Arma 3 BattlEye Tool "
         Height="600"
         Width="800"
+        Icon="Icons/main.ico"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
