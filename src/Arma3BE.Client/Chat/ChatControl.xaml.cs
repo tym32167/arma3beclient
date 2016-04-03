@@ -70,7 +70,7 @@ namespace Arma3BEClient.Chat
             span.Inlines.Add(text);
 
             if ( message.Type != ChatMessage.MessageType.RCon && message.IsImportantMessage)
-                span.FontWeight = FontWeights.Bold;
+                span.FontWeight = FontWeights.Heavy;
 
             _paragraph.Inlines.Add(span);
 

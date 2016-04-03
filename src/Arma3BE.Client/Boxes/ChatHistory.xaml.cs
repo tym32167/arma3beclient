@@ -58,7 +58,9 @@ namespace Arma3BEClient.Boxes
             var span = new Span {Foreground = brush};
 
             if (message.Type != ChatMessage.MessageType.RCon && message.IsImportantMessage)
-                span.FontWeight = FontWeights.Bold;
+            {
+                span.FontWeight = FontWeights.Heavy;
+            }
 
             span.Inlines.Add(text);
             p.Inlines.Add(span);
