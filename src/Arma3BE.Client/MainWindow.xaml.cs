@@ -208,5 +208,11 @@ namespace Arma3BEClient
                 MessageBox.Show("Import finished!");
             }
         }
+
+        private void AboutClick(object sender, RoutedEventArgs e)
+        {
+            var window =  new About();
+            window.ShowDialog();
+        }
     }
 }

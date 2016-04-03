@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 
 [assembly: AssemblyTitle("Arma 3 BattlEye Client")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("This program is designed specifically for the TEHGAM community, with the main intended purpose of managing players and bans through the BattlEye protocol.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("tym32167")]
-[assembly: AssemblyProduct("Arma3BEClient")]
-[assembly: AssemblyCopyright("Copyright ©  2016")]
+[assembly: AssemblyProduct("Arma 3 BattlEye Client")]
+[assembly: AssemblyCopyright("Copyright © 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

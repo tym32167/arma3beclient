@@ -188,6 +188,9 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="About.xaml.cs">
+      <DependentUpon>About.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Boxes\BanPlayerWindow.xaml.cs">
       <DependentUpon>BanPlayerWindow.xaml</DependentUpon>
     </Compile>
@@ -261,6 +264,10 @@
     <Compile Include="ViewModel\PlayerListModelView.cs" />
     <Compile Include="ViewModel\ServerMonitorModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Page Include="About.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Boxes\BanPlayerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
