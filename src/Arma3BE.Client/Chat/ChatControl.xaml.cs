@@ -68,6 +68,10 @@ namespace Arma3BEClient.Chat
             var brush = new SolidColorBrush(color);
             var span = new Span {Foreground = brush};
             span.Inlines.Add(text);
+
+            if ( message.Type != ChatMessage.MessageType.RCon && message.IsImportantMessage)
+                span.FontWeight = FontWeights.Heavy;
+
             _paragraph.Inlines.Add(span);
 
             if (Model.AutoScroll)

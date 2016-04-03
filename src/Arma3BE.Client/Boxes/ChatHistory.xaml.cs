@@ -56,6 +56,12 @@ namespace Arma3BEClient.Boxes
             var color = ServerMonitorModel.GetMessageColor(message);
             var brush = new SolidColorBrush(color);
             var span = new Span {Foreground = brush};
+
+            if (message.Type != ChatMessage.MessageType.RCon && message.IsImportantMessage)
+            {
+                span.FontWeight = FontWeights.Heavy;
+            }
+
             span.Inlines.Add(text);
             p.Inlines.Add(span);
         }
