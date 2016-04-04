@@ -212,6 +212,7 @@ namespace Arma3BEClient
         private void AboutClick(object sender, RoutedEventArgs e)
         {
             var window =  new About();
+            window.Owner = this;
             window.ShowDialog();
         }
     }
