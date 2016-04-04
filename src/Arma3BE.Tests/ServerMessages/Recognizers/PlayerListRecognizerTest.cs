@@ -65,6 +65,36 @@ Players on server:
 17  77.79.128.173:2304    31   d0ee5caf1b8b6282349e79fb998c2ee2(OK) tomson
 (15 players in total)
 ")]
+
+        [TestCase(@"
+Players on server:
+[#] [IP Address]:[Port] [Ping] [GUID] [Name]
+--------------------------------------------------
+0   94.180.166.157:2304   32   44681c96ef8a59983dca16b85f9a290a(OK) RainRock
+1   37.147.149.27:2304    16   5704999c4b5ca545a052925c1a1926c2(?)  soondoock
+4   46.160.29.46:2304     16   7d8fc062d3d2cf3f67bc99205ae177b8(OK) qazzaq50
+5   213.88.77.71:2304     16   c7bf58aeac99b8892dbc90818563baaa(OK) 12s
+7   90.154.77.84:2304     16   9d2005c08273d12eb0486442c9d6933c(OK) S.W.A.T
+8   188.163.72.114:6610   31   3445a80b882a1d623e14c827b50b3ea7(OK) Archangel
+9   188.242.156.212:2304  16   9748b3f0134f95839aca62d94a42e48f(OK) kovt[Ястреб]
+(7 players in total)
+")]
+
+
+        [TestCase(@"
+Players on server:
+[#] [IP Address]:[Port] [Ping] [GUID] [Name]
+--------------------------------------------------
+0   94.180.166.157:2304   16   44681c96ef8a59983dca16b85f9a290a(OK) RainRock
+1   37.147.149.27:2304    0    5704999c4b5ca545a052925c1a1926c2(?)  soondoock
+2   95.153.131.47:55574   46   f3c9188dc8ccfd1cfd6cabcebd563a02(OK) DIMON1504
+4   46.160.29.46:2304     15   7d8fc062d3d2cf3f67bc99205ae177b8(OK) qazzaq50
+7   90.154.77.84:2304     16   9d2005c08273d12eb0486442c9d6933c(OK) S.W.A.T
+8   188.163.72.114:6610   31   3445a80b882a1d623e14c827b50b3ea7(OK) Archangel
+9   188.242.156.212:2304  16   9748b3f0134f95839aca62d94a42e48f(OK) kovt[Ястреб]
+(7 players in total)
+")]
+
         public void List_Test(string message)
         {
             var serverMessage = new ServerMessage(0, message);

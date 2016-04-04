@@ -118,7 +118,7 @@ namespace Arma3BEClient
 
         private void Export(string fname)
         {
-            using (var repo = new PlayerRepository())
+            using (var repo = PlayerRepositoryFactory.Create())
             {
                 var list =
                     repo.GetAllPlayers()
@@ -146,7 +146,7 @@ namespace Arma3BEClient
 
         private void Import(string fname)
         {
-            using (var repo = new PlayerRepository())
+            using (var repo = PlayerRepositoryFactory.Create())
             {
                 var db =
                     repo.GetAllPlayers()
@@ -207,6 +207,13 @@ namespace Arma3BEClient
                 await Task.Run(() => Import(ofd.FileName));
                 MessageBox.Show("Import finished!");
             }
+        }
+
+        private void AboutClick(object sender, RoutedEventArgs e)
+        {
+            var window =  new About();
+            window.Owner = this;
+            window.ShowDialog();
         }
     }
 }

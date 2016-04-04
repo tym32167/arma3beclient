@@ -71,7 +71,7 @@ namespace Arma3BEClient.ViewModel
 
         public void Refresh()
         {
-            using (var repo = new PlayerRepository())
+            using (var repo = PlayerRepositoryFactory.Create())
             {
                 var opts = SelectedOptions.Split(',');
 

@@ -24,6 +24,9 @@ namespace Arma3BEClient.Helpers.Views
         public string Comment { get; set; }
 
         [ShowInUi]
+        public bool CanBeAdmin { get; set; }
+
+        [ShowInUi]
         [EnableCopy]
         public string Country
         {
@@ -44,6 +47,10 @@ namespace Arma3BEClient.Helpers.Views
 
         [ShowInUi]
         [EnableCopy]
+        public int Ping { get; set; }
+
+        [ShowInUi]
+        [EnableCopy]
         public string IP { get; set; }
 
         [ShowInUi]
@@ -53,10 +60,6 @@ namespace Arma3BEClient.Helpers.Views
         [ShowInUi]
         [EnableCopy]
         public int Port { get; set; }
-
-        [ShowInUi]
-        [EnableCopy]
-        public int Ping { get; set; }
 
         public Guid Id { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;

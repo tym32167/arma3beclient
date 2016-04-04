@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using Arma3BEClient.Common.Core;
 using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
@@ -12,12 +11,12 @@ namespace Arma3BEClient.Libs.Repositories
 {
     public class BanRepository : DisposeObject
     {
-        public IEnumerable<Ban> GetActiveBans(Guid serverId, string[] playerGuids)
+        public IEnumerable<Ban> GetActiveBans(Guid serverId)
         {
             using (var context = new Arma3BeClientContext())
             {
                 return
-                    context.Bans.Where(x => x.IsActive && x.ServerId == serverId && playerGuids.Contains(x.GuidIp))
+                    context.Bans.Where(x => x.IsActive && x.ServerId == serverId)
                         .ToList();
             }
         }
@@ -38,6 +37,7 @@ namespace Arma3BEClient.Libs.Repositories
             using (var dc = new Arma3BeClientContext())
             {
                 dc.Bans.AddOrUpdate(bans.ToArray());
+                dc.SaveChanges();
             }
         }
     }

@@ -4,9 +4,10 @@
         xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         Loaded="LoadedWindow"
-        Title="Arma 3 BattlEye Tool – TEHGAM.COM"
+        Title="TEHGAM.COM - Arma 3 BattlEye Tool "
         Height="600"
         Width="800"
+        Icon="Icons/main.ico"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
@@ -16,9 +17,6 @@
         <!-- Toolbar -->
         <Menu>
             <MenuItem Header="File">
-                <!--<MenuItem Header="New" Click="NewClick"></MenuItem>-->
-                <!--<MenuItem Header="Open" Click="OpenFileClick"></MenuItem>
-        <Separator/>-->
                 <MenuItem Header="Export players" Click="ExportClick" />
                 <MenuItem Header="Import players" Click="ImportClick" />
                 <Separator />
@@ -26,43 +24,18 @@
             </MenuItem>
             <MenuItem Header="Options">
                 <MenuItem Header="Preferences..." Click="OptionsClick" />
-                <!--<MenuItem Header="Themes">
-          <MenuItem Header="Aero.NormalColor"
-                    Tag="aero.normalcolor"
-                    Click="ChangeStandardTheme"/>
-          <MenuItem Header="Classic"
-                    Tag="classic"
-                    Click="ChangeStandardTheme"/>
-          <MenuItem Header="Luna.Normalcolor"
-                    Tag="luna.normalcolor"
-                    Click="ChangeStandardTheme"/>
-          <MenuItem Header="Generic"
-                    Tag="generic"
-                    Click="ChangeStandardTheme"/>
-          <Separator/>
-          <MenuItem Header="Dev 2010"
-                    Tag="/AvalonDock.Themes;component/themes/dev2010.xaml"
-                    Click="ChangeCustomTheme"/>
-          <MenuItem Header="Expression Dark"
-                    Tag="/AvalonDock.Themes;component/themes/ExpressionDark.xaml"
-                    Click="ChangeCustomTheme"/>
-          <Separator/>
-          <MenuItem Header="Default" Click="SetDefaultTheme"/>
-        </MenuItem>-->
             </MenuItem>
             <MenuItem Header="Servers" ItemsSource="{Binding Servers}" Click="ServerClick">
-                <!--<MenuItem.ItemsSource>
-          <CompositeCollection>
-            <CollectionContainer Collection="{Binding Servers}"/>
-          </CompositeCollection>
-        </MenuItem.ItemsSource>-->
                 <MenuItem.ItemContainerStyle>
                     <Style>
                         <Setter Property="MenuItem.Header" Value="{Binding Name}" />
                     </Style>
                 </MenuItem.ItemContainerStyle>
             </MenuItem>
-            <!--<MenuItem Header="Players" Click="PlayersClick"></MenuItem>-->
+            <Separator/>
+            <MenuItem Header="Help">
+                <MenuItem Header="About" Click="AboutClick" />
+            </MenuItem>
         </Menu>
         <xcad:DockingManager x:Name="DockManager" Grid.Row="1" Margin="0,0,0,0" />
     </Grid>

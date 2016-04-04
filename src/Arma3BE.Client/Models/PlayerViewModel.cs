@@ -26,7 +26,7 @@ namespace Arma3BEClient.Models
             {
                 if (_player == null)
                 {
-                    using (var dc = new PlayerRepository())
+                    using (var dc = PlayerRepositoryFactory.Create())
                     {
                         var player = dc.GetPlayerInfo(_userGuid);
                         _player = player;
@@ -57,7 +57,7 @@ namespace Arma3BEClient.Models
 
         private void SaveUserComment()
         {
-            using (var repo = new PlayerRepository())
+            using (var repo = PlayerRepositoryFactory.Create())
             {
                 repo.UpdatePlayerComment(Player.GUID, Player.Comment);
             }
