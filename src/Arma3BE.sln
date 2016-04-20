@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleNET", "BattleNET\BattleNET.csproj", "{4FBB3734-215B-45B1-BDBC-0EFA156A6900}"
 EndProject
@@ -42,6 +42,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Global", "Global", "{44D8CB
 	ProjectSection(SolutionItems) = preProject
 		GlobalAssemblyInfo.cs = GlobalAssemblyInfo.cs
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Prism", "Prism", "{2F4F1E4D-2CAB-4AC4-AB7A-53DC68B61001}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BE.Frontend", "Arma3BE.Frontend\Arma3BE.Frontend.csproj", "{BE0E5D76-66C9-46C4-81B3-B2304D51A548}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,6 +93,10 @@ Global
 		{E17CCDE1-E438-486A-BF27-6D9C553C9431}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E17CCDE1-E438-486A-BF27-6D9C553C9431}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E17CCDE1-E438-486A-BF27-6D9C553C9431}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE0E5D76-66C9-46C4-81B3-B2304D51A548}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE0E5D76-66C9-46C4-81B3-B2304D51A548}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE0E5D76-66C9-46C4-81B3-B2304D51A548}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE0E5D76-66C9-46C4-81B3-B2304D51A548}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,5 +111,6 @@ Global
 		{B2948BD4-B413-4E9D-B9ED-41261B0C56DA} = {A63546C5-96E9-4DAF-ACBF-C4D0C2F6B9CF}
 		{992FAB3C-6505-41E4-A4D0-4D0657661695} = {009DEDB1-E6E3-4FA8-AFEC-39DBBE4FFCC6}
 		{E17CCDE1-E438-486A-BF27-6D9C553C9431} = {459FC375-2A8A-4766-9567-540DF4029A53}
+		{BE0E5D76-66C9-46C4-81B3-B2304D51A548} = {2F4F1E4D-2CAB-4AC4-AB7A-53DC68B61001}
 	EndGlobalSection
 EndGlobal
