@@ -1,9 +1,9 @@
-﻿using System;
-using System.Windows;
-using Arma3BE.Frontend.Modules.Views;
-using Prism.Unity;
+﻿using Arma3BE.Frontend.Modules.Views;
 using Microsoft.Practices.Unity;
 using Prism.Modularity;
+using Prism.Unity;
+using System;
+using System.Windows;
 
 namespace Arma3BE.Frontend
 {
