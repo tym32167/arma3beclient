@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Arma3BE.Server.Models;
 
-namespace Arma3BE.Server
+namespace Arma3BE.Server.Abstract
 {
     public interface IBEServer : IDisposable
     {

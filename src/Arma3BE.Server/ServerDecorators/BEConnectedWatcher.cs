@@ -1,31 +1,31 @@
 using System;
 using System.Threading;
-using System.Threading.Tasks;
+using Arma3BE.Server.Abstract;
 using Arma3BEClient.Common.Core;
 using Arma3BEClient.Common.Logging;
 using BattleNET;
 
-namespace Arma3BE.Server.Decorators
+namespace Arma3BE.Server.ServerDecorators
 {
-    public class BEConnectedWatcher : DisposeObject, IBattlEyeClient
+    public class BEConnectedWatcher : DisposeObject, IBattlEyeServer
     {
-        private readonly IBattlEyeClientFactory _battlEyeClientFactory;
+        private readonly IBattlEyeServerFactory _battlEyeServerFactory;
         private readonly BattlEyeLoginCredentials _credentials;
 
         private readonly object _lock = new object();
         private readonly ILog _log;
 
         private readonly Timer _timer;
-        private IBattlEyeClient _battlEyeClient;
+        private IBattlEyeServer _battlEyeServer;
         private DateTime _lastReceived = DateTime.UtcNow;
         private int _numAttempts;
 
-        public bool Connected => _battlEyeClient != null && _battlEyeClient.Connected;
+        public bool Connected => _battlEyeServer != null && _battlEyeServer.Connected;
 
-        public BEConnectedWatcher(IBattlEyeClientFactory battlEyeClientFactory, ILog log,
+        public BEConnectedWatcher(IBattlEyeServerFactory battlEyeServerFactory, ILog log,
             BattlEyeLoginCredentials credentials)
         {
-            _battlEyeClientFactory = battlEyeClientFactory;
+            _battlEyeServerFactory = battlEyeServerFactory;
             _log = log;
             _credentials = credentials;
 
@@ -35,19 +35,19 @@ namespace Arma3BE.Server.Decorators
 
         public int SendCommand(BattlEyeCommand command, string parameters = "")
         {
-            _battlEyeClient?.SendCommand(command, parameters);
+            _battlEyeServer?.SendCommand(command, parameters);
             return 0;
         }
 
         public BattlEyeConnectionResult Connect()
         {
-            var result = _battlEyeClient?.Connect();
+            var result = _battlEyeServer?.Connect();
             return result ?? BattlEyeConnectionResult.ConnectionFailed;
         }
 
         public void Disconnect()
         {
-            _battlEyeClient?.Disconnect();
+            _battlEyeServer?.Disconnect();
         }
 
         public event BattlEyeMessageEventHandler BattlEyeMessageReceived;
@@ -56,7 +56,7 @@ namespace Arma3BE.Server.Decorators
 
         private void _timer_Elapsed(object state)
         {
-            if (_battlEyeClient == null || !_battlEyeClient.Connected)
+            if (_battlEyeServer == null || !_battlEyeServer.Connected)
             {
                 _numAttempts++;
             }
@@ -90,10 +90,10 @@ namespace Arma3BE.Server.Decorators
             {
                 _log.Info($"Init {_credentials.Host}:{_credentials.Port}");
 
-                _battlEyeClient = _battlEyeClientFactory.Create(_credentials);
-                _battlEyeClient.BattlEyeConnected += OnBattlEyeConnected;
-                _battlEyeClient.BattlEyeMessageReceived += OnBattlEyeMessageReceived;
-                _battlEyeClient.BattlEyeDisconnected += OnBattlEyeDisconnected;
+                _battlEyeServer = _battlEyeServerFactory.Create(_credentials);
+                _battlEyeServer.BattlEyeConnected += OnBattlEyeConnected;
+                _battlEyeServer.BattlEyeMessageReceived += OnBattlEyeMessageReceived;
+                _battlEyeServer.BattlEyeDisconnected += OnBattlEyeDisconnected;
             }
         }
 
@@ -102,18 +102,18 @@ namespace Arma3BE.Server.Decorators
             lock (_lock)
             {
                 _log.Info($"Release {_credentials.Host}:{_credentials.Port}");
-                if (_battlEyeClient != null)
+                if (_battlEyeServer != null)
                 {
-                    _battlEyeClient.BattlEyeConnected -= OnBattlEyeConnected;
-                    _battlEyeClient.BattlEyeMessageReceived -= OnBattlEyeMessageReceived;
-                    _battlEyeClient.BattlEyeDisconnected -= OnBattlEyeDisconnected;
+                    _battlEyeServer.BattlEyeConnected -= OnBattlEyeConnected;
+                    _battlEyeServer.BattlEyeMessageReceived -= OnBattlEyeMessageReceived;
+                    _battlEyeServer.BattlEyeDisconnected -= OnBattlEyeDisconnected;
 
-                    if (_battlEyeClient.Connected) _battlEyeClient.Disconnect();
+                    if (_battlEyeServer.Connected) _battlEyeServer.Disconnect();
 
-                    _battlEyeClient.Dispose();
+                    _battlEyeServer.Dispose();
                 }
 
-                _battlEyeClient = null;
+                _battlEyeServer = null;
             }
         }
 
@@ -138,17 +138,17 @@ namespace Arma3BE.Server.Decorators
         {
             _timer.Dispose();
 
-            if (_battlEyeClient != null)
+            if (_battlEyeServer != null)
             {
                 lock (_lock)
                 {
-                    if (_battlEyeClient != null)
+                    if (_battlEyeServer != null)
                     {
                         Release();
                     }
                 }
             }
-            
+
             base.DisposeManagedResources();
         }
     }

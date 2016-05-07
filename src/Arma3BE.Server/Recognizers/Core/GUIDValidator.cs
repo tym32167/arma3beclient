@@ -1,4 +1,4 @@
-﻿namespace Arma3BE.Server.Messaging.Recognizers.Core
+﻿namespace Arma3BE.Server.Recognizers.Core
 {
     public class GUIDValidator
     {

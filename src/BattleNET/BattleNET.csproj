@@ -51,7 +51,6 @@
     <Compile Include="BattlEyeConnectionResult.cs" />
     <Compile Include="BattlEyeDisconnectionType.cs" />
     <Compile Include="Helpers.cs" />
-    <Compile Include="IBattlEyeClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

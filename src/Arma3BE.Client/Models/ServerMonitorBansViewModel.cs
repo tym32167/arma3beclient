@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Input;
 using Arma3BE.Server;
+using Arma3BE.Server.Abstract;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Boxes;
 using Arma3BEClient.Commands;

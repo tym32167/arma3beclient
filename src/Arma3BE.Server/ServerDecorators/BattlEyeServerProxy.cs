@@ -1,13 +1,14 @@
+using Arma3BE.Server.Abstract;
 using Arma3BEClient.Common.Core;
 using BattleNET;
 
-namespace Arma3BE.Server.Decorators
+namespace Arma3BE.Server.ServerDecorators
 {
-    public class BattlEyeClientProxy : DisposeObject, IBattlEyeClient
+    public class BattlEyeServerProxy : DisposeObject, IBattlEyeServer
     {
         private BattlEyeClient _battlEyeClient;
 
-        public BattlEyeClientProxy(BattlEyeClient client)
+        public BattlEyeServerProxy(BattlEyeClient client)
         {
             _battlEyeClient = client;
 

@@ -1,23 +1,26 @@
 using System;
-using Arma3BE.Server.Messaging.Recognizers.Core;
+using Arma3BE.Server.Abstract;
+using Arma3BE.Server.Messaging;
 using Arma3BE.Server.Models;
+using Arma3BE.Server.Recognizers.Core;
 
-namespace Arma3BE.Server.Messaging.Recognizers
+namespace Arma3BE.Server.Recognizers
 {
-    public class PlayerListRecognizer : IServerMessageRecognizer
+    public class AdminListRecognizer : IServerMessageRecognizer
     {
         public ServerMessageType GetMessageType(ServerMessage message)
         {
-            return ServerMessageType.PlayerList;
+            return ServerMessageType.AdminList;
         }
 
+        
         public bool CanRecognize(ServerMessage serverMessage)
         {
             var firstLines = new[]
             {
-                "Players on server:",
-                "[#] [IP Address]:[Port] [Ping] [GUID] [Name]",
-                "--------------------------------------------------"
+                "Connected RCon admins:",
+                "[#] [IP Address]:[Port]",
+                "-----------------------------"
             };
 
 
@@ -32,19 +35,13 @@ namespace Arma3BE.Server.Messaging.Recognizers
                     return false;
             }
 
-            for (; i < (lines.Length - 1); i++)
+            for (; i < (lines.Length); i++)
             {
-                if (Player.Parse(lines[i]) == null || !CanRecognizeLine(lines[i]))
+                if (Admin.Parse(lines[i]) == null || !CanRecognizeLine(lines[i]))
                 {
                     return false;
                 }
             }
-
-
-            var lastLine = $"({lines.Length - 4} players in total)";
-            if (string.Compare(lastLine, lines[lines.Length - 1], StringComparison.InvariantCultureIgnoreCase) != 0)
-                return false;
-
 
             return true;
         }
@@ -52,18 +49,23 @@ namespace Arma3BE.Server.Messaging.Recognizers
         public bool CanRecognizeLine(string line)
         {
             var lines = line.Split(" \t".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            if (lines.Length < 5) return false;
+            if (lines.Length < 2) return false;
 
             int test;
             if (!Int32.TryParse(lines[0], out test)) return false;
 
             if (!IPAndPortValidator.Validate(lines[1])) return false;
 
-            if (!Int32.TryParse(lines[2], out test)) return false;
-
-            if (!GUIDValidator.Validate(lines[3].Replace("(OK)", string.Empty).Replace("(?)", string.Empty))) return false;
-
             return true;
         }
     }
+
+//Sample
+//
+//Connected RCon admins:
+//[#] [IP Address]:[Port]
+//-----------------------------
+//0 94.181.44.100:50960
+//1 213.21.12.135:54678
+
 }

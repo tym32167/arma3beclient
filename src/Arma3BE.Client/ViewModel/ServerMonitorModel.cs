@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Windows.Media;
 using Arma3BE.Server;
+using Arma3BE.Server.Abstract;
 using Arma3BE.Server.Models;
+using Arma3BE.Server.ServerFactory;
 using Arma3BEClient.Commands;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Contracts;
@@ -34,7 +36,7 @@ namespace Arma3BEClient.ViewModel
 
             SteamQueryViewModel = new ServerMonitorSteamQueryViewModel(CurrentServer.Host, CurrentServer.Port, _log);
 
-            _beServer = new BEServer(host, CurrentServer.Port, CurrentServer.Password, _log, new WatcherBEClientFactory(_log));
+            _beServer = new BEServer(host, CurrentServer.Port, CurrentServer.Password, _log, new WatcherBEServerFactory(_log));
 
             
 

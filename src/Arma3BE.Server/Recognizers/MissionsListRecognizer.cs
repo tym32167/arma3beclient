@@ -1,6 +1,8 @@
+using Arma3BE.Server.Abstract;
+using Arma3BE.Server.Messaging;
 using Arma3BE.Server.Models;
 
-namespace Arma3BE.Server.Messaging.Recognizers
+namespace Arma3BE.Server.Recognizers
 {
     public class MissionsListRecognizer : IServerMessageRecognizer
     {

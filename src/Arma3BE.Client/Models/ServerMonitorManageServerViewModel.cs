@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using Arma3BE.Server;
+using Arma3BE.Server.Abstract;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Commands;
 using Arma3BEClient.Common.Logging;

@@ -1,8 +1,9 @@
 ﻿using System;
+using BattleNET;
 
-namespace BattleNET
+namespace Arma3BE.Server.Abstract
 {
-    public interface IBattlEyeClient : IDisposable
+    public interface IBattlEyeServer : IDisposable
     {
         bool Connected { get; }
         int SendCommand(BattlEyeCommand command, string parameters = "");
