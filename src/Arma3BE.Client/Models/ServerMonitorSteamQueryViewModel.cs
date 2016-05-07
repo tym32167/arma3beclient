@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Arma3BEClient.Commands;
+using Arma3BEClient.Common.Dns;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Helpers;
 using Arma3BEClient.Steam;
@@ -27,7 +28,7 @@ namespace Arma3BEClient.Models
 
             ExcecuteCommand = new ActionCommand(() => Task.Run(() =>
             {
-                var iphost = IPInfo.GetIPAddress(Host);
+                var iphost = DnsService.GetIpAddress(Host);
                 var server = new Server(new IPEndPoint(IPAddress.Parse(iphost), Port));
 
                 var settings = new GetServerInfoSettings();
@@ -60,7 +61,7 @@ namespace Arma3BEClient.Models
             }),
                 () =>
                 {
-                    var iphost = IPInfo.GetIPAddress(Host);
+                    var iphost = DnsService.GetIpAddress(Host);
 
                     if (string.IsNullOrEmpty(iphost))
                     {

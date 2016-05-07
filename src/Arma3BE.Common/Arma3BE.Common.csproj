@@ -48,6 +48,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -60,6 +61,7 @@
     </Compile>
     <Compile Include="Attributes\ShowInUIAttribute.cs" />
     <Compile Include="Core\DisposeObject.cs" />
+    <Compile Include="Dns\DnsService.cs" />
     <Compile Include="Logging\ILog.cs" />
     <Compile Include="Logging\Log.cs" />
   </ItemGroup>
