@@ -5,6 +5,9 @@
         xmlns:viewModel="clr-namespace:Arma3BEClient.ViewModel"
         Title="Options" WindowStartupLocation="CenterScreen" Height="600" Width="800"
         WindowStyle="ToolWindow">
+
+    <xctk:BusyIndicator IsBusy="False" BusyContent="Saving changes..." Name="BusyIndicator">
+    
     <Grid>
 
         <Grid.RowDefinitions>
@@ -19,7 +22,6 @@
                                             ItemsSource="{Binding Servers}"
                                             ItemAdded="ServerAdded" ItemDeleted="ServerDeleted"
                                             ItemsSourceType="viewModel:ServerInfoModel"
-                                            ItemDeleting="ServerDeleting"
                                             NewItemTypes="{Binding NewListItemTypes}" />
                 </Grid>
             </TabItem>
@@ -49,4 +51,5 @@
         </StackPanel>
 
     </Grid>
+    </xctk:BusyIndicator>
 </Window>

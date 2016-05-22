@@ -1,10 +1,10 @@
+using Arma3BEClient.Common.Core;
+using Arma3BEClient.Libs.Context;
+using Arma3BEClient.Libs.ModelCompact;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Migrations;
 using System.Linq;
-using Arma3BEClient.Common.Core;
-using Arma3BEClient.Libs.Context;
-using Arma3BEClient.Libs.ModelCompact;
 
 namespace Arma3BEClient.Libs.Repositories
 {
@@ -60,7 +60,12 @@ namespace Arma3BEClient.Libs.Repositories
         {
             using (var dc = new Arma3BeClientContext())
             {
-                dc.ServerInfo.RemoveRange(dc.ServerInfo.Where(x=>x.Id == serverInfoId));
+                dc.ChatLog.RemoveRange(dc.ChatLog.Where(x => x.ServerId == serverInfoId));
+                dc.Bans.RemoveRange(dc.Bans.Where(x => x.ServerId == serverInfoId));
+                dc.PlayerHistory.RemoveRange(dc.PlayerHistory.Where(x => x.ServerId == serverInfoId));
+                dc.Admins.RemoveRange(dc.Admins.Where(x => x.ServerId == serverInfoId));
+
+                dc.ServerInfo.RemoveRange(dc.ServerInfo.Where(x => x.Id == serverInfoId));
                 dc.SaveChanges();
             }
         }
