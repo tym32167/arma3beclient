@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Arma3BE.Client.Modules.MainModule.Commands;
+using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BEClient.Common.Dns;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Steam;

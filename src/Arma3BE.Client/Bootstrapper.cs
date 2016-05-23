@@ -1,4 +1,5 @@
 ﻿using Arma3BE.Client.Modules.MainModule;
+using Arma3BEClient.Common.Logging;
 using log4net.Config;
 using Microsoft.Practices.Unity;
 using Prism.Modularity;
@@ -36,6 +37,12 @@ namespace Arma3BEClient
                   ModuleName = moduleCType.Name,
                   ModuleType = moduleCType.AssemblyQualifiedName,
               });
+        }
+
+        protected override void ConfigureContainer()
+        {
+            base.ConfigureContainer();
+            Container.RegisterType<ILog, Log>();
         }
     }
 }

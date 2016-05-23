@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Arma3BE.Client.Modules.MainModule.Commands
+namespace Arma3BE.Client.Infrastructure.Commands
 {
     public class ActionCommand : BaseCommand
     {

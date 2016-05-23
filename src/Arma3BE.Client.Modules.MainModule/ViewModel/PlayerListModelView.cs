@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using Arma3BE.Client.Modules.MainModule.Commands;
+using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Client.Modules.MainModule.Helpers;
 using Arma3BE.Client.Modules.MainModule.Models;
 using Arma3BE.Server.Abstract;

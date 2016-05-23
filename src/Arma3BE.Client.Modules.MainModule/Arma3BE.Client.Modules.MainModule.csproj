@@ -176,8 +176,6 @@
     <Compile Include="Chat\ChatControl.xaml.cs">
       <DependentUpon>ChatControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Commands\ActionCommand.cs" />
-    <Compile Include="Commands\BaseCommand.cs" />
     <Compile Include="Contracts\DisposableUserControl.cs" />
     <Compile Include="Contracts\DisposableViewModelBase.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter .cs" />
@@ -336,7 +334,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Boxes\BoxesGrids\" />
     <Folder Include="DataSources\" />
   </ItemGroup>
   <ItemGroup>

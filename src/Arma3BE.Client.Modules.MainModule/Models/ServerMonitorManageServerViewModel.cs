@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using Arma3BE.Client.Modules.MainModule.Commands;
+using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Server;
 using Arma3BE.Server.Abstract;
 using Arma3BE.Server.Models;

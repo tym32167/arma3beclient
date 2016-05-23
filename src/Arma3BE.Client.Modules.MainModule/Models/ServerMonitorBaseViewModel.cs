@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using Arma3BE.Client.Modules.MainModule.Commands;
+using Arma3BE.Client.Infrastructure.Commands;
 using GalaSoft.MvvmLight;
 
 namespace Arma3BE.Client.Modules.MainModule.Models

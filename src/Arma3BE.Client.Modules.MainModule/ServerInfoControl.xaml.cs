@@ -14,11 +14,11 @@ namespace Arma3BE.Client.Modules.MainModule
         private bool _disposed;
         private ServerMonitorModel _model;
 
-        public ServerInfoControl(ServerInfo serverInfo)
+        public ServerInfoControl(ServerMonitorModel model)
         {
             InitializeComponent();
 
-            _model = new ServerMonitorModel(serverInfo, new Log());
+            _model = model;// new ServerMonitorModel(serverInfo, new Log());
             DataContext = _model;
             Dispatcher.ShutdownStarted += Dispatcher_ShutdownStarted;
         }

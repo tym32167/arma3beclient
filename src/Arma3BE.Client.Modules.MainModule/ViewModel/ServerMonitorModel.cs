@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Media;
-using Arma3BE.Client.Modules.MainModule.Commands;
+using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Client.Modules.MainModule.Contracts;
 using Arma3BE.Client.Modules.MainModule.Models;
 using Arma3BE.Server;

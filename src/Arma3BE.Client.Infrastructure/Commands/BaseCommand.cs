@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace Arma3BE.Client.Modules.MainModule.Commands
+namespace Arma3BE.Client.Infrastructure.Commands
 {
     public abstract class BaseCommand : ICommand
     {

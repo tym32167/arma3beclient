@@ -1,5 +1,5 @@
 ﻿using System.Windows.Input;
-using Arma3BE.Client.Modules.MainModule.Commands;
+using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Client.Modules.MainModule.Helpers;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;

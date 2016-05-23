@@ -1,15 +1,16 @@
-﻿using System;
+﻿using Arma3BE.Client.Modules.MainModule.Models.Export;
+using Arma3BE.Client.Modules.MainModule.ViewModel;
+using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Repositories;
+using Microsoft.Practices.Unity;
+using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Serialization;
-using Arma3BE.Client.Modules.MainModule.Models.Export;
-using Arma3BE.Client.Modules.MainModule.ViewModel;
-using Arma3BEClient.Libs.ModelCompact;
-using Arma3BEClient.Libs.Repositories;
-using Microsoft.Win32;
 using Xceed.Wpf.AvalonDock.Controls;
 using Xceed.Wpf.AvalonDock.Layout;
 using MessageBox = Xceed.Wpf.Toolkit.MessageBox;
@@ -20,15 +21,17 @@ namespace Arma3BE.Client.Modules.MainModule
     ///     Interaction logic for MainWindow.xaml
     /// </summary>
     // ReSharper disable once RedundantExtendsListEntry
-    public partial class MainWindow 
+    public partial class MainWindow
     {
         private readonly MainViewModel _model;
+        private readonly IUnityContainer _container;
 
-        public MainWindow(MainViewModel model)
+        public MainWindow(MainViewModel model, IUnityContainer container)
         {
             InitializeComponent();
 
             _model = model;
+            _container = container;
             DataContext = _model;
         }
 
@@ -47,7 +50,10 @@ namespace Arma3BE.Client.Modules.MainModule
             {
                 var doc = new LayoutDocument { Title = serverInfo.Name };
 
-                var control = new ServerInfoControl(serverInfo);
+                var control =
+                    _container.Resolve<ServerInfoControl>(
+                        new ParameterOverride("currentServer", serverInfo).OnType<ServerMonitorModel>(),
+                        new ParameterOverride("console", false).OnType<ServerMonitorModel>());
 
                 doc.Content = control;
 
@@ -212,8 +218,8 @@ namespace Arma3BE.Client.Modules.MainModule
 
         private void AboutClick(object sender, RoutedEventArgs e)
         {
-            var window =  new About();
-            window.Owner = this.FindVisualAncestor<Window>(); 
+            var window = new About();
+            window.Owner = this.FindVisualAncestor<Window>();
             window.ShowDialog();
         }
     }
