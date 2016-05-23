@@ -57,7 +57,7 @@ namespace Arma3BEClient.Grids
 
             if (si != null)
             {
-                var w = new BanPlayerWindow(Model._playerHelper, si.Guid, false, si.Name, null);
+                var w = new BanPlayerWindow(Model.PlayerHelper, si.Guid, false, si.Name, null);
                 w.ShowDialog();
             }
         }

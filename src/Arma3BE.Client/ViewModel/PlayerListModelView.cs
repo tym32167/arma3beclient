@@ -1,35 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Input;
-using Arma3BE.Server;
-using Arma3BE.Server.Abstract;
+﻿using Arma3BE.Server.Abstract;
 using Arma3BEClient.Commands;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Helpers;
-using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using Arma3BEClient.Models;
 using GalaSoft.MvvmLight;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Input;
 
 namespace Arma3BEClient.ViewModel
 {
     public class PlayerListModelView : ViewModelBase
     {
-        private readonly IBEServer _beServer;
-        private readonly ILog _log;
-        private readonly Guid _serverId;
         private int _playerCount;
-        internal PlayerHelper _playerHelper;
+        internal readonly PlayerHelper PlayerHelper;
         private ICommand _refreshCommand;
 
         public PlayerListModelView(ILog log, IBEServer beServer, Guid serverId)
         {
-            _log = log;
-            _beServer = beServer;
-            _serverId = serverId;
-
-            _playerHelper = new PlayerHelper(_log, serverId, _beServer);
+            PlayerHelper = new PlayerHelper(log, serverId, beServer);
             SelectedOptions = "Name,IP,Guid,Comment";
         }
 
@@ -41,7 +32,7 @@ namespace Arma3BEClient.ViewModel
             set
             {
                 _playerCount = value;
-                RaisePropertyChanged("PlayerCount");
+                RaisePropertyChanged();
             }
         }
 
@@ -120,7 +111,7 @@ namespace Arma3BEClient.ViewModel
                 Players = r;
             }
 
-            RaisePropertyChanged("Players");
+            RaisePropertyChanged(nameof(Players));
         }
     }
 }

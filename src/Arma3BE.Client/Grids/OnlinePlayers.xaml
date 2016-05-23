@@ -36,7 +36,7 @@
         </ToolBar>
 
         <xcdg:DataGridControl Grid.Row="1" ItemsSource="{Binding Data, Mode=OneWay}"
-                              SelectedItem="{Binding SelectedPlayer, Mode=TwoWay}" AutoCreateColumns="False"
+                              AutoCreateColumns="False"
                               ReadOnly="True" Name="dg">
 
             <xcdg:DataGridControl.ContextMenu>

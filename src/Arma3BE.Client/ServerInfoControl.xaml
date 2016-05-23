@@ -7,6 +7,7 @@
              xmlns:local="clr-namespace:Arma3BEClient.Grids"
              xmlns:converters="clr-namespace:Arma3BEClient.Converters"
              xmlns:chat="clr-namespace:Arma3BEClient.Chat"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -23,7 +24,8 @@
 
 
     </UserControl.Resources>
-    <Grid>
+    <xctk:BusyIndicator IsBusy="{Binding IsBusy}" BusyContent="Please, wait..." >
+        <Grid>
 
         <!--<Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
@@ -87,4 +89,5 @@
             </StackPanel>
         </StatusBar>
     </Grid>
+    </xctk:BusyIndicator>
 </UserControl>

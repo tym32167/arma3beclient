@@ -9,15 +9,17 @@ using Arma3BEClient.Contracts;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Models;
 using System;
+using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace Arma3BEClient.ViewModel
 {
     public class ServerMonitorModel : DisposableViewModelBase
     {
-        private readonly IBEServer _beServer;
+        private IBEServer _beServer;
         private readonly bool _console;
         private readonly ILog _log;
+        private bool _isBusy;
 
         public ServerMonitorModel(ServerInfo currentServer, ILog log, bool console = false)
         {
@@ -25,6 +27,14 @@ namespace Arma3BEClient.ViewModel
             _log = log;
             _console = console;
 
+            IsBusy = true;
+
+            Task.Factory.StartNew(() => InitModel(console))
+                .ContinueWith(t => IsBusy = false);
+        }
+
+        private void InitModel(bool console)
+        {
             var host = DnsService.GetIpAddress(CurrentServer.Host);
 
             if (string.IsNullOrEmpty(host))
@@ -59,33 +69,33 @@ namespace Arma3BEClient.ViewModel
             if (!console)
             {
                 _beServer.BanLog += (s, e) =>
-               {
-                   _beServer.SendCommand(CommandType.Players);
-                   _beServer.SendCommand(CommandType.Bans);
-               };
+                {
+                    _beServer.SendCommand(CommandType.Players);
+                    _beServer.SendCommand(CommandType.Bans);
+                };
             }
 
             _beServer.ConnectingHandler += (s, e) => RaisePropertyChanged("Connected");
 
-            PlayersViewModel = new ServerMonitorPlayerViewModel(_log, currentServer, _beServer);
+            PlayersViewModel = new ServerMonitorPlayerViewModel(_log, CurrentServer, _beServer);
 
             if (!console)
             {
-                BansViewModel = new ServerMonitorBansViewModel(_log, currentServer.Id, _beServer);
-                AdminsViewModel = new ServerMonitorAdminsViewModel(_log, currentServer,
+                BansViewModel = new ServerMonitorBansViewModel(_log, CurrentServer.Id, _beServer);
+                AdminsViewModel = new ServerMonitorAdminsViewModel(_log, CurrentServer,
                     new ActionCommand(() => _beServer.SendCommand(CommandType.Admins)));
-                ManageServerViewModel = new ServerMonitorManageServerViewModel(_log, currentServer.Id, _beServer);
-                PlayerListModelView = new PlayerListModelView(_log, _beServer, currentServer.Id);
+                ManageServerViewModel = new ServerMonitorManageServerViewModel(_log, CurrentServer.Id, _beServer);
+                PlayerListModelView = new PlayerListModelView(_log, _beServer, CurrentServer.Id);
             }
 
-            ChatViewModel = new ServerMonitorChatViewModel(_log, currentServer.Id, _beServer);
+            ChatViewModel = new ServerMonitorChatViewModel(_log, CurrentServer.Id, _beServer);
 
             Connect();
         }
 
         public ServerInfo CurrentServer { get; }
 
-        public bool Connected => _beServer.Connected;
+        public bool Connected => _beServer?.Connected ?? false;
 
         public static Color GetMessageColor(ChatMessage message)
         {
@@ -174,6 +184,19 @@ namespace Arma3BEClient.ViewModel
         public ServerMonitorManageServerViewModel ManageServerViewModel { get; set; }
 
         public PlayerListModelView PlayerListModelView { get; set; }
+
+        public bool IsBusy
+        {
+            get { return _isBusy; }
+            set
+            {
+                if (_isBusy != value)
+                {
+                    _isBusy = value;
+                    RaisePropertyChanged(nameof(IsBusy));
+                }
+            }
+        }
 
         #endregion
     }

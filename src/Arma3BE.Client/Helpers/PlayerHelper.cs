@@ -11,7 +11,6 @@ using Arma3BEClient.Helpers.Views;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using Arma3BEClient.Libs.Tools;
-using Castle.Windsor.Installer;
 using Player = Arma3BE.Server.Models.Player;
 
 namespace Arma3BEClient.Helpers

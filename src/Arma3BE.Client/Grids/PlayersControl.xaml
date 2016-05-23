@@ -33,24 +33,8 @@
             </xctk:DropDownButton>
         </ToolBar>
 
-
-        <!--<DataGrid ItemsSource="{Binding Players,  Mode=OneWay}" AutoGenerateColumns="False" Name="dg" IsReadOnly="True" AllowDrop="False" Grid.Row="1">
-            <DataGrid.ContextMenu>
-                <ContextMenu>
-
-                    <MenuItem Header="Ban" Click="BanClick" >
-                    </MenuItem>
-
-                    <MenuItem Header="Player Info" Click="PlayerInfo_Click" >
-                    </MenuItem>
-
-                </ContextMenu>
-            </DataGrid.ContextMenu>
-        </DataGrid>-->
-
         <xcdg:DataGridControl Name="dg" Grid.Row="1" ItemsSource="{Binding Players,  Mode=OneWay}"
-                              AutoCreateColumns="False" ReadOnly="True"
-                              SelectedItem="{Binding SelectedPlayer, Mode=TwoWay}">
+                              AutoCreateColumns="False" ReadOnly="True">
             <xcdg:DataGridControl.ContextMenu>
                 <ContextMenu>
 
