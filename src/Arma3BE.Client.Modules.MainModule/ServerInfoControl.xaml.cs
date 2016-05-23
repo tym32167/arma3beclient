@@ -1,8 +1,6 @@
-﻿using System;
+﻿using Arma3BE.Client.Modules.MainModule.ViewModel;
+using System;
 using System.Windows.Controls;
-using Arma3BE.Client.Modules.MainModule.ViewModel;
-using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Libs.ModelCompact;
 
 namespace Arma3BE.Client.Modules.MainModule
 {
@@ -18,7 +16,7 @@ namespace Arma3BE.Client.Modules.MainModule
         {
             InitializeComponent();
 
-            _model = model;// new ServerMonitorModel(serverInfo, new Log());
+            _model = model;
             DataContext = _model;
             Dispatcher.ShutdownStarted += Dispatcher_ShutdownStarted;
         }
