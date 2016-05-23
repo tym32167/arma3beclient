@@ -1,0 +1,116 @@
+﻿<UserControl x:Class="Arma3BE.Client.Modules.MainModule.Chat.ChatControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:Arma3BE.Client.Modules.MainModule.Converters"
+             mc:Ignorable="d" DataContextChanged="ToolBar_DataContextChanged" HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch">
+
+    <UserControl.Resources>
+        <converters:PlayerNumberToColorConverter x:Uid="local:PlayerNumberToColorConverter"
+                                              x:Key="PlayerNumberToColorConverter" />
+    </UserControl.Resources>
+
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <ToolBar>
+
+            <CheckBox Content="Enable chat" IsChecked="{Binding EnableChat, Mode=TwoWay}" />
+            <Separator />
+            <CheckBox Content="Auto scroll" IsChecked="{Binding AutoScroll, Mode=TwoWay}" />
+            <Separator />
+            <Button Content="History" Command="{Binding ShowHistoryCommand}" />
+            <Button Content="Clear all" Click="ClearAll_Click" />
+        </ToolBar>
+
+        <TabControl Grid.Row="1" TabStripPlacement="Left">
+
+
+            <TabControl.Resources>
+                <Style TargetType="{x:Type TabItem}">
+                    <Setter Property="HeaderTemplate">
+                        <Setter.Value>
+                            <DataTemplate>
+                                <ContentPresenter Content="{TemplateBinding Content}">
+                                    <ContentPresenter.LayoutTransform>
+                                        <RotateTransform Angle="270" />
+                                    </ContentPresenter.LayoutTransform>
+                                </ContentPresenter>
+                            </DataTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Padding" Value="3" />
+                </Style>
+            </TabControl.Resources>
+
+
+            <TabItem Header="Chat">
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition  Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <ScrollViewer Grid.ColumnSpan="3" Name="ChatScrollViewer">
+
+                        <RichTextBox Name="msgBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                     IsReadOnly="True" IsReadOnlyCaretVisible="False"
+                                     FontSize="14" FontWeight="Medium" FontStyle="Normal" Background="#F0F0F0">
+                            <RichTextBox.Resources>
+                                <Style TargetType="{x:Type Paragraph}">
+                                    <Setter Property="Margin" Value="0" />
+                                </Style>
+                            </RichTextBox.Resources>
+                        </RichTextBox>
+
+                    </ScrollViewer>
+
+                    <ComboBox Grid.Row="1" Grid.Column="0" Margin="2" ItemsSource="{Binding Players, Mode=OneWay}" 
+                              SelectedValue="{Binding SelectedPlayer, Mode=TwoWay}">
+
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+
+                                <TextBlock Text="{Binding Path=Name}" Foreground="{Binding Path=Num, Converter={StaticResource PlayerNumberToColorConverter}}">
+                                    </TextBlock>
+                                
+                            </DataTemplate>
+
+                        </ComboBox.ItemTemplate>
+
+                    </ComboBox>
+
+                    <TextBox Name="tbNewMessage" Grid.Row="1" Grid.Column="1" Margin="2"
+                             Text="{Binding InputMessage, Mode=TwoWay}" KeyDown="KeyDown" Height="20" />
+                    <Button Grid.Row="1" Grid.Column="2" Content="Send" Margin="2" Click="SendMessage" />
+
+                </Grid>
+
+            </TabItem>
+            <TabItem Header="Console">
+
+                <ScrollViewer Grid.ColumnSpan="2" Name="ConsoleScrollViewer">
+
+                    <TextBox Name="msgConsole" FontSize="12" IsReadOnly="True" />
+
+                </ScrollViewer>
+            </TabItem>
+
+        </TabControl>
+
+
+    </Grid>
+</UserControl>

@@ -1,0 +1,19 @@
+﻿<Window x:Class="Arma3BEClient.Shell"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Arma3BEClient"
+        xmlns:regions="http://prismlibrary.com/"
+        xmlns:inf="clr-namespace:Arma3BE.Client.Infrastructure;assembly=Arma3BE.Client.Infrastructure"
+        mc:Ignorable="d"
+        Title="TEHGAM.COM - Arma 3 BattlEye Tool"
+        Height="600"
+        Width="800"
+        Icon="Icons/main.ico"
+        WindowStartupLocation="CenterScreen"
+        >
+    <Grid>
+        <ContentControl regions:RegionManager.RegionName="{x:Static inf:RegionNames.MainRegionRegion}" ></ContentControl>
+    </Grid>
+</Window>

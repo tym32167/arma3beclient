@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Threading;
 using Arma3BEClient.Common.Logging;
-using Arma3BEClient.ViewModel;
 using log4net.Config;
 
 namespace Arma3BEClient
@@ -11,16 +10,24 @@ namespace Arma3BEClient
     /// </summary>
     public partial class App : Application
     {
-        private readonly ILog _logger = new Log();
-
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            XmlConfigurator.Configure();
-            _logger.Info("Startup");
-            
-            new MainWindow(new MainViewModel()).Show();
+            var boostrapper = new Bootstrapper();
+            boostrapper.Run();
         }
+
+
+        private readonly ILog _logger = new Log();
+
+        //protected override void OnStartup(StartupEventArgs e)
+        //{
+        //    base.OnStartup(e);
+        //    XmlConfigurator.Configure();
+        //    _logger.Info("Startup");
+            
+        //    new MainWindow(new MainViewModel()).Show();
+        //}
 
         protected override void OnExit(ExitEventArgs e)
         {

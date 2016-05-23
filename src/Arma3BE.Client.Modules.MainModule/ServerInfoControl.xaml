@@ -1,0 +1,93 @@
+﻿<UserControl x:Class="Arma3BE.Client.Modules.MainModule.ServerInfoControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:converters="clr-namespace:Arma3BE.Client.Modules.MainModule.Converters"
+             xmlns:grids="clr-namespace:Arma3BE.Client.Modules.MainModule.Grids"
+             xmlns:chat="clr-namespace:Arma3BE.Client.Modules.MainModule.Chat"
+             mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <Style TargetType="{x:Type xcdg:GroupByControl}">
+            <Setter Property="Visibility" Value="Collapsed" />
+        </Style>
+
+        <converters:InverseBooleanConverter x:Uid="local:InverseBooleanConverter_1" x:Key="InverseBooleanConverter" />
+        <converters:BrushColorConverter x:Uid="local:BrushColorConverter_1" x:Key="BrushColorConverter" />
+        <converters:BoolToVisibilityConverter x:Uid="local:BoolToVisibilityConverter_1"
+                                              x:Key="BoolToVisibilityConverter" />
+        <converters:BoolToVisibilityConverterInverse x:Uid="local:BoolToVisibilityConverterInverse"
+                                                     x:Key="BoolToVisibilityConverterInverse" />
+
+
+    </UserControl.Resources>
+    <xctk:BusyIndicator IsBusy="{Binding IsBusy}" BusyContent="Please, wait..." >
+        <Grid>
+
+        <!--<Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="200"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>-->
+
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+
+        <TabControl>
+            <TabItem Header="Session">
+                <grids:OnlinePlayers DataContext="{Binding PlayersViewModel}" />
+            </TabItem>
+
+            <TabItem Header="Bans">
+                <grids:BansControl DataContext="{Binding BansViewModel}" />
+            </TabItem>
+
+            <TabItem Header="Admins">
+                <grids:AdminsControl DataContext="{Binding AdminsViewModel}" />
+            </TabItem>
+
+            <TabItem Header="Players">
+                <grids:PlayersControl DataContext="{Binding PlayerListModelView}" />
+            </TabItem>
+
+            <TabItem Header="Manage Server">
+                <grids:ManageServer DataContext="{Binding ManageServerViewModel}" />
+            </TabItem>
+
+            <TabItem Header="Steam Query">
+                <grids:SteamQuery DataContext="{Binding SteamQueryViewModel}" />
+            </TabItem>
+        </TabControl>
+
+
+        <GridSplitter Grid.Row="0" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="5" />
+
+
+        <chat:ChatControl Grid.Row="0" Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                          DataContext="{Binding ChatViewModel}" />
+
+        <StatusBar Grid.Row="1" Grid.ColumnSpan="3" Height="20">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Connected" Foreground="DarkGreen"
+                           Visibility="{Binding Connected, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
+                <TextBlock Foreground="Red" Text="Disonnected"
+                           Visibility="{Binding Connected, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverterInverse}}" />
+            </StackPanel>
+        </StatusBar>
+    </Grid>
+    </xctk:BusyIndicator>
+</UserControl>
