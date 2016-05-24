@@ -62,7 +62,6 @@
     <Compile Include="Attributes\ShowInUIAttribute.cs" />
     <Compile Include="Core\DisposeObject.cs" />
     <Compile Include="Core\IFactory.cs" />
-    <Compile Include="Dns\DnsService.cs" />
     <Compile Include="Logging\ILog.cs" />
     <Compile Include="Logging\Log.cs" />
   </ItemGroup>

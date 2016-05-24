@@ -1,14 +1,13 @@
-﻿using System;
+﻿using Arma3BE.Client.Infrastructure.Commands;
+using Arma3BEClient.Common.Logging;
+using Arma3BEClient.Steam;
+using GalaSoft.MvvmLight;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Arma3BE.Client.Infrastructure.Commands;
-using Arma3BEClient.Common.Dns;
-using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Steam;
-using GalaSoft.MvvmLight;
 
 namespace Arma3BE.Client.Modules.MainModule.Models
 {
@@ -27,7 +26,7 @@ namespace Arma3BE.Client.Modules.MainModule.Models
 
             ExcecuteCommand = new ActionCommand(() => Task.Run(() =>
             {
-                var iphost = DnsService.GetIpAddress(Host);
+                var iphost = host;
                 var server = new Arma3BEClient.Steam.Server(new IPEndPoint(IPAddress.Parse(iphost), Port));
 
                 var settings = new GetServerInfoSettings();
@@ -60,7 +59,7 @@ namespace Arma3BE.Client.Modules.MainModule.Models
             }),
                 () =>
                 {
-                    var iphost = DnsService.GetIpAddress(Host);
+                    var iphost = host;
 
                     if (string.IsNullOrEmpty(iphost))
                     {

@@ -45,6 +45,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BE.Client.Modules.Onli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BE.Client.Modules.DialogsModule", "Arma3BE.Client.Modules.DialogsModule\Arma3BE.Client.Modules.DialogsModule.csproj", "{932EF400-5783-4E2A-9EE1-1DFCA706537C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BE.Client.Modules.NetModule", "Arma3BE.Client.Modules.NetModule\Arma3BE.Client.Modules.NetModule.csproj", "{E7C5AB59-5824-40EA-AE0C-F8C75B6C919C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,10 @@ Global
 		{932EF400-5783-4E2A-9EE1-1DFCA706537C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{932EF400-5783-4E2A-9EE1-1DFCA706537C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{932EF400-5783-4E2A-9EE1-1DFCA706537C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7C5AB59-5824-40EA-AE0C-F8C75B6C919C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7C5AB59-5824-40EA-AE0C-F8C75B6C919C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7C5AB59-5824-40EA-AE0C-F8C75B6C919C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7C5AB59-5824-40EA-AE0C-F8C75B6C919C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -111,5 +117,6 @@ Global
 		{B58670E5-011F-4318-964E-35C8B63870A5} = {22A6CC46-99D2-45AF-B379-3320ECE99124}
 		{017F121B-3AF0-4E98-A107-0CC3F2B67FCE} = {0A6E26FC-847F-48AF-A744-DD901EC34618}
 		{932EF400-5783-4E2A-9EE1-1DFCA706537C} = {0A6E26FC-847F-48AF-A744-DD901EC34618}
+		{E7C5AB59-5824-40EA-AE0C-F8C75B6C919C} = {0A6E26FC-847F-48AF-A744-DD901EC34618}
 	EndGlobalSection
 EndGlobal

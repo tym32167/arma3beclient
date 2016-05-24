@@ -1,4 +1,5 @@
 ﻿using Arma3BE.Client.Modules.MainModule;
+using Arma3BE.Client.Modules.NetModule;
 using Arma3BEClient.Common.Logging;
 using log4net.Config;
 using Microsoft.Practices.Unity;
@@ -30,12 +31,17 @@ namespace Arma3BEClient
         {
             base.ConfigureModuleCatalog();
 
-            Type moduleCType = typeof(MainModuleInit);
+            AddModule(typeof(NetModuleInit));
+            AddModule(typeof(MainModuleInit));
+        }
+
+        private void AddModule(Type initType)
+        {
             ModuleCatalog.AddModule(
               new ModuleInfo()
               {
-                  ModuleName = moduleCType.Name,
-                  ModuleType = moduleCType.AssemblyQualifiedName,
+                  ModuleName = initType.Name,
+                  ModuleType = initType.AssemblyQualifiedName,
               });
         }
 

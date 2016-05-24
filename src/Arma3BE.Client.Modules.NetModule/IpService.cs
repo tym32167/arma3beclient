@@ -1,10 +1,11 @@
 ﻿using System.Net;
+using Arma3BE.Client.Infrastructure;
 
-namespace Arma3BEClient.Common.Dns
+namespace Arma3BE.Client.Modules.NetModule
 {
-    public static class DnsService
+    public class IpService : IIpService
     {
-        public static string GetIpAddress(string host)
+        public string GetIpAddress(string host)
         {
             IPAddress ip;
 
@@ -14,7 +15,7 @@ namespace Arma3BEClient.Common.Dns
             }
             try
             {
-                var entry = System.Net.Dns.GetHostEntry(host);
+                var entry = Dns.GetHostEntry(host);
                 return entry.AddressList[0].ToString();
             }
             catch

@@ -1,9 +1,9 @@
-﻿using System.Windows.Input;
-using Arma3BE.Client.Infrastructure.Commands;
+﻿using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Client.Modules.MainModule.Helpers;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using GalaSoft.MvvmLight;
+using System.Windows.Input;
 
 namespace Arma3BE.Client.Modules.MainModule.Models
 {
@@ -46,7 +46,7 @@ namespace Arma3BE.Client.Modules.MainModule.Models
                     t.ContinueWith(x =>
                     {
                         _playerIPInfo = x.Result;
-                        RaisePropertyChanged("PlayerIPInfo");
+                        RaisePropertyChanged(nameof(PlayerIPInfo));
                     });
                 }
                 return _playerIPInfo;
@@ -63,7 +63,7 @@ namespace Arma3BE.Client.Modules.MainModule.Models
             }
 
             _player = null;
-            RaisePropertyChanged("Player");
+            RaisePropertyChanged(nameof(Player));
         }
     }
 }

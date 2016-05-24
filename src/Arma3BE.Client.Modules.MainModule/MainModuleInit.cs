@@ -1,5 +1,7 @@
 ﻿using Arma3BE.Client.Infrastructure;
 using Arma3BE.Client.Modules.MainModule.ViewModel;
+using Arma3BE.Server.Abstract;
+using Arma3BE.Server.ServerFactory;
 using Microsoft.Practices.Unity;
 using Prism.Modularity;
 using Prism.Regions;
@@ -18,6 +20,8 @@ namespace Arma3BE.Client.Modules.MainModule
 
             _container.RegisterType<MainViewModel>();
             _container.RegisterType<MainWindow>();
+
+            _container.RegisterType<IBattlEyeServerFactory, WatcherBEServerFactory>();
         }
 
         public void Initialize()

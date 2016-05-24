@@ -199,6 +199,10 @@
       <Project>{58dbdf91-7ad0-4780-a3ef-0fa5c39e2869}</Project>
       <Name>Arma3BE.Client.Modules.MainModule</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Modules.NetModule\Arma3BE.Client.Modules.NetModule.csproj">
+      <Project>{e7c5ab59-5824-40ea-ae0c-f8c75b6c919c}</Project>
+      <Name>Arma3BE.Client.Modules.NetModule</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Arma3BE.Common\Arma3BE.Common.csproj">
       <Project>{d507e532-7de6-4028-9dbe-aa76c54cc92a}</Project>
       <Name>Arma3BE.Common</Name>

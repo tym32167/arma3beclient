@@ -1,16 +1,16 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Windows.Media;
+﻿using Arma3BE.Client.Infrastructure;
 using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Client.Modules.MainModule.Contracts;
 using Arma3BE.Client.Modules.MainModule.Models;
 using Arma3BE.Server;
 using Arma3BE.Server.Abstract;
 using Arma3BE.Server.Models;
-using Arma3BE.Server.ServerFactory;
-using Arma3BEClient.Common.Dns;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.ModelCompact;
+using Microsoft.Practices.Unity;
+using System;
+using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace Arma3BE.Client.Modules.MainModule.ViewModel
 {
@@ -21,7 +21,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
         private readonly ILog _log;
         private bool _isBusy;
 
-        public ServerMonitorModel(ServerInfo currentServer, ILog log, bool console = false)
+        public ServerMonitorModel(ServerInfo currentServer, ILog log, IIpService ipService, IUnityContainer container, bool console = false)
         {
             CurrentServer = currentServer;
             _log = log;
@@ -29,13 +29,13 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 
             IsBusy = true;
 
-            Task.Factory.StartNew(() => InitModel(console))
+            Task.Factory.StartNew(() => InitModel(ipService, container, console))
                 .ContinueWith(t => IsBusy = false);
         }
 
-        private void InitModel(bool console)
+        private void InitModel(IIpService ipService, IUnityContainer container, bool console)
         {
-            var host = DnsService.GetIpAddress(CurrentServer.Host);
+            var host = ipService.GetIpAddress(CurrentServer.Host);
 
             if (string.IsNullOrEmpty(host))
             {
@@ -44,10 +44,13 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
                 throw new Exception(message);
             }
 
-            SteamQueryViewModel = new ServerMonitorSteamQueryViewModel(CurrentServer.Host, CurrentServer.Port, _log);
+            SteamQueryViewModel =
+                container.Resolve<ServerMonitorSteamQueryViewModel>(new ParameterOverride("host", host),
+                    new ParameterOverride("port", CurrentServer.Port));
 
-            _beServer = new BEServer(host, CurrentServer.Port, CurrentServer.Password, _log, new WatcherBEServerFactory(_log));
-
+            _beServer = container.Resolve<BEServer>(new ParameterOverride("host", host),
+                new ParameterOverride("port", CurrentServer.Port),
+                new ParameterOverride("password", CurrentServer.Password));
 
 
             if (!console)
@@ -75,20 +78,40 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
                 };
             }
 
-            _beServer.ConnectingHandler += (s, e) => RaisePropertyChanged("Connected");
+            _beServer.ConnectingHandler += (s, e) => RaisePropertyChanged(nameof(Connected));
 
-            PlayersViewModel = new ServerMonitorPlayerViewModel(_log, CurrentServer, _beServer);
+
+            PlayersViewModel =
+                container.Resolve<ServerMonitorPlayerViewModel>(new ParameterOverride("serverInfo", CurrentServer),
+                    new ParameterOverride("beServer", _beServer));
+
 
             if (!console)
             {
-                BansViewModel = new ServerMonitorBansViewModel(_log, CurrentServer.Id, _beServer);
-                AdminsViewModel = new ServerMonitorAdminsViewModel(_log, CurrentServer,
-                    new ActionCommand(() => _beServer.SendCommand(CommandType.Admins)));
-                ManageServerViewModel = new ServerMonitorManageServerViewModel(_log, CurrentServer.Id, _beServer);
-                PlayerListModelView = new PlayerListModelView(_log, _beServer, CurrentServer.Id);
+
+                BansViewModel =
+                    container.Resolve<ServerMonitorBansViewModel>(
+                        new ParameterOverride("serverInfoId", CurrentServer.Id),
+                        new ParameterOverride("beServer", _beServer));
+
+                AdminsViewModel =
+                    container.Resolve<ServerMonitorAdminsViewModel>(new ParameterOverride("serverInfo", CurrentServer),
+                        new ParameterOverride("refreshCommand",
+                            new ActionCommand(() => _beServer.SendCommand(CommandType.Admins))));
+
+                ManageServerViewModel =
+                    container.Resolve<ServerMonitorManageServerViewModel>(
+                        new ParameterOverride("serverId", CurrentServer.Id),
+                        new ParameterOverride("beServer", _beServer));
+
+                PlayerListModelView =
+                    container.Resolve<PlayerListModelView>(new ParameterOverride("serverId", CurrentServer.Id),
+                        new ParameterOverride("beServer", _beServer));
             }
 
-            ChatViewModel = new ServerMonitorChatViewModel(_log, CurrentServer.Id, _beServer);
+            ChatViewModel =
+                container.Resolve<ServerMonitorChatViewModel>(new ParameterOverride("serverId", CurrentServer.Id),
+                    new ParameterOverride("beServer", _beServer));
 
             Connect();
         }
