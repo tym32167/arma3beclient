@@ -86,7 +86,6 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="IPInfo.cs" />
     <Compile Include="IpService.cs" />
     <Compile Include="NetModuleInit.cs" />
   </ItemGroup>
