@@ -1,9 +1,11 @@
-﻿using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using Arma3BE.Client.Modules.MainModule.Boxes;
+﻿using Arma3BE.Client.Modules.MainModule.Boxes;
+using Arma3BE.Client.Modules.MainModule.Dialogs;
 using Arma3BE.Client.Modules.MainModule.Extensions;
 using Arma3BE.Client.Modules.MainModule.Models;
+using Microsoft.Practices.Unity;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
 using PlayerView = Arma3BE.Client.Modules.MainModule.Helpers.Views.PlayerView;
 
 namespace Arma3BE.Client.Modules.MainModule.Grids
@@ -30,7 +32,10 @@ namespace Arma3BE.Client.Modules.MainModule.Grids
             {
                 dg.Columns.Add(generateColumn);
             }
+            _playerViewService = MainModuleInit.Current.Resolve<IPlayerViewService>();
         }
+
+        private IPlayerViewService _playerViewService;
 
         private ServerMonitorPlayerViewModel Model
         {
@@ -65,8 +70,7 @@ namespace Arma3BE.Client.Modules.MainModule.Grids
 
             if (si != null)
             {
-                var w = new PlayerViewWindow(new PlayerViewModel(si.Guid));
-                w.ShowDialog();
+                _playerViewService.ShowDialog(si.Guid);
             }
         }
     }

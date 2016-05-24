@@ -1,10 +1,11 @@
-﻿using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using Arma3BE.Client.Modules.MainModule.Boxes;
+﻿using Arma3BE.Client.Modules.MainModule.Dialogs;
 using Arma3BE.Client.Modules.MainModule.Extensions;
 using Arma3BE.Client.Modules.MainModule.Helpers.Views;
 using Arma3BE.Client.Modules.MainModule.Models;
+using Microsoft.Practices.Unity;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
 using Xceed.Wpf.DataGrid;
 
 namespace Arma3BE.Client.Modules.MainModule.Grids
@@ -44,7 +45,11 @@ namespace Arma3BE.Client.Modules.MainModule.Grids
             {
                 dg2.Columns.Add(generateColumn);
             }
+
+            _playerViewService = MainModuleInit.Current.Resolve<IPlayerViewService>();
         }
+
+        private IPlayerViewService _playerViewService;
 
         private ServerMonitorBansViewModel Model
         {
@@ -79,12 +84,7 @@ namespace Arma3BE.Client.Modules.MainModule.Grids
 
             if (si != null)
             {
-                var model = new PlayerViewModel(si.GuidIp);
-                if (model.Player != null)
-                {
-                    var w = new PlayerViewWindow(model);
-                    w.ShowDialog();
-                }
+                _playerViewService.ShowDialog(si.GuidIp);
             }
         }
 
@@ -94,12 +94,7 @@ namespace Arma3BE.Client.Modules.MainModule.Grids
 
             if (si != null)
             {
-                var model = new PlayerViewModel(si.GuidIp);
-                if (model.Player != null)
-                {
-                    var w = new PlayerViewWindow(model);
-                    w.ShowDialog();
-                }
+                _playerViewService.ShowDialog(si.GuidIp);
             }
         }
     }

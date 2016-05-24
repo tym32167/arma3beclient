@@ -183,6 +183,7 @@
     <Compile Include="Converters\BrushColorConverter.cs" />
     <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Converters\PlayerNumberToColorConverter.cs" />
+    <Compile Include="Dialogs\IPlayerViewService.cs" />
     <Compile Include="Extensions\GridHelper.cs" />
     <Compile Include="Grids\AdminsControl.xaml.cs">
       <DependentUpon>AdminsControl.xaml</DependentUpon>
@@ -205,7 +206,6 @@
     <Compile Include="Helpers\AdminHelper.cs" />
     <Compile Include="Helpers\BanHelper.cs" />
     <Compile Include="Helpers\ChatHelper.cs" />
-    <Compile Include="Helpers\IPInfo.cs" />
     <Compile Include="Helpers\PlayerHelper.cs" />
     <Compile Include="Helpers\StateHelper.cs" />
     <Compile Include="Helpers\Views\BanView.cs" />
@@ -328,14 +328,7 @@
   <ItemGroup>
     <Resource Include="Icons\tehgam.jpg" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="IPDatabase\GeoLite2-City.mmdb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DataSources\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
