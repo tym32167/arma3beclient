@@ -1,6 +1,6 @@
 ﻿using Arma3BEClient.Common.Attributes;
 
-namespace Arma3BE.Client.Modules.MainModule.Helpers.Views
+namespace Arma3BE.Client.Infrastructure.Helpers.Views
 {
     public class BanView
     {

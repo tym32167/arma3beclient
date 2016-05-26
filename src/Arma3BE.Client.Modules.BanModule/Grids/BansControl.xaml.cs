@@ -1,14 +1,11 @@
-﻿using Arma3BE.Client.Modules.MainModule.Dialogs;
-using Arma3BE.Client.Modules.MainModule.Extensions;
-using Arma3BE.Client.Modules.MainModule.Helpers.Views;
-using Arma3BE.Client.Modules.MainModule.Models;
-using Microsoft.Practices.Unity;
+﻿using Arma3BE.Client.Infrastructure.Helpers.Views;
+using Arma3BE.Client.Modules.BanModule.Models;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Xceed.Wpf.DataGrid;
 
-namespace Arma3BE.Client.Modules.MainModule.Grids
+namespace Arma3BE.Client.Modules.BanModule.Grids
 {
     /// <summary>
     ///     Interaction logic for BansControl.xaml
@@ -19,37 +16,37 @@ namespace Arma3BE.Client.Modules.MainModule.Grids
         {
             InitializeComponent();
 
-            var menu = dg.Generate<BanView>();
+            //var menu = dg.Generate<BanView>();
 
-            foreach (var menuItem in menu.Items.OfType<MenuItem>().ToList())
-            {
-                menu.Items.Remove(menuItem);
-                dg.ContextMenu.Items.Add(menuItem);
-            }
+            //foreach (var menuItem in menu.Items.OfType<MenuItem>().ToList())
+            //{
+            //    menu.Items.Remove(menuItem);
+            //    dg.ContextMenu.Items.Add(menuItem);
+            //}
 
-            foreach (var generateColumn in GridHelper.GenerateColumns<BanView>())
-            {
-                dg.Columns.Add(generateColumn);
-            }
+            //foreach (var generateColumn in GridHelper.GenerateColumns<BanView>())
+            //{
+            //    dg.Columns.Add(generateColumn);
+            //}
 
 
-            var menu2 = dg2.Generate<BanView>();
+            //var menu2 = dg2.Generate<BanView>();
 
-            foreach (var menuItem in menu2.Items.OfType<MenuItem>().ToList())
-            {
-                menu2.Items.Remove(menuItem);
-                dg2.ContextMenu.Items.Add(menuItem);
-            }
+            //foreach (var menuItem in menu2.Items.OfType<MenuItem>().ToList())
+            //{
+            //    menu2.Items.Remove(menuItem);
+            //    dg2.ContextMenu.Items.Add(menuItem);
+            //}
 
-            foreach (var generateColumn in GridHelper.GenerateColumns<BanView>())
-            {
-                dg2.Columns.Add(generateColumn);
-            }
+            //foreach (var generateColumn in GridHelper.GenerateColumns<BanView>())
+            //{
+            //    dg2.Columns.Add(generateColumn);
+            //}
 
-            _playerViewService = MainModuleInit.Current.Resolve<IPlayerViewService>();
+            //_playerViewService = MainModuleInit.Current.Resolve<IPlayerViewService>();
         }
 
-        private IPlayerViewService _playerViewService;
+        //private IPlayerViewService _playerViewService;
 
         private ServerMonitorBansViewModel Model
         {
@@ -84,7 +81,7 @@ namespace Arma3BE.Client.Modules.MainModule.Grids
 
             if (si != null)
             {
-                _playerViewService.ShowDialog(si.GuidIp);
+                //_playerViewService.ShowDialog(si.GuidIp);
             }
         }
 
@@ -94,7 +91,7 @@ namespace Arma3BE.Client.Modules.MainModule.Grids
 
             if (si != null)
             {
-                _playerViewService.ShowDialog(si.GuidIp);
+                // _playerViewService.ShowDialog(si.GuidIp);
             }
         }
     }

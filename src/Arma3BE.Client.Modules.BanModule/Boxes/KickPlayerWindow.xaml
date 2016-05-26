@@ -1,8 +1,8 @@
-﻿<Window x:Class="Arma3BE.Client.Modules.MainModule.Boxes.KickPlayerWindow"
+﻿<Window x:Class="Arma3BE.Client.Modules.BanModule.Boxes.KickPlayerWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
-        Title="{Binding Path=Player.Name , StringFormat=Kick player {0}}" WindowStyle="ToolWindow"
+        Title="{Binding Path=PlayerName , StringFormat=Kick player {0}}" WindowStyle="ToolWindow"
         SizeToContent="WidthAndHeight" ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen">
     <Grid>

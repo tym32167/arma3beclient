@@ -34,13 +34,13 @@
         </ToolBar>
 
         <xcdg:DataGridControl Name="dg" Grid.Row="1" ItemsSource="{Binding Players,  Mode=OneWay}"
-                              AutoCreateColumns="False" ReadOnly="True">
+                              AutoCreateColumns="False" ReadOnly="True" SelectedItem="{Binding SelectedPlayer, Mode=TwoWay}">
             <xcdg:DataGridControl.ContextMenu>
                 <ContextMenu>
 
-                    <MenuItem Header="Ban" Click="BanClick" />
+                    <MenuItem Header="Ban" Command="{Binding BanCommand}" />
 
-                    <MenuItem Header="Player Info" Click="PlayerInfo_Click" />
+                    <MenuItem Header="Player Info" Command="{Binding PlayerInfoCommand}" />
 
                 </ContextMenu>
             </xcdg:DataGridControl.ContextMenu>

@@ -1,33 +1,35 @@
-﻿using System;
+﻿using Arma3BE.Client.Infrastructure.Helpers;
+using Arma3BE.Client.Infrastructure.Helpers.Views;
+using Arma3BE.Server;
+using Arma3BE.Server.Abstract;
+using Arma3BE.Server.Models;
+using Arma3BEClient.Common.Logging;
+using Arma3BEClient.Libs.Repositories;
+using Arma3BEClient.Libs.Tools;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Arma3BE.Client.Modules.MainModule.Helpers.Views;
-using Arma3BE.Server.Models;
-using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Libs.Repositories;
 
-namespace Arma3BE.Client.Modules.MainModule.Helpers
+namespace Arma3BE.Client.Modules.BanModule.Helpers
 {
-    public class BanHelper : StateHelper<Ban>
+    public class BanHelper : StateHelper<Ban>, IBanHelper
     {
-        private readonly Guid _currentServerId;
         private readonly ILog _log;
         private readonly Regex replace = new Regex(@"\[[^\]^\[]*\]", RegexOptions.Compiled | RegexOptions.Multiline);
 
-        public BanHelper(ILog log, Guid currentServerId)
+        public BanHelper(ILog log)
         {
             _log = log;
-            _currentServerId = currentServerId;
         }
 
-        public void RegisterBans(IEnumerable<Ban> list)
+        public void RegisterBans(IEnumerable<Ban> list, Guid currentServerId)
         {
-            Task.Run(() => RegisterBansInternal(list));
+            Task.Run(() => RegisterBansInternal(list, currentServerId));
         }
 
-        private bool RegisterBansInternal(IEnumerable<Ban> list)
+        private bool RegisterBansInternal(IEnumerable<Ban> list, Guid currentServerId)
         {
             var bans = list.ToList();
             var userIds = bans.Select(x => x.GuidIp).Distinct().ToArray();
@@ -41,7 +43,7 @@ namespace Arma3BE.Client.Modules.MainModule.Helpers
                 using (var playerRepository = PlayerRepositoryFactory.Create())
                 {
                     var db =
-                        banRepository.GetActiveBans(_currentServerId);
+                        banRepository.GetActiveBans(currentServerId);
 
                     var ids = bans.Select(x => x.GuidIp).ToList();
 
@@ -107,11 +109,11 @@ namespace Arma3BE.Client.Modules.MainModule.Helpers
 
                     foreach (var ban in bans)
                     {
-                        var bdb = db.FirstOrDefault(x => x.ServerId == _currentServerId && x.GuidIp == ban.GuidIp);
+                        var bdb = db.FirstOrDefault(x => x.ServerId == currentServerId && x.GuidIp == ban.GuidIp);
                         if (bdb == null)
                         {
                             var player = players.FirstOrDefault(x => x.GUID == ban.GuidIp);
-                            
+
                             var newBan = new Arma3BEClient.Libs.ModelCompact.Ban
                             {
                                 CreateDate = DateTime.UtcNow,
@@ -121,7 +123,7 @@ namespace Arma3BE.Client.Modules.MainModule.Helpers
                                 MinutesLeft = ban.Minutesleft,
                                 Num = ban.Num,
                                 Reason = ban.Reason,
-                                ServerId = _currentServerId,
+                                ServerId = currentServerId,
                                 PlayerId = player?.Id
                             };
 
@@ -178,6 +180,95 @@ namespace Arma3BE.Client.Modules.MainModule.Helpers
                     return ban;
                 }).ToList();
             }
+        }
+
+
+        public void Kick(IBEServer battlEyeServer, int playerNum, string playerGuid, string reason, bool isAuto = false)
+        {
+            var totalreason =
+                $"[{SettingsStore.Instance.AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
+
+            battlEyeServer.SendCommand(CommandType.Kick,
+                $"{playerNum} {totalreason}");
+
+            if (!isAuto)
+            {
+                using (var context = PlayerRepositoryFactory.Create())
+                {
+                    var user = context.GetPlayer(playerGuid);
+                    if (user != null)
+                    {
+                        context.AddNotes(user.Id, $"Kicked with reason: {totalreason}");
+                        user.Comment = $"{user.Comment} | {reason}";
+                        context.UpdatePlayerComment(user.GUID, user.Comment);
+                    }
+                }
+                battlEyeServer.SendCommand(CommandType.Players);
+            }
+        }
+
+        public void BanGUIDOffline(IBEServer battlEyeServer, string guid, string reason, long minutes, bool syncMode = false)
+        {
+            if (!syncMode)
+            {
+                var totalreason =
+                    $"[{SettingsStore.Instance.AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
+
+
+                battlEyeServer.SendCommand(CommandType.AddBan,
+                    $"{guid} {minutes} {totalreason}");
+
+
+                using (var context = PlayerRepositoryFactory.Create())
+                {
+                    var user = context.GetPlayer(guid);
+                    if (user != null)
+                    {
+                        context.AddNotes(user.Id, $"Baned with reason: {totalreason}");
+                        user.Comment = $"{user.Comment} | {reason}";
+                        context.UpdatePlayerComment(user.GUID, user.Comment);
+                    }
+                }
+
+
+#pragma warning disable 4014
+                battlEyeServer.SendCommand(CommandType.Bans);
+#pragma warning restore 4014
+            }
+            else
+            {
+#pragma warning disable 4014
+                battlEyeServer.SendCommand(CommandType.AddBan,
+#pragma warning restore 4014
+                            $"{guid} {minutes} {reason}");
+            }
+        }
+
+        public async void BanGuidOnline(IBEServer battlEyeServer, string num, string guid, string reason, long minutes)
+        {
+            var totalreason =
+                $"[{SettingsStore.Instance.AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
+
+
+            battlEyeServer.SendCommand(CommandType.Ban,
+                $"{num} {minutes} {totalreason}");
+
+
+            using (var context = PlayerRepositoryFactory.Create())
+            {
+                var user = context.GetPlayer(guid);
+                if (user != null)
+                {
+                    context.AddNotes(user.Id, $"Baned with reason: {totalreason}");
+                    user.Comment = $"{user.Comment} | {reason}";
+                    context.UpdatePlayerComment(user.GUID, user.Comment);
+                }
+            }
+
+
+#pragma warning disable 4014
+            battlEyeServer.SendCommand(CommandType.Players);
+            battlEyeServer.SendCommand(CommandType.Bans);
         }
     }
 }

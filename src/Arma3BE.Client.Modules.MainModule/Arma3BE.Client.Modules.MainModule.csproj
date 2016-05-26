@@ -161,14 +161,8 @@
     <Compile Include="About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Boxes\BanPlayerWindow.xaml.cs">
-      <DependentUpon>BanPlayerWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Boxes\ChatHistory.xaml.cs">
       <DependentUpon>ChatHistory.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Boxes\KickPlayerWindow.xaml.cs">
-      <DependentUpon>KickPlayerWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Boxes\PlayerViewWindow.xaml.cs">
       <DependentUpon>PlayerViewWindow.xaml</DependentUpon>
@@ -188,9 +182,6 @@
     <Compile Include="Grids\AdminsControl.xaml.cs">
       <DependentUpon>AdminsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Grids\BansControl.xaml.cs">
-      <DependentUpon>BansControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Grids\ManageServer.xaml.cs">
       <DependentUpon>ManageServer.xaml</DependentUpon>
     </Compile>
@@ -204,11 +195,8 @@
       <DependentUpon>SteamQuery.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helpers\AdminHelper.cs" />
-    <Compile Include="Helpers\BanHelper.cs" />
     <Compile Include="Helpers\ChatHelper.cs" />
     <Compile Include="Helpers\PlayerHelper.cs" />
-    <Compile Include="Helpers\StateHelper.cs" />
-    <Compile Include="Helpers\Views\BanView.cs" />
     <Compile Include="Helpers\Views\PlayerView.cs" />
     <Compile Include="MainModuleInit.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -219,8 +207,6 @@
     <Compile Include="Models\PlayerView.cs" />
     <Compile Include="Models\PlayerViewModel.cs" />
     <Compile Include="Models\ServerMonitorAdminsViewModel.cs" />
-    <Compile Include="Models\ServerMonitorBansViewModel.cs" />
-    <Compile Include="Models\ServerMonitorBaseViewModel.cs" />
     <Compile Include="Models\ServerMonitorChatViewModel.cs" />
     <Compile Include="Models\ServerMonitorManageServerViewModel.cs" />
     <Compile Include="Models\ServerMonitorPlayerViewModel.cs" />
@@ -244,15 +230,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Boxes\BanPlayerWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Boxes\ChatHistory.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Boxes\KickPlayerWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -265,10 +243,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Grids\AdminsControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Grids\BansControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

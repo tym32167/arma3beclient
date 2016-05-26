@@ -1,28 +1,64 @@
-﻿using System;
+﻿using Arma3BE.Client.Infrastructure;
+using Arma3BE.Client.Infrastructure.Commands;
+using Arma3BE.Client.Modules.MainModule.Models;
+using Arma3BE.Server.Abstract;
+using Arma3BEClient.Libs.Repositories;
+using GalaSoft.MvvmLight;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using Arma3BE.Client.Infrastructure.Commands;
-using Arma3BE.Client.Modules.MainModule.Helpers;
-using Arma3BE.Client.Modules.MainModule.Models;
-using Arma3BE.Server.Abstract;
-using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Libs.Repositories;
-using GalaSoft.MvvmLight;
+using Arma3BE.Client.Modules.MainModule.Dialogs;
+using Prism.Commands;
 
 namespace Arma3BE.Client.Modules.MainModule.ViewModel
 {
     public class PlayerListModelView : ViewModelBase
     {
+        private readonly IBanService _banService;
+        private readonly IBEServer _beServer;
+        private readonly IPlayerViewService _playerViewService;
         private int _playerCount;
-        internal readonly PlayerHelper PlayerHelper;
         private ICommand _refreshCommand;
 
-        public PlayerListModelView(ILog log, IBEServer beServer, Guid serverId)
+        public PlayerListModelView(IBanService banService, IBEServer beServer, IPlayerViewService playerViewService)
         {
-            PlayerHelper = new PlayerHelper(log, serverId, beServer);
+            _banService = banService;
+            _beServer = beServer;
+            _playerViewService = playerViewService;
             SelectedOptions = "Name,IP,Guid,Comment";
+
+            BanCommand = new ActionCommand(ShowBan);
+            PlayerInfoCommand = new DelegateCommand(PlayerInfoDialog, CanShowDialog);
         }
+
+        public PlayerView SelectedPlayer { get; set; }
+
+        private void ShowBan()
+        {
+            var local = SelectedPlayer;
+            if (local != null)
+            {
+                _banService.ShowBanDialog(_beServer, local.Guid, false, local.Name, null);
+            }
+        }
+
+        private bool CanShowDialog()
+        {
+            return SelectedPlayer != null;
+        }
+
+        private void PlayerInfoDialog()
+        {
+            var local = SelectedPlayer;
+            if (local != null)
+            {
+                _playerViewService.ShowDialog(local.Guid);
+            }
+        }
+
+        public ICommand BanCommand { get; set; }
+        public ICommand PlayerInfoCommand { get; set; }
+
 
         public string Filter { get; set; }
 

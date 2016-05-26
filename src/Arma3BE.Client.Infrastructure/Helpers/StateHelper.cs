@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Arma3BE.Server.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Arma3BE.Server.Models;
 
-namespace Arma3BE.Client.Modules.MainModule.Helpers
+namespace Arma3BE.Client.Infrastructure.Helpers
 {
     public class StateHelper<T> where T : class
     {
@@ -23,7 +23,7 @@ namespace Arma3BE.Client.Modules.MainModule.Helpers
             return true;
         }
 
-        protected bool HaveChanges<TK>(List<T> newList, Func<T, TK> orderer, Func<T, T, bool> comparer = null )
+        protected bool HaveChanges<TK>(List<T> newList, Func<T, TK> orderer, Func<T, T, bool> comparer = null)
         {
             var temp = _previousRequest;
             _previousRequest = newList;

@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Arma3BE.Client.Modules.BanModule.Helpers;
+using Arma3BE.Server.Abstract;
+using GalaSoft.MvvmLight;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Windows;
-using Arma3BE.Client.Modules.MainModule.Helpers;
-using GalaSoft.MvvmLight;
 
-namespace Arma3BE.Client.Modules.MainModule.Boxes
+namespace Arma3BE.Client.Modules.BanModule.Boxes
 {
     /// <summary>
     ///     Interaction logic for BanPlayerWindow.xaml
@@ -15,11 +16,11 @@ namespace Arma3BE.Client.Modules.MainModule.Boxes
     {
         private readonly BanPlayerViewModel _model;
 
-        public BanPlayerWindow(PlayerHelper playerHelper, string playerGuid, bool isOnline, string playerName,
+        public BanPlayerWindow(IBEServer beServer, BanHelper banHelper, string playerGuid, bool isOnline, string playerName,
             string playerNum)
         {
             InitializeComponent();
-            _model = new BanPlayerViewModel(playerGuid, isOnline, playerHelper, playerName, playerNum);
+            _model = new BanPlayerViewModel(playerGuid, isOnline, banHelper, playerName, playerNum, beServer);
 
             tbGuid.IsEnabled = string.IsNullOrEmpty(playerGuid);
 
@@ -54,22 +55,24 @@ namespace Arma3BE.Client.Modules.MainModule.Boxes
     public class BanPlayerViewModel : ViewModelBase
     {
         private readonly bool _isOnline;
-        private readonly PlayerHelper _playerHelper;
+        private readonly BanHelper _playerHelper;
         private readonly string _playerNum;
+        private readonly IBEServer _beServer;
         private long? _minutes;
         private string _playerGuid;
         private string _playerName;
         private string _reason;
         private TimeSpan _timeSpan;
 
-        public BanPlayerViewModel(string playerGuid, bool isOnline, PlayerHelper playerHelper, string playerName,
-            string playerNum)
+        public BanPlayerViewModel(string playerGuid, bool isOnline, BanHelper playerHelper, string playerName,
+            string playerNum, IBEServer beServer)
         {
             _playerGuid = playerGuid;
             _isOnline = isOnline;
             _playerHelper = playerHelper;
             _playerName = playerName;
             _playerNum = playerNum;
+            _beServer = beServer;
             _minutes = 0;
         }
 
@@ -79,7 +82,7 @@ namespace Arma3BE.Client.Modules.MainModule.Boxes
             set
             {
                 _playerName = value;
-                RaisePropertyChanged("PlayerName");
+                RaisePropertyChanged();
             }
         }
 
@@ -99,7 +102,7 @@ namespace Arma3BE.Client.Modules.MainModule.Boxes
                 }
                 catch (Exception)
                 {
-                    return new[] {string.Empty};
+                    return new[] { string.Empty };
                 }
             }
         }
@@ -110,7 +113,7 @@ namespace Arma3BE.Client.Modules.MainModule.Boxes
             set
             {
                 _playerGuid = value;
-                RaisePropertyChanged("PlayerGuid");
+                RaisePropertyChanged();
             }
         }
 
@@ -120,7 +123,7 @@ namespace Arma3BE.Client.Modules.MainModule.Boxes
             set
             {
                 _reason = value;
-                RaisePropertyChanged("Reason");
+                RaisePropertyChanged();
             }
         }
 
@@ -130,7 +133,7 @@ namespace Arma3BE.Client.Modules.MainModule.Boxes
             set
             {
                 _minutes = value;
-                RaisePropertyChanged("Minutes");
+                RaisePropertyChanged();
             }
         }
 
@@ -140,8 +143,8 @@ namespace Arma3BE.Client.Modules.MainModule.Boxes
             set
             {
                 _timeSpan = value;
-                RaisePropertyChanged("TimeSpan");
-                Minutes = (long) _timeSpan.TotalMinutes;
+                RaisePropertyChanged();
+                Minutes = (long)_timeSpan.TotalMinutes;
             }
         }
 
@@ -150,9 +153,9 @@ namespace Arma3BE.Client.Modules.MainModule.Boxes
             if (Minutes != null)
             {
                 if (_isOnline)
-                    _playerHelper.BanGuidOnline(_playerNum, _playerGuid, Reason, Minutes.Value);
+                    _playerHelper.BanGuidOnline(_beServer, _playerNum, _playerGuid, Reason, Minutes.Value);
                 else
-                    _playerHelper.BanGUIDOffline(_playerGuid, Reason, Minutes.Value);
+                    _playerHelper.BanGUIDOffline(_beServer, _playerGuid, Reason, Minutes.Value);
             }
         }
     }

@@ -1,37 +1,41 @@
-﻿using System;
+﻿using Arma3BE.Client.Infrastructure.Helpers;
+using Arma3BE.Server.Abstract;
+using GalaSoft.MvvmLight;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Windows;
-using Arma3BE.Client.Modules.MainModule.Helpers;
-using Arma3BE.Client.Modules.MainModule.Helpers.Views;
-using GalaSoft.MvvmLight;
 
-namespace Arma3BE.Client.Modules.MainModule.Boxes
+namespace Arma3BE.Client.Modules.BanModule.Boxes
 {
     /// <summary>
     ///     Interaction logic for KickPlayerWindow.xaml
     /// </summary>
     public partial class KickPlayerWindow : Window
     {
-        private readonly PlayerHelper _playerHelper;
-        private readonly PlayerView _playerView;
+        private readonly IBanHelper _playerHelper;
+        private readonly IBEServer _beServer;
+        private readonly int _playerNum;
+        private readonly string _playerGuid;
         private readonly KickPlayerViewModel Model;
 
-        public KickPlayerWindow(PlayerHelper playerHelper, PlayerView playerView)
+        public KickPlayerWindow(IBanHelper playerHelper, IBEServer beServer, int playerNum, string playerGuid, string playerName)
         {
             _playerHelper = playerHelper;
-            _playerView = playerView;
+            _beServer = beServer;
+            _playerNum = playerNum;
+            _playerGuid = playerGuid;
             InitializeComponent();
 
-            Model = new KickPlayerViewModel(playerView);
+            Model = new KickPlayerViewModel(playerName);
 
             DataContext = Model;
         }
 
         private void KickClick(object sender, RoutedEventArgs e)
         {
-            _playerHelper.Kick(_playerView, tbReason.Text);
+            _playerHelper.Kick(_beServer, _playerNum, _playerGuid, tbReason.Text);
             Close();
         }
 
@@ -46,12 +50,12 @@ namespace Arma3BE.Client.Modules.MainModule.Boxes
     {
         private string _reason;
 
-        public KickPlayerViewModel(PlayerView playerView)
+        public KickPlayerViewModel(string playerName)
         {
-            Player = playerView;
+            PlayerName = playerName;
         }
 
-        public PlayerView Player { get; }
+        public string PlayerName { get; }
 
         public string Reason
         {
@@ -59,7 +63,7 @@ namespace Arma3BE.Client.Modules.MainModule.Boxes
             set
             {
                 _reason = value;
-                RaisePropertyChanged("Reason");
+                RaisePropertyChanged();
             }
         }
 
@@ -79,7 +83,7 @@ namespace Arma3BE.Client.Modules.MainModule.Boxes
                 }
                 catch (Exception)
                 {
-                    return new[] {string.Empty};
+                    return new[] { string.Empty };
                 }
             }
         }

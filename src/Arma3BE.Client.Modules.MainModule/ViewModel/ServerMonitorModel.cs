@@ -1,5 +1,6 @@
 ﻿using Arma3BE.Client.Infrastructure;
 using Arma3BE.Client.Infrastructure.Commands;
+using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.MainModule.Contracts;
 using Arma3BE.Client.Modules.MainModule.Models;
 using Arma3BE.Server;
@@ -55,7 +56,6 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 
             if (!console)
             {
-                _beServer.BanHandler += (s, e) => BansViewModel.SetData(e.Data);
                 _beServer.AdminHandler += (s, e) => AdminsViewModel.SetData(e.Data);
             }
 
@@ -90,7 +90,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             {
 
                 BansViewModel =
-                    container.Resolve<ServerMonitorBansViewModel>(
+                    container.Resolve<IServerMonitorBansViewModel>(
                         new ParameterOverride("serverInfoId", CurrentServer.Id),
                         new ParameterOverride("beServer", _beServer));
 
@@ -105,8 +105,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
                         new ParameterOverride("beServer", _beServer));
 
                 PlayerListModelView =
-                    container.Resolve<PlayerListModelView>(new ParameterOverride("serverId", CurrentServer.Id),
-                        new ParameterOverride("beServer", _beServer));
+                    container.Resolve<PlayerListModelView>(new ParameterOverride("beServer", _beServer));
             }
 
             ChatViewModel =
@@ -200,7 +199,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
         public ServerMonitorSteamQueryViewModel SteamQueryViewModel { get; set; }
 
         public ServerMonitorPlayerViewModel PlayersViewModel { get; set; }
-        public ServerMonitorBansViewModel BansViewModel { get; set; }
+        public IServerMonitorBansViewModel BansViewModel { get; set; }
         public ServerMonitorAdminsViewModel AdminsViewModel { get; set; }
 
         public ServerMonitorChatViewModel ChatViewModel { get; set; }

@@ -35,16 +35,16 @@
         </ToolBar>
 
         <xcdg:DataGridControl Grid.Row="1" ItemsSource="{Binding Data, Mode=OneWay}"
-                              AutoCreateColumns="False"
+                              AutoCreateColumns="False" SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                               ReadOnly="True" Name="dg">
 
             <xcdg:DataGridControl.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Kick" Click="KickClick" />
+                    <MenuItem Header="Kick" Command="{Binding KickUserCommand}" />
 
-                    <MenuItem Header="Ban" Click="BanClick" />
+                    <MenuItem Header="Ban" Command="{Binding BanUserCommand}" />
 
-                    <MenuItem Header="Player Info" Click="PlayerInfo_Click" />
+                    <MenuItem Header="Player Info" Command="{Binding PlayerInfoCommand}" />
 
                 </ContextMenu>
             </xcdg:DataGridControl.ContextMenu>

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.MainModule.Helpers;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.ModelCompact;

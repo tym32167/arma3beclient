@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;

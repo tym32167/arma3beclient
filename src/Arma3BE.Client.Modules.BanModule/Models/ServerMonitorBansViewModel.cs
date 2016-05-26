@@ -1,26 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Windows.Input;
-using Arma3BE.Client.Infrastructure.Commands;
-using Arma3BE.Client.Modules.MainModule.Boxes;
-using Arma3BE.Client.Modules.MainModule.Helpers;
-using Arma3BE.Client.Modules.MainModule.Helpers.Views;
+﻿using Arma3BE.Client.Infrastructure.Commands;
+using Arma3BE.Client.Infrastructure.Helpers.Views;
+using Arma3BE.Client.Infrastructure.Models;
+using Arma3BE.Client.Modules.BanModule.Boxes;
+using Arma3BE.Client.Modules.BanModule.Helpers;
 using Arma3BE.Server;
 using Arma3BE.Server.Abstract;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.Repositories;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Windows.Input;
 
-namespace Arma3BE.Client.Modules.MainModule.Models
+namespace Arma3BE.Client.Modules.BanModule.Models
 {
-    public class ServerMonitorBansViewModel : ServerMonitorBaseViewModel<Ban, BanView>
+    public class ServerMonitorBansViewModel : ServerMonitorBaseViewModel<Ban, BanView>, IServerMonitorBansViewModel
     {
         private readonly IBEServer _beServer;
         private readonly BanHelper _helper;
         private readonly ILog _log;
-        private readonly PlayerHelper _playerHelper;
         private readonly Guid _serverInfoId;
 
         public ServerMonitorBansViewModel(ILog log, Guid serverInfoId, IBEServer beServer)
@@ -29,15 +29,10 @@ namespace Arma3BE.Client.Modules.MainModule.Models
             _log = log;
             _serverInfoId = serverInfoId;
             _beServer = beServer;
-            _helper = new BanHelper(_log, serverInfoId);
-
-            _playerHelper = new PlayerHelper(_log, serverInfoId, _beServer);
-
+            _helper = new BanHelper(_log);
 
             SyncBans = new ActionCommand(() =>
             {
-                //var bans = AvailibleBans.ToList();
-
                 var bans = SelectedAvailibleBans;
 
                 if (bans != null)
@@ -46,12 +41,13 @@ namespace Arma3BE.Client.Modules.MainModule.Models
                     {
                         foreach (var ban in bans)
                         {
-                            _playerHelper.BanGUIDOffline(ban.GuidIp, ban.Reason, ban.Minutesleft, true);
+                            _helper.BanGUIDOffline(_beServer, ban.GuidIp, ban.Reason, ban.Minutesleft, true);
                             Thread.Sleep(10);
                         }
 
                         _beServer.SendCommand(CommandType.Bans);
-                    }) {IsBackground = true};
+                    })
+                    { IsBackground = true };
 
                     t.Start();
                 }
@@ -59,9 +55,11 @@ namespace Arma3BE.Client.Modules.MainModule.Models
 
             CustomBan = new ActionCommand(() =>
             {
-                var w = new BanPlayerWindow(_playerHelper, null, false, null, null);
+                var w = new BanPlayerWindow(_beServer, _helper, null, false, null, null);
                 w.ShowDialog();
             });
+
+            _beServer.BanHandler += (s, e) => SetData(e.Data);
         }
 
         public IEnumerable<BanView> SelectedAvailibleBans { get; set; }
@@ -108,7 +106,7 @@ namespace Arma3BE.Client.Modules.MainModule.Models
         protected override IEnumerable<BanView> RegisterData(IEnumerable<Ban> initialData)
         {
             var enumerable = initialData as IList<Ban> ?? initialData.ToList();
-            _helper.RegisterBans(enumerable);
+            _helper.RegisterBans(enumerable, _serverInfoId);
             return _helper.GetBanView(enumerable);
         }
 
@@ -121,8 +119,8 @@ namespace Arma3BE.Client.Modules.MainModule.Models
         public override void SetData(IEnumerable<Ban> initialData)
         {
             base.SetData(initialData);
-            RaisePropertyChanged("AvailibleBans");
-            RaisePropertyChanged("AvailibleBansCount");
+            RaisePropertyChanged(nameof(AvailibleBans));
+            RaisePropertyChanged(nameof(AvailibleBansCount));
         }
     }
 }

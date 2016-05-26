@@ -1,14 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using Arma3BE.Client.Infrastructure.Commands;
+using GalaSoft.MvvmLight;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using Arma3BE.Client.Infrastructure.Commands;
-using GalaSoft.MvvmLight;
 
-namespace Arma3BE.Client.Modules.MainModule.Models
+namespace Arma3BE.Client.Infrastructure.Models
 {
     public abstract class ServerMonitorBaseViewModel<T, TK> : ViewModelBase where T : class where TK : class
     {
         protected IEnumerable<TK> _data;
+        private TK _selectedItem;
 
         protected ServerMonitorBaseViewModel(ICommand refreshCommand)
         {
@@ -19,6 +20,16 @@ namespace Arma3BE.Client.Modules.MainModule.Models
         public IEnumerable<TK> Data
         {
             get { return FilterData(_data); }
+        }
+
+        public TK SelectedItem
+        {
+            get { return _selectedItem; }
+            set
+            {
+                _selectedItem = value;
+                RaisePropertyChanged();
+            }
         }
 
         public string Filter { get; set; }
@@ -41,8 +52,8 @@ namespace Arma3BE.Client.Modules.MainModule.Models
 
         public virtual void UpdateData()
         {
-            RaisePropertyChanged("Data");
-            RaisePropertyChanged("DataCount");
+            RaisePropertyChanged(nameof(Data));
+            RaisePropertyChanged(nameof(DataCount));
         }
 
         protected abstract IEnumerable<TK> RegisterData(IEnumerable<T> initialData);
@@ -58,7 +69,7 @@ namespace Arma3BE.Client.Modules.MainModule.Models
             if (string.IsNullOrEmpty(initialFilter)) return true;
             var filter = initialFilter.ToLower();
 
-            var type = typeof (TK);
+            var type = typeof(TK);
 
 
             var members = type.GetProperties();

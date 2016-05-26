@@ -195,6 +195,10 @@
       <Project>{b58670e5-011f-4318-964e-35c8b63870a5}</Project>
       <Name>Arma3BE.Client.Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Modules.BanModule\Arma3BE.Client.Modules.BanModule.csproj">
+      <Project>{b9350497-d13c-4a2b-b4f9-51c53d28a55a}</Project>
+      <Name>Arma3BE.Client.Modules.BanModule</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Arma3BE.Client.Modules.MainModule\Arma3BE.Client.Modules.MainModule.csproj">
       <Project>{58dbdf91-7ad0-4780-a3ef-0fa5c39e2869}</Project>
       <Name>Arma3BE.Client.Modules.MainModule</Name>
