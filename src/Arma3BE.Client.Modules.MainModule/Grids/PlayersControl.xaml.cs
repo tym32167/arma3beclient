@@ -1,10 +1,6 @@
-﻿using Arma3BE.Client.Modules.MainModule.Dialogs;
-using Arma3BE.Client.Modules.MainModule.Extensions;
+﻿using Arma3BE.Client.Infrastructure.Extensions;
 using Arma3BE.Client.Modules.MainModule.Models;
-using Arma3BE.Client.Modules.MainModule.ViewModel;
-using Microsoft.Practices.Unity;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 
 namespace Arma3BE.Client.Modules.MainModule.Grids

@@ -22,7 +22,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
         private readonly ILog _log;
         private bool _isBusy;
 
-        public ServerMonitorModel(ServerInfo currentServer, ILog log, IIpService ipService, IUnityContainer container, bool console = false)
+        public ServerMonitorModel(ServerInfo currentServer, ILog log, IIpService ipService, IUnityContainer container, IBanService banService, bool console = false)
         {
             CurrentServer = currentServer;
             _log = log;
@@ -30,11 +30,11 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 
             IsBusy = true;
 
-            Task.Factory.StartNew(() => InitModel(ipService, container, console))
+            Task.Factory.StartNew(() => InitModel(ipService, container, banService, console))
                 .ContinueWith(t => IsBusy = false);
         }
 
-        private void InitModel(IIpService ipService, IUnityContainer container, bool console)
+        private void InitModel(IIpService ipService, IUnityContainer container, IBanService banService, bool console)
         {
             var host = ipService.GetIpAddress(CurrentServer.Host);
 
@@ -89,10 +89,13 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             if (!console)
             {
 
-                BansViewModel =
+                var bansViewModel =
                     container.Resolve<IServerMonitorBansViewModel>(
                         new ParameterOverride("serverInfoId", CurrentServer.Id),
                         new ParameterOverride("beServer", _beServer));
+
+                BanControl = banService.CreateBanView(bansViewModel);
+
 
                 AdminsViewModel =
                     container.Resolve<ServerMonitorAdminsViewModel>(new ParameterOverride("serverInfo", CurrentServer),
@@ -199,7 +202,12 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
         public ServerMonitorSteamQueryViewModel SteamQueryViewModel { get; set; }
 
         public ServerMonitorPlayerViewModel PlayersViewModel { get; set; }
-        public IServerMonitorBansViewModel BansViewModel { get; set; }
+        
+        
+        //public IServerMonitorBansViewModel BansViewModel { get; set; }
+        public object BanControl { get; set; }
+
+
         public ServerMonitorAdminsViewModel AdminsViewModel { get; set; }
 
         public ServerMonitorChatViewModel ChatViewModel { get; set; }

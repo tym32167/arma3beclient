@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows;
-using Arma3BE.Client.Modules.MainModule.Extensions;
+using Arma3BE.Client.Infrastructure.Extensions;
 using Arma3BE.Client.Modules.MainModule.Models;
 using Arma3BEClient.Libs.ModelCompact;
 

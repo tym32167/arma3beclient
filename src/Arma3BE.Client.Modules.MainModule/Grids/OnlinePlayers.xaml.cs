@@ -1,4 +1,4 @@
-﻿using Arma3BE.Client.Modules.MainModule.Extensions;
+﻿using Arma3BE.Client.Infrastructure.Extensions;
 using System.Linq;
 using System.Windows.Controls;
 using PlayerView = Arma3BE.Client.Modules.MainModule.Helpers.Views.PlayerView;

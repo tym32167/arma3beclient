@@ -178,7 +178,6 @@
     <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Converters\PlayerNumberToColorConverter.cs" />
     <Compile Include="Dialogs\IPlayerViewService.cs" />
-    <Compile Include="Extensions\GridHelper.cs" />
     <Compile Include="Grids\AdminsControl.xaml.cs">
       <DependentUpon>AdminsControl.xaml</DependentUpon>
     </Compile>
@@ -304,6 +303,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

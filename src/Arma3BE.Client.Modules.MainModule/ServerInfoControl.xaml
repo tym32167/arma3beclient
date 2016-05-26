@@ -56,7 +56,11 @@
                 <grids:BansControl DataContext="{Binding BansViewModel}" />
             </TabItem>-->
 
-            <TabItem Header="Admins">
+                <TabItem Header="Bans">
+                    <ContentControl Content="{Binding BanControl}"></ContentControl>
+                </TabItem>
+
+                <TabItem Header="Admins">
                 <grids:AdminsControl DataContext="{Binding AdminsViewModel}" />
             </TabItem>
 

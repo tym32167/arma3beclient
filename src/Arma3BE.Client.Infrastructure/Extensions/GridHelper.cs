@@ -1,27 +1,27 @@
-﻿using System;
+﻿using Arma3BEClient.Common.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using Arma3BEClient.Common.Attributes;
 using Xceed.Wpf.DataGrid;
 
-namespace Arma3BE.Client.Modules.MainModule.Extensions
+namespace Arma3BE.Client.Infrastructure.Extensions
 {
     public static class GridHelper
     {
         public static ContextMenu Generate<T>(this DataGridControl dgcGridControl) where T : class
         {
             var menu = new ContextMenu();
-            var root = new MenuItem {Header = "Copy"};
+            var root = new MenuItem { Header = "Copy" };
             menu.Items.Add(root);
 
 
-            var type = typeof (T);
+            var type = typeof(T);
             var members = type.GetProperties();
             foreach (var propertyInfo in members)
             {
-                var attr = Attribute.GetCustomAttribute(propertyInfo, typeof (EnableCopyAttribute));
+                var attr = Attribute.GetCustomAttribute(propertyInfo, typeof(EnableCopyAttribute));
                 if (attr != null)
                 {
                     var item = new MenuItem();
@@ -61,11 +61,11 @@ namespace Arma3BE.Client.Modules.MainModule.Extensions
         public static IEnumerable<Column> GenerateColumns<T>()
         {
             var list = new List<Column>();
-            var type = typeof (T);
+            var type = typeof(T);
             var members = type.GetProperties();
             foreach (var propertyInfo in members)
             {
-                var attr = Attribute.GetCustomAttribute(propertyInfo, typeof (ShowInUiAttribute));
+                var attr = Attribute.GetCustomAttribute(propertyInfo, typeof(ShowInUiAttribute));
                 if (attr != null)
                 {
                     var c = new Column();
@@ -74,13 +74,13 @@ namespace Arma3BE.Client.Modules.MainModule.Extensions
                     c.Title = propertyInfo.Name;
 
 
-                    if (propertyInfo.PropertyType == typeof (DateTime) ||
-                        propertyInfo.PropertyType == typeof (DateTime?))
+                    if (propertyInfo.PropertyType == typeof(DateTime) ||
+                        propertyInfo.PropertyType == typeof(DateTime?))
                     {
-                        var newTextBlock = new FrameworkElementFactory(typeof (TextBlock));
+                        var newTextBlock = new FrameworkElementFactory(typeof(TextBlock));
                         newTextBlock.SetBinding(TextBlock.TextProperty,
-                            new Binding(".") {StringFormat = @"{0:dd.MM.yy HH:mm:ss}"});
-                        var newDataTemplate = new DataTemplate {VisualTree = newTextBlock};
+                            new Binding(".") { StringFormat = @"{0:dd.MM.yy HH:mm:ss}" });
+                        var newDataTemplate = new DataTemplate { VisualTree = newTextBlock };
 
                         c.CellContentTemplate = newDataTemplate;
                     }
@@ -94,15 +94,15 @@ namespace Arma3BE.Client.Modules.MainModule.Extensions
         public static ContextMenu DgGenerate<T>(this DataGrid dgcGridControl) where T : class
         {
             var menu = new ContextMenu();
-            var root = new MenuItem {Header = "Copy"};
+            var root = new MenuItem { Header = "Copy" };
             menu.Items.Add(root);
 
 
-            var type = typeof (T);
+            var type = typeof(T);
             var members = type.GetProperties();
             foreach (var propertyInfo in members)
             {
-                var attr = Attribute.GetCustomAttribute(propertyInfo, typeof (EnableCopyAttribute));
+                var attr = Attribute.GetCustomAttribute(propertyInfo, typeof(EnableCopyAttribute));
                 if (attr != null)
                 {
                     var item = new MenuItem();
@@ -142,11 +142,11 @@ namespace Arma3BE.Client.Modules.MainModule.Extensions
         public static IEnumerable<DataGridColumn> DgGenerateColumns<T>()
         {
             var list = new List<DataGridColumn>();
-            var type = typeof (T);
+            var type = typeof(T);
             var members = type.GetProperties();
             foreach (var propertyInfo in members)
             {
-                var attr = Attribute.GetCustomAttribute(propertyInfo, typeof (ShowInUiAttribute));
+                var attr = Attribute.GetCustomAttribute(propertyInfo, typeof(ShowInUiAttribute));
                 if (attr != null)
                 {
                     var c = new DataGridTextColumn();
@@ -156,8 +156,8 @@ namespace Arma3BE.Client.Modules.MainModule.Extensions
                     c.Binding = new Binding(propertyInfo.Name);
 
 
-                    if (propertyInfo.PropertyType == typeof (DateTime) ||
-                        propertyInfo.PropertyType == typeof (DateTime?))
+                    if (propertyInfo.PropertyType == typeof(DateTime) ||
+                        propertyInfo.PropertyType == typeof(DateTime?))
                     {
                         c.Binding.StringFormat = @"{0:dd.MM.yy HH:mm:ss}";
                     }

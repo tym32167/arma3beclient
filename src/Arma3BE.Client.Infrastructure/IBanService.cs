@@ -1,4 +1,5 @@
-﻿using Arma3BE.Server.Abstract;
+﻿using Arma3BE.Client.Infrastructure.Models;
+using Arma3BE.Server.Abstract;
 
 namespace Arma3BE.Client.Infrastructure
 {
@@ -8,5 +9,7 @@ namespace Arma3BE.Client.Infrastructure
             string playerNum);
 
         void ShowKickDialog(IBEServer beServer, int playerNum, string playerGuid, string playerName);
+
+        object CreateBanView(IServerMonitorBansViewModel model);
     }
 }

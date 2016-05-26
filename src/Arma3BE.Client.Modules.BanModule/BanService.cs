@@ -1,7 +1,10 @@
 ﻿using Arma3BE.Client.Infrastructure;
+using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.BanModule.Boxes;
+using Arma3BE.Client.Modules.BanModule.Grids;
 using Arma3BE.Server.Abstract;
 using Microsoft.Practices.Unity;
+using System.Windows;
 
 namespace Arma3BE.Client.Modules.BanModule
 {
@@ -49,6 +52,29 @@ namespace Arma3BE.Client.Modules.BanModule
                 new ParameterOverride("playerName", playerName),
                 new ParameterOverride("playerNum", playerNum));
             w.ShowDialog();
+        }
+
+        public object CreateBanView(IServerMonitorBansViewModel model)
+        {
+            var dispatcher = Application.Current.Dispatcher;
+
+            FrameworkElement control = null;
+
+            if (dispatcher.CheckAccess())
+            {
+                control = new BansControl();
+                control.DataContext = model;
+            }
+            else
+            {
+                dispatcher.Invoke(() =>
+                {
+                    control = new BansControl();
+                    control.DataContext = model;
+                });
+            }
+            
+            return control;
         }
     }
 }
