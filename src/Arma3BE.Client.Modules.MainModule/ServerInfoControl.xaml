@@ -52,9 +52,9 @@
                 <grids:OnlinePlayers DataContext="{Binding PlayersViewModel}" />
             </TabItem>
 
-            <TabItem Header="Bans">
+            <!--<TabItem Header="Bans">
                 <grids:BansControl DataContext="{Binding BansViewModel}" />
-            </TabItem>
+            </TabItem>-->
 
             <TabItem Header="Admins">
                 <grids:AdminsControl DataContext="{Binding AdminsViewModel}" />
