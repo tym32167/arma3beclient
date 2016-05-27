@@ -1,14 +1,15 @@
-﻿using Arma3BE.Client.Infrastructure;
-using Arma3BE.Client.Infrastructure.Commands;
+﻿using Arma3BE.Client.Infrastructure.Commands;
+using Arma3BE.Client.Infrastructure.Events;
+using Arma3BE.Client.Infrastructure.Events.Models;
 using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Infrastructure.Models;
-using Arma3BE.Client.Modules.MainModule.Dialogs;
 using Arma3BE.Client.Modules.MainModule.Helpers;
 using Arma3BE.Server;
 using Arma3BE.Server.Abstract;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.ModelCompact;
 using Prism.Commands;
+using Prism.Events;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
@@ -19,16 +20,15 @@ namespace Arma3BE.Client.Modules.MainModule.Models
     public class ServerMonitorPlayerViewModel : ServerMonitorBaseViewModel<Player, Helpers.Views.PlayerView>
     {
         private readonly IBEServer _beServer;
-        private readonly IBanService _banService;
-        private readonly IPlayerViewService _playerViewService;
+        private readonly IEventAggregator _eventAggregator;
         internal readonly PlayerHelper PlayerHelper;
 
-        public ServerMonitorPlayerViewModel(ILog log, ServerInfo serverInfo, IBEServer beServer, IBanHelper banHelper, IBanService banService, IPlayerViewService playerViewService)
+        public ServerMonitorPlayerViewModel(ILog log, ServerInfo serverInfo,
+            IBEServer beServer, IBanHelper banHelper, IEventAggregator eventAggregator)
             : base(new ActionCommand(() => beServer.SendCommand(CommandType.Players)))
         {
             _beServer = beServer;
-            _banService = banService;
-            _playerViewService = playerViewService;
+            _eventAggregator = eventAggregator;
             PlayerHelper = new PlayerHelper(log, serverInfo.Id, beServer, banHelper);
 
             KickUserCommand = new DelegateCommand(ShowKickDialog, CanShowDialog);
@@ -44,7 +44,7 @@ namespace Arma3BE.Client.Modules.MainModule.Models
             var local = SelectedItem;
             if (local != null)
             {
-                _banService.ShowKickDialog(_beServer, local.Num, local.Guid, local.Name);
+                _eventAggregator.GetEvent<KickUserEvent>().Publish(new KickUserModel(_beServer, local.Guid, local.Name, local.Num));
             }
         }
 
@@ -53,7 +53,7 @@ namespace Arma3BE.Client.Modules.MainModule.Models
             var local = SelectedItem;
             if (local != null)
             {
-                _banService.ShowBanDialog(_beServer, local.Guid, true, local.Name, local.Num.ToString());
+                _eventAggregator.GetEvent<BanUserEvent>().Publish(new BanUserModel(_beServer, local.Guid, true, local.Name, local.Num.ToString()));
             }
         }
 
@@ -62,7 +62,7 @@ namespace Arma3BE.Client.Modules.MainModule.Models
             var local = SelectedItem;
             if (local != null)
             {
-                _playerViewService.ShowDialog(local.Guid);
+                _eventAggregator.GetEvent<ShowUserInfoEvent>().Publish(new ShowUserModel(local.Guid));
             }
         }
 

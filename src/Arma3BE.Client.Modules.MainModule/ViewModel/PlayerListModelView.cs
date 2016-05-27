@@ -1,30 +1,29 @@
-﻿using Arma3BE.Client.Infrastructure;
-using Arma3BE.Client.Infrastructure.Commands;
+﻿using Arma3BE.Client.Infrastructure.Commands;
+using Arma3BE.Client.Infrastructure.Events;
+using Arma3BE.Client.Infrastructure.Events.Models;
 using Arma3BE.Client.Modules.MainModule.Models;
 using Arma3BE.Server.Abstract;
 using Arma3BEClient.Libs.Repositories;
 using GalaSoft.MvvmLight;
+using Prism.Commands;
+using Prism.Events;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using Arma3BE.Client.Modules.MainModule.Dialogs;
-using Prism.Commands;
 
 namespace Arma3BE.Client.Modules.MainModule.ViewModel
 {
     public class PlayerListModelView : ViewModelBase
     {
-        private readonly IBanService _banService;
         private readonly IBEServer _beServer;
-        private readonly IPlayerViewService _playerViewService;
+        private readonly IEventAggregator _eventAggregator;
         private int _playerCount;
         private ICommand _refreshCommand;
 
-        public PlayerListModelView(IBanService banService, IBEServer beServer, IPlayerViewService playerViewService)
+        public PlayerListModelView(IBEServer beServer, IEventAggregator eventAggregator)
         {
-            _banService = banService;
             _beServer = beServer;
-            _playerViewService = playerViewService;
+            _eventAggregator = eventAggregator;
             SelectedOptions = "Name,IP,Guid,Comment";
 
             BanCommand = new ActionCommand(ShowBan);
@@ -38,7 +37,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             var local = SelectedPlayer;
             if (local != null)
             {
-                _banService.ShowBanDialog(_beServer, local.Guid, false, local.Name, null);
+                _eventAggregator.GetEvent<BanUserEvent>().Publish(new BanUserModel(_beServer, local.Guid, true, local.Name, null));
             }
         }
 
@@ -52,7 +51,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             var local = SelectedPlayer;
             if (local != null)
             {
-                _playerViewService.ShowDialog(local.Guid);
+                _eventAggregator.GetEvent<ShowUserInfoEvent>().Publish(new ShowUserModel(local.Guid));
             }
         }
 

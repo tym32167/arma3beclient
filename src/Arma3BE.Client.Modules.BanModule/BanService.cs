@@ -1,20 +1,35 @@
-﻿using Arma3BE.Client.Infrastructure;
+﻿using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.BanModule.Boxes;
 using Arma3BE.Client.Modules.BanModule.Grids;
 using Arma3BE.Server.Abstract;
 using Microsoft.Practices.Unity;
+using Prism.Events;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Arma3BE.Client.Modules.BanModule
 {
-    public class BanService : IBanService
+    public class BanService
     {
         private readonly IUnityContainer _container;
+        private readonly IEventAggregator _eventAggregator;
 
-        public BanService(IUnityContainer container)
+        public BanService(IUnityContainer container, IEventAggregator eventAggregator)
         {
             _container = container;
+            _eventAggregator = eventAggregator;
+
+            _eventAggregator.GetEvent<BanUserEvent>()
+                .Subscribe(e => ShowBanDialog(e.BEServer, e.PlayerGuid, e.IsOnline, e.PlayerName, e.PlayerNum));
+
+            _eventAggregator.GetEvent<KickUserEvent>()
+                .Subscribe(e => ShowKickDialog(e.BEServer, e.PlayerNum, e.PlayerGuid, e.PlayerName));
+
+            _eventAggregator.GetEvent<CreateViewEvent<IServerMonitorBansViewModel>>().Subscribe(e =>
+            {
+                CreateBanView(e.Parent, e.ViewModel);
+            });
         }
 
         public void ShowBanDialog(IBEServer beServer, string playerGuid, bool isOnline, string playerName,
@@ -54,7 +69,7 @@ namespace Arma3BE.Client.Modules.BanModule
             w.ShowDialog();
         }
 
-        public object CreateBanView(IServerMonitorBansViewModel model)
+        public void CreateBanView(ContentControl parent, IServerMonitorBansViewModel model)
         {
             var dispatcher = Application.Current.Dispatcher;
 
@@ -64,17 +79,15 @@ namespace Arma3BE.Client.Modules.BanModule
             {
                 control = new BansControl();
                 control.DataContext = model;
+                parent.Content = control;
             }
             else
             {
                 dispatcher.Invoke(() =>
                 {
-                    control = new BansControl();
-                    control.DataContext = model;
+                    CreateBanView(parent, model);
                 });
             }
-            
-            return control;
         }
     }
 }

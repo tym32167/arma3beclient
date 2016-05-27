@@ -49,6 +49,14 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Prism, Version=6.1.0.0, Culture=neutral, PublicKeyToken=91a96d2a154366d8, processorArchitecture=MSIL">
+      <HintPath>..\packages\Prism.Core.6.1.0\lib\net45\Prism.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Prism.Wpf, Version=6.1.0.0, Culture=neutral, PublicKeyToken=91a96d2a154366d8, processorArchitecture=MSIL">
+      <HintPath>..\packages\Prism.Wpf.6.1.0\lib\net45\Prism.Wpf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -91,11 +99,18 @@
   <ItemGroup>
     <Compile Include="Commands\ActionCommand.cs" />
     <Compile Include="Commands\BaseCommand.cs" />
+    <Compile Include="Events\BanUserEvent.cs" />
+    <Compile Include="Events\CreateViewEvent.cs" />
+    <Compile Include="Events\KickUserEvent.cs" />
+    <Compile Include="Events\Models\BanUserModel.cs" />
+    <Compile Include="Events\Models\CreateViewModel.cs" />
+    <Compile Include="Events\Models\KickUserModel.cs" />
+    <Compile Include="Events\Models\ShowUserModel.cs" />
+    <Compile Include="Events\ShowUserInfoEvent.cs" />
     <Compile Include="Extensions\GridHelper.cs" />
     <Compile Include="Helpers\IBanHelper.cs" />
     <Compile Include="Helpers\StateHelper.cs" />
     <Compile Include="Helpers\Views\BanView.cs" />
-    <Compile Include="IBanService.cs" />
     <Compile Include="IIpService.cs" />
     <Compile Include="Models\IServerMonitorBansViewModel.cs" />
     <Compile Include="Models\ServerMonitorBaseViewModel.cs" />

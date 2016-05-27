@@ -1,9 +1,9 @@
-﻿using Arma3BE.Client.Infrastructure;
-using Arma3BE.Client.Infrastructure.Helpers;
+﻿using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.BanModule.Helpers;
 using Arma3BE.Client.Modules.BanModule.Models;
 using Microsoft.Practices.Unity;
+using Prism.Events;
 using Prism.Modularity;
 
 namespace Arma3BE.Client.Modules.BanModule
@@ -19,7 +19,7 @@ namespace Arma3BE.Client.Modules.BanModule
 
         public void Initialize()
         {
-            _container.RegisterType<IBanService, BanService>();
+            _container.RegisterInstance(new BanService(_container, _container.Resolve<IEventAggregator>()));
             _container.RegisterType<IBanHelper, BanHelper>();
             _container.RegisterType<IServerMonitorBansViewModel, ServerMonitorBansViewModel>();
         }

@@ -1,5 +1,7 @@
 ﻿using Arma3BE.Client.Infrastructure;
 using Arma3BE.Client.Infrastructure.Commands;
+using Arma3BE.Client.Infrastructure.Events;
+using Arma3BE.Client.Infrastructure.Events.Models;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.MainModule.Contracts;
 using Arma3BE.Client.Modules.MainModule.Models;
@@ -9,8 +11,11 @@ using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.ModelCompact;
 using Microsoft.Practices.Unity;
+using Prism.Events;
 using System;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace Arma3BE.Client.Modules.MainModule.ViewModel
@@ -20,21 +25,23 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
         private IBEServer _beServer;
         private readonly bool _console;
         private readonly ILog _log;
+        private readonly IEventAggregator _eventAggregator;
         private bool _isBusy;
 
-        public ServerMonitorModel(ServerInfo currentServer, ILog log, IIpService ipService, IUnityContainer container, IBanService banService, bool console = false)
+        public ServerMonitorModel(ServerInfo currentServer, ILog log, IIpService ipService, IUnityContainer container, IEventAggregator eventAggregator, bool console = false)
         {
             CurrentServer = currentServer;
             _log = log;
+            _eventAggregator = eventAggregator;
             _console = console;
 
             IsBusy = true;
 
-            Task.Factory.StartNew(() => InitModel(ipService, container, banService, console))
+            Task.Factory.StartNew(() => InitModel(ipService, container, console))
                 .ContinueWith(t => IsBusy = false);
         }
 
-        private void InitModel(IIpService ipService, IUnityContainer container, IBanService banService, bool console)
+        private void InitModel(IIpService ipService, IUnityContainer container, bool console)
         {
             var host = ipService.GetIpAddress(CurrentServer.Host);
 
@@ -94,7 +101,12 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
                         new ParameterOverride("serverInfoId", CurrentServer.Id),
                         new ParameterOverride("beServer", _beServer));
 
-                BanControl = banService.CreateBanView(bansViewModel);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    BanControl = new ContentControl();
+                });
+                _eventAggregator.GetEvent<CreateViewEvent<IServerMonitorBansViewModel>>()
+                    .Publish(new CreateViewModel<IServerMonitorBansViewModel>((ContentControl)BanControl, bansViewModel));
 
 
                 AdminsViewModel =
@@ -202,8 +214,8 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
         public ServerMonitorSteamQueryViewModel SteamQueryViewModel { get; set; }
 
         public ServerMonitorPlayerViewModel PlayersViewModel { get; set; }
-        
-        
+
+
         //public IServerMonitorBansViewModel BansViewModel { get; set; }
         public object BanControl { get; set; }
 
