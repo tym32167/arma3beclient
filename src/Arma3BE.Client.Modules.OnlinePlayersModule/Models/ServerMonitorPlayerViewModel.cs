@@ -21,7 +21,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
     {
         private readonly IBEServer _beServer;
         private readonly IEventAggregator _eventAggregator;
-        internal readonly PlayerHelper PlayerHelper;
+        private readonly PlayerHelper _playerHelper;
 
         public ServerMonitorPlayerViewModel(ILog log, ServerInfo serverInfo,
             IBEServer beServer, IBanHelper banHelper, IEventAggregator eventAggregator)
@@ -29,14 +29,14 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
         {
             _beServer = beServer;
             _eventAggregator = eventAggregator;
-            PlayerHelper = new PlayerHelper(log, serverInfo.Id, beServer, banHelper);
+            _playerHelper = new PlayerHelper(log, serverInfo.Id, beServer, banHelper);
 
             KickUserCommand = new DelegateCommand(ShowKickDialog, CanShowDialog);
             BanUserCommand = new DelegateCommand(ShowBanDialog, CanShowDialog);
             PlayerInfoCommand = new DelegateCommand(PlayerInfoDialog, CanShowDialog);
 
-            beServer.PlayerHandler += (s, e) => base.SetData(e.Data);
-            beServer.AdminHandler += (s, e) => { _admins = e.Data ?? new Arma3BE.Server.Models.Admin[0]; };
+            _beServer.PlayerHandler += (s, e) => base.SetData(e.Data);
+            _beServer.AdminHandler += (s, e) => { _admins = e.Data ?? new Arma3BE.Server.Models.Admin[0]; };
         }
 
         private void ShowKickDialog()
@@ -80,8 +80,8 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
         protected override IEnumerable<Helpers.Views.PlayerView> RegisterData(IEnumerable<Player> initialData)
         {
             var enumerable = initialData as IList<Player> ?? initialData.ToList();
-            PlayerHelper.RegisterPlayers(enumerable);
-            var view = PlayerHelper.GetPlayerView(enumerable).ToArray();
+            _playerHelper.RegisterPlayers(enumerable);
+            var view = _playerHelper.GetPlayerView(enumerable).ToArray();
             var admins = _admins ?? new Arma3BE.Server.Models.Admin[0];
             var adminsIps = new HashSet<string>(admins.Select(x => x.IP.ToLower()).Distinct());
             foreach (var playerView in view)
