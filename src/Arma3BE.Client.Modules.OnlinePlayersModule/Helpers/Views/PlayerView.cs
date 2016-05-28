@@ -1,19 +1,17 @@
-﻿using Arma3BE.Client.Infrastructure;
-using Arma3BE.Client.Modules.MainModule.Properties;
+﻿using System;
+using Arma3BE.Client.Infrastructure;
+using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Attributes;
 using Microsoft.Practices.Unity;
-using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
-namespace Arma3BE.Client.Modules.MainModule.Helpers.Views
+namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views
 {
-    public class PlayerView : INotifyPropertyChanged
+    public class PlayerView : ViewModelBase
     {
         public PlayerView()
         {
-            _ipService = MainModuleInit.Current.Resolve<IIpService>();
+            _ipService = OnlinePlayersModuleInit.Current.Resolve<IIpService>();
         }
 
         private IIpService _ipService;
@@ -71,13 +69,5 @@ namespace Arma3BE.Client.Modules.MainModule.Helpers.Views
         public int Port { get; set; }
 
         public Guid Id { get; set; }
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            var handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

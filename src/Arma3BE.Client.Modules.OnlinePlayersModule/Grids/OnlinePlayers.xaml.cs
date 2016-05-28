@@ -1,9 +1,9 @@
 ﻿using Arma3BE.Client.Infrastructure.Extensions;
+using Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views;
 using System.Linq;
 using System.Windows.Controls;
-using PlayerView = Arma3BE.Client.Modules.MainModule.Helpers.Views.PlayerView;
 
-namespace Arma3BE.Client.Modules.MainModule.Grids
+namespace Arma3BE.Client.Modules.OnlinePlayersModule.Grids
 {
     /// <summary>
     ///     Interaction logic for OnlinePlayers.xaml

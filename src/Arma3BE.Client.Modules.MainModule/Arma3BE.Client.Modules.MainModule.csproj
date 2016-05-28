@@ -168,9 +168,6 @@
     <Compile Include="Grids\ManageServer.xaml.cs">
       <DependentUpon>ManageServer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Grids\OnlinePlayers.xaml.cs">
-      <DependentUpon>OnlinePlayers.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Grids\PlayersControl.xaml.cs">
       <DependentUpon>PlayersControl.xaml</DependentUpon>
     </Compile>
@@ -179,8 +176,6 @@
     </Compile>
     <Compile Include="Helpers\AdminHelper.cs" />
     <Compile Include="Helpers\ChatHelper.cs" />
-    <Compile Include="Helpers\PlayerHelper.cs" />
-    <Compile Include="Helpers\Views\PlayerView.cs" />
     <Compile Include="MainModuleInit.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -192,7 +187,6 @@
     <Compile Include="Models\ServerMonitorAdminsViewModel.cs" />
     <Compile Include="Models\ServerMonitorChatViewModel.cs" />
     <Compile Include="Models\ServerMonitorManageServerViewModel.cs" />
-    <Compile Include="Models\ServerMonitorPlayerViewModel.cs" />
     <Compile Include="Models\ServerMonitorSteamQueryViewModel.cs" />
     <Compile Include="Options.xaml.cs">
       <DependentUpon>Options.xaml</DependentUpon>
@@ -229,10 +223,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Grids\ManageServer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Grids\OnlinePlayers.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

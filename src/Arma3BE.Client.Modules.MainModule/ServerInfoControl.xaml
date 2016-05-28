@@ -49,8 +49,9 @@
 
         <TabControl>
             <TabItem Header="Session">
-                <grids:OnlinePlayers DataContext="{Binding PlayersViewModel}" />
-            </TabItem>
+                <!--<grids:OnlinePlayers DataContext="{Binding PlayersViewModel}" />-->
+                    <ContentControl Content="{Binding OnlinePlayersControl}"></ContentControl>
+                </TabItem>
 
             <!--<TabItem Header="Bans">
                 <grids:BansControl DataContext="{Binding BansViewModel}" />

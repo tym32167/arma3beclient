@@ -207,6 +207,10 @@
       <Project>{e7c5ab59-5824-40ea-ae0c-f8c75b6c919c}</Project>
       <Name>Arma3BE.Client.Modules.NetModule</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Modules.OnlinePlayersModule\Arma3BE.Client.Modules.OnlinePlayersModule.csproj">
+      <Project>{017F121B-3AF0-4E98-A107-0CC3F2B67FCE}</Project>
+      <Name>Arma3BE.Client.Modules.OnlinePlayersModule</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Arma3BE.Common\Arma3BE.Common.csproj">
       <Project>{d507e532-7de6-4028-9dbe-aa76c54cc92a}</Project>
       <Name>Arma3BE.Common</Name>

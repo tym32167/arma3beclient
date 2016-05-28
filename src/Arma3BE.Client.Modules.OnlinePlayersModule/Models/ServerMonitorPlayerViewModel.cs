@@ -3,7 +3,7 @@ using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Events.Models;
 using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Infrastructure.Models;
-using Arma3BE.Client.Modules.MainModule.Helpers;
+using Arma3BE.Client.Modules.OnlinePlayersModule.Helpers;
 using Arma3BE.Server;
 using Arma3BE.Server.Abstract;
 using Arma3BEClient.Common.Logging;
@@ -15,9 +15,9 @@ using System.Linq;
 using System.Windows.Input;
 using Player = Arma3BE.Server.Models.Player;
 
-namespace Arma3BE.Client.Modules.MainModule.Models
+namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
 {
-    public class ServerMonitorPlayerViewModel : ServerMonitorBaseViewModel<Player, Helpers.Views.PlayerView>
+    public class ServerMonitorPlayerViewModel : ServerMonitorBaseViewModel<Player, Helpers.Views.PlayerView>, IServerMonitorPlayerViewModel
     {
         private readonly IBEServer _beServer;
         private readonly IEventAggregator _eventAggregator;

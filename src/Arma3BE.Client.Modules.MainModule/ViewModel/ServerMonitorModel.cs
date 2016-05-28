@@ -14,7 +14,6 @@ using Microsoft.Practices.Unity;
 using Prism.Events;
 using System;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -36,6 +35,9 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             _console = console;
 
             IsBusy = true;
+
+            BanControl = new ContentControl();
+            OnlinePlayersControl = new ContentControl();
 
             Task.Factory.StartNew(() => InitModel(ipService, container, console))
                 .ContinueWith(t => IsBusy = false);
@@ -88,9 +90,12 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             _beServer.ConnectingHandler += (s, e) => OnPropertyChanged(nameof(Connected));
 
 
-            PlayersViewModel =
-                container.Resolve<ServerMonitorPlayerViewModel>(new ParameterOverride("serverInfo", CurrentServer),
+            var playersViewModel =
+                container.Resolve<IServerMonitorPlayerViewModel>(new ParameterOverride("serverInfo", CurrentServer),
                     new ParameterOverride("beServer", _beServer));
+
+            _eventAggregator.GetEvent<CreateViewEvent<IServerMonitorPlayerViewModel>>()
+                   .Publish(new CreateViewModel<IServerMonitorPlayerViewModel>((ContentControl)OnlinePlayersControl, playersViewModel));
 
 
             if (!console)
@@ -101,10 +106,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
                         new ParameterOverride("serverInfoId", CurrentServer.Id),
                         new ParameterOverride("beServer", _beServer));
 
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    BanControl = new ContentControl();
-                });
+
                 _eventAggregator.GetEvent<CreateViewEvent<IServerMonitorBansViewModel>>()
                     .Publish(new CreateViewModel<IServerMonitorBansViewModel>((ContentControl)BanControl, bansViewModel));
 
@@ -214,12 +216,12 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 
         public ServerMonitorSteamQueryViewModel SteamQueryViewModel { get; set; }
 
-        public ServerMonitorPlayerViewModel PlayersViewModel { get; set; }
+        //public ServerMonitorPlayerViewModel PlayersViewModel { get; set; }
 
 
         //public IServerMonitorBansViewModel BansViewModel { get; set; }
         public object BanControl { get; set; }
-
+        public object OnlinePlayersControl { get; set; }
 
         public ServerMonitorAdminsViewModel AdminsViewModel { get; set; }
 

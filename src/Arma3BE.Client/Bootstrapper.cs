@@ -1,6 +1,7 @@
 ﻿using Arma3BE.Client.Modules.BanModule;
 using Arma3BE.Client.Modules.MainModule;
 using Arma3BE.Client.Modules.NetModule;
+using Arma3BE.Client.Modules.OnlinePlayersModule;
 using Arma3BEClient.Common.Logging;
 using log4net.Config;
 using Microsoft.Practices.Unity;
@@ -33,6 +34,7 @@ namespace Arma3BEClient
             base.ConfigureModuleCatalog();
 
             AddModule(typeof(BanModuleInit));
+            AddModule(typeof(OnlinePlayersModuleInit));
             AddModule(typeof(NetModuleInit));
             AddModule(typeof(MainModuleInit));
         }

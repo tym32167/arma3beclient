@@ -1,18 +1,18 @@
-﻿using Arma3BE.Client.Infrastructure.Helpers;
-using Arma3BE.Client.Modules.MainModule.Helpers.Views;
-using Arma3BE.Server.Abstract;
-using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Libs.ModelCompact;
-using Arma3BEClient.Libs.Repositories;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Arma3BE.Client.Infrastructure.Helpers;
+using Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views;
+using Arma3BE.Server.Abstract;
+using Arma3BEClient.Common.Logging;
+using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Repositories;
 using Player = Arma3BE.Server.Models.Player;
 
-namespace Arma3BE.Client.Modules.MainModule.Helpers
+namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
 {
     public class PlayerHelper : StateHelper<Player>
     {

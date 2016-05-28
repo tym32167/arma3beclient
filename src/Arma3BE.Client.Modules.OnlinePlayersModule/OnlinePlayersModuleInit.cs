@@ -1,28 +1,26 @@
-﻿//using Arma3BE.Client.Infrastructure;
-//using Arma3BE.Client.Modules.MainModule.ViewModel;
-//using Microsoft.Practices.Unity;
-//using Prism.Modularity;
-//using Prism.Regions;
+﻿using Arma3BE.Client.Infrastructure.Models;
+using Arma3BE.Client.Modules.OnlinePlayersModule.Models;
+using Microsoft.Practices.Unity;
+using Prism.Events;
+using Prism.Modularity;
 
-//namespace Arma3BE.Client.Modules.MainModule
-//{
-//    public class MainModuleInit : IModule
-//    {
-//        private readonly IUnityContainer _container;
-//        private readonly IRegionManager _regionManager;
+namespace Arma3BE.Client.Modules.OnlinePlayersModule
+{
+    public class OnlinePlayersModuleInit : IModule
+    {
+        private static IUnityContainer _container;
 
-//        public MainModuleInit(IUnityContainer container, IRegionManager regionManager)
-//        {
-//            _container = container;
-//            _regionManager = regionManager;
+        public OnlinePlayersModuleInit(IUnityContainer container)
+        {
+            _container = container;
+        }
 
-//            _container.RegisterType<MainViewModel>();
-//            _container.RegisterType<MainWindow>();
-//        }
+        public void Initialize()
+        {
+            _container.RegisterInstance(new PlayerService(_container.Resolve<IEventAggregator>()));
+            _container.RegisterType<IServerMonitorPlayerViewModel, ServerMonitorPlayerViewModel>();
+        }
 
-//        public void Initialize()
-//        {
-//            _regionManager.RegisterViewWithRegion(RegionNames.MainRegionRegion, typeof(MainWindow));
-//        }
-//    }
-//}
+        public static IUnityContainer Current => _container;
+    }
+}
