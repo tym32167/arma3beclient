@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace Arma3BE.Client.Modules.MainModule.Converters
+namespace Arma3BE.Client.Infrastructure.Converters
 {
     [ValueConversion(typeof (bool), typeof (bool))]
     public class InverseBooleanConverter : IValueConverter

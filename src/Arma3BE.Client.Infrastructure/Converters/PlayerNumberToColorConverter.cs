@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace Arma3BE.Client.Modules.MainModule.Converters
+namespace Arma3BE.Client.Infrastructure.Converters
 {
     [ValueConversion(typeof(int), typeof(SolidColorBrush))]
     public class PlayerNumberToColorConverter : IValueConverter

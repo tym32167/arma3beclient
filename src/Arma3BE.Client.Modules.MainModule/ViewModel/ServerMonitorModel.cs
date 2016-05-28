@@ -1,9 +1,9 @@
 ﻿using Arma3BE.Client.Infrastructure;
 using Arma3BE.Client.Infrastructure.Commands;
+using Arma3BE.Client.Infrastructure.Contracts;
 using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Events.Models;
 using Arma3BE.Client.Infrastructure.Models;
-using Arma3BE.Client.Modules.MainModule.Contracts;
 using Arma3BE.Client.Modules.MainModule.Models;
 using Arma3BE.Server;
 using Arma3BE.Server.Abstract;

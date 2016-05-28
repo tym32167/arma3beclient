@@ -14,7 +14,7 @@
 
         <ToolBar Height="30">
             <Button Command="{Binding RefreshCommand, Mode=OneWay}">
-                <Image x:Uid="Image_1" Source="../Icons/refresh.ico" Height="16" Width="16" />
+                <Image x:Uid="Image_1" Source="Icons/refresh.ico" Height="16" Width="16" />
             </Button>
 
             <Separator />

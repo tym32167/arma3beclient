@@ -5,9 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:converters="clr-namespace:Arma3BE.Client.Modules.MainModule.Converters"
              xmlns:grids="clr-namespace:Arma3BE.Client.Modules.MainModule.Grids"
              xmlns:chat="clr-namespace:Arma3BE.Client.Modules.MainModule.Chat"
+             xmlns:converters="clr-namespace:Arma3BE.Client.Infrastructure.Converters;assembly=Arma3BE.Client.Infrastructure"
              mc:Ignorable="d">
 
     <UserControl.Resources>

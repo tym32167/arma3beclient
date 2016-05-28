@@ -154,13 +154,6 @@
     <Compile Include="Chat\ChatControl.xaml.cs">
       <DependentUpon>ChatControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Contracts\DisposableUserControl.cs" />
-    <Compile Include="Contracts\DisposableViewModelBase.cs" />
-    <Compile Include="Converters\BoolToVisibilityConverter .cs" />
-    <Compile Include="Converters\BoolToVisibilityConverterInverse.cs" />
-    <Compile Include="Converters\BrushColorConverter.cs" />
-    <Compile Include="Converters\InverseBooleanConverter.cs" />
-    <Compile Include="Converters\PlayerNumberToColorConverter.cs" />
     <Compile Include="Dialogs\IPlayerViewService.cs" />
     <Compile Include="Grids\AdminsControl.xaml.cs">
       <DependentUpon>AdminsControl.xaml</DependentUpon>
@@ -196,7 +189,6 @@
       <DependentUpon>ServerInfoControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="ViewModel\OnlinePlayersModelView.cs" />
     <Compile Include="ViewModel\OptionsModel.cs" />
     <Compile Include="ViewModel\PlayerListModelView.cs" />
     <Compile Include="ViewModel\ServerMonitorModel.cs" />
@@ -246,33 +238,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icons\add.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icons\bg_header.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icons\delete.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icons\download.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icons\gear.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icons\refresh.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icons\save 2.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icons\site_logo.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icons\tehgam.jpg" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

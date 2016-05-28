@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:converters="clr-namespace:Arma3BE.Client.Modules.MainModule.Converters"
+             xmlns:converters="clr-namespace:Arma3BE.Client.Infrastructure.Converters;assembly=Arma3BE.Client.Infrastructure"
              mc:Ignorable="d" DataContextChanged="ToolBar_DataContextChanged" HorizontalAlignment="Stretch"
              VerticalAlignment="Stretch">
 

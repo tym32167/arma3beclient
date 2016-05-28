@@ -83,6 +83,13 @@
   <ItemGroup>
     <Compile Include="Commands\ActionCommand.cs" />
     <Compile Include="Commands\BaseCommand.cs" />
+    <Compile Include="Contracts\DisposableUserControl.cs" />
+    <Compile Include="Contracts\DisposableViewModelBase.cs" />
+    <Compile Include="Converters\BoolToVisibilityConverter .cs" />
+    <Compile Include="Converters\BoolToVisibilityConverterInverse.cs" />
+    <Compile Include="Converters\BrushColorConverter.cs" />
+    <Compile Include="Converters\InverseBooleanConverter.cs" />
+    <Compile Include="Converters\PlayerNumberToColorConverter.cs" />
     <Compile Include="Events\BanUserEvent.cs" />
     <Compile Include="Events\CreateViewEvent.cs" />
     <Compile Include="Events\KickUserEvent.cs" />
@@ -115,6 +122,51 @@
       <Project>{992fab3c-6505-41e4-a4d0-4d0657661695}</Project>
       <Name>Arma3BE.Server</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Icons\add.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Icons\bg_header.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Icons\delete.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Icons\download.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Icons\gear.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Icons\refresh.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Icons\save 2.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Icons\site_logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Icons\tehgam.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

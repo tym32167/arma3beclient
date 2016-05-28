@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Windows.Controls;
+using Arma3BE.Client.Infrastructure.Models;
 
-namespace Arma3BE.Client.Modules.MainModule.Contracts
+namespace Arma3BE.Client.Infrastructure.Contracts
 {
-    public abstract class DisposableUserControl : UserControl, IDisposable
+    public abstract class DisposableViewModelBase : ViewModelBase, IDisposable
     {
         private bool _disposed;
 
@@ -13,7 +13,7 @@ namespace Arma3BE.Client.Modules.MainModule.Contracts
             GC.SuppressFinalize(this);
         }
 
-        ~DisposableUserControl()
+        ~DisposableViewModelBase()
         {
             Dispose(false);
         }
@@ -37,6 +37,13 @@ namespace Arma3BE.Client.Modules.MainModule.Contracts
 
         protected virtual void DisposeUnManagedResources()
         {
+        }
+
+        // TODO: do not forget about cleaning!
+        public void Cleanup()
+        {
+            //base.Cleanup();
+            Dispose();
         }
     }
 }
