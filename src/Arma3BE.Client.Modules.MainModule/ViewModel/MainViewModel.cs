@@ -7,18 +7,6 @@ using System.Linq;
 
 namespace Arma3BE.Client.Modules.MainModule.ViewModel
 {
-    /// <summary>
-    ///     This class contains properties that the main View can data bind to.
-    ///     <para>
-    ///         Use the <strong>mvvminpc</strong> snippet to add bindable properties to this ViewModel.
-    ///     </para>
-    ///     <para>
-    ///         You can also use Blend to data bind with the tool's support.
-    ///     </para>
-    ///     <para>
-    ///         See http://www.galasoft.ch/mvvm
-    ///     </para>
-    /// </summary>
     public class MainViewModel : ViewModelBase
     {
         public MainViewModel()
@@ -37,18 +25,12 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 
         private void InitServers()
         {
-            //using (var context = new Arma3BeClientContext())
-            //{
-            //    context.ServerInfo.Where(x=>x.Active).ToList().ForEach(x => x.Active = false);
-            //    context.SaveChanges();
-            //}
-
             Reload();
         }
 
         public void Reload()
         {
-            OnPropertyChanged("Servers");
+            OnPropertyChanged(nameof(Servers));
         }
 
         public void SetActive(Guid serverId, bool active = false)
