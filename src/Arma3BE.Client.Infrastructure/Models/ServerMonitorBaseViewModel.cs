@@ -1,5 +1,4 @@
 ﻿using Arma3BE.Client.Infrastructure.Commands;
-using GalaSoft.MvvmLight;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
@@ -28,7 +27,7 @@ namespace Arma3BE.Client.Infrastructure.Models
             set
             {
                 _selectedItem = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -52,8 +51,8 @@ namespace Arma3BE.Client.Infrastructure.Models
 
         public virtual void UpdateData()
         {
-            RaisePropertyChanged(nameof(Data));
-            RaisePropertyChanged(nameof(DataCount));
+            OnPropertyChanged(nameof(Data));
+            OnPropertyChanged(nameof(DataCount));
         }
 
         protected abstract IEnumerable<TK> RegisterData(IEnumerable<T> initialData);

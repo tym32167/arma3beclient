@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight;
+﻿using Arma3BE.Client.Infrastructure.Models;
 
 namespace Arma3BE.Client.Modules.MainModule.ViewModel
 {

@@ -10,7 +10,7 @@ using Arma3BE.Server.Abstract;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.Tools;
-using GalaSoft.MvvmLight;
+using Arma3BE.Client.Infrastructure.Models;
 
 namespace Arma3BE.Client.Modules.MainModule.Models
 {
@@ -88,7 +88,7 @@ namespace Arma3BE.Client.Modules.MainModule.Models
             set
             {
                 _players = value;
-                RaisePropertyChanged("Players");
+                OnPropertyChanged("Players");
             }
         }
 
@@ -99,7 +99,7 @@ namespace Arma3BE.Client.Modules.MainModule.Models
             set
             {
                 _selectedPlayer = value;
-                RaisePropertyChanged("SelectedPlayer");
+                OnPropertyChanged("SelectedPlayer");
             }
         }
 
@@ -109,7 +109,7 @@ namespace Arma3BE.Client.Modules.MainModule.Models
             set
             {
                 _autoScroll = value;
-                RaisePropertyChanged("AutoScroll");
+                OnPropertyChanged("AutoScroll");
             }
         }
 
@@ -119,7 +119,7 @@ namespace Arma3BE.Client.Modules.MainModule.Models
             set
             {
                 _enableChat = value;
-                RaisePropertyChanged("EnableChat");
+                OnPropertyChanged("EnableChat");
             }
         }
 
@@ -129,7 +129,7 @@ namespace Arma3BE.Client.Modules.MainModule.Models
             set
             {
                 _inputMessage = value;
-                RaisePropertyChanged("InputMessage");
+                OnPropertyChanged("InputMessage");
             }
         }
 

@@ -1,6 +1,6 @@
 ﻿using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Server.Abstract;
-using GalaSoft.MvvmLight;
+using Arma3BE.Client.Infrastructure.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -63,7 +63,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             set
             {
                 _reason = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 

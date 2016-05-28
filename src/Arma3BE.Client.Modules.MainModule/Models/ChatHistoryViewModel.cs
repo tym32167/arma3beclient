@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Arma3BE.Client.Infrastructure.Commands;
+using Arma3BE.Client.Infrastructure.Models;
+using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using Arma3BE.Client.Infrastructure.Commands;
-using Arma3BEClient.Libs.ModelCompact;
-using Arma3BEClient.Libs.Repositories;
-using GalaSoft.MvvmLight;
 
 namespace Arma3BE.Client.Modules.MainModule.Models
 {
@@ -25,7 +25,7 @@ namespace Arma3BE.Client.Modules.MainModule.Models
         {
             _serverId = serverId;
 
-            FilterCommand = new ActionCommand(() => RaisePropertyChanged("Log"));
+            FilterCommand = new ActionCommand(() => OnPropertyChanged("Log"));
 
             SelectedServers = serverId.ToString();
         }

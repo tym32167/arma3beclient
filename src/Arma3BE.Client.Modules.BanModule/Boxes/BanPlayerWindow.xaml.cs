@@ -1,6 +1,6 @@
-﻿using Arma3BE.Client.Modules.BanModule.Helpers;
+﻿using Arma3BE.Client.Infrastructure.Models;
+using Arma3BE.Client.Modules.BanModule.Helpers;
 using Arma3BE.Server.Abstract;
-using GalaSoft.MvvmLight;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -82,7 +82,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             set
             {
                 _playerName = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -113,7 +113,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             set
             {
                 _playerGuid = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -123,7 +123,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             set
             {
                 _reason = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -133,7 +133,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             set
             {
                 _minutes = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -143,7 +143,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             set
             {
                 _timeSpan = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
                 Minutes = (long)_timeSpan.TotalMinutes;
             }
         }

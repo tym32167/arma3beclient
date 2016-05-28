@@ -6,7 +6,7 @@ using Arma3BE.Server;
 using Arma3BE.Server.Abstract;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Logging;
-using GalaSoft.MvvmLight;
+using Arma3BE.Client.Infrastructure.Models;
 
 namespace Arma3BE.Client.Modules.MainModule.Models
 {
@@ -95,7 +95,7 @@ namespace Arma3BE.Client.Modules.MainModule.Models
             set
             {
                 _selectedMission = value;
-                RaisePropertyChanged("SelectedMission");
+                OnPropertyChanged("SelectedMission");
                 SetMissionCommand.RaiseCanExecuteChanged();
             }
         }
@@ -106,7 +106,7 @@ namespace Arma3BE.Client.Modules.MainModule.Models
             set
             {
                 _missions = value;
-                RaisePropertyChanged("Missions");
+                OnPropertyChanged("Missions");
             }
         }
 

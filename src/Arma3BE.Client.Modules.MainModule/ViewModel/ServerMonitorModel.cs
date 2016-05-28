@@ -85,7 +85,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
                 };
             }
 
-            _beServer.ConnectingHandler += (s, e) => RaisePropertyChanged(nameof(Connected));
+            _beServer.ConnectingHandler += (s, e) => OnPropertyChanged(nameof(Connected));
 
 
             PlayersViewModel =
@@ -172,7 +172,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 
         private void BeServerDisconnectHandler(object sender, EventArgs e)
         {
-            RaisePropertyChanged("Connected");
+            OnPropertyChanged("Connected");
         }
 
         private void BeServerConnectHandler(object sender, EventArgs e)
@@ -186,7 +186,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
                 _beServer.SendCommand(CommandType.Bans);
             }
 
-            RaisePropertyChanged("Connected");
+            OnPropertyChanged("Connected");
         }
 
         public void Connect()
@@ -205,8 +205,9 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
         protected override void DisposeManagedResources()
         {
             base.DisposeManagedResources();
-            _beServer.Disconnect();
-            _beServer.Dispose();
+            _beServer?.Disconnect();
+            _beServer?.Dispose();
+            _beServer = null;
         }
 
         #region ViewModels
@@ -235,7 +236,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
                 if (_isBusy != value)
                 {
                     _isBusy = value;
-                    RaisePropertyChanged(nameof(IsBusy));
+                    OnPropertyChanged(nameof(IsBusy));
                 }
             }
         }

@@ -119,8 +119,8 @@ namespace Arma3BE.Client.Modules.BanModule.Models
         public override void SetData(IEnumerable<Ban> initialData)
         {
             base.SetData(initialData);
-            RaisePropertyChanged(nameof(AvailibleBans));
-            RaisePropertyChanged(nameof(AvailibleBansCount));
+            OnPropertyChanged(nameof(AvailibleBans));
+            OnPropertyChanged(nameof(AvailibleBansCount));
         }
     }
 }

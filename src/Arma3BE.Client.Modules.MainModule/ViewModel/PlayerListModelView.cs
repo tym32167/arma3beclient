@@ -1,10 +1,10 @@
 ﻿using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Events.Models;
+using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.MainModule.Models;
 using Arma3BE.Server.Abstract;
 using Arma3BEClient.Libs.Repositories;
-using GalaSoft.MvvmLight;
 using Prism.Commands;
 using Prism.Events;
 using System.Collections.Generic;
@@ -67,7 +67,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             set
             {
                 _playerCount = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -146,7 +146,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
                 Players = r;
             }
 
-            RaisePropertyChanged(nameof(Players));
+            OnPropertyChanged(nameof(Players));
         }
     }
 }

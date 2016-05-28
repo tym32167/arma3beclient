@@ -1,7 +1,7 @@
 ﻿using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Steam;
-using GalaSoft.MvvmLight;
+using Arma3BE.Client.Infrastructure.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,8 +21,8 @@ namespace Arma3BE.Client.Modules.MainModule.Models
             Host = host;
             Port = port + 1;
 
-            RaisePropertyChanged("Host");
-            RaisePropertyChanged("Port");
+            OnPropertyChanged("Host");
+            OnPropertyChanged("Port");
 
             ExcecuteCommand = new ActionCommand(() => Task.Run(() =>
             {
@@ -53,9 +53,9 @@ namespace Arma3BE.Client.Modules.MainModule.Models
                     server.GetServerChallengeSync(settings);
 
 
-                RaisePropertyChanged("ServerRules");
-                RaisePropertyChanged("ServerInfo");
-                RaisePropertyChanged("ServerPlayers");
+                OnPropertyChanged("ServerRules");
+                OnPropertyChanged("ServerInfo");
+                OnPropertyChanged("ServerPlayers");
             }),
                 () =>
                 {

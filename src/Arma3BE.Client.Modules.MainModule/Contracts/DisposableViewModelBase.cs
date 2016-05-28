@@ -1,5 +1,5 @@
-﻿using System;
-using GalaSoft.MvvmLight;
+﻿using Arma3BE.Client.Infrastructure.Models;
+using System;
 
 namespace Arma3BE.Client.Modules.MainModule.Contracts
 {
@@ -39,9 +39,10 @@ namespace Arma3BE.Client.Modules.MainModule.Contracts
         {
         }
 
-        public override void Cleanup()
+        // TODO: do not forget about cleaning!
+        public void Cleanup()
         {
-            base.Cleanup();
+            //base.Cleanup();
             Dispose();
         }
     }
