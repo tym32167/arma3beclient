@@ -1,6 +1,8 @@
 ﻿using Arma3BE.Server.Abstract;
 using BattleNET;
+using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Arma3BE.Server.Mocks
 {
@@ -41,7 +43,7 @@ namespace Arma3BE.Server.Mocks
             _timer = null;
         }
 
-        public bool Connected { get; }
+        public bool Connected { get; private set; }
 
         public int SendCommand(BattlEyeCommand command, string parameters = "")
         {
@@ -50,7 +52,11 @@ namespace Arma3BE.Server.Mocks
 
         public void Disconnect()
         {
-
+            Task.Delay(TimeSpan.FromSeconds(2)).ContinueWith(t =>
+            {
+                Connected = false;
+                OnBattlEyeDisconnected(new BattlEyeDisconnectEventArgs(default(BattlEyeLoginCredentials), BattlEyeDisconnectionType.Manual));
+            });
         }
 
         public event BattlEyeMessageEventHandler BattlEyeMessageReceived;
@@ -59,6 +65,12 @@ namespace Arma3BE.Server.Mocks
 
         public BattlEyeConnectionResult Connect()
         {
+            Task.Delay(TimeSpan.FromSeconds(2)).ContinueWith(t =>
+            {
+                Connected = true;
+                OnBattlEyeConnected(new BattlEyeConnectEventArgs(default(BattlEyeLoginCredentials), BattlEyeConnectionResult.Success));
+            });
+
             return BattlEyeConnectionResult.Success;
         }
 
@@ -145,5 +157,15 @@ RF_SC_VTN_0_4_2.Catalina.pbo
 IP Bans:
 [#] [IP Address] [Minutes left] [Reason]
 ----------------------------------------------";
+
+        protected virtual void OnBattlEyeConnected(BattlEyeConnectEventArgs args)
+        {
+            BattlEyeConnected?.Invoke(args);
+        }
+
+        protected virtual void OnBattlEyeDisconnected(BattlEyeDisconnectEventArgs args)
+        {
+            BattlEyeDisconnected?.Invoke(args);
+        }
     }
 }
