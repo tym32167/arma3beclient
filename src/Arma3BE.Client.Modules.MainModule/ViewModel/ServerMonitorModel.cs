@@ -129,6 +129,12 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
                 container.Resolve<ServerMonitorChatViewModel>(new ParameterOverride("serverId", CurrentServer.Id),
                     new ParameterOverride("beServer", _beServer));
 
+            OnPropertyChanged("AdminsViewModel");
+            OnPropertyChanged("ManageServerViewModel");
+            OnPropertyChanged("PlayerListModelView");
+            OnPropertyChanged("ChatViewModel");
+            OnPropertyChanged("SteamQueryViewModel");
+
             Connect();
         }
 
