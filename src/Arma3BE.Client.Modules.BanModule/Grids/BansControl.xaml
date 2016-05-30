@@ -14,7 +14,7 @@
 
         <ToolBar Height="30">
             <Button Command="{Binding RefreshCommand, Mode=OneWay}">
-                <Image x:Uid="Image_1" Source="Icons/refresh.ico" Height="16" Width="16" />
+                <Image x:Uid="Image_1" Source="{StaticResource ResourceKey=refresh_icon}" Height="16" Width="16" />
             </Button>
 
             <Separator />
@@ -27,7 +27,7 @@
                        Text="{Binding AvailibleBansCount, Mode=OneWay, StringFormat=Availible bans: {0}}" />
 
             <Button Command="{Binding SyncBans, Mode=OneWay}" Content="Ban selected">
-                <!--<Image x:Uid="Image_1" Source="../Icons/refresh.ico" Height="16" Width="16"></Image>-->
+                <!--<Image x:Uid="Image_1" Source="{StaticResource refresh_icon}" Height="16" Width="16"></Image>-->
             </Button>
 
             <Separator />

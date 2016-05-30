@@ -35,7 +35,7 @@
 
         <StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Left">
             <Button Command="{Binding RefreshCommand}">
-                <Image x:Uid="Image_1" Source="../Icons/refresh.ico" Height="16" Width="16" />
+                <Image x:Uid="Image_1" Source="{StaticResource refresh_icon}" Height="16" Width="16" />
             </Button>
             <ComboBox ItemsSource="{Binding Missions, Mode=OneWay}" Width="300"
                       SelectedItem="{Binding SelectedMission, Mode=TwoWay}">

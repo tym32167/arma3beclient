@@ -21,7 +21,7 @@ namespace Arma3BE.Server.ServerFactory
             //    ReconnectOnPacketLoss = true
             //}), _log);
 
-            return new MockBattleEyeServer();
+            return new BattlEyeServerLogProxy(new MockBattleEyeServer(), _log);
         }
     }
 }

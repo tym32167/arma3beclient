@@ -10,9 +10,8 @@
         Title="TEHGAM.COM - Arma 3 BattlEye Tool"
         Height="600"
         Width="800"
-        Icon="Icons/main.ico"
-        WindowStartupLocation="CenterScreen"
-        >
+        Icon="{StaticResource main_icon}"
+        WindowStartupLocation="CenterScreen">
     <Grid>
         <ContentControl regions:RegionManager.RegionName="{x:Static inf:RegionNames.MainRegionRegion}" ></ContentControl>
     </Grid>

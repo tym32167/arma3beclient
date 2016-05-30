@@ -5,24 +5,11 @@
              xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
              DispatcherUnhandledException="App_OnDispatcherUnhandledException">
     <Application.Resources>
-        <!--<vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" xmlns:vm="clr-namespace:Arma3BEClient.ViewModel" />-->
-
-
-        <!--<ResourceDictionary>
+        <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-
-                <ResourceDictionary Source="/AvalonDock.Themes;component/themes/dev2010.xaml"/>
-                --><!--<ResourceDictionary Source="/AvalonDock.Themes;component/themes/ExpressionDark.xaml"/>-->
-
-        <!--<ResourceDictionary Source="/AvalonDock;component/themes/aero.normalcolor.xaml"/>-->
-        <!--<ResourceDictionary Source="/AvalonDock;component/themes/classic.xaml"/>-->
-        <!--<ResourceDictionary Source="/AvalonDock;component/themes/luna.normalcolor.xaml"/>--><!--
+                <ResourceDictionary Source="/Arma3BE.Client.Styles;component/Icons.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="/Arma3BE.Client.Styles;component/Styles.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>-->
-
-        <Style TargetType="Button">
-            <Setter Property="Margin" Value="2" />
-        </Style>
-
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
