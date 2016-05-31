@@ -134,7 +134,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             OnPropertyChanged(nameof(AdminsViewModel));
             OnPropertyChanged(nameof(ManageServerViewModel));
             OnPropertyChanged(nameof(PlayerListModelView));
-            OnPropertyChanged(nameof(SteamQueryViewModel);
+            OnPropertyChanged(nameof(SteamQueryViewModel));
 
             OnPropertyChanged(nameof(BanControl));
             OnPropertyChanged(nameof(OnlinePlayersControl));
