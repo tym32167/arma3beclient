@@ -21,6 +21,7 @@ namespace Arma3BE.Server.Mocks
             MockMessage(bans);
             MockMessage(admins);
             MockMessage(missions);
+            MockMessage(ChatMessage);
             _timer?.Change(10000, Timeout.Infinite);
         }
 
@@ -72,6 +73,11 @@ namespace Arma3BE.Server.Mocks
             });
 
             return BattlEyeConnectionResult.Success;
+        }
+
+        private static string ChatMessage
+        {
+            get { return $"(Global) bot: Текущее время {DateTime.UtcNow}"; }
         }
 
         private static string players =
