@@ -1,14 +1,13 @@
-﻿using System;
+﻿using Arma3BE.Client.Modules.ChatModule.Models;
+using Arma3BE.Server.Models;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using Arma3BE.Client.Modules.MainModule.Models;
-using Arma3BE.Client.Modules.MainModule.ViewModel;
-using Arma3BE.Server.Models;
 
-namespace Arma3BE.Client.Modules.MainModule.Chat
+namespace Arma3BE.Client.Modules.ChatModule.Chat
 {
     /// <summary>
     ///     Interaction logic for ChatControl.xaml
@@ -63,13 +62,13 @@ namespace Arma3BE.Client.Modules.MainModule.Chat
         public void AppendText(Paragraph p, ScrollViewer scroll, ChatMessage message)
         {
             var text = $"[ {message.Date:HH:mm:ss} ]  {message.Message}\n";
-            var color = ServerMonitorModel.GetMessageColor(message);
+            var color = ServerMonitorChatViewModel.GetMessageColor(message);
 
             var brush = new SolidColorBrush(color);
-            var span = new Span {Foreground = brush};
+            var span = new Span { Foreground = brush };
             span.Inlines.Add(text);
 
-            if ( message.Type != ChatMessage.MessageType.RCon && message.IsImportantMessage)
+            if (message.Type != ChatMessage.MessageType.RCon && message.IsImportantMessage)
                 span.FontWeight = FontWeights.Heavy;
 
             _paragraph.Inlines.Add(span);

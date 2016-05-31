@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 
-namespace Arma3BE.Client.Modules.MainModule.Models
+namespace Arma3BE.Client.Modules.ChatModule.Models
 {
     public class ChatHistoryViewModel : ViewModelBase
     {

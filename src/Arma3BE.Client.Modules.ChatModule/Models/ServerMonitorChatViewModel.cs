@@ -1,20 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Input;
-using Arma3BE.Client.Infrastructure.Commands;
-using Arma3BE.Client.Modules.MainModule.Boxes;
-using Arma3BE.Client.Modules.MainModule.Helpers;
+﻿using Arma3BE.Client.Infrastructure.Commands;
+using Arma3BE.Client.Infrastructure.Models;
+using Arma3BE.Client.Modules.ChatModule.Boxes;
+using Arma3BE.Client.Modules.ChatModule.Helpers;
 using Arma3BE.Server;
 using Arma3BE.Server.Abstract;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.Tools;
-using Arma3BE.Client.Infrastructure.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Input;
+using System.Windows.Media;
 
-namespace Arma3BE.Client.Modules.MainModule.Models
+namespace Arma3BE.Client.Modules.ChatModule.Models
 {
-    public class ServerMonitorChatViewModel : ViewModelBase
+    public class ServerMonitorChatViewModel : ViewModelBase, IServerMonitorChatViewModel
     {
         private readonly IBEServer _beServer;
         private readonly ChatHelper _chatHelper;
@@ -40,9 +41,9 @@ namespace Arma3BE.Client.Modules.MainModule.Models
             _beServer.RConAdminLog += _beServer_PlayerLog;
             _beServer.BanLog += _beServer_PlayerLog;
             _beServer.PlayerHandler += _beServer_PlayerHandler;
-            
+
             var global = new Player(-1, null, 0, 0, null, "GLOBAL", Player.PlayerState.Ingame);
-            Players = new List<Player> { global }; 
+            Players = new List<Player> { global };
             SelectedPlayer = global;
 
             ShowHistoryCommand = new ActionCommand(() =>
@@ -60,7 +61,7 @@ namespace Arma3BE.Client.Modules.MainModule.Models
             var newItems = new List<Player>();
             var global = new Player(-1, null, 0, 0, null, "GLOBAL", Player.PlayerState.Ingame);
             newItems.Add(global);
-            newItems.AddRange(e.Data.OrderBy(x=>x.Name));
+            newItems.AddRange(e.Data.OrderBy(x => x.Name));
 
             var selected = SelectedPlayer;
 
@@ -180,6 +181,42 @@ namespace Arma3BE.Client.Modules.MainModule.Models
         protected virtual void OnLogMessageEventHandler(LogMessage e)
         {
             LogMessageEventHandler?.Invoke(this, new ServerMonitorLogViewModelEventArgs(e));
+        }
+
+        public static Color GetMessageColor(ChatMessage message)
+        {
+            var type = message.Type;
+
+            var color = Colors.Black;
+
+            switch (type)
+            {
+                case ChatMessage.MessageType.Command:
+                    color = Color.FromRgb(212, 169, 24);
+                    break;
+                case ChatMessage.MessageType.Direct:
+                    color = Color.FromRgb(146, 140, 150);
+                    break;
+                case ChatMessage.MessageType.Global:
+                    color = Color.FromRgb(80, 112, 115);
+                    break;
+                case ChatMessage.MessageType.Group:
+                    color = Color.FromRgb(156, 204, 118);
+                    break;
+                case ChatMessage.MessageType.RCon:
+                    color = Color.FromRgb(252, 31, 23);
+                    break;
+                case ChatMessage.MessageType.Side:
+                    color = Color.FromRgb(25, 181, 209);
+                    break;
+                case ChatMessage.MessageType.Vehicle:
+                    color = Color.FromRgb(155, 115, 0);
+                    break;
+                default:
+                    break;
+            }
+
+            return color;
         }
     }
 

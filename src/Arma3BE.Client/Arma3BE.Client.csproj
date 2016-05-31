@@ -198,6 +198,10 @@
       <Project>{b9350497-d13c-4a2b-b4f9-51c53d28a55a}</Project>
       <Name>Arma3BE.Client.Modules.BanModule</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Modules.ChatModule\Arma3BE.Client.Modules.ChatModule.csproj">
+      <Project>{49e36c5f-4a81-4338-8a34-c0e52fcfa5dc}</Project>
+      <Name>Arma3BE.Client.Modules.ChatModule</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Arma3BE.Client.Modules.MainModule\Arma3BE.Client.Modules.MainModule.csproj">
       <Project>{58dbdf91-7ad0-4780-a3ef-0fa5c39e2869}</Project>
       <Name>Arma3BE.Client.Modules.MainModule</Name>

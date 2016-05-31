@@ -1,13 +1,12 @@
-﻿using System.ComponentModel;
+﻿using Arma3BE.Client.Modules.ChatModule.Models;
+using Arma3BE.Server.Models;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
-using Arma3BE.Client.Modules.MainModule.Models;
-using Arma3BE.Client.Modules.MainModule.ViewModel;
-using Arma3BE.Server.Models;
 
-namespace Arma3BE.Client.Modules.MainModule.Boxes
+namespace Arma3BE.Client.Modules.ChatModule.Boxes
 {
     /// <summary>
     ///     Interaction logic for ChatHistory.xaml
@@ -41,10 +40,9 @@ namespace Arma3BE.Client.Modules.MainModule.Boxes
 
             foreach (var chatLog in _model.Log)
             {
-                var mes = new ChatMessage {Date = chatLog.Date, Message = chatLog.Text};
+                var mes = new ChatMessage { Date = chatLog.Date, Message = chatLog.Text };
                 AppendText(p, ChatScrollViewer, mes, chatLog.ServerName);
             }
-
 
             msgBox.Document.Blocks.Add(p);
         }
@@ -53,9 +51,9 @@ namespace Arma3BE.Client.Modules.MainModule.Boxes
         {
             var text = string.Format("[{0}] [ {1:yyyy-MM-dd HH:mm:ss} ]  {2}\n", servername, message.Date,
                 message.Message);
-            var color = ServerMonitorModel.GetMessageColor(message);
+            var color = ServerMonitorChatViewModel.GetMessageColor(message);
             var brush = new SolidColorBrush(color);
-            var span = new Span {Foreground = brush};
+            var span = new Span { Foreground = brush };
 
             if (message.Type != ChatMessage.MessageType.RCon && message.IsImportantMessage)
             {

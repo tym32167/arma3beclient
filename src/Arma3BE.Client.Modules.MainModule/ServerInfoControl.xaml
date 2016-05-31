@@ -6,7 +6,6 @@
              xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:grids="clr-namespace:Arma3BE.Client.Modules.MainModule.Grids"
-             xmlns:chat="clr-namespace:Arma3BE.Client.Modules.MainModule.Chat"
              xmlns:converters="clr-namespace:Arma3BE.Client.Infrastructure.Converters;assembly=Arma3BE.Client.Infrastructure"
              mc:Ignorable="d">
 
@@ -82,10 +81,12 @@
         <GridSplitter Grid.Row="0" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="5" />
 
 
-        <chat:ChatControl Grid.Row="0" Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-                          DataContext="{Binding ChatViewModel}" />
+        <!--<chat:ChatControl Grid.Row="0" Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                          DataContext="{Binding ChatViewModel}" />-->
 
-        <StatusBar Grid.Row="1" Grid.ColumnSpan="3" Height="20">
+            <ContentControl Content="{Binding ChatControl}" Grid.Row="0" Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></ContentControl>
+
+            <StatusBar Grid.Row="1" Grid.ColumnSpan="3" Height="20">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Connected" Foreground="DarkGreen"
                            Visibility="{Binding Connected, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />

@@ -7,7 +7,6 @@ using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.MainModule.Models;
 using Arma3BE.Server;
 using Arma3BE.Server.Abstract;
-using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.ModelCompact;
 using Microsoft.Practices.Unity;
@@ -15,7 +14,6 @@ using Prism.Events;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace Arma3BE.Client.Modules.MainModule.ViewModel
 {
@@ -38,6 +36,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 
             BanControl = new ContentControl();
             OnlinePlayersControl = new ContentControl();
+            ChatControl = new ContentControl();
 
             Task.Factory.StartNew(() => InitModel(ipService, container, console))
                 .ContinueWith(t => IsBusy = false);
@@ -125,15 +124,21 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
                     container.Resolve<PlayerListModelView>(new ParameterOverride("beServer", _beServer));
             }
 
-            ChatViewModel =
-                container.Resolve<ServerMonitorChatViewModel>(new ParameterOverride("serverId", CurrentServer.Id),
+            var chatViewModel =
+                container.Resolve<IServerMonitorChatViewModel>(new ParameterOverride("serverId", CurrentServer.Id),
                     new ParameterOverride("beServer", _beServer));
 
-            OnPropertyChanged("AdminsViewModel");
-            OnPropertyChanged("ManageServerViewModel");
-            OnPropertyChanged("PlayerListModelView");
-            OnPropertyChanged("ChatViewModel");
-            OnPropertyChanged("SteamQueryViewModel");
+            _eventAggregator.GetEvent<CreateViewEvent<IServerMonitorChatViewModel>>()
+                  .Publish(new CreateViewModel<IServerMonitorChatViewModel>((ContentControl)ChatControl, chatViewModel));
+
+            OnPropertyChanged(nameof(AdminsViewModel));
+            OnPropertyChanged(nameof(ManageServerViewModel));
+            OnPropertyChanged(nameof(PlayerListModelView));
+            OnPropertyChanged(nameof(SteamQueryViewModel);
+
+            OnPropertyChanged(nameof(BanControl));
+            OnPropertyChanged(nameof(OnlinePlayersControl));
+            OnPropertyChanged(nameof(ChatControl));
 
             Connect();
         }
@@ -142,45 +147,10 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 
         public bool Connected => _beServer?.Connected ?? false;
 
-        public static Color GetMessageColor(ChatMessage message)
-        {
-            var type = message.Type;
-
-            var color = Colors.Black;
-
-            switch (type)
-            {
-                case ChatMessage.MessageType.Command:
-                    color = Color.FromRgb(212, 169, 24);
-                    break;
-                case ChatMessage.MessageType.Direct:
-                    color = Color.FromRgb(146, 140, 150);
-                    break;
-                case ChatMessage.MessageType.Global:
-                    color = Color.FromRgb(80, 112, 115);
-                    break;
-                case ChatMessage.MessageType.Group:
-                    color = Color.FromRgb(156, 204, 118);
-                    break;
-                case ChatMessage.MessageType.RCon:
-                    color = Color.FromRgb(252, 31, 23);
-                    break;
-                case ChatMessage.MessageType.Side:
-                    color = Color.FromRgb(25, 181, 209);
-                    break;
-                case ChatMessage.MessageType.Vehicle:
-                    color = Color.FromRgb(155, 115, 0);
-                    break;
-                default:
-                    break;
-            }
-
-            return color;
-        }
 
         private void BeServerDisconnectHandler(object sender, EventArgs e)
         {
-            OnPropertyChanged("Connected");
+            OnPropertyChanged(nameof(Connected));
         }
 
         private void BeServerConnectHandler(object sender, EventArgs e)
@@ -194,7 +164,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
                 _beServer.SendCommand(CommandType.Bans);
             }
 
-            OnPropertyChanged("Connected");
+            OnPropertyChanged(nameof(Connected));
         }
 
         public void Connect()
@@ -226,12 +196,13 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 
 
         //public IServerMonitorBansViewModel BansViewModel { get; set; }
+        public object ChatControl { get; set; }
         public object BanControl { get; set; }
         public object OnlinePlayersControl { get; set; }
 
         public ServerMonitorAdminsViewModel AdminsViewModel { get; set; }
 
-        public ServerMonitorChatViewModel ChatViewModel { get; set; }
+        //public ServerMonitorChatViewModel ChatViewModel { get; set; }
         public ServerMonitorManageServerViewModel ManageServerViewModel { get; set; }
 
         public PlayerListModelView PlayerListModelView { get; set; }
