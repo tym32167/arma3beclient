@@ -1,5 +1,4 @@
 ﻿using Arma3BE.Client.Infrastructure;
-using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Client.Infrastructure.Contracts;
 using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Events.Models;
@@ -37,6 +36,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             BanControl = new ContentControl();
             OnlinePlayersControl = new ContentControl();
             ChatControl = new ContentControl();
+            AdminsControl = new ContentControl();
 
             Task.Factory.StartNew(() => InitModel(ipService, container, console))
                 .ContinueWith(t => IsBusy = false);
@@ -60,12 +60,6 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             _beServer = container.Resolve<BEServer>(new ParameterOverride("host", host),
                 new ParameterOverride("port", CurrentServer.Port),
                 new ParameterOverride("password", CurrentServer.Password));
-
-
-            if (!console)
-            {
-                _beServer.AdminHandler += (s, e) => AdminsViewModel.SetData(e.Data);
-            }
 
             _beServer.ConnectHandler += BeServerConnectHandler;
             _beServer.DisconnectHandler += BeServerDisconnectHandler;
@@ -110,10 +104,23 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
                     .Publish(new CreateViewModel<IServerMonitorBansViewModel>((ContentControl)BanControl, bansViewModel));
 
 
-                AdminsViewModel =
-                    container.Resolve<ServerMonitorAdminsViewModel>(new ParameterOverride("serverInfo", CurrentServer),
-                        new ParameterOverride("refreshCommand",
-                            new ActionCommand(() => _beServer.SendCommand(CommandType.Admins))));
+
+
+
+                var adminsViewModel =
+                   container.Resolve<IServerMonitorAdminsViewModel>(
+                       new ParameterOverride("serverInfoId", CurrentServer.Id),
+                       new ParameterOverride("beServer", _beServer));
+
+
+                _eventAggregator.GetEvent<CreateViewEvent<IServerMonitorAdminsViewModel>>()
+                    .Publish(new CreateViewModel<IServerMonitorAdminsViewModel>((ContentControl)AdminsControl, adminsViewModel));
+
+
+                //AdminsViewModel =
+                //    container.Resolve<ServerMonitorAdminsViewModel>(new ParameterOverride("serverInfo", CurrentServer),
+                //        new ParameterOverride("refreshCommand",
+                //            new ActionCommand(() => _beServer.SendCommand(CommandType.Admins))));
 
                 ManageServerViewModel =
                     container.Resolve<ServerMonitorManageServerViewModel>(
@@ -131,7 +138,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             _eventAggregator.GetEvent<CreateViewEvent<IServerMonitorChatViewModel>>()
                   .Publish(new CreateViewModel<IServerMonitorChatViewModel>((ContentControl)ChatControl, chatViewModel));
 
-            OnPropertyChanged(nameof(AdminsViewModel));
+            //OnPropertyChanged(nameof(AdminsViewModel));
             OnPropertyChanged(nameof(ManageServerViewModel));
             OnPropertyChanged(nameof(PlayerListModelView));
             OnPropertyChanged(nameof(SteamQueryViewModel));
@@ -139,6 +146,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             OnPropertyChanged(nameof(BanControl));
             OnPropertyChanged(nameof(OnlinePlayersControl));
             OnPropertyChanged(nameof(ChatControl));
+            OnPropertyChanged(nameof(AdminsControl));
 
             Connect();
         }
@@ -198,9 +206,10 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
         //public IServerMonitorBansViewModel BansViewModel { get; set; }
         public object ChatControl { get; set; }
         public object BanControl { get; set; }
+        public object AdminsControl { get; set; }
         public object OnlinePlayersControl { get; set; }
 
-        public ServerMonitorAdminsViewModel AdminsViewModel { get; set; }
+        //public ServerMonitorAdminsViewModel AdminsViewModel { get; set; }
 
         //public ServerMonitorChatViewModel ChatViewModel { get; set; }
         public ServerMonitorManageServerViewModel ManageServerViewModel { get; set; }

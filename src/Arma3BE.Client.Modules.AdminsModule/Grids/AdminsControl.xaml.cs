@@ -1,8 +1,8 @@
-﻿using System.Windows.Controls;
-using Arma3BE.Client.Infrastructure.Extensions;
+﻿using Arma3BE.Client.Infrastructure.Extensions;
 using Arma3BE.Server.Models;
+using System.Windows.Controls;
 
-namespace Arma3BE.Client.Modules.MainModule.Grids
+namespace Arma3BE.Client.Modules.AdminsModule.Grids
 {
     /// <summary>
     ///     Interaction logic for AdminsControl.xaml

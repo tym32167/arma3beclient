@@ -50,7 +50,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -193,6 +193,10 @@
     <ProjectReference Include="..\Arma3BE.Client.Infrastructure\Arma3BE.Client.Infrastructure.csproj">
       <Project>{b58670e5-011f-4318-964e-35c8b63870a5}</Project>
       <Name>Arma3BE.Client.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Modules.AdminsModule\Arma3BE.Client.Modules.AdminsModule.csproj">
+      <Project>{50e80fcc-87bd-4982-901e-38fd22482d02}</Project>
+      <Name>Arma3BE.Client.Modules.AdminsModule</Name>
     </ProjectReference>
     <ProjectReference Include="..\Arma3BE.Client.Modules.BanModule\Arma3BE.Client.Modules.BanModule.csproj">
       <Project>{b9350497-d13c-4a2b-b4f9-51c53d28a55a}</Project>

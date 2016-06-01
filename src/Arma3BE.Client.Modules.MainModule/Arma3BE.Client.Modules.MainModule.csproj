@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -149,9 +149,6 @@
       <DependentUpon>PlayerViewWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\IPlayerViewService.cs" />
-    <Compile Include="Grids\AdminsControl.xaml.cs">
-      <DependentUpon>AdminsControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Grids\ManageServer.xaml.cs">
       <DependentUpon>ManageServer.xaml</DependentUpon>
     </Compile>
@@ -161,7 +158,6 @@
     <Compile Include="Grids\SteamQuery.xaml.cs">
       <DependentUpon>SteamQuery.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\AdminHelper.cs" />
     <Compile Include="MainModuleInit.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -169,7 +165,6 @@
     <Compile Include="Models\Export\PlayerXML.cs" />
     <Compile Include="Models\PlayerView.cs" />
     <Compile Include="Models\PlayerViewModel.cs" />
-    <Compile Include="Models\ServerMonitorAdminsViewModel.cs" />
     <Compile Include="Models\ServerMonitorManageServerViewModel.cs" />
     <Compile Include="Models\ServerMonitorSteamQueryViewModel.cs" />
     <Compile Include="Options.xaml.cs">
@@ -190,10 +185,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Boxes\PlayerViewWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Grids\AdminsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

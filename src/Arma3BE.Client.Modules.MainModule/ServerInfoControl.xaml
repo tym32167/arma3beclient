@@ -61,7 +61,8 @@
                 </TabItem>
 
                 <TabItem Header="Admins">
-                <grids:AdminsControl DataContext="{Binding AdminsViewModel}" />
+                    <ContentControl Content="{Binding AdminsControl}"></ContentControl>
+                <!--<grids:AdminsControl DataContext="{Binding AdminsViewModel}" />-->
             </TabItem>
 
             <TabItem Header="Players">
