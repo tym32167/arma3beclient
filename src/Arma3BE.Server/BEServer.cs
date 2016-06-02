@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using Arma3BE.Server.Abstract;
+﻿using Arma3BE.Server.Abstract;
 using Arma3BE.Server.Messaging;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Core;
 using Arma3BEClient.Common.Logging;
 using BattleNET;
+using System;
+using System.Collections.Generic;
+using System.Net;
 
 namespace Arma3BE.Server
 {
@@ -40,10 +40,10 @@ namespace Arma3BE.Server
             get { return _battlEyeServer != null && _battlEyeServer.Connected; }
         }
 
-        public event EventHandler<UpdateClientEventArgs<IEnumerable<Player>>> PlayerHandler;
-        public event EventHandler<UpdateClientEventArgs<IEnumerable<Ban>>> BanHandler;
-        public event EventHandler<UpdateClientEventArgs<IEnumerable<Admin>>> AdminHandler;
-        public event EventHandler<UpdateClientEventArgs<IEnumerable<Mission>>> MissionHandler;
+        public event EventHandler<BEClientEventArgs<IEnumerable<Player>>> PlayerHandler;
+        public event EventHandler<BEClientEventArgs<IEnumerable<Ban>>> BanHandler;
+        public event EventHandler<BEClientEventArgs<IEnumerable<Admin>>> AdminHandler;
+        public event EventHandler<BEClientEventArgs<IEnumerable<Mission>>> MissionHandler;
 
         public event EventHandler<ChatMessage> ChatMessageHandler;
 
@@ -176,7 +176,7 @@ namespace Arma3BE.Server
         private void OnMissionHandler(IEnumerable<Mission> e)
         {
             var handler = MissionHandler;
-            handler?.Invoke(this, new UpdateClientEventArgs<IEnumerable<Mission>>(e));
+            handler?.Invoke(this, new BEClientEventArgs<IEnumerable<Mission>>(e));
         }
 
         private void OnConnectingHandler()
@@ -206,7 +206,7 @@ namespace Arma3BE.Server
         private void OnAdminHandler(IEnumerable<Admin> e)
         {
             var handler = AdminHandler;
-            handler?.Invoke(this, new UpdateClientEventArgs<IEnumerable<Admin>>(e));
+            handler?.Invoke(this, new BEClientEventArgs<IEnumerable<Admin>>(e));
         }
 
         private void OnChatMessageHandler(ChatMessage e)
@@ -219,7 +219,7 @@ namespace Arma3BE.Server
         private void OnBanHandler(IEnumerable<Ban> e)
         {
             var handler = BanHandler;
-            handler?.Invoke(this, new UpdateClientEventArgs<IEnumerable<Ban>>(e));
+            handler?.Invoke(this, new BEClientEventArgs<IEnumerable<Ban>>(e));
         }
 
         private void OnDisconnectHandler()
@@ -239,7 +239,7 @@ namespace Arma3BE.Server
         private void OnPlayerHandler(IEnumerable<Player> e)
         {
             var handler = PlayerHandler;
-            handler?.Invoke(this, new UpdateClientEventArgs<IEnumerable<Player>>(e));
+            handler?.Invoke(this, new BEClientEventArgs<IEnumerable<Player>>(e));
         }
 
         private void BattlEyeServerBattlEyeDisconnected(BattlEyeDisconnectEventArgs args)
@@ -398,9 +398,9 @@ namespace Arma3BE.Server
     }
 
 
-    public class UpdateClientEventArgs<T> : EventArgs
+    public class BEClientEventArgs<T> : EventArgs
     {
-        public UpdateClientEventArgs(T data)
+        public BEClientEventArgs(T data)
         {
             Data = data;
         }

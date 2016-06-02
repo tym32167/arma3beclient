@@ -8,10 +8,10 @@ namespace Arma3BE.Server.Abstract
     {
         bool Connected { get; }
         //bool Disposed { get; }
-        event EventHandler<UpdateClientEventArgs<IEnumerable<Player>>> PlayerHandler;
-        event EventHandler<UpdateClientEventArgs<IEnumerable<Ban>>> BanHandler;
-        event EventHandler<UpdateClientEventArgs<IEnumerable<Admin>>> AdminHandler;
-        event EventHandler<UpdateClientEventArgs<IEnumerable<Mission>>> MissionHandler;
+        event EventHandler<BEClientEventArgs<IEnumerable<Player>>> PlayerHandler;
+        event EventHandler<BEClientEventArgs<IEnumerable<Ban>>> BanHandler;
+        event EventHandler<BEClientEventArgs<IEnumerable<Admin>>> AdminHandler;
+        event EventHandler<BEClientEventArgs<IEnumerable<Mission>>> MissionHandler;
         event EventHandler<ChatMessage> ChatMessageHandler;
         event EventHandler<LogMessage> RConAdminLog;
         event EventHandler<LogMessage> PlayerLog;

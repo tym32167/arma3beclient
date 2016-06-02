@@ -56,7 +56,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             });
         }
 
-        private void _beServer_PlayerHandler(object sender, UpdateClientEventArgs<System.Collections.Generic.IEnumerable<Player>> e)
+        private void _beServer_PlayerHandler(object sender, BEClientEventArgs<System.Collections.Generic.IEnumerable<Player>> e)
         {
             var newItems = new List<Player>();
             var global = new Player(-1, null, 0, 0, null, "GLOBAL", Player.PlayerState.Ingame);

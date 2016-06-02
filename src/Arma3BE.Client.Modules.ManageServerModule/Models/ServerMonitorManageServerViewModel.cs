@@ -122,7 +122,7 @@ namespace Arma3BE.Client.Modules.ManageServerModule.Models
         public ActionCommand LoadScriptsCommand { get; set; }
         public ActionCommand LoadEventsCommand { get; set; }
 
-        private void BeServerOnMissionHandler(object sender, UpdateClientEventArgs<IEnumerable<Mission>> e)
+        private void BeServerOnMissionHandler(object sender, BEClientEventArgs<IEnumerable<Mission>> e)
         {
             Missions = e.Data;
         }
