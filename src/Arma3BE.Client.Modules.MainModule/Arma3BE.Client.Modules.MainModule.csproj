@@ -145,15 +145,11 @@
     <Compile Include="About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Grids\ManageServer.xaml.cs">
-      <DependentUpon>ManageServer.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MainModuleInit.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\Export\PlayerXML.cs" />
-    <Compile Include="Models\ServerMonitorManageServerViewModel.cs" />
     <Compile Include="Options.xaml.cs">
       <DependentUpon>Options.xaml</DependentUpon>
     </Compile>
@@ -167,10 +163,6 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="About.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Grids\ManageServer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

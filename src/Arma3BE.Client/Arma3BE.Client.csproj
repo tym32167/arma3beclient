@@ -210,6 +210,10 @@
       <Project>{58dbdf91-7ad0-4780-a3ef-0fa5c39e2869}</Project>
       <Name>Arma3BE.Client.Modules.MainModule</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Modules.ManageServerModule\Arma3BE.Client.Modules.ManageServerModule.csproj">
+      <Project>{da176f41-7db9-4678-868b-c585c95cb48e}</Project>
+      <Name>Arma3BE.Client.Modules.ManageServerModule</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Arma3BE.Client.Modules.NetModule\Arma3BE.Client.Modules.NetModule.csproj">
       <Project>{e7c5ab59-5824-40ea-ae0c-f8c75b6c919c}</Project>
       <Name>Arma3BE.Client.Modules.NetModule</Name>

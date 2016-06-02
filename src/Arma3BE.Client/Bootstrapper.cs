@@ -2,6 +2,7 @@
 using Arma3BE.Client.Modules.BanModule;
 using Arma3BE.Client.Modules.ChatModule;
 using Arma3BE.Client.Modules.MainModule;
+using Arma3BE.Client.Modules.ManageServerModule;
 using Arma3BE.Client.Modules.NetModule;
 using Arma3BE.Client.Modules.OnlinePlayersModule;
 using Arma3BE.Client.Modules.PlayersModule;
@@ -42,6 +43,7 @@ namespace Arma3BEClient
             AddModule(typeof(BanModuleInit));
             AddModule(typeof(AdminsModuleInit));
             AddModule(typeof(ChatModuleInit));
+            AddModule(typeof(ManageServerModuleInit));
             AddModule(typeof(OnlinePlayersModuleInit));
             AddModule(typeof(SteamModuleInit));
             AddModule(typeof(MainModuleInit));

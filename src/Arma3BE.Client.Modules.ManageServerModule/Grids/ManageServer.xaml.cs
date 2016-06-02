@@ -1,7 +1,7 @@
-﻿using System.Windows.Controls;
-using Arma3BE.Client.Modules.MainModule.Models;
+﻿using Arma3BE.Client.Modules.ManageServerModule.Models;
+using System.Windows.Controls;
 
-namespace Arma3BE.Client.Modules.MainModule.Grids
+namespace Arma3BE.Client.Modules.ManageServerModule.Grids
 {
     /// <summary>
     ///     Interaction logic for ManageServer.xaml

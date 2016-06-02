@@ -3,7 +3,6 @@ using Arma3BE.Client.Infrastructure.Contracts;
 using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Events.Models;
 using Arma3BE.Client.Infrastructure.Models;
-using Arma3BE.Client.Modules.MainModule.Models;
 using Arma3BE.Server;
 using Arma3BE.Server.Abstract;
 using Arma3BEClient.Common.Logging;
@@ -39,6 +38,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             ChatControl = new ContentControl();
             AdminsControl = new ContentControl();
             SteamControl = new ContentControl();
+            ManageServerControl = new ContentControl();
 
             Task.Factory.StartNew(() => InitModel(ipService, container, console))
                 .ContinueWith(t => IsBusy = false);
@@ -127,10 +127,14 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
                 //        new ParameterOverride("refreshCommand",
                 //            new ActionCommand(() => _beServer.SendCommand(CommandType.Admins))));
 
-                ManageServerViewModel =
-                    container.Resolve<ServerMonitorManageServerViewModel>(
+                var manageServerViewModel =
+                    container.Resolve<IServerMonitorManageServerViewModel>(
                         new ParameterOverride("serverId", CurrentServer.Id),
                         new ParameterOverride("beServer", _beServer));
+
+                _eventAggregator.GetEvent<CreateViewEvent<IServerMonitorManageServerViewModel>>()
+                   .Publish(new CreateViewModel<IServerMonitorManageServerViewModel>((ContentControl)ManageServerControl, manageServerViewModel));
+
 
                 var playerListModelView =
                     container.Resolve<IPlayerListModelView>(new ParameterOverride("beServer", _beServer));
@@ -147,7 +151,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
                   .Publish(new CreateViewModel<IServerMonitorChatViewModel>((ContentControl)ChatControl, chatViewModel));
 
             //OnPropertyChanged(nameof(AdminsViewModel));
-            OnPropertyChanged(nameof(ManageServerViewModel));
+            //OnPropertyChanged(nameof(ManageServerViewModel));
             //OnPropertyChanged(nameof(PlayerListModelView));
             //OnPropertyChanged(nameof(SteamQueryViewModel));
 
@@ -157,7 +161,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             OnPropertyChanged(nameof(ChatControl));
             OnPropertyChanged(nameof(AdminsControl));
             OnPropertyChanged(nameof(SteamControl));
-
+            OnPropertyChanged(nameof(ManageServerControl));
             Connect();
         }
 
@@ -220,11 +224,12 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
         public object OnlinePlayersControl { get; set; }
         public object PlayersControl { get; set; }
         public object SteamControl { get; set; }
+        public object ManageServerControl { get; set; }
 
         //public ServerMonitorAdminsViewModel AdminsViewModel { get; set; }
 
         //public ServerMonitorChatViewModel ChatViewModel { get; set; }
-        public ServerMonitorManageServerViewModel ManageServerViewModel { get; set; }
+        // public ServerMonitorManageServerViewModel ManageServerViewModel { get; set; }
 
         //public PlayerListModelView PlayerListModelView { get; set; }
 

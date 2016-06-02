@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:grids="clr-namespace:Arma3BE.Client.Modules.MainModule.Grids"
+             
              xmlns:converters="clr-namespace:Arma3BE.Client.Infrastructure.Converters;assembly=Arma3BE.Client.Infrastructure"
              mc:Ignorable="d">
 
@@ -71,8 +71,8 @@
                 </TabItem>
 
             <TabItem Header="Manage Server">
-                <grids:ManageServer DataContext="{Binding ManageServerViewModel}" />
-            </TabItem>
+                    <ContentControl Content="{Binding ManageServerControl}"></ContentControl>
+                </TabItem>
 
             <TabItem Header="Steam Query">
                 <!--<grids:SteamQuery DataContext="{Binding SteamQueryViewModel}" />-->

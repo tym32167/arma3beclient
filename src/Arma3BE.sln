@@ -57,6 +57,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BE.Client.Modules.Play
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BE.Client.Modules.SteamModule", "Arma3BE.Client.Modules.SteamModule\Arma3BE.Client.Modules.SteamModule.csproj", "{6CE098A8-DFF1-4C66-AD16-909903945E2B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BE.Client.Modules.ManageServerModule", "Arma3BE.Client.Modules.ManageServerModule\Arma3BE.Client.Modules.ManageServerModule.csproj", "{DA176F41-7DB9-4678-868B-C585C95CB48E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -131,6 +133,10 @@ Global
 		{6CE098A8-DFF1-4C66-AD16-909903945E2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CE098A8-DFF1-4C66-AD16-909903945E2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CE098A8-DFF1-4C66-AD16-909903945E2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA176F41-7DB9-4678-868B-C585C95CB48E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA176F41-7DB9-4678-868B-C585C95CB48E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA176F41-7DB9-4678-868B-C585C95CB48E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA176F41-7DB9-4678-868B-C585C95CB48E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -153,5 +159,6 @@ Global
 		{50E80FCC-87BD-4982-901E-38FD22482D02} = {0A6E26FC-847F-48AF-A744-DD901EC34618}
 		{CD6C99BE-B22B-4B78-AE37-A7561E1FF837} = {0A6E26FC-847F-48AF-A744-DD901EC34618}
 		{6CE098A8-DFF1-4C66-AD16-909903945E2B} = {0A6E26FC-847F-48AF-A744-DD901EC34618}
+		{DA176F41-7DB9-4678-868B-C585C95CB48E} = {0A6E26FC-847F-48AF-A744-DD901EC34618}
 	EndGlobalSection
 EndGlobal

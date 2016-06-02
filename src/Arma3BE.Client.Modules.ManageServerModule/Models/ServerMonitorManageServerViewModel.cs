@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows;
-using Arma3BE.Client.Infrastructure.Commands;
+﻿using Arma3BE.Client.Infrastructure.Commands;
+using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Server;
 using Arma3BE.Server.Abstract;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Logging;
-using Arma3BE.Client.Infrastructure.Models;
+using System;
+using System.Collections.Generic;
+using System.Windows;
 
-namespace Arma3BE.Client.Modules.MainModule.Models
+namespace Arma3BE.Client.Modules.ManageServerModule.Models
 {
-    public class ServerMonitorManageServerViewModel : ViewModelBase
+    public class ServerMonitorManageServerViewModel : ViewModelBase, IServerMonitorManageServerViewModel
     {
         private readonly IBEServer _beServer;
         private readonly ILog _log;
