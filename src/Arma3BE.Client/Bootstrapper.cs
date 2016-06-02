@@ -1,5 +1,6 @@
 ﻿using Arma3BE.Client.Modules.AdminsModule;
 using Arma3BE.Client.Modules.BanModule;
+using Arma3BE.Client.Modules.BEServerModule;
 using Arma3BE.Client.Modules.ChatModule;
 using Arma3BE.Client.Modules.MainModule;
 using Arma3BE.Client.Modules.ManageServerModule;
@@ -39,6 +40,7 @@ namespace Arma3BEClient
             base.ConfigureModuleCatalog();
 
             AddModule(typeof(NetModuleInit));
+            AddModule(typeof(BEServerModuleInit));
             AddModule(typeof(PlayersModuleInit));
             AddModule(typeof(BanModuleInit));
             AddModule(typeof(AdminsModuleInit));
