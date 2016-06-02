@@ -1,8 +1,8 @@
-﻿using Arma3BE.Client.Modules.MainModule.Boxes;
-using Arma3BE.Client.Modules.MainModule.Models;
+﻿using Arma3BE.Client.Modules.PlayersModule.Boxes;
+using Arma3BE.Client.Modules.PlayersModule.Models;
 using Microsoft.Practices.Unity;
 
-namespace Arma3BE.Client.Modules.MainModule.Dialogs
+namespace Arma3BE.Client.Modules.PlayersModule.Dialogs
 {
     public interface IPlayerViewService
     {

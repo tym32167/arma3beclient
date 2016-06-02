@@ -1,4 +1,4 @@
-﻿<Window x:Class="Arma3BE.Client.Modules.MainModule.Boxes.PlayerViewWindow"
+﻿<Window x:Class="Arma3BE.Client.Modules.PlayersModule.Boxes.PlayerViewWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"

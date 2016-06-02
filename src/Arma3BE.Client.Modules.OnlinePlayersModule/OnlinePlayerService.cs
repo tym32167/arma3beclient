@@ -7,9 +7,9 @@ using System.Windows.Controls;
 
 namespace Arma3BE.Client.Modules.OnlinePlayersModule
 {
-    public class PlayerService
+    public class OnlinePlayerService
     {
-        public PlayerService(IEventAggregator eventAggregator)
+        public OnlinePlayerService(IEventAggregator eventAggregator)
         {
             eventAggregator.GetEvent<CreateViewEvent<IServerMonitorPlayerViewModel>>().Subscribe(e =>
             {

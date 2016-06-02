@@ -35,6 +35,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 
             BanControl = new ContentControl();
             OnlinePlayersControl = new ContentControl();
+            PlayersControl = new ContentControl();
             ChatControl = new ContentControl();
             AdminsControl = new ContentControl();
 
@@ -127,8 +128,11 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
                         new ParameterOverride("serverId", CurrentServer.Id),
                         new ParameterOverride("beServer", _beServer));
 
-                PlayerListModelView =
-                    container.Resolve<PlayerListModelView>(new ParameterOverride("beServer", _beServer));
+                var playerListModelView =
+                    container.Resolve<IPlayerListModelView>(new ParameterOverride("beServer", _beServer));
+
+                _eventAggregator.GetEvent<CreateViewEvent<IPlayerListModelView>>()
+                  .Publish(new CreateViewModel<IPlayerListModelView>((ContentControl)PlayersControl, playerListModelView));
             }
 
             var chatViewModel =
@@ -140,11 +144,12 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 
             //OnPropertyChanged(nameof(AdminsViewModel));
             OnPropertyChanged(nameof(ManageServerViewModel));
-            OnPropertyChanged(nameof(PlayerListModelView));
+            //OnPropertyChanged(nameof(PlayerListModelView));
             OnPropertyChanged(nameof(SteamQueryViewModel));
 
             OnPropertyChanged(nameof(BanControl));
             OnPropertyChanged(nameof(OnlinePlayersControl));
+            OnPropertyChanged(nameof(PlayersControl));
             OnPropertyChanged(nameof(ChatControl));
             OnPropertyChanged(nameof(AdminsControl));
 
@@ -208,13 +213,14 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
         public object BanControl { get; set; }
         public object AdminsControl { get; set; }
         public object OnlinePlayersControl { get; set; }
+        public object PlayersControl { get; set; }
 
         //public ServerMonitorAdminsViewModel AdminsViewModel { get; set; }
 
         //public ServerMonitorChatViewModel ChatViewModel { get; set; }
         public ServerMonitorManageServerViewModel ManageServerViewModel { get; set; }
 
-        public PlayerListModelView PlayerListModelView { get; set; }
+        //public PlayerListModelView PlayerListModelView { get; set; }
 
         public bool IsBusy
         {

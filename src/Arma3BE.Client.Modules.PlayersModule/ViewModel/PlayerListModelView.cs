@@ -2,7 +2,7 @@
 using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Events.Models;
 using Arma3BE.Client.Infrastructure.Models;
-using Arma3BE.Client.Modules.MainModule.Models;
+using Arma3BE.Client.Modules.PlayersModule.Models;
 using Arma3BE.Server.Abstract;
 using Arma3BEClient.Libs.Repositories;
 using Prism.Commands;
@@ -11,9 +11,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 
-namespace Arma3BE.Client.Modules.MainModule.ViewModel
+namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
 {
-    public class PlayerListModelView : ViewModelBase
+    public class PlayerListModelView : ViewModelBase, IPlayerListModelView
     {
         private readonly IBEServer _beServer;
         private readonly IEventAggregator _eventAggregator;

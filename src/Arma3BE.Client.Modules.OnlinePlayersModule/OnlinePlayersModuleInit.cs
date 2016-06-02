@@ -17,7 +17,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule
 
         public void Initialize()
         {
-            _container.RegisterInstance(new PlayerService(_container.Resolve<IEventAggregator>()));
+            _container.RegisterInstance(new OnlinePlayerService(_container.Resolve<IEventAggregator>()));
             _container.RegisterType<IServerMonitorPlayerViewModel, ServerMonitorPlayerViewModel>();
         }
 

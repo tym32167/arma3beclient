@@ -1,9 +1,9 @@
-﻿using Arma3BE.Client.Infrastructure.Extensions;
-using Arma3BE.Client.Modules.MainModule.Models;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows.Controls;
+using Arma3BE.Client.Infrastructure.Extensions;
+using Arma3BE.Client.Modules.PlayersModule.Models;
 
-namespace Arma3BE.Client.Modules.MainModule.Grids
+namespace Arma3BE.Client.Modules.PlayersModule.Grids
 {
     /// <summary>
     ///     Interaction logic for PlayersControl.xaml

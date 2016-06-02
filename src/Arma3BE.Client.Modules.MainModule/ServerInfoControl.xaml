@@ -66,8 +66,9 @@
             </TabItem>
 
             <TabItem Header="Players">
-                <grids:PlayersControl DataContext="{Binding PlayerListModelView}" />
-            </TabItem>
+                <!--<grids:PlayersControl DataContext="{Binding PlayerListModelView}" />-->
+                    <ContentControl Content="{Binding PlayersControl}"></ContentControl>
+                </TabItem>
 
             <TabItem Header="Manage Server">
                 <grids:ManageServer DataContext="{Binding ManageServerViewModel}" />

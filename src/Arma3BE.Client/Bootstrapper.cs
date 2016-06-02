@@ -4,6 +4,7 @@ using Arma3BE.Client.Modules.ChatModule;
 using Arma3BE.Client.Modules.MainModule;
 using Arma3BE.Client.Modules.NetModule;
 using Arma3BE.Client.Modules.OnlinePlayersModule;
+using Arma3BE.Client.Modules.PlayersModule;
 using Arma3BEClient.Common.Logging;
 using log4net.Config;
 using Microsoft.Practices.Unity;
@@ -27,8 +28,8 @@ namespace Arma3BEClient
 
             base.InitializeShell();
 
-            App.Current.MainWindow = (Window)Shell;
-            App.Current.MainWindow.Show();
+            Application.Current.MainWindow = (Window)Shell;
+            Application.Current.MainWindow.Show();
         }
 
         protected override void ConfigureModuleCatalog()
@@ -36,6 +37,7 @@ namespace Arma3BEClient
             base.ConfigureModuleCatalog();
 
             AddModule(typeof(NetModuleInit));
+            AddModule(typeof(PlayersModuleInit));
             AddModule(typeof(BanModuleInit));
             AddModule(typeof(AdminsModuleInit));
             AddModule(typeof(ChatModuleInit));

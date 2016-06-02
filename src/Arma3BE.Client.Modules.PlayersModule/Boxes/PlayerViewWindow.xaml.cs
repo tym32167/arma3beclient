@@ -1,9 +1,9 @@
 ﻿using Arma3BE.Client.Infrastructure.Extensions;
-using Arma3BE.Client.Modules.MainModule.Models;
+using Arma3BE.Client.Modules.PlayersModule.Models;
 using Arma3BEClient.Libs.ModelCompact;
 using System.Windows;
 
-namespace Arma3BE.Client.Modules.MainModule.Boxes
+namespace Arma3BE.Client.Modules.PlayersModule.Boxes
 {
     /// <summary>
     ///     Interaction logic for PlayerViewWindow.xaml

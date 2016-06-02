@@ -1,11 +1,11 @@
-﻿using Arma3BE.Client.Infrastructure;
+﻿using System.Windows.Input;
+using Arma3BE.Client.Infrastructure;
 using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
-using System.Windows.Input;
 
-namespace Arma3BE.Client.Modules.MainModule.Models
+namespace Arma3BE.Client.Modules.PlayersModule.Models
 {
     public class PlayerViewModel : ViewModelBase
     {

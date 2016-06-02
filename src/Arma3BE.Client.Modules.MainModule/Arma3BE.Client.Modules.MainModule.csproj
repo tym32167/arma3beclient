@@ -145,15 +145,8 @@
     <Compile Include="About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Boxes\PlayerViewWindow.xaml.cs">
-      <DependentUpon>PlayerViewWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\IPlayerViewService.cs" />
     <Compile Include="Grids\ManageServer.xaml.cs">
       <DependentUpon>ManageServer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Grids\PlayersControl.xaml.cs">
-      <DependentUpon>PlayersControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Grids\SteamQuery.xaml.cs">
       <DependentUpon>SteamQuery.xaml</DependentUpon>
@@ -163,8 +156,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\Export\PlayerXML.cs" />
-    <Compile Include="Models\PlayerView.cs" />
-    <Compile Include="Models\PlayerViewModel.cs" />
     <Compile Include="Models\ServerMonitorManageServerViewModel.cs" />
     <Compile Include="Models\ServerMonitorSteamQueryViewModel.cs" />
     <Compile Include="Options.xaml.cs">
@@ -176,7 +167,6 @@
     </Compile>
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\OptionsModel.cs" />
-    <Compile Include="ViewModel\PlayerListModelView.cs" />
     <Compile Include="ViewModel\ServerMonitorModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -184,15 +174,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Boxes\PlayerViewWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Grids\ManageServer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Grids\PlayersControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

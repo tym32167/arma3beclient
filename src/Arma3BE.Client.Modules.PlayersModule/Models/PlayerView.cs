@@ -1,7 +1,7 @@
 ﻿using System;
 using Arma3BEClient.Common.Attributes;
 
-namespace Arma3BE.Client.Modules.MainModule.Models
+namespace Arma3BE.Client.Modules.PlayersModule.Models
 {
     public class PlayerView
     {
