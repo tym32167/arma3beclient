@@ -108,6 +108,7 @@
     <Compile Include="Models\IServerMonitorBansViewModel.cs" />
     <Compile Include="Models\IServerMonitorChatViewModel.cs" />
     <Compile Include="Models\IServerMonitorPlayerViewModel.cs" />
+    <Compile Include="Models\IServerMonitorSteamQueryViewModel.cs" />
     <Compile Include="Models\ServerMonitorBaseViewModel.cs" />
     <Compile Include="Models\ViewModelBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

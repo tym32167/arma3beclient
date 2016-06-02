@@ -1,7 +1,7 @@
 ﻿using Arma3BE.Client.Infrastructure.Commands;
+using Arma3BE.Client.Infrastructure.Models;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Steam;
-using Arma3BE.Client.Infrastructure.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +9,9 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Arma3BE.Client.Modules.MainModule.Models
+namespace Arma3BE.Client.Modules.SteamModule.Models
 {
-    public class ServerMonitorSteamQueryViewModel : ViewModelBase
+    public class ServerMonitorSteamQueryViewModel : ViewModelBase, IServerMonitorSteamQueryViewModel
     {
         private readonly ILog _log;
 

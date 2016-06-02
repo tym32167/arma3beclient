@@ -5,6 +5,7 @@ using Arma3BE.Client.Modules.MainModule;
 using Arma3BE.Client.Modules.NetModule;
 using Arma3BE.Client.Modules.OnlinePlayersModule;
 using Arma3BE.Client.Modules.PlayersModule;
+using Arma3BE.Client.Modules.SteamModule;
 using Arma3BEClient.Common.Logging;
 using log4net.Config;
 using Microsoft.Practices.Unity;
@@ -42,6 +43,7 @@ namespace Arma3BEClient
             AddModule(typeof(AdminsModuleInit));
             AddModule(typeof(ChatModuleInit));
             AddModule(typeof(OnlinePlayersModuleInit));
+            AddModule(typeof(SteamModuleInit));
             AddModule(typeof(MainModuleInit));
         }
 

@@ -38,6 +38,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             PlayersControl = new ContentControl();
             ChatControl = new ContentControl();
             AdminsControl = new ContentControl();
+            SteamControl = new ContentControl();
 
             Task.Factory.StartNew(() => InitModel(ipService, container, console))
                 .ContinueWith(t => IsBusy = false);
@@ -54,9 +55,12 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
                 throw new Exception(message);
             }
 
-            SteamQueryViewModel =
-                container.Resolve<ServerMonitorSteamQueryViewModel>(new ParameterOverride("host", host),
+            var steamQueryViewModel =
+                container.Resolve<IServerMonitorSteamQueryViewModel>(new ParameterOverride("host", host),
                     new ParameterOverride("port", CurrentServer.Port));
+            _eventAggregator.GetEvent<CreateViewEvent<IServerMonitorSteamQueryViewModel>>()
+                  .Publish(new CreateViewModel<IServerMonitorSteamQueryViewModel>((ContentControl)SteamControl, steamQueryViewModel));
+
 
             _beServer = container.Resolve<BEServer>(new ParameterOverride("host", host),
                 new ParameterOverride("port", CurrentServer.Port),
@@ -145,13 +149,14 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             //OnPropertyChanged(nameof(AdminsViewModel));
             OnPropertyChanged(nameof(ManageServerViewModel));
             //OnPropertyChanged(nameof(PlayerListModelView));
-            OnPropertyChanged(nameof(SteamQueryViewModel));
+            //OnPropertyChanged(nameof(SteamQueryViewModel));
 
             OnPropertyChanged(nameof(BanControl));
             OnPropertyChanged(nameof(OnlinePlayersControl));
             OnPropertyChanged(nameof(PlayersControl));
             OnPropertyChanged(nameof(ChatControl));
             OnPropertyChanged(nameof(AdminsControl));
+            OnPropertyChanged(nameof(SteamControl));
 
             Connect();
         }
@@ -203,7 +208,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 
         #region ViewModels
 
-        public ServerMonitorSteamQueryViewModel SteamQueryViewModel { get; set; }
+        //public ServerMonitorSteamQueryViewModel SteamQueryViewModel { get; set; }
 
         //public ServerMonitorPlayerViewModel PlayersViewModel { get; set; }
 
@@ -214,6 +219,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
         public object AdminsControl { get; set; }
         public object OnlinePlayersControl { get; set; }
         public object PlayersControl { get; set; }
+        public object SteamControl { get; set; }
 
         //public ServerMonitorAdminsViewModel AdminsViewModel { get; set; }
 

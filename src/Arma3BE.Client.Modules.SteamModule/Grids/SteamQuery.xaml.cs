@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Arma3BE.Client.Modules.MainModule.Grids
+namespace Arma3BE.Client.Modules.SteamModule.Grids
 {
     /// <summary>
     ///     Interaction logic for SteamQuery.xaml
