@@ -1,6 +1,7 @@
 ﻿using Arma3BE.Client.Infrastructure;
 using Arma3BE.Client.Infrastructure.Contracts;
 using Arma3BE.Client.Infrastructure.Events;
+using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Client.Infrastructure.Events.Models;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Server;
@@ -65,6 +66,9 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             _beServer = container.Resolve<BEServer>(new ParameterOverride("host", host),
                 new ParameterOverride("port", CurrentServer.Port),
                 new ParameterOverride("password", CurrentServer.Password));
+
+
+            _eventAggregator.GetEvent<RunServerEvent>().Publish(CurrentServer);
 
             _beServer.ConnectHandler += BeServerConnectHandler;
             _beServer.DisconnectHandler += BeServerDisconnectHandler;

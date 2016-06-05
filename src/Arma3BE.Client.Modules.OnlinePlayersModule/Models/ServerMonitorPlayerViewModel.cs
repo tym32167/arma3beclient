@@ -1,5 +1,6 @@
 ﻿using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Client.Infrastructure.Events;
+using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Client.Infrastructure.Events.Models;
 using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Infrastructure.Models;
@@ -35,8 +36,16 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
             BanUserCommand = new DelegateCommand(ShowBanDialog, CanShowDialog);
             PlayerInfoCommand = new DelegateCommand(PlayerInfoDialog, CanShowDialog);
 
-            _beServer.PlayerHandler += (s, e) => base.SetData(e.Data);
+            //_beServer.PlayerHandler += (s, e) => base.SetData(e.Data);
             _beServer.AdminHandler += (s, e) => { _admins = e.Data ?? new Arma3BE.Server.Models.Admin[0]; };
+
+            _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Player>>>().Subscribe(e =>
+            {
+                if (e.ServerId == serverInfo.Id)
+                {
+                    base.SetData(e.Items);
+                }
+            });
         }
 
         private void ShowKickDialog()

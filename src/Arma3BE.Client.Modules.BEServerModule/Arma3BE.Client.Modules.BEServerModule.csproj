@@ -70,10 +70,29 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BEServerModuleInit.cs" />
+    <Compile Include="BEService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Arma3BE.Client.Infrastructure\Arma3BE.Client.Infrastructure.csproj">
+      <Project>{b58670e5-011f-4318-964e-35c8b63870a5}</Project>
+      <Name>Arma3BE.Client.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Libs\Arma3BE.Client.Libs.csproj">
+      <Project>{e5240a50-e944-4f50-a353-2e3c9e547447}</Project>
+      <Name>Arma3BE.Client.Libs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Common\Arma3BE.Common.csproj">
+      <Project>{d507e532-7de6-4028-9dbe-aa76c54cc92a}</Project>
+      <Name>Arma3BE.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Server\Arma3BE.Server.csproj">
+      <Project>{992fab3c-6505-41e4-a4d0-4d0657661695}</Project>
+      <Name>Arma3BE.Server</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -14,6 +14,7 @@ namespace Arma3BE.Client.Modules.BEServerModule
 
         public void Initialize()
         {
+            _container.RegisterInstance(_container.Resolve<BEService>());
         }
     }
 }
