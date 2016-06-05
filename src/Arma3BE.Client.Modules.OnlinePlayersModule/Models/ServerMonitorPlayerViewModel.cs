@@ -64,7 +64,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
             var local = SelectedItem;
             if (local != null)
             {
-                _eventAggregator.GetEvent<BanUserEvent>().Publish(new BanUserModel(_beServer, local.Guid, true, local.Name, local.Num.ToString()));
+                _eventAggregator.GetEvent<BanUserEvent>().Publish(new BanUserModel(_serverInfo.Id, local.Guid, true, local.Name, local.Num.ToString()));
             }
         }
 

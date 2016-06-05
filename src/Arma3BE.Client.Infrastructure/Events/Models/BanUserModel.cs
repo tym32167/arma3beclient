@@ -1,21 +1,21 @@
-﻿using Arma3BE.Server.Abstract;
+﻿using System;
 
 namespace Arma3BE.Client.Infrastructure.Events.Models
 {
     public class BanUserModel
     {
+        public Guid ServerId { get; }
         public string PlayerGuid { get; }
         public string PlayerNum { get; }
-        public IBEServer BEServer { get; }
         public bool IsOnline { get; }
         public string PlayerName { get; }
 
-        public BanUserModel(IBEServer beServer, string playerGuid, bool isOnline, string playerName,
+        public BanUserModel(Guid serverId, string playerGuid, bool isOnline, string playerName,
             string playerNum)
         {
+            ServerId = serverId;
             PlayerGuid = playerGuid;
             PlayerNum = playerNum;
-            BEServer = beServer;
             IsOnline = isOnline;
             PlayerName = playerName;
         }

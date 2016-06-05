@@ -22,7 +22,7 @@ namespace Arma3BE.Client.Modules.BanModule
             _eventAggregator = eventAggregator;
 
             _eventAggregator.GetEvent<BanUserEvent>()
-                .Subscribe(e => ShowBanDialog(e.BEServer, e.PlayerGuid, e.IsOnline, e.PlayerName, e.PlayerNum));
+                .Subscribe(e => ShowBanDialog(e.ServerId, e.PlayerGuid, e.IsOnline, e.PlayerName, e.PlayerNum));
 
             _eventAggregator.GetEvent<KickUserEvent>()
                 .Subscribe(e => ShowKickDialog(e.ServerId, e.PlayerNum, e.PlayerGuid, e.PlayerName));
@@ -33,13 +33,13 @@ namespace Arma3BE.Client.Modules.BanModule
             });
         }
 
-        public void ShowBanDialog(IBEServer beServer, string playerGuid, bool isOnline, string playerName,
+        public void ShowBanDialog(Guid serverId, string playerGuid, bool isOnline, string playerName,
             string playerNum)
         {
             if (playerNum != null)
             {
                 var w = _container.Resolve<BanPlayerWindow>(
-                    new ParameterOverride("beServer", beServer),
+                    new ParameterOverride("serverId", serverId),
                     new ParameterOverride("playerGuid", playerGuid),
                     new ParameterOverride("isOnline", isOnline),
                     new ParameterOverride("playerName", playerName),
@@ -50,7 +50,7 @@ namespace Arma3BE.Client.Modules.BanModule
             else
             {
                 var w = _container.Resolve<BanPlayerWindow>(
-                   new ParameterOverride("beServer", beServer),
+                   new ParameterOverride("serverId", serverId),
                    new ParameterOverride("playerGuid", playerGuid),
                    new ParameterOverride("isOnline", isOnline),
                    new ParameterOverride("playerName", playerName),

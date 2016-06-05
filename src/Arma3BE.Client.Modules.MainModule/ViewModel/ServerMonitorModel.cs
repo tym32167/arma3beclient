@@ -141,7 +141,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 
 
                 var playerListModelView =
-                    container.Resolve<IPlayerListModelView>(new ParameterOverride("beServer", _beServer));
+                    container.Resolve<IPlayerListModelView>(new ParameterOverride("serverId", CurrentServer.Id));
 
                 _eventAggregator.GetEvent<CreateViewEvent<IPlayerListModelView>>()
                   .Publish(new CreateViewModel<IPlayerListModelView>((ContentControl)PlayersControl, playerListModelView));

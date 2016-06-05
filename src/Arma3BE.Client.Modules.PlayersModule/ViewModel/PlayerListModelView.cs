@@ -7,6 +7,7 @@ using Arma3BE.Server.Abstract;
 using Arma3BEClient.Libs.Repositories;
 using Prism.Commands;
 using Prism.Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
@@ -15,14 +16,14 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
 {
     public class PlayerListModelView : ViewModelBase, IPlayerListModelView
     {
-        private readonly IBEServer _beServer;
+        private readonly Guid _serverId;
         private readonly IEventAggregator _eventAggregator;
         private int _playerCount;
         private ICommand _refreshCommand;
 
-        public PlayerListModelView(IBEServer beServer, IEventAggregator eventAggregator)
+        public PlayerListModelView(Guid serverId, IEventAggregator eventAggregator)
         {
-            _beServer = beServer;
+            _serverId = serverId;
             _eventAggregator = eventAggregator;
             SelectedOptions = "Name,IP,Guid,Comment";
 
@@ -37,7 +38,7 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
             var local = SelectedPlayer;
             if (local != null)
             {
-                _eventAggregator.GetEvent<BanUserEvent>().Publish(new BanUserModel(_beServer, local.Guid, true, local.Name, null));
+                _eventAggregator.GetEvent<BanUserEvent>().Publish(new BanUserModel(_serverId, local.Guid, true, local.Name, null));
             }
         }
 
