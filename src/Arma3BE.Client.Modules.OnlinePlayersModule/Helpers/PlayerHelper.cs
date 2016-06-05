@@ -1,22 +1,20 @@
-﻿using System;
+﻿using Arma3BE.Client.Infrastructure.Helpers;
+using Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views;
+using Arma3BEClient.Common.Logging;
+using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Arma3BE.Client.Infrastructure.Helpers;
-using Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views;
-using Arma3BE.Server.Abstract;
-using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Libs.ModelCompact;
-using Arma3BEClient.Libs.Repositories;
 using Player = Arma3BE.Server.Models.Player;
 
 namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
 {
     public class PlayerHelper : StateHelper<Player>
     {
-        private readonly IBEServer _beServer;
         private readonly IBanHelper _banHelper;
         private readonly ILog _log;
         private readonly Guid _serverId;
@@ -24,11 +22,10 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
         private readonly Regex NameRegex = new Regex("[A-Za-zА-Яа-я0-9]+",
             RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
-        public PlayerHelper(ILog log, Guid serverId, IBEServer beServer, IBanHelper banHelper)
+        public PlayerHelper(ILog log, Guid serverId, IBanHelper banHelper)
         {
             _log = log;
             _serverId = serverId;
-            _beServer = beServer;
             _banHelper = banHelper;
         }
 
@@ -155,7 +152,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
                 if (filterUsers != null)
                 {
 #pragma warning disable 4014
-                    _banHelper.Kick(_beServer, filterUsers.Num, filterUsers.Guid, "bot: Fill Nickname");
+                    _banHelper.Kick(_serverId, filterUsers.Num, filterUsers.Guid, "bot: Fill Nickname");
 #pragma warning restore 4014
                 }
 
@@ -170,7 +167,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
 
                     if (bad != null)
 #pragma warning disable 4014
-                        _banHelper.Kick(_beServer, bad.Num, bad.Guid, "bot: Bad Nickname");
+                        _banHelper.Kick(_serverId, bad.Num, bad.Guid, "bot: Bad Nickname");
 #pragma warning restore 4014
                 }
 

@@ -1,11 +1,12 @@
-﻿using Arma3BE.Client.Infrastructure.Helpers;
+﻿using Arma3BE.Client.Infrastructure.Events.BE;
+using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Infrastructure.Helpers.Views;
 using Arma3BE.Server;
-using Arma3BE.Server.Abstract;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.Repositories;
 using Arma3BEClient.Libs.Tools;
+using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +18,13 @@ namespace Arma3BE.Client.Modules.BanModule.Helpers
     public class BanHelper : StateHelper<Ban>, IBanHelper
     {
         private readonly ILog _log;
+        private readonly IEventAggregator _eventAggregator;
         private readonly Regex replace = new Regex(@"\[[^\]^\[]*\]", RegexOptions.Compiled | RegexOptions.Multiline);
 
-        public BanHelper(ILog log)
+        public BanHelper(ILog log, IEventAggregator eventAggregator)
         {
             _log = log;
+            _eventAggregator = eventAggregator;
         }
 
         public void RegisterBans(IEnumerable<Ban> list, Guid currentServerId)
@@ -182,13 +185,17 @@ namespace Arma3BE.Client.Modules.BanModule.Helpers
             }
         }
 
+        private void SendCommand(Guid serverId, CommandType commandType, string parameters = null)
+        {
+            _eventAggregator.GetEvent<BEMessageEvent<BECommand>>().Publish(new BECommand(serverId, commandType, parameters));
+        }
 
-        public void Kick(IBEServer battlEyeServer, int playerNum, string playerGuid, string reason, bool isAuto = false)
+        public void Kick(Guid serverId, int playerNum, string playerGuid, string reason, bool isAuto = false)
         {
             var totalreason =
                 $"[{SettingsStore.Instance.AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
 
-            battlEyeServer.SendCommand(CommandType.Kick,
+            SendCommand(serverId, CommandType.Kick,
                 $"{playerNum} {totalreason}");
 
             if (!isAuto)
@@ -203,11 +210,11 @@ namespace Arma3BE.Client.Modules.BanModule.Helpers
                         context.UpdatePlayerComment(user.GUID, user.Comment);
                     }
                 }
-                battlEyeServer.SendCommand(CommandType.Players);
+                SendCommand(serverId, CommandType.Players);
             }
         }
 
-        public void BanGUIDOffline(IBEServer battlEyeServer, string guid, string reason, long minutes, bool syncMode = false)
+        public void BanGUIDOffline(Guid serverId, string guid, string reason, long minutes, bool syncMode = false)
         {
             if (!syncMode)
             {
@@ -215,7 +222,7 @@ namespace Arma3BE.Client.Modules.BanModule.Helpers
                     $"[{SettingsStore.Instance.AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
 
 
-                battlEyeServer.SendCommand(CommandType.AddBan,
+                SendCommand(serverId, CommandType.AddBan,
                     $"{guid} {minutes} {totalreason}");
 
 
@@ -232,25 +239,25 @@ namespace Arma3BE.Client.Modules.BanModule.Helpers
 
 
 #pragma warning disable 4014
-                battlEyeServer.SendCommand(CommandType.Bans);
+                SendCommand(serverId, CommandType.Bans);
 #pragma warning restore 4014
             }
             else
             {
 #pragma warning disable 4014
-                battlEyeServer.SendCommand(CommandType.AddBan,
+                SendCommand(serverId, CommandType.AddBan,
 #pragma warning restore 4014
                             $"{guid} {minutes} {reason}");
             }
         }
 
-        public async void BanGuidOnline(IBEServer battlEyeServer, string num, string guid, string reason, long minutes)
+        public async void BanGuidOnline(Guid serverId, string num, string guid, string reason, long minutes)
         {
             var totalreason =
                 $"[{SettingsStore.Instance.AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
 
 
-            battlEyeServer.SendCommand(CommandType.Ban,
+            SendCommand(serverId, CommandType.Ban,
                 $"{num} {minutes} {totalreason}");
 
 
@@ -267,8 +274,8 @@ namespace Arma3BE.Client.Modules.BanModule.Helpers
 
 
 #pragma warning disable 4014
-            battlEyeServer.SendCommand(CommandType.Players);
-            battlEyeServer.SendCommand(CommandType.Bans);
+            SendCommand(serverId, CommandType.Players);
+            SendCommand(serverId, CommandType.Bans);
         }
     }
 }

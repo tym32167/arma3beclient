@@ -1,4 +1,5 @@
-﻿using Arma3BE.Client.Infrastructure.Events;
+﻿using System;
+using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.BanModule.Boxes;
 using Arma3BE.Client.Modules.BanModule.Grids;
@@ -24,7 +25,7 @@ namespace Arma3BE.Client.Modules.BanModule
                 .Subscribe(e => ShowBanDialog(e.BEServer, e.PlayerGuid, e.IsOnline, e.PlayerName, e.PlayerNum));
 
             _eventAggregator.GetEvent<KickUserEvent>()
-                .Subscribe(e => ShowKickDialog(e.BEServer, e.PlayerNum, e.PlayerGuid, e.PlayerName));
+                .Subscribe(e => ShowKickDialog(e.ServerId, e.PlayerNum, e.PlayerGuid, e.PlayerName));
 
             _eventAggregator.GetEvent<CreateViewEvent<IServerMonitorBansViewModel>>().Subscribe(e =>
             {
@@ -59,10 +60,10 @@ namespace Arma3BE.Client.Modules.BanModule
             }
         }
 
-        public void ShowKickDialog(IBEServer beServer, int playerNum, string playerGuid, string playerName)
+        public void ShowKickDialog(Guid serverId, int playerNum, string playerGuid, string playerName)
         {
             var w = _container.Resolve<KickPlayerWindow>(
-                new ParameterOverride("beServer", beServer),
+                new ParameterOverride("serverId", serverId),
                 new ParameterOverride("playerGuid", playerGuid),
                 new ParameterOverride("playerName", playerName),
                 new ParameterOverride("playerNum", playerNum));

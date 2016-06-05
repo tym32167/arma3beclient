@@ -70,6 +70,36 @@ namespace Arma3BE.Client.Modules.BEServerModule
                 BEServer = beServer;
 
                 BEServer.PlayerHandler += BEServer_PlayerHandler;
+                BEServer.AdminHandler += BEServer_AdminHandler;
+                BEServer.BanHandler += BEServer_BanHandler;
+                BEServer.MissionHandler += BEServer_MissionHandler;
+
+                _eventAggregator.GetEvent<BEMessageEvent<BECommand>>().Subscribe(Command);
+            }
+
+            private void Command(BECommand command)
+            {
+                var server = this.BEServer;
+
+                if (this.Info.Id == command.ServerId && server != null && server.Connected)
+                {
+                    server.SendCommand(command.CommandType, command.Parameters);
+                }
+            }
+
+            private void BEServer_MissionHandler(object sender, BEClientEventArgs<System.Collections.Generic.IEnumerable<Server.Models.Mission>> e)
+            {
+                _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Server.Models.Mission>>>().Publish(new BEItemsMessage<Server.Models.Mission>(e.Data, Info.Id));
+            }
+
+            private void BEServer_BanHandler(object sender, BEClientEventArgs<System.Collections.Generic.IEnumerable<Server.Models.Ban>> e)
+            {
+                _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Server.Models.Ban>>>().Publish(new BEItemsMessage<Server.Models.Ban>(e.Data, Info.Id));
+            }
+
+            private void BEServer_AdminHandler(object sender, BEClientEventArgs<System.Collections.Generic.IEnumerable<Server.Models.Admin>> e)
+            {
+                _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Server.Models.Admin>>>().Publish(new BEItemsMessage<Server.Models.Admin>(e.Data, Info.Id));
             }
 
             private void BEServer_PlayerHandler(object sender, Server.BEClientEventArgs<System.Collections.Generic.IEnumerable<Server.Models.Player>> e)

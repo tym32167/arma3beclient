@@ -1,4 +1,5 @@
-﻿using Prism.Events;
+﻿using Arma3BE.Server;
+using Prism.Events;
 using System;
 using System.Collections.Generic;
 
@@ -22,6 +23,18 @@ namespace Arma3BE.Client.Infrastructure.Events.BE
         }
 
         public IEnumerable<T> Items { get; }
+    }
+
+    public class BECommand : BEMessageBase<object>
+    {
+        public string Parameters { get; }
+        public CommandType CommandType { get; }
+
+        public BECommand(Guid serverId, CommandType commandType, string parameters) : base(serverId)
+        {
+            Parameters = parameters;
+            CommandType = commandType;
+        }
     }
 
     public class BEMessageEvent<T> : PubSubEvent<T>

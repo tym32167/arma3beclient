@@ -16,11 +16,11 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
     {
         private readonly BanPlayerViewModel _model;
 
-        public BanPlayerWindow(IBEServer beServer, BanHelper banHelper, string playerGuid, bool isOnline, string playerName,
+        public BanPlayerWindow(Guid serverId, BanHelper banHelper, string playerGuid, bool isOnline, string playerName,
             string playerNum)
         {
             InitializeComponent();
-            _model = new BanPlayerViewModel(playerGuid, isOnline, banHelper, playerName, playerNum, beServer);
+            _model = new BanPlayerViewModel(serverId, playerGuid, isOnline, banHelper, playerName, playerNum);
 
             tbGuid.IsEnabled = string.IsNullOrEmpty(playerGuid);
 
@@ -57,22 +57,22 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
         private readonly bool _isOnline;
         private readonly BanHelper _playerHelper;
         private readonly string _playerNum;
-        private readonly IBEServer _beServer;
         private long? _minutes;
+        private readonly Guid _serverId;
         private string _playerGuid;
         private string _playerName;
         private string _reason;
         private TimeSpan _timeSpan;
 
-        public BanPlayerViewModel(string playerGuid, bool isOnline, BanHelper playerHelper, string playerName,
-            string playerNum, IBEServer beServer)
+        public BanPlayerViewModel(Guid serverId, string playerGuid, bool isOnline, BanHelper playerHelper, string playerName,
+            string playerNum)
         {
+            _serverId = serverId;
             _playerGuid = playerGuid;
             _isOnline = isOnline;
             _playerHelper = playerHelper;
             _playerName = playerName;
             _playerNum = playerNum;
-            _beServer = beServer;
             _minutes = 0;
         }
 
@@ -153,9 +153,9 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             if (Minutes != null)
             {
                 if (_isOnline)
-                    _playerHelper.BanGuidOnline(_beServer, _playerNum, _playerGuid, Reason, Minutes.Value);
+                    _playerHelper.BanGuidOnline(_serverId, _playerNum, _playerGuid, Reason, Minutes.Value);
                 else
-                    _playerHelper.BanGUIDOffline(_beServer, _playerGuid, Reason, Minutes.Value);
+                    _playerHelper.BanGUIDOffline(_serverId, _playerGuid, Reason, Minutes.Value);
             }
         }
     }

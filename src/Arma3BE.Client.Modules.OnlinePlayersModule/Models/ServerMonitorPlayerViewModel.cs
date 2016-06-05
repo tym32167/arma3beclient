@@ -20,6 +20,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
 {
     public class ServerMonitorPlayerViewModel : ServerMonitorBaseViewModel<Player, Helpers.Views.PlayerView>, IServerMonitorPlayerViewModel
     {
+        private readonly ServerInfo _serverInfo;
         private readonly IBEServer _beServer;
         private readonly IEventAggregator _eventAggregator;
         private readonly PlayerHelper _playerHelper;
@@ -28,9 +29,10 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
             IBEServer beServer, IBanHelper banHelper, IEventAggregator eventAggregator)
             : base(new ActionCommand(() => beServer.SendCommand(CommandType.Players)))
         {
+            _serverInfo = serverInfo;
             _beServer = beServer;
             _eventAggregator = eventAggregator;
-            _playerHelper = new PlayerHelper(log, serverInfo.Id, beServer, banHelper);
+            _playerHelper = new PlayerHelper(log, serverInfo.Id, banHelper);
 
             KickUserCommand = new DelegateCommand(ShowKickDialog, CanShowDialog);
             BanUserCommand = new DelegateCommand(ShowBanDialog, CanShowDialog);
@@ -53,7 +55,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
             var local = SelectedItem;
             if (local != null)
             {
-                _eventAggregator.GetEvent<KickUserEvent>().Publish(new KickUserModel(_beServer, local.Guid, local.Name, local.Num));
+                _eventAggregator.GetEvent<KickUserEvent>().Publish(new KickUserModel(_serverInfo.Id, local.Guid, local.Name, local.Num));
             }
         }
 

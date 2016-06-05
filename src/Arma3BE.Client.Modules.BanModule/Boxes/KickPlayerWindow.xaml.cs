@@ -1,5 +1,4 @@
 ﻿using Arma3BE.Client.Infrastructure.Helpers;
-using Arma3BE.Server.Abstract;
 using Arma3BE.Client.Infrastructure.Models;
 using System;
 using System.Collections.Generic;
@@ -15,15 +14,15 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
     public partial class KickPlayerWindow : Window
     {
         private readonly IBanHelper _playerHelper;
-        private readonly IBEServer _beServer;
+        private readonly Guid _serverId;
         private readonly int _playerNum;
         private readonly string _playerGuid;
         private readonly KickPlayerViewModel Model;
 
-        public KickPlayerWindow(IBanHelper playerHelper, IBEServer beServer, int playerNum, string playerGuid, string playerName)
+        public KickPlayerWindow(IBanHelper playerHelper, Guid serverId, int playerNum, string playerGuid, string playerName)
         {
             _playerHelper = playerHelper;
-            _beServer = beServer;
+            _serverId = serverId;
             _playerNum = playerNum;
             _playerGuid = playerGuid;
             InitializeComponent();
@@ -35,7 +34,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
 
         private void KickClick(object sender, RoutedEventArgs e)
         {
-            _playerHelper.Kick(_beServer, _playerNum, _playerGuid, tbReason.Text);
+            _playerHelper.Kick(_serverId, _playerNum, _playerGuid, tbReason.Text);
             Close();
         }
 

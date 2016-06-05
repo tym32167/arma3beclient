@@ -8,6 +8,7 @@ using Arma3BE.Server.Abstract;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.Repositories;
+using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,13 +24,13 @@ namespace Arma3BE.Client.Modules.BanModule.Models
         private readonly ILog _log;
         private readonly Guid _serverInfoId;
 
-        public ServerMonitorBansViewModel(ILog log, Guid serverInfoId, IBEServer beServer)
+        public ServerMonitorBansViewModel(ILog log, Guid serverInfoId, IBEServer beServer, IEventAggregator eventAggregator)
             : base(new ActionCommand(() => beServer.SendCommand(CommandType.Bans)))
         {
             _log = log;
             _serverInfoId = serverInfoId;
             _beServer = beServer;
-            _helper = new BanHelper(_log);
+            _helper = new BanHelper(_log, eventAggregator);
 
             SyncBans = new ActionCommand(() =>
             {
@@ -41,7 +42,7 @@ namespace Arma3BE.Client.Modules.BanModule.Models
                     {
                         foreach (var ban in bans)
                         {
-                            _helper.BanGUIDOffline(_beServer, ban.GuidIp, ban.Reason, ban.Minutesleft, true);
+                            _helper.BanGUIDOffline(_serverInfoId, ban.GuidIp, ban.Reason, ban.Minutesleft, true);
                             Thread.Sleep(10);
                         }
 
@@ -55,7 +56,7 @@ namespace Arma3BE.Client.Modules.BanModule.Models
 
             CustomBan = new ActionCommand(() =>
             {
-                var w = new BanPlayerWindow(_beServer, _helper, null, false, null, null);
+                var w = new BanPlayerWindow(_serverInfoId, _helper, null, false, null, null);
                 w.ShowDialog();
             });
 
