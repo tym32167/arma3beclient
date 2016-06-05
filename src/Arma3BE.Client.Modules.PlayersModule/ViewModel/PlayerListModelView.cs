@@ -3,7 +3,7 @@ using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Events.Models;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.PlayersModule.Models;
-using Arma3BE.Server.Abstract;
+using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using Prism.Commands;
 using Prism.Events;
@@ -21,9 +21,9 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
         private int _playerCount;
         private ICommand _refreshCommand;
 
-        public PlayerListModelView(Guid serverId, IEventAggregator eventAggregator)
+        public PlayerListModelView(ServerInfo serverInfo, IEventAggregator eventAggregator)
         {
-            _serverId = serverId;
+            _serverId = serverInfo.Id;
             _eventAggregator = eventAggregator;
             SelectedOptions = "Name,IP,Guid,Comment";
 

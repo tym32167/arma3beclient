@@ -4,9 +4,9 @@ using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.ChatModule.Boxes;
 using Arma3BE.Client.Modules.ChatModule.Helpers;
 using Arma3BE.Server;
-using Arma3BE.Server.Abstract;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Logging;
+using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Tools;
 using Prism.Events;
 using System;
@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
+using Player = Arma3BE.Server.Models.Player;
 
 namespace Arma3BE.Client.Modules.ChatModule.Models
 {
@@ -28,10 +29,10 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
         private string _inputMessage;
         private List<Player> _players = new List<Player>();
 
-        public ServerMonitorChatViewModel(ILog log, Guid serverId, IEventAggregator eventAggregator)
+        public ServerMonitorChatViewModel(ILog log, ServerInfo serverInfo, IEventAggregator eventAggregator)
         {
             _log = log;
-            _serverId = serverId;
+            _serverId = serverInfo.Id;
             _eventAggregator = eventAggregator;
 
             AutoScroll = true;
@@ -58,7 +59,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
 
             ShowHistoryCommand = new ActionCommand(() =>
             {
-                var model = new ChatHistoryViewModel(serverId);
+                var model = new ChatHistoryViewModel(_serverId);
                 model.StartDate = DateTime.UtcNow.AddHours(-5);
                 var wnd = new ChatHistory(model);
                 wnd.Show();

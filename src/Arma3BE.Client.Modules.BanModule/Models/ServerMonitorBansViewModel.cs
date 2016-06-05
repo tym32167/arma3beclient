@@ -5,8 +5,8 @@ using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.BanModule.Boxes;
 using Arma3BE.Client.Modules.BanModule.Helpers;
 using Arma3BE.Server;
-using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Logging;
+using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using Prism.Events;
 using System;
@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Windows.Input;
+using Ban = Arma3BE.Server.Models.Ban;
 
 namespace Arma3BE.Client.Modules.BanModule.Models
 {
@@ -24,11 +25,11 @@ namespace Arma3BE.Client.Modules.BanModule.Models
         private readonly ILog _log;
         private readonly Guid _serverInfoId;
 
-        public ServerMonitorBansViewModel(ILog log, Guid serverInfoId, IEventAggregator eventAggregator)
-            : base(new ActionCommand(() => SendCommand(eventAggregator, serverInfoId, CommandType.Bans)))
+        public ServerMonitorBansViewModel(ILog log, ServerInfo serverInfo, IEventAggregator eventAggregator)
+            : base(new ActionCommand(() => SendCommand(eventAggregator, serverInfo.Id, CommandType.Bans)))
         {
             _log = log;
-            _serverInfoId = serverInfoId;
+            _serverInfoId = serverInfo.Id;
             _eventAggregator = eventAggregator;
             _helper = new BanHelper(_log, eventAggregator);
 

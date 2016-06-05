@@ -8,25 +8,29 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Arma3BE.Client.Infrastructure;
+using Arma3BEClient.Libs.ModelCompact;
 
 namespace Arma3BE.Client.Modules.SteamModule.Models
 {
     public class ServerMonitorSteamQueryViewModel : ViewModelBase, IServerMonitorSteamQueryViewModel
     {
         private readonly ILog _log;
+        private readonly IIpService _ipService;
 
-        public ServerMonitorSteamQueryViewModel(string host, int port, ILog log)
+        public ServerMonitorSteamQueryViewModel(ServerInfo serverInfo, ILog log, IIpService ipService)
         {
             _log = log;
-            Host = host;
-            Port = port + 1;
+            _ipService = ipService;
+            Host = serverInfo.Host;
+            Port = serverInfo.Port + 1;
 
             OnPropertyChanged("Host");
             OnPropertyChanged("Port");
 
             ExcecuteCommand = new ActionCommand(() => Task.Run(() =>
             {
-                var iphost = host;
+                var iphost = ipService.GetIpAddress(Host);
                 var server = new Arma3BEClient.Steam.Server(new IPEndPoint(IPAddress.Parse(iphost), Port));
 
                 var settings = new GetServerInfoSettings();
@@ -37,16 +41,16 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
                             new Tuple<string, string>(x.Key,
                                 x.Value)).ToList();
 
-                var serverInfo =
+                var serverInfoR =
                     server.GetServerInfoSync(settings);
 
-                var props = serverInfo.GetType().GetProperties();
+                var props = serverInfoR.GetType().GetProperties();
 
                 ServerInfo =
                     props.Select(
                         x =>
                             new Tuple<string, string>(x.Name,
-                                x.GetValue(serverInfo)
+                                x.GetValue(serverInfoR)
                                     .ToString())).ToList();
 
                 ServerPlayers =
@@ -59,7 +63,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
             }),
                 () =>
                 {
-                    var iphost = host;
+                    var iphost = Host;
 
                     if (string.IsNullOrEmpty(iphost))
                     {
