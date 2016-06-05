@@ -73,21 +73,21 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             _beServer.ConnectHandler += BeServerConnectHandler;
             _beServer.DisconnectHandler += BeServerDisconnectHandler;
 
-            if (!console)
-            {
-                _beServer.RConAdminLog += (s, e) => _beServer.SendCommand(CommandType.Admins);
-            }
+            //if (!console)
+            //{
+            //    _beServer.RConAdminLog += (s, e) => _beServer.SendCommand(CommandType.Admins);
+            //}
 
-            _beServer.PlayerLog += (s, e) => _beServer.SendCommand(CommandType.Players);
+            //_beServer.PlayerLog += (s, e) => _beServer.SendCommand(CommandType.Players);
 
-            if (!console)
-            {
-                _beServer.BanLog += (s, e) =>
-                {
-                    _beServer.SendCommand(CommandType.Players);
-                    _beServer.SendCommand(CommandType.Bans);
-                };
-            }
+            //if (!console)
+            //{
+            //    _beServer.BanLog += (s, e) =>
+            //    {
+            //        _beServer.SendCommand(CommandType.Players);
+            //        _beServer.SendCommand(CommandType.Bans);
+            //    };
+            //}
 
             _beServer.ConnectingHandler += (s, e) => OnPropertyChanged(nameof(Connected));
 
@@ -181,16 +181,18 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 
         private void BeServerConnectHandler(object sender, EventArgs e)
         {
-            _beServer.SendCommand(CommandType.Players);
-
-            if (!_console)
-            {
-                _beServer.SendCommand(CommandType.Admins);
-                _beServer.SendCommand(CommandType.Missions);
-                _beServer.SendCommand(CommandType.Bans);
-            }
+            SendCommand(CommandType.Players);
+            SendCommand(CommandType.Admins);
+            SendCommand(CommandType.Missions);
+            SendCommand(CommandType.Bans);
 
             OnPropertyChanged(nameof(Connected));
+        }
+
+        private void SendCommand(CommandType commandType, string parameters = null)
+        {
+            _eventAggregator.GetEvent<BEMessageEvent<BECommand>>()
+                .Publish(new BECommand(CurrentServer.Id, commandType, parameters));
         }
 
         public void Connect()
@@ -216,12 +218,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 
         #region ViewModels
 
-        //public ServerMonitorSteamQueryViewModel SteamQueryViewModel { get; set; }
 
-        //public ServerMonitorPlayerViewModel PlayersViewModel { get; set; }
-
-
-        //public IServerMonitorBansViewModel BansViewModel { get; set; }
         public object ChatControl { get; set; }
         public object BanControl { get; set; }
         public object AdminsControl { get; set; }
@@ -229,13 +226,6 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
         public object PlayersControl { get; set; }
         public object SteamControl { get; set; }
         public object ManageServerControl { get; set; }
-
-        //public ServerMonitorAdminsViewModel AdminsViewModel { get; set; }
-
-        //public ServerMonitorChatViewModel ChatViewModel { get; set; }
-        // public ServerMonitorManageServerViewModel ManageServerViewModel { get; set; }
-
-        //public PlayerListModelView PlayerListModelView { get; set; }
 
         public bool IsBusy
         {

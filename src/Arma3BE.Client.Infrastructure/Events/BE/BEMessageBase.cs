@@ -30,7 +30,7 @@ namespace Arma3BE.Client.Infrastructure.Events.BE
         public string Parameters { get; }
         public CommandType CommandType { get; }
 
-        public BECommand(Guid serverId, CommandType commandType, string parameters) : base(serverId)
+        public BECommand(Guid serverId, CommandType commandType, string parameters = null) : base(serverId)
         {
             Parameters = parameters;
             CommandType = commandType;

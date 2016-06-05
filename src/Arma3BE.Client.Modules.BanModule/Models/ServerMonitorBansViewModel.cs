@@ -1,10 +1,10 @@
 ﻿using Arma3BE.Client.Infrastructure.Commands;
+using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Client.Infrastructure.Helpers.Views;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.BanModule.Boxes;
 using Arma3BE.Client.Modules.BanModule.Helpers;
 using Arma3BE.Server;
-using Arma3BE.Server.Abstract;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.Repositories;
@@ -19,17 +19,17 @@ namespace Arma3BE.Client.Modules.BanModule.Models
 {
     public class ServerMonitorBansViewModel : ServerMonitorBaseViewModel<Ban, BanView>, IServerMonitorBansViewModel
     {
-        private readonly IBEServer _beServer;
+        private readonly IEventAggregator _eventAggregator;
         private readonly BanHelper _helper;
         private readonly ILog _log;
         private readonly Guid _serverInfoId;
 
-        public ServerMonitorBansViewModel(ILog log, Guid serverInfoId, IBEServer beServer, IEventAggregator eventAggregator)
-            : base(new ActionCommand(() => beServer.SendCommand(CommandType.Bans)))
+        public ServerMonitorBansViewModel(ILog log, Guid serverInfoId, IEventAggregator eventAggregator)
+            : base(new ActionCommand(() => SendCommand(eventAggregator, serverInfoId, CommandType.Bans)))
         {
             _log = log;
             _serverInfoId = serverInfoId;
-            _beServer = beServer;
+            _eventAggregator = eventAggregator;
             _helper = new BanHelper(_log, eventAggregator);
 
             SyncBans = new ActionCommand(() =>
@@ -46,7 +46,7 @@ namespace Arma3BE.Client.Modules.BanModule.Models
                             Thread.Sleep(10);
                         }
 
-                        _beServer.SendCommand(CommandType.Bans);
+                        SendCommand(CommandType.Bans);
                     })
                     { IsBackground = true };
 
@@ -60,7 +60,12 @@ namespace Arma3BE.Client.Modules.BanModule.Models
                 w.ShowDialog();
             });
 
-            _beServer.BanHandler += (s, e) => SetData(e.Data);
+            _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Ban>>>()
+                .Subscribe(e =>
+                {
+                    if (_serverInfoId == e.ServerId)
+                        SetData(e.Items);
+                });
         }
 
         public IEnumerable<BanView> SelectedAvailibleBans { get; set; }
@@ -113,8 +118,8 @@ namespace Arma3BE.Client.Modules.BanModule.Models
 
         public async void RemoveBan(BanView si)
         {
-            _beServer.SendCommand(CommandType.RemoveBan, si.Num.ToString());
-            _beServer.SendCommand(CommandType.Bans);
+            SendCommand(CommandType.RemoveBan, si.Num.ToString());
+            SendCommand(CommandType.Bans);
         }
 
         public override void SetData(IEnumerable<Ban> initialData)
@@ -122,6 +127,17 @@ namespace Arma3BE.Client.Modules.BanModule.Models
             base.SetData(initialData);
             OnPropertyChanged(nameof(AvailibleBans));
             OnPropertyChanged(nameof(AvailibleBansCount));
+        }
+
+        private void SendCommand(CommandType commandType, string parameters = null)
+        {
+            SendCommand(_eventAggregator, _serverInfoId, commandType, parameters);
+        }
+
+        private static void SendCommand(IEventAggregator eventAggregator, Guid serverId, CommandType commandType, string parameters = null)
+        {
+            eventAggregator.GetEvent<BEMessageEvent<BECommand>>()
+                .Publish(new BECommand(serverId, commandType, parameters));
         }
     }
 }

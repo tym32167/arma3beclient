@@ -1,9 +1,10 @@
 ﻿using Arma3BE.Client.Infrastructure.Commands;
+using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Server;
-using Arma3BE.Server.Abstract;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Logging;
+using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -12,20 +13,23 @@ namespace Arma3BE.Client.Modules.ManageServerModule.Models
 {
     public class ServerMonitorManageServerViewModel : ViewModelBase, IServerMonitorManageServerViewModel
     {
-        private readonly IBEServer _beServer;
+        private readonly IEventAggregator _eventAggregator;
         private readonly ILog _log;
         private readonly Guid _serverId;
         private IEnumerable<Mission> _missions;
         private Mission _selectedMission;
 
-        public ServerMonitorManageServerViewModel(ILog log, Guid serverId, IBEServer beServer)
+        public ServerMonitorManageServerViewModel(ILog log, Guid serverId, IEventAggregator eventAggregator)
         {
             _log = log;
             _serverId = serverId;
-            _beServer = beServer;
+            _eventAggregator = eventAggregator;
 
-            _beServer.MissionHandler += BeServerOnMissionHandler;
-
+            _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Mission>>>().Subscribe(e =>
+            {
+                if (e.ServerId == this._serverId)
+                    this.Missions = e.Items;
+            });
 
             SetMissionCommand = new ActionCommand(() =>
             {
@@ -33,58 +37,58 @@ namespace Arma3BE.Client.Modules.ManageServerModule.Models
                 if (m != null)
                 {
                     var mn = m.Name;
-                    _beServer.SendCommand(CommandType.Mission, mn);
+                    SendCommand(CommandType.Mission, mn);
                 }
             },
                 () => SelectedMission != null);
 
-            RefreshCommand = new ActionCommand(() => _beServer.SendCommand(CommandType.Missions));
+            RefreshCommand = new ActionCommand(() => SendCommand(CommandType.Missions));
 
             InitCommand = new ActionCommand(() =>
            {
-               _beServer.SendCommand(CommandType.Init);
+               SendCommand(CommandType.Init);
                MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
            });
             ShutdownCommand = new ActionCommand(() =>
            {
-               _beServer.SendCommand(CommandType.Shutdown);
+               SendCommand(CommandType.Shutdown);
                MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
            });
             ReassignCommand = new ActionCommand(() =>
            {
-               _beServer.SendCommand(CommandType.Reassign);
+               SendCommand(CommandType.Reassign);
                MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
            });
             RestartCommand = new ActionCommand(() =>
            {
-               _beServer.SendCommand(CommandType.Restart);
+               SendCommand(CommandType.Restart);
                MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
            });
             LockCommand = new ActionCommand(() =>
            {
-               _beServer.SendCommand(CommandType.Lock);
+               SendCommand(CommandType.Lock);
                MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
            });
             UnlockCommand = new ActionCommand(() =>
            {
-               _beServer.SendCommand(CommandType.Unlock);
+               SendCommand(CommandType.Unlock);
                MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
            });
 
 
             LoadBansCommand = new ActionCommand(() =>
            {
-               _beServer.SendCommand(CommandType.LoadBans);
+               SendCommand(CommandType.LoadBans);
                MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
            });
             LoadScriptsCommand = new ActionCommand(() =>
            {
-               _beServer.SendCommand(CommandType.LoadScripts);
+               SendCommand(CommandType.LoadScripts);
                MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
            });
             LoadEventsCommand = new ActionCommand(() =>
            {
-               _beServer.SendCommand(CommandType.LoadEvents);
+               SendCommand(CommandType.LoadEvents);
                MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
            });
         }
@@ -122,9 +126,10 @@ namespace Arma3BE.Client.Modules.ManageServerModule.Models
         public ActionCommand LoadScriptsCommand { get; set; }
         public ActionCommand LoadEventsCommand { get; set; }
 
-        private void BeServerOnMissionHandler(object sender, BEClientEventArgs<IEnumerable<Mission>> e)
+        private void SendCommand(CommandType commandType, string parameters = null)
         {
-            Missions = e.Data;
+            _eventAggregator.GetEvent<BEMessageEvent<BECommand>>()
+                .Publish(new BECommand(_serverId, commandType, parameters));
         }
     }
 }
