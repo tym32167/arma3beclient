@@ -1,4 +1,5 @@
 ﻿using Arma3BE.Client.Infrastructure.Commands;
+using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.ChatModule.Boxes;
 using Arma3BE.Client.Modules.ChatModule.Helpers;
@@ -7,6 +8,7 @@ using Arma3BE.Server.Abstract;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.Tools;
+using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +19,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
 {
     public class ServerMonitorChatViewModel : ViewModelBase, IServerMonitorChatViewModel
     {
-        private readonly IBEServer _beServer;
+        private readonly IEventAggregator _eventAggregator;
         private readonly ChatHelper _chatHelper;
         private readonly ILog _log;
         private readonly Guid _serverId;
@@ -26,21 +28,29 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
         private string _inputMessage;
         private List<Player> _players = new List<Player>();
 
-        public ServerMonitorChatViewModel(ILog log, Guid serverId, IBEServer beServer)
+        public ServerMonitorChatViewModel(ILog log, Guid serverId, IEventAggregator eventAggregator)
         {
             _log = log;
             _serverId = serverId;
-            _beServer = beServer;
+            _eventAggregator = eventAggregator;
 
             AutoScroll = true;
             EnableChat = true;
 
             _chatHelper = new ChatHelper(_log, _serverId);
-            _beServer.ChatMessageHandler += BeServerChatMessageHandler;
-            _beServer.PlayerLog += _beServer_PlayerLog;
-            _beServer.RConAdminLog += _beServer_PlayerLog;
-            _beServer.BanLog += _beServer_PlayerLog;
-            _beServer.PlayerHandler += _beServer_PlayerHandler;
+
+            _eventAggregator.GetEvent<BEMessageEvent<BEChatMessage>>()
+                .Subscribe(BeServerChatMessageHandler);
+
+            _eventAggregator.GetEvent<BEMessageEvent<BEAdminLogMessage>>()
+                .Subscribe(_beServer_PlayerLog);
+            _eventAggregator.GetEvent<BEMessageEvent<BEPlayerLogMessage>>()
+                .Subscribe(_beServer_PlayerLog);
+            _eventAggregator.GetEvent<BEMessageEvent<BEBanLogMessage>>()
+                .Subscribe(_beServer_PlayerLog);
+
+            _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Player>>>()
+                .Subscribe(_beServer_PlayerHandler);
 
             var global = new Player(-1, null, 0, 0, null, "GLOBAL", Player.PlayerState.Ingame);
             Players = new List<Player> { global };
@@ -56,12 +66,14 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             });
         }
 
-        private void _beServer_PlayerHandler(object sender, BEClientEventArgs<System.Collections.Generic.IEnumerable<Player>> e)
+        private void _beServer_PlayerHandler(BEItemsMessage<Player> e)
         {
+            if (e.ServerId != _serverId) return;
+
             var newItems = new List<Player>();
             var global = new Player(-1, null, 0, 0, null, "GLOBAL", Player.PlayerState.Ingame);
             newItems.Add(global);
-            newItems.AddRange(e.Data.OrderBy(x => x.Name));
+            newItems.AddRange(e.Items.OrderBy(x => x.Name));
 
             var selected = SelectedPlayer;
 
@@ -78,9 +90,23 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             }
         }
 
-        private void _beServer_PlayerLog(object sender, LogMessage e)
+
+        private void _beServer_PlayerLog(BEAdminLogMessage e)
         {
-            OnLogMessageEventHandler(e);
+            if (_serverId == e.ServerId)
+                OnLogMessageEventHandler(e.Message);
+        }
+
+        private void _beServer_PlayerLog(BEBanLogMessage e)
+        {
+            if (_serverId == e.ServerId)
+                OnLogMessageEventHandler(e.Message);
+        }
+
+        private void _beServer_PlayerLog(BEPlayerLogMessage e)
+        {
+            if (_serverId == e.ServerId)
+                OnLogMessageEventHandler(e.Message);
         }
 
         public List<Player> Players
@@ -144,10 +170,11 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             if (handler != null) handler(this, new ServerMonitorChatViewModelEventArgs(e));
         }
 
-        private void BeServerChatMessageHandler(object sender, ChatMessage e)
+        private void BeServerChatMessageHandler(BEChatMessage e)
         {
-            _chatHelper.RegisterChatMessage(e);
-            OnChatMessageEventHandler(e);
+            if (e.ServerId != _serverId) return;
+            _chatHelper.RegisterChatMessage(e.Message);
+            OnChatMessageEventHandler(e.Message);
         }
 
         public void SendMessage(string rawmessage)
@@ -164,7 +191,9 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
                 }
 
                 var message = $" {destinationNum} {adminName}: {rawmessage}";
-                _beServer.SendCommand(CommandType.Say, message);
+
+                _eventAggregator.GetEvent<BEMessageEvent<BECommand>>()
+                    .Publish(new BECommand(_serverId, CommandType.Say, message));
             }
 
             InputMessage = string.Empty;

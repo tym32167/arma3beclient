@@ -78,7 +78,15 @@ namespace Arma3BE.Client.Modules.BEServerModule
                 BEServer.RConAdminLog += BEServer_RConAdminLog;
                 BEServer.PlayerLog += BEServer_PlayerLog;
 
+                BEServer.ChatMessageHandler += BEServer_ChatMessageHandler;
+
                 _eventAggregator.GetEvent<BEMessageEvent<BECommand>>().Subscribe(Command);
+            }
+
+            private void BEServer_ChatMessageHandler(object sender, Server.Models.ChatMessage e)
+            {
+                _eventAggregator.GetEvent<BEMessageEvent<BEChatMessage>>()
+                   .Publish(new BEChatMessage(e, Info.Id));
             }
 
             private void BEServer_PlayerLog(object sender, Server.Models.LogMessage e)

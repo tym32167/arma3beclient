@@ -94,6 +94,7 @@
     <Compile Include="Events\BEServersChangedEvent.cs" />
     <Compile Include="Events\BE\BEAdminLogMessage.cs" />
     <Compile Include="Events\BE\BEBanLogMessage.cs" />
+    <Compile Include="Events\BE\BEChatMessage.cs" />
     <Compile Include="Events\BE\BECommand.cs" />
     <Compile Include="Events\BE\BEItemsMessage.cs" />
     <Compile Include="Events\BE\BELogMessage.cs" />

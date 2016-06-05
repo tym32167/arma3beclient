@@ -1,5 +1,5 @@
-﻿using System;
-using Arma3BE.Server.Models;
+﻿using Arma3BE.Server.Models;
+using System;
 
 namespace Arma3BE.Client.Infrastructure.Events.BE
 {
