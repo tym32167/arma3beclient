@@ -1,7 +1,4 @@
-﻿using Arma3BE.Server;
-using Prism.Events;
-using System;
-using System.Collections.Generic;
+﻿using System;
 
 namespace Arma3BE.Client.Infrastructure.Events.BE
 {
@@ -13,32 +10,5 @@ namespace Arma3BE.Client.Infrastructure.Events.BE
         }
 
         public Guid ServerId { get; }
-    }
-
-    public class BEItemsMessage<T> : BEMessageBase<IEnumerable<T>>
-    {
-        public BEItemsMessage(IEnumerable<T> items, Guid serverId) : base(serverId)
-        {
-            Items = items;
-        }
-
-        public IEnumerable<T> Items { get; }
-    }
-
-    public class BECommand : BEMessageBase<object>
-    {
-        public string Parameters { get; }
-        public CommandType CommandType { get; }
-
-        public BECommand(Guid serverId, CommandType commandType, string parameters = null) : base(serverId)
-        {
-            Parameters = parameters;
-            CommandType = commandType;
-        }
-    }
-
-    public class BEMessageEvent<T> : PubSubEvent<T>
-    {
-
     }
 }

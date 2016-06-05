@@ -74,7 +74,29 @@ namespace Arma3BE.Client.Modules.BEServerModule
                 BEServer.BanHandler += BEServer_BanHandler;
                 BEServer.MissionHandler += BEServer_MissionHandler;
 
+                BEServer.BanLog += BEServer_BanLog;
+                BEServer.RConAdminLog += BEServer_RConAdminLog;
+                BEServer.PlayerLog += BEServer_PlayerLog;
+
                 _eventAggregator.GetEvent<BEMessageEvent<BECommand>>().Subscribe(Command);
+            }
+
+            private void BEServer_PlayerLog(object sender, Server.Models.LogMessage e)
+            {
+                _eventAggregator.GetEvent<BEMessageEvent<BEPlayerLogMessage>>()
+                    .Publish(new BEPlayerLogMessage(e, Info.Id));
+            }
+
+            private void BEServer_RConAdminLog(object sender, Server.Models.LogMessage e)
+            {
+                _eventAggregator.GetEvent<BEMessageEvent<BEAdminLogMessage>>()
+                    .Publish(new BEAdminLogMessage(e, Info.Id));
+            }
+
+            private void BEServer_BanLog(object sender, Server.Models.LogMessage e)
+            {
+                _eventAggregator.GetEvent<BEMessageEvent<BEBanLogMessage>>()
+                    .Publish(new BEBanLogMessage(e, Info.Id));
             }
 
             private void Command(BECommand command)

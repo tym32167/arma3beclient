@@ -92,7 +92,14 @@
     <Compile Include="Converters\PlayerNumberToColorConverter.cs" />
     <Compile Include="Events\BanUserEvent.cs" />
     <Compile Include="Events\BEServersChangedEvent.cs" />
+    <Compile Include="Events\BE\BEAdminLogMessage.cs" />
+    <Compile Include="Events\BE\BEBanLogMessage.cs" />
+    <Compile Include="Events\BE\BECommand.cs" />
+    <Compile Include="Events\BE\BEItemsMessage.cs" />
+    <Compile Include="Events\BE\BELogMessage.cs" />
     <Compile Include="Events\BE\BEMessageBase.cs" />
+    <Compile Include="Events\BE\BEMessageEvent.cs" />
+    <Compile Include="Events\BE\BEPlayerLogMessage.cs" />
     <Compile Include="Events\BE\RunServerEvent.cs" />
     <Compile Include="Events\CreateViewEvent.cs" />
     <Compile Include="Events\KickUserEvent.cs" />

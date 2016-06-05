@@ -1,9 +1,10 @@
 ﻿using Arma3BE.Client.Infrastructure.Commands;
+using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.AdminsModule.Helpers;
 using Arma3BE.Server;
-using Arma3BE.Server.Abstract;
 using Arma3BEClient.Common.Logging;
+using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,18 +16,18 @@ namespace Arma3BE.Client.Modules.AdminsModule.Models
     {
         private readonly AdminHelper _helper;
         private readonly ILog _log;
-        private readonly IBEServer _beServer;
 
-        public ServerMonitorAdminsViewModel(ILog log, Guid serverInfoId, IBEServer beServer)
-            : base(new ActionCommand(() => beServer.SendCommand(CommandType.Admins)))
+        public ServerMonitorAdminsViewModel(ILog log, Guid serverInfoId, IEventAggregator eventAggregator)
+            : base(new ActionCommand(() => SendCommand(eventAggregator, serverInfoId, CommandType.Admins)))
         {
             _log = log;
-            _beServer = beServer;
             _helper = new AdminHelper(_log, serverInfoId);
-            _beServer.AdminHandler += (s, e) =>
+
+            eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Admin>>>().Subscribe(e =>
             {
-                SetData(e.Data);
-            };
+                if (e.ServerId == serverInfoId)
+                    SetData(e.Items);
+            });
         }
 
         protected override IEnumerable<Admin> RegisterData(IEnumerable<Admin> initialData)
@@ -34,6 +35,13 @@ namespace Arma3BE.Client.Modules.AdminsModule.Models
             var enumerable = initialData as IList<Admin> ?? initialData.ToList();
             _helper.RegisterAdmins(enumerable);
             return enumerable;
+        }
+
+        private static void SendCommand(IEventAggregator eventAggregator, Guid serverId, CommandType commandType,
+            string parameters = null)
+        {
+            eventAggregator.GetEvent<BEMessageEvent<BECommand>>()
+                .Publish(new BECommand(serverId, commandType, parameters));
         }
     }
 }
