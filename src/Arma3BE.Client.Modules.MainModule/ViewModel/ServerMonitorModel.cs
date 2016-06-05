@@ -5,7 +5,6 @@ using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Client.Infrastructure.Events.Models;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Server;
-using Arma3BE.Server.Abstract;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.ModelCompact;
 using Microsoft.Practices.Unity;
@@ -89,7 +88,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             //    };
             //}
 
-           // _beServer.ConnectingHandler += (s, e) => OnPropertyChanged(nameof(Connected));
+            // _beServer.ConnectingHandler += (s, e) => OnPropertyChanged(nameof(Connected));
 
 
             var playersViewModel =
@@ -203,13 +202,15 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
         //    }
         //}
 
-        //protected override void DisposeManagedResources()
-        //{
-        //    base.DisposeManagedResources();
-        //    _beServer?.Disconnect();
-        //    _beServer?.Dispose();
-        //    _beServer = null;
-        //}
+        protected override void DisposeManagedResources()
+        {
+            base.DisposeManagedResources();
+            _eventAggregator.GetEvent<CloseServerEvent>()
+                .Publish(CurrentServer);
+            //_beServer?.Disconnect();
+            //_beServer?.Dispose();
+            //_beServer = null;
+        }
 
         #region ViewModels
 

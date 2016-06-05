@@ -2,6 +2,7 @@
 using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Server;
 using Arma3BE.Server.Abstract;
+using Arma3BEClient.Common.Core;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.ModelCompact;
 using Microsoft.Practices.Unity;
@@ -27,6 +28,17 @@ namespace Arma3BE.Client.Modules.BEServerModule
             _eventAggregator = eventAggregator;
 
             _eventAggregator.GetEvent<RunServerEvent>().Subscribe(CheckServer);
+            _eventAggregator.GetEvent<CloseServerEvent>().Subscribe(CloseServer);
+        }
+
+        private void CloseServer(ServerInfo info)
+        {
+            ServerItem item;
+
+            if (_serverPool.TryRemove(info.Id, out item))
+            {
+                item.Dispose();
+            }
         }
 
         private void CheckServer(ServerInfo info)
@@ -57,7 +69,7 @@ namespace Arma3BE.Client.Modules.BEServerModule
             return server;
         }
 
-        private class ServerItem
+        private class ServerItem : DisposeObject
         {
             private readonly IEventAggregator _eventAggregator;
             public ServerInfo Info { get; }
@@ -81,6 +93,27 @@ namespace Arma3BE.Client.Modules.BEServerModule
                 BEServer.ChatMessageHandler += BEServer_ChatMessageHandler;
 
                 _eventAggregator.GetEvent<BEMessageEvent<BECommand>>().Subscribe(Command);
+            }
+
+            protected override void DisposeManagedResources()
+            {
+                base.DisposeManagedResources();
+
+                BEServer.PlayerHandler -= BEServer_PlayerHandler;
+                BEServer.AdminHandler -= BEServer_AdminHandler;
+                BEServer.BanHandler -= BEServer_BanHandler;
+                BEServer.MissionHandler -= BEServer_MissionHandler;
+
+                BEServer.BanLog -= BEServer_BanLog;
+                BEServer.RConAdminLog -= BEServer_RConAdminLog;
+                BEServer.PlayerLog -= BEServer_PlayerLog;
+
+                BEServer.ChatMessageHandler -= BEServer_ChatMessageHandler;
+
+                _eventAggregator.GetEvent<BEMessageEvent<BECommand>>().Unsubscribe(Command);
+
+                BEServer.Disconnect();
+                BEServer.Dispose();
             }
 
             private void BEServer_ChatMessageHandler(object sender, Server.Models.ChatMessage e)
