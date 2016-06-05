@@ -35,15 +35,6 @@ namespace Arma3BE.Client.Modules.MainModule
             DataContext = _model;
         }
 
-        private void OptionsClick(object sender, RoutedEventArgs e)
-        {
-            var w = new Options(new OptionsModel());
-            w.Owner = this.FindVisualAncestor<Window>();
-            w.ShowDialog();
-
-            _model.Reload();
-        }
-
         private void OpenServerInfo(ServerInfo serverInfo)
         {
             Dispatcher.BeginInvoke(new Action(() =>

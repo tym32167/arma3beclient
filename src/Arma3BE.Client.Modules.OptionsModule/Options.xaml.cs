@@ -1,10 +1,10 @@
-﻿using Arma3BE.Client.Modules.MainModule.ViewModel;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using System.Windows;
+using Arma3BE.Client.Modules.OptionsModule.ViewModel;
 using Xceed.Wpf.Toolkit;
 
-namespace Arma3BE.Client.Modules.MainModule
+namespace Arma3BE.Client.Modules.OptionsModule
 {
     /// <summary>
     ///     Interaction logic for Options.xaml

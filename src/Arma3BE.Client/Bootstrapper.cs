@@ -6,6 +6,7 @@ using Arma3BE.Client.Modules.MainModule;
 using Arma3BE.Client.Modules.ManageServerModule;
 using Arma3BE.Client.Modules.NetModule;
 using Arma3BE.Client.Modules.OnlinePlayersModule;
+using Arma3BE.Client.Modules.OptionsModule;
 using Arma3BE.Client.Modules.PlayersModule;
 using Arma3BE.Client.Modules.SteamModule;
 using Arma3BEClient.Common.Logging;
@@ -40,6 +41,7 @@ namespace Arma3BEClient
             base.ConfigureModuleCatalog();
 
             AddModule(typeof(NetModuleInit));
+            AddModule(typeof(OptionsModuleInit));
             AddModule(typeof(BEServerModuleInit));
             AddModule(typeof(PlayersModuleInit));
             AddModule(typeof(BanModuleInit));

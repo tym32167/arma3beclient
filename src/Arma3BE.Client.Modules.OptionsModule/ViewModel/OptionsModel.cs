@@ -1,23 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Windows;
-using Arma3BE.Client.Infrastructure.Contracts;
+﻿using Arma3BE.Client.Infrastructure.Contracts;
+using Arma3BE.Client.Infrastructure.Events;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using Arma3BEClient.Libs.Tools;
+using Prism.Events;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
 
-namespace Arma3BE.Client.Modules.MainModule.ViewModel
+namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
 {
     public class OptionsModel : DisposableViewModelBase
     {
+        private readonly IEventAggregator _eventAggregator;
         private readonly ILog _log = new Log();
         private SettingsStore _settingsStore;
 
-        public OptionsModel()
+        public OptionsModel(IEventAggregator eventAggregator)
         {
+            _eventAggregator = eventAggregator;
             using (var servierInfoRepository = new ServerInfoRepository())
             {
                 Servers = servierInfoRepository.GetServerInfo().Select(x => new ServerInfoModel(x)).ToList();
@@ -34,7 +37,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 
         public IList<Type> NewListItemTypes
         {
-            get { return new List<Type> {typeof (ServerInfoModel)}; }
+            get { return new List<Type> { typeof(ServerInfoModel) }; }
         }
 
         public void Save()
@@ -65,6 +68,8 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
                         servierInfoRepository.AddOrUpdate(m);
                     }
                 }
+
+                _eventAggregator.GetEvent<BEServersChangedEvent>().Publish(null);
             }
             catch (Exception e)
             {
@@ -98,28 +103,28 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             _info = model;
         }
 
-        [Required]
+        //[Required]
         public string Host
         {
             get { return _info.Host; }
             set { _info.Host = value; }
         }
 
-        [Required]
+        //[Required]
         public int Port
         {
             get { return _info.Port; }
             set { _info.Port = value; }
         }
 
-        [Required]
+        //[Required]
         public string Password
         {
             get { return _info.Password; }
             set { _info.Password = value; }
         }
 
-        [Required]
+        //[Required]
         public string Name
         {
             get { return _info.Name; }

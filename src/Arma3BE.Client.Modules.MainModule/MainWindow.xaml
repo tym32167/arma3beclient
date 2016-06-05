@@ -18,7 +18,7 @@
                 <MenuItem Header="Exit" Click="ExitClick" />
             </MenuItem>
             <MenuItem Header="Options">
-                <MenuItem Header="Preferences..." Click="OptionsClick" />
+                <MenuItem Header="Preferences..." Command="{Binding OptionsCommand}" />
             </MenuItem>
             <MenuItem Header="Servers" ItemsSource="{Binding Servers}" Click="ServerClick">
                 <MenuItem.ItemContainerStyle>

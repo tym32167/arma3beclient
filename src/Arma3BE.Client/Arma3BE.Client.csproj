@@ -226,6 +226,10 @@
       <Project>{017F121B-3AF0-4E98-A107-0CC3F2B67FCE}</Project>
       <Name>Arma3BE.Client.Modules.OnlinePlayersModule</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Modules.OptionsModule\Arma3BE.Client.Modules.OptionsModule.csproj">
+      <Project>{09d6c875-0877-40b7-b52c-7fa0476c1d5d}</Project>
+      <Name>Arma3BE.Client.Modules.OptionsModule</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Arma3BE.Client.Modules.PlayersModule\Arma3BE.Client.Modules.PlayersModule.csproj">
       <Project>{cd6c99be-b22b-4b78-ae37-a7561e1ff837}</Project>
       <Name>Arma3BE.Client.Modules.PlayersModule</Name>
