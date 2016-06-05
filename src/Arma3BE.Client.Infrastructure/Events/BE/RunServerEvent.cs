@@ -7,9 +7,4 @@ namespace Arma3BE.Client.Infrastructure.Events.BE
     {
 
     }
-
-    public class CloseServerEvent : PubSubEvent<ServerInfo>
-    {
-
-    }
 }

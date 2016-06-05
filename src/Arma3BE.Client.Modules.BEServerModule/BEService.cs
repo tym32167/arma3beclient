@@ -92,7 +92,29 @@ namespace Arma3BE.Client.Modules.BEServerModule
 
                 BEServer.ChatMessageHandler += BEServer_ChatMessageHandler;
 
+                BEServer.ConnectHandler += BEServer_ConnectHandler;
+                BEServer.ConnectingHandler += BEServer_ConnectingHandler;
+                BEServer.DisconnectHandler += BEServer_DisconnectHandler;
+
                 _eventAggregator.GetEvent<BEMessageEvent<BECommand>>().Subscribe(Command);
+            }
+
+            private void BEServer_DisconnectHandler(object sender, EventArgs e)
+            {
+                _eventAggregator.GetEvent<DisConnectServerEvent>()
+                   .Publish(Info);
+            }
+
+            private void BEServer_ConnectingHandler(object sender, EventArgs e)
+            {
+                _eventAggregator.GetEvent<ConnectingServerEvent>()
+                  .Publish(Info);
+            }
+
+            private void BEServer_ConnectHandler(object sender, EventArgs e)
+            {
+                _eventAggregator.GetEvent<ConnectServerEvent>()
+                  .Publish(Info);
             }
 
             protected override void DisposeManagedResources()
@@ -109,6 +131,10 @@ namespace Arma3BE.Client.Modules.BEServerModule
                 BEServer.PlayerLog -= BEServer_PlayerLog;
 
                 BEServer.ChatMessageHandler -= BEServer_ChatMessageHandler;
+
+                BEServer.ConnectHandler -= BEServer_ConnectHandler;
+                BEServer.ConnectingHandler -= BEServer_ConnectingHandler;
+                BEServer.DisconnectHandler -= BEServer_DisconnectHandler;
 
                 _eventAggregator.GetEvent<BEMessageEvent<BECommand>>().Unsubscribe(Command);
 

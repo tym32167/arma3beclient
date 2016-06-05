@@ -1,5 +1,4 @@
-﻿using Arma3BE.Client.Infrastructure;
-using Arma3BE.Client.Infrastructure.Contracts;
+﻿using Arma3BE.Client.Infrastructure.Contracts;
 using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Client.Infrastructure.Events.Models;
@@ -9,7 +8,6 @@ using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.ModelCompact;
 using Microsoft.Practices.Unity;
 using Prism.Events;
-using System;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -22,8 +20,9 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
         private readonly ILog _log;
         private readonly IEventAggregator _eventAggregator;
         private bool _isBusy;
+        private bool _connected;
 
-        public ServerMonitorModel(ServerInfo currentServer, ILog log, IIpService ipService, IUnityContainer container, IEventAggregator eventAggregator, bool console = false)
+        public ServerMonitorModel(ServerInfo currentServer, ILog log, IUnityContainer container, IEventAggregator eventAggregator, bool console = false)
         {
             CurrentServer = currentServer;
             _log = log;
@@ -40,27 +39,30 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             SteamControl = new ContentControl();
             ManageServerControl = new ContentControl();
 
-            Task.Factory.StartNew(() => InitModel(ipService, container, console))
+            Task.Factory.StartNew(() => InitModel(container, console))
                 .ContinueWith(t => IsBusy = false);
         }
 
-        private void InitModel(IIpService ipService, IUnityContainer container, bool console)
+        private void InitModel(IUnityContainer container, bool console)
         {
-            var host = ipService.GetIpAddress(CurrentServer.Host);
+            //var host = ipService.GetIpAddress(CurrentServer.Host);
 
-            if (string.IsNullOrEmpty(host))
-            {
-                var message = $"Host is incorrect for server {CurrentServer.Name}";
-                _log.Error(message);
-                throw new Exception(message);
-            }
+            //if (string.IsNullOrEmpty(host))
+            //{
+            //    var message = $"Host is incorrect for server {CurrentServer.Name}";
+            //    _log.Error(message);
+            //    throw new Exception(message);
+            //}
 
             var steamQueryViewModel =
-                container.Resolve<IServerMonitorSteamQueryViewModel>(new ParameterOverride("host", host),
+                container.Resolve<IServerMonitorSteamQueryViewModel>(new ParameterOverride("host", CurrentServer.Host),
                     new ParameterOverride("port", CurrentServer.Port));
             _eventAggregator.GetEvent<CreateViewEvent<IServerMonitorSteamQueryViewModel>>()
                   .Publish(new CreateViewModel<IServerMonitorSteamQueryViewModel>((ContentControl)SteamControl, steamQueryViewModel));
 
+
+            _eventAggregator.GetEvent<ConnectServerEvent>().Subscribe(BeServerConnectHandler);
+            _eventAggregator.GetEvent<DisConnectServerEvent>().Subscribe(BeServerDisconnectHandler);
 
             //_beServer = container.Resolve<BEServer>(new ParameterOverride("host", host),
             //    new ParameterOverride("port", CurrentServer.Port),
@@ -165,22 +167,32 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 
         public ServerInfo CurrentServer { get; }
 
-        public bool Connected => false;
-
-
-        private void BeServerDisconnectHandler(object sender, EventArgs e)
+        public bool Connected
         {
-            OnPropertyChanged(nameof(Connected));
+            get { return _connected; }
+            set
+            {
+                _connected = value;
+                OnPropertyChanged();
+            }
         }
 
-        private void BeServerConnectHandler(object sender, EventArgs e)
+
+        private void BeServerDisconnectHandler(ServerInfo info)
         {
+            if (info.Id != CurrentServer.Id) return;
+            Connected = false;
+        }
+
+        private void BeServerConnectHandler(ServerInfo info)
+        {
+            if (info.Id != CurrentServer.Id) return;
             SendCommand(CommandType.Players);
             SendCommand(CommandType.Admins);
             SendCommand(CommandType.Missions);
             SendCommand(CommandType.Bans);
 
-            OnPropertyChanged(nameof(Connected));
+            Connected = true;
         }
 
         private void SendCommand(CommandType commandType, string parameters = null)
