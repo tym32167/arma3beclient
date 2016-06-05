@@ -18,7 +18,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 {
     public class ServerMonitorModel : DisposableViewModelBase
     {
-        private IBEServer _beServer;
+        //private IBEServer _beServer;
         private readonly bool _console;
         private readonly ILog _log;
         private readonly IEventAggregator _eventAggregator;
@@ -63,15 +63,15 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
                   .Publish(new CreateViewModel<IServerMonitorSteamQueryViewModel>((ContentControl)SteamControl, steamQueryViewModel));
 
 
-            _beServer = container.Resolve<BEServer>(new ParameterOverride("host", host),
-                new ParameterOverride("port", CurrentServer.Port),
-                new ParameterOverride("password", CurrentServer.Password));
+            //_beServer = container.Resolve<BEServer>(new ParameterOverride("host", host),
+            //    new ParameterOverride("port", CurrentServer.Port),
+            //    new ParameterOverride("password", CurrentServer.Password));
 
 
             _eventAggregator.GetEvent<RunServerEvent>().Publish(CurrentServer);
 
-            _beServer.ConnectHandler += BeServerConnectHandler;
-            _beServer.DisconnectHandler += BeServerDisconnectHandler;
+            //_beServer.ConnectHandler += BeServerConnectHandler;
+            //_beServer.DisconnectHandler += BeServerDisconnectHandler;
 
             //if (!console)
             //{
@@ -89,12 +89,11 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             //    };
             //}
 
-            _beServer.ConnectingHandler += (s, e) => OnPropertyChanged(nameof(Connected));
+           // _beServer.ConnectingHandler += (s, e) => OnPropertyChanged(nameof(Connected));
 
 
             var playersViewModel =
-                container.Resolve<IServerMonitorPlayerViewModel>(new ParameterOverride("serverInfo", CurrentServer),
-                    new ParameterOverride("beServer", _beServer));
+                container.Resolve<IServerMonitorPlayerViewModel>(new ParameterOverride("serverInfo", CurrentServer));
 
             _eventAggregator.GetEvent<CreateViewEvent<IServerMonitorPlayerViewModel>>()
                    .Publish(new CreateViewModel<IServerMonitorPlayerViewModel>((ContentControl)OnlinePlayersControl, playersViewModel));
@@ -105,8 +104,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 
                 var bansViewModel =
                     container.Resolve<IServerMonitorBansViewModel>(
-                        new ParameterOverride("serverInfoId", CurrentServer.Id),
-                        new ParameterOverride("beServer", _beServer));
+                        new ParameterOverride("serverInfoId", CurrentServer.Id));
 
 
                 _eventAggregator.GetEvent<CreateViewEvent<IServerMonitorBansViewModel>>()
@@ -118,8 +116,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 
                 var adminsViewModel =
                    container.Resolve<IServerMonitorAdminsViewModel>(
-                       new ParameterOverride("serverInfoId", CurrentServer.Id),
-                       new ParameterOverride("beServer", _beServer));
+                       new ParameterOverride("serverInfoId", CurrentServer.Id));
 
 
                 _eventAggregator.GetEvent<CreateViewEvent<IServerMonitorAdminsViewModel>>()
@@ -133,8 +130,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 
                 var manageServerViewModel =
                     container.Resolve<IServerMonitorManageServerViewModel>(
-                        new ParameterOverride("serverId", CurrentServer.Id),
-                        new ParameterOverride("beServer", _beServer));
+                        new ParameterOverride("serverId", CurrentServer.Id));
 
                 _eventAggregator.GetEvent<CreateViewEvent<IServerMonitorManageServerViewModel>>()
                    .Publish(new CreateViewModel<IServerMonitorManageServerViewModel>((ContentControl)ManageServerControl, manageServerViewModel));
@@ -148,8 +144,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             }
 
             var chatViewModel =
-                container.Resolve<IServerMonitorChatViewModel>(new ParameterOverride("serverId", CurrentServer.Id),
-                    new ParameterOverride("beServer", _beServer));
+                container.Resolve<IServerMonitorChatViewModel>(new ParameterOverride("serverId", CurrentServer.Id));
 
             _eventAggregator.GetEvent<CreateViewEvent<IServerMonitorChatViewModel>>()
                   .Publish(new CreateViewModel<IServerMonitorChatViewModel>((ContentControl)ChatControl, chatViewModel));
@@ -166,12 +161,12 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             OnPropertyChanged(nameof(AdminsControl));
             OnPropertyChanged(nameof(SteamControl));
             OnPropertyChanged(nameof(ManageServerControl));
-            Connect();
+            //Connect();
         }
 
         public ServerInfo CurrentServer { get; }
 
-        public bool Connected => _beServer?.Connected ?? false;
+        public bool Connected => false;
 
 
         private void BeServerDisconnectHandler(object sender, EventArgs e)
@@ -195,26 +190,26 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
                 .Publish(new BECommand(CurrentServer.Id, commandType, parameters));
         }
 
-        public void Connect()
-        {
-            try
-            {
-                if (!_beServer.Connected)
-                    _beServer.Connect();
-            }
-            catch (Exception ex)
-            {
-                _log.Error(ex);
-            }
-        }
+        //public void Connect()
+        //{
+        //    try
+        //    {
+        //        if (!_beServer.Connected)
+        //            _beServer.Connect();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _log.Error(ex);
+        //    }
+        //}
 
-        protected override void DisposeManagedResources()
-        {
-            base.DisposeManagedResources();
-            _beServer?.Disconnect();
-            _beServer?.Dispose();
-            _beServer = null;
-        }
+        //protected override void DisposeManagedResources()
+        //{
+        //    base.DisposeManagedResources();
+        //    _beServer?.Disconnect();
+        //    _beServer?.Dispose();
+        //    _beServer = null;
+        //}
 
         #region ViewModels
 

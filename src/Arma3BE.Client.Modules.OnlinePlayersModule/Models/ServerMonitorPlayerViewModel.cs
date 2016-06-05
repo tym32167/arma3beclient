@@ -6,14 +6,15 @@ using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.OnlinePlayersModule.Helpers;
 using Arma3BE.Server;
-using Arma3BE.Server.Abstract;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.ModelCompact;
 using Prism.Commands;
 using Prism.Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+using Admin = Arma3BE.Server.Models.Admin;
 using Player = Arma3BE.Server.Models.Player;
 
 namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
@@ -21,25 +22,20 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
     public class ServerMonitorPlayerViewModel : ServerMonitorBaseViewModel<Player, Helpers.Views.PlayerView>, IServerMonitorPlayerViewModel
     {
         private readonly ServerInfo _serverInfo;
-        private readonly IBEServer _beServer;
         private readonly IEventAggregator _eventAggregator;
         private readonly PlayerHelper _playerHelper;
 
         public ServerMonitorPlayerViewModel(ILog log, ServerInfo serverInfo,
-            IBEServer beServer, IBanHelper banHelper, IEventAggregator eventAggregator)
-            : base(new ActionCommand(() => beServer.SendCommand(CommandType.Players)))
+            IBanHelper banHelper, IEventAggregator eventAggregator)
+            : base(new ActionCommand(() => SendCommand(eventAggregator, serverInfo.Id, CommandType.Players)))
         {
             _serverInfo = serverInfo;
-            _beServer = beServer;
             _eventAggregator = eventAggregator;
             _playerHelper = new PlayerHelper(log, serverInfo.Id, banHelper);
 
             KickUserCommand = new DelegateCommand(ShowKickDialog, CanShowDialog);
             BanUserCommand = new DelegateCommand(ShowBanDialog, CanShowDialog);
             PlayerInfoCommand = new DelegateCommand(PlayerInfoDialog, CanShowDialog);
-
-            //_beServer.PlayerHandler += (s, e) => base.SetData(e.Data);
-            _beServer.AdminHandler += (s, e) => { _admins = e.Data ?? new Arma3BE.Server.Models.Admin[0]; };
 
             _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Player>>>().Subscribe(e =>
             {
@@ -48,6 +44,21 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
                     base.SetData(e.Items);
                 }
             });
+
+            _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Admin>>>().Subscribe(e =>
+            {
+                if (e.ServerId == serverInfo.Id)
+                {
+                    _admins = e.Items ?? new Arma3BE.Server.Models.Admin[0];
+                }
+            });
+        }
+
+        private static void SendCommand(IEventAggregator eventAggregator, Guid serverId, CommandType commandType,
+            string parameters = null)
+        {
+            eventAggregator.GetEvent<BEMessageEvent<BECommand>>()
+                .Publish(new BECommand(serverId, commandType, parameters));
         }
 
         private void ShowKickDialog()
