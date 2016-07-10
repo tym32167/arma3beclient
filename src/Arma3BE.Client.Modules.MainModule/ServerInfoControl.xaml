@@ -13,48 +13,31 @@
         <Style TargetType="{x:Type xcdg:GroupByControl}">
             <Setter Property="Visibility" Value="Collapsed" />
         </Style>
-
-        <converters:InverseBooleanConverter x:Uid="local:InverseBooleanConverter_1" x:Key="InverseBooleanConverter" />
-        <converters:BrushColorConverter x:Uid="local:BrushColorConverter_1" x:Key="BrushColorConverter" />
+       
         <converters:BoolToVisibilityConverter x:Uid="local:BoolToVisibilityConverter_1"
                                               x:Key="BoolToVisibilityConverter" />
         <converters:BoolToVisibilityConverterInverse x:Uid="local:BoolToVisibilityConverterInverse"
                                                      x:Key="BoolToVisibilityConverterInverse" />
 
-
     </UserControl.Resources>
     <xctk:BusyIndicator IsBusy="{Binding IsBusy}" BusyContent="Please, wait..." >
         <Grid>
 
-        <!--<Grid.RowDefinitions>
-            <RowDefinition></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="200"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-        </Grid.RowDefinitions>-->
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-        <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-
-
-        <TabControl>
-            <TabItem Header="Session">
-                <!--<grids:OnlinePlayers DataContext="{Binding PlayersViewModel}" />-->
+            <TabControl>
+                <TabItem Header="Session">
                     <ContentControl Content="{Binding OnlinePlayersControl}"></ContentControl>
                 </TabItem>
-
-            <!--<TabItem Header="Bans">
-                <grids:BansControl DataContext="{Binding BansViewModel}" />
-            </TabItem>-->
 
                 <TabItem Header="Bans">
                     <ContentControl Content="{Binding BanControl}"></ContentControl>
@@ -62,41 +45,33 @@
 
                 <TabItem Header="Admins">
                     <ContentControl Content="{Binding AdminsControl}"></ContentControl>
-                <!--<grids:AdminsControl DataContext="{Binding AdminsViewModel}" />-->
-            </TabItem>
+                </TabItem>
 
-            <TabItem Header="Players">
-                <!--<grids:PlayersControl DataContext="{Binding PlayerListModelView}" />-->
+                <TabItem Header="Players">
                     <ContentControl Content="{Binding PlayersControl}"></ContentControl>
                 </TabItem>
 
-            <TabItem Header="Manage Server">
+                <TabItem Header="Manage Server">
                     <ContentControl Content="{Binding ManageServerControl}"></ContentControl>
                 </TabItem>
 
-            <TabItem Header="Steam Query">
-                <!--<grids:SteamQuery DataContext="{Binding SteamQueryViewModel}" />-->
+                <TabItem Header="Steam Query">
                     <ContentControl Content="{Binding SteamControl}"></ContentControl>
                 </TabItem>
-        </TabControl>
+            </TabControl>
 
-
-        <GridSplitter Grid.Row="0" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="5" />
-
-
-        <!--<chat:ChatControl Grid.Row="0" Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-                          DataContext="{Binding ChatViewModel}" />-->
+            <GridSplitter Grid.Row="0" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="5" />
 
             <ContentControl Content="{Binding ChatControl}" Grid.Row="0" Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></ContentControl>
 
             <StatusBar Grid.Row="1" Grid.ColumnSpan="3" Height="20">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Connected" Foreground="DarkGreen"
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Connected" Foreground="DarkGreen"
                            Visibility="{Binding Connected, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
-                <TextBlock Foreground="Red" Text="Disonnected"
+                    <TextBlock Foreground="Red" Text="Disonnected"
                            Visibility="{Binding Connected, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverterInverse}}" />
-            </StackPanel>
-        </StatusBar>
-    </Grid>
+                </StackPanel>
+            </StatusBar>
+        </Grid>
     </xctk:BusyIndicator>
 </UserControl>
