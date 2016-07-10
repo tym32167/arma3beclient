@@ -15,19 +15,17 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 {
     public class ServerMonitorModel : DisposableViewModelBase
     {
-        private readonly bool _console;
         private readonly IEventAggregator _eventAggregator;
         private readonly ILog _log;
         private bool _connected;
         private bool _isBusy;
 
         public ServerMonitorModel(ServerInfo currentServer, ILog log, IUnityContainer container,
-            IEventAggregator eventAggregator, bool console = false)
+            IEventAggregator eventAggregator)
         {
             CurrentServer = currentServer;
             _log = log;
             _eventAggregator = eventAggregator;
-            _console = console;
 
             IsBusy = true;
 
@@ -39,7 +37,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             SteamControl = new ContentControl();
             ManageServerControl = new ContentControl();
 
-            Task.Factory.StartNew(() => InitModel(container, console))
+            Task.Factory.StartNew(() => InitModel(container))
                 .ContinueWith(t => IsBusy = false);
         }
 
@@ -55,69 +53,64 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             }
         }
 
-        private void InitModel(IUnityContainer container, bool console)
+        private void InitModel(IUnityContainer container)
         {
+            _eventAggregator.GetEvent<ConnectServerEvent>().Subscribe(BeServerConnectHandler);
+            _eventAggregator.GetEvent<DisConnectServerEvent>().Subscribe(BeServerDisconnectHandler);
+
+            _eventAggregator.GetEvent<RunServerEvent>().Publish(CurrentServer);
+
             var steamQueryViewModel =
                 container.Resolve<IServerMonitorSteamQueryViewModel>(new ParameterOverride("serverInfo", CurrentServer));
             _eventAggregator.GetEvent<CreateViewEvent<IServerMonitorSteamQueryViewModel>>()
-                .Publish(new CreateViewModel<IServerMonitorSteamQueryViewModel>((ContentControl) SteamControl,
+                .Publish(new CreateViewModel<IServerMonitorSteamQueryViewModel>((ContentControl)SteamControl,
                     steamQueryViewModel));
-
-            _eventAggregator.GetEvent<ConnectServerEvent>().Subscribe(BeServerConnectHandler);
-            _eventAggregator.GetEvent<DisConnectServerEvent>().Subscribe(BeServerDisconnectHandler);
-            _eventAggregator.GetEvent<RunServerEvent>().Publish(CurrentServer);
-
 
             var playersViewModel =
                 container.Resolve<IServerMonitorPlayerViewModel>(new ParameterOverride("serverInfo", CurrentServer));
 
             _eventAggregator.GetEvent<CreateViewEvent<IServerMonitorPlayerViewModel>>()
-                .Publish(new CreateViewModel<IServerMonitorPlayerViewModel>((ContentControl) OnlinePlayersControl,
+                .Publish(new CreateViewModel<IServerMonitorPlayerViewModel>((ContentControl)OnlinePlayersControl,
                     playersViewModel));
 
+            var bansViewModel =
+                container.Resolve<IServerMonitorBansViewModel>(
+                    new ParameterOverride("serverInfo", CurrentServer));
 
-            if (!console)
-            {
-                var bansViewModel =
-                    container.Resolve<IServerMonitorBansViewModel>(
-                        new ParameterOverride("serverInfo", CurrentServer));
-
-                _eventAggregator.GetEvent<CreateViewEvent<IServerMonitorBansViewModel>>()
-                    .Publish(new CreateViewModel<IServerMonitorBansViewModel>((ContentControl) BanControl, bansViewModel));
+            _eventAggregator.GetEvent<CreateViewEvent<IServerMonitorBansViewModel>>()
+                .Publish(new CreateViewModel<IServerMonitorBansViewModel>((ContentControl)BanControl, bansViewModel));
 
 
-                var adminsViewModel =
-                    container.Resolve<IServerMonitorAdminsViewModel>(
-                        new ParameterOverride("serverInfo", CurrentServer));
+            var adminsViewModel =
+                container.Resolve<IServerMonitorAdminsViewModel>(
+                    new ParameterOverride("serverInfo", CurrentServer));
 
-                _eventAggregator.GetEvent<CreateViewEvent<IServerMonitorAdminsViewModel>>()
-                    .Publish(new CreateViewModel<IServerMonitorAdminsViewModel>((ContentControl) AdminsControl,
-                        adminsViewModel));
-
-
-                var manageServerViewModel =
-                    container.Resolve<IServerMonitorManageServerViewModel>(
-                        new ParameterOverride("serverInfo", CurrentServer));
-
-                _eventAggregator.GetEvent<CreateViewEvent<IServerMonitorManageServerViewModel>>()
-                    .Publish(
-                        new CreateViewModel<IServerMonitorManageServerViewModel>((ContentControl) ManageServerControl,
-                            manageServerViewModel));
+            _eventAggregator.GetEvent<CreateViewEvent<IServerMonitorAdminsViewModel>>()
+                .Publish(new CreateViewModel<IServerMonitorAdminsViewModel>((ContentControl)AdminsControl,
+                    adminsViewModel));
 
 
-                var playerListModelView =
-                    container.Resolve<IPlayerListModelView>(new ParameterOverride("serverInfo", CurrentServer));
+            var manageServerViewModel =
+                container.Resolve<IServerMonitorManageServerViewModel>(
+                    new ParameterOverride("serverInfo", CurrentServer));
 
-                _eventAggregator.GetEvent<CreateViewEvent<IPlayerListModelView>>()
-                    .Publish(new CreateViewModel<IPlayerListModelView>((ContentControl) PlayersControl,
-                        playerListModelView));
-            }
+            _eventAggregator.GetEvent<CreateViewEvent<IServerMonitorManageServerViewModel>>()
+                .Publish(
+                    new CreateViewModel<IServerMonitorManageServerViewModel>((ContentControl)ManageServerControl,
+                        manageServerViewModel));
+
+            var playerListModelView =
+                container.Resolve<IPlayerListModelView>(new ParameterOverride("serverInfo", CurrentServer));
+
+            _eventAggregator.GetEvent<CreateViewEvent<IPlayerListModelView>>()
+                .Publish(new CreateViewModel<IPlayerListModelView>((ContentControl)PlayersControl,
+                    playerListModelView));
 
             var chatViewModel =
                 container.Resolve<IServerMonitorChatViewModel>(new ParameterOverride("serverInfo", CurrentServer));
 
             _eventAggregator.GetEvent<CreateViewEvent<IServerMonitorChatViewModel>>()
-                .Publish(new CreateViewModel<IServerMonitorChatViewModel>((ContentControl) ChatControl, chatViewModel));
+                .Publish(new CreateViewModel<IServerMonitorChatViewModel>((ContentControl)ChatControl, chatViewModel));
 
             OnPropertyChanged(nameof(BanControl));
             OnPropertyChanged(nameof(OnlinePlayersControl));
