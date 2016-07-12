@@ -35,22 +35,27 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Decorators\BattlEyeClientProxy.cs" />
-    <Compile Include="Decorators\BEConnectedWatcher.cs" />
+    <Compile Include="Mocks\BattlEyeServerLogProxy.cs" />
+    <Compile Include="Mocks\MockBattleEyeServer.cs" />
+    <Compile Include="ServerFactory\BattlEyeServerFactory.cs" />
+    <Compile Include="ServerFactory\WatcherBEServerFactory.cs" />
+    <Compile Include="ServerDecorators\BattlEyeServerProxy.cs" />
+    <Compile Include="ServerDecorators\BEConnectedWatcher.cs" />
     <Compile Include="CommandType.cs" />
-    <Compile Include="IBattlEyeClientFactory.cs" />
-    <Compile Include="IBEServer.cs" />
-    <Compile Include="Messaging\Recognizers\AdminListRecognizer.cs" />
-    <Compile Include="Messaging\Recognizers\BanListRecognizer.cs" />
-    <Compile Include="Messaging\Recognizers\BanLogRecognizer.cs" />
-    <Compile Include="Messaging\Recognizers\ChatMessageRecognizer.cs" />
-    <Compile Include="Messaging\IServerMessageRecognizer.cs" />
-    <Compile Include="Messaging\Recognizers\Core\GUIDValidator.cs" />
-    <Compile Include="Messaging\Recognizers\Core\IPAndPortValidator.cs" />
-    <Compile Include="Messaging\Recognizers\MissionsListRecognizer.cs" />
-    <Compile Include="Messaging\Recognizers\PlayerListRecognizer.cs" />
-    <Compile Include="Messaging\Recognizers\PlayerLogRecognizer.cs" />
-    <Compile Include="Messaging\Recognizers\RconAdminLogRecognizer.cs" />
+    <Compile Include="Abstract\IBattlEyeServer.cs" />
+    <Compile Include="Abstract\IBattlEyeServerFactory.cs" />
+    <Compile Include="Abstract\IBEServer.cs" />
+    <Compile Include="Recognizers\AdminListRecognizer.cs" />
+    <Compile Include="Recognizers\BanListRecognizer.cs" />
+    <Compile Include="Recognizers\BanLogRecognizer.cs" />
+    <Compile Include="Recognizers\ChatMessageRecognizer.cs" />
+    <Compile Include="Abstract\IServerMessageRecognizer.cs" />
+    <Compile Include="Recognizers\Core\GUIDValidator.cs" />
+    <Compile Include="Recognizers\Core\IPAndPortValidator.cs" />
+    <Compile Include="Recognizers\MissionsListRecognizer.cs" />
+    <Compile Include="Recognizers\PlayerListRecognizer.cs" />
+    <Compile Include="Recognizers\PlayerLogRecognizer.cs" />
+    <Compile Include="Recognizers\RconAdminLogRecognizer.cs" />
     <Compile Include="Models\Admin.cs" />
     <Compile Include="Models\AdminList.cs" />
     <Compile Include="Models\Ban.cs" />
@@ -64,7 +69,7 @@
     <Compile Include="Models\ServerMessage.cs" />
     <Compile Include="Models\StateList.cs" />
     <Compile Include="BEServer.cs" />
-    <Compile Include="Decorators\ThreadSafeBattleEyeClient.cs" />
+    <Compile Include="ServerDecorators\ThreadSafeBattleEyeServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Arma3BE.Common\Arma3BE.Common.csproj">

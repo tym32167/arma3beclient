@@ -5,7 +5,10 @@ namespace Arma3BE.Server.Models
 {
     public class Ban
     {
-        public Ban(int num, string guidIp, int minutesleft, string reason)
+        private static readonly Regex CompidelRegex = new Regex(@"(\d{1,5})[ ]+([^ ]+)[ ]+([^ ]+)[ ]+(.*)",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        private Ban(int num, string guidIp, int minutesleft, string reason)
         {
             Num = num;
             GuidIp = guidIp;
@@ -21,7 +24,7 @@ namespace Arma3BE.Server.Models
 
         public string Reason { get; }
 
-        protected bool Equals(Ban other)
+        private bool Equals(Ban other)
         {
             return Num == other.Num && string.Equals(GuidIp, other.GuidIp) && string.Equals(Reason, other.Reason);
         }
@@ -31,32 +34,36 @@ namespace Arma3BE.Server.Models
             unchecked
             {
                 var hashCode = Num;
-                hashCode = (hashCode*397) ^ (GuidIp != null ? GuidIp.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ Minutesleft;
-                hashCode = (hashCode*397) ^ (Reason != null ? Reason.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (GuidIp?.GetHashCode() ?? 0);
+                hashCode = (hashCode * 397) ^ Minutesleft;
+                hashCode = (hashCode * 397) ^ (Reason?.GetHashCode() ?? 0);
                 return hashCode;
             }
         }
-
-
-        private static Regex compidelRegex = new Regex(@"(\d{1,5})[ ]+([^ ]+)[ ]+([^ ]+)[ ]+(.*)",
-                    RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public static Ban Parse(string input)
         {
             try
             {
-                var match = compidelRegex.Match(input);
+                var match = CompidelRegex.Match(input);
 
                 if (match.Success || match.Groups.Count != 6)
                 {
-                    var num = int.Parse(match.Groups[1].Value);
+                    int num;
+
+                    if (!int.TryParse(match.Groups[1].Value, out num)) return null;
+
                     var guid = match.Groups[2].Value;
 
                     if (guid.Length != 32) return null;
 
                     var l = match.Groups[3].Value;
-                    var left = l == "perm" ? 0 : (l == "-" ? -1 : int.Parse(l));
+
+                    var left = l == "perm" ? 0 : (l == "-" ? -1 : -2);
+                    if (left == -2)
+                    {
+                        if (!int.TryParse(l, out left)) return null;
+                    }
 
                     var reason = match.Groups[4].Value;
 
@@ -81,7 +88,7 @@ namespace Arma3BE.Server.Models
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != GetType()) return false;
-            return Equals((Ban) obj);
+            return Equals((Ban)obj);
         }
     }
 }
