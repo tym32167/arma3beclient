@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Arma3BE.Client.Modules.MainModule.ViewModel;
+using Arma3BEClient.Common.Logging;
+using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Repositories;
+using log4net.Config;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Libs.ModelCompact;
-using Arma3BEClient.Libs.Repositories;
-using Arma3BEClient.ViewModel;
-using log4net.Config;
 
 namespace arma3beConsole
 {
@@ -48,7 +48,7 @@ namespace arma3beConsole
         private static void Run(IEnumerable<ServerMonitorModel> models)
         {
             var creators =
-                models.Select(x => new Func<Thread>(() => new Thread(() => Run(x)) {IsBackground = true})).ToArray();
+                models.Select(x => new Func<Thread>(() => new Thread(() => Run(x)) { IsBackground = true })).ToArray();
             var threads = new Thread[creators.Length];
 
             while (true)

@@ -1,3 +1,6 @@
+using Arma3BEClient.Common.Core;
+using Arma3BEClient.Libs.Context;
+using Arma3BEClient.Libs.ModelCompact;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -6,14 +9,10 @@ using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading;
-using Arma3BEClient.Common.Core;
-using Arma3BEClient.Libs.Context;
-using Arma3BEClient.Libs.ModelCompact;
 
 namespace Arma3BEClient.Libs.Repositories
 {
-    public class PlayerRepositoryFactory
+    public class PlayerRepositoryFactory : IFactory<PlayerRepositoryFactory.IPlayerRepository>
     {
         public static IPlayerRepository Create()
         {
@@ -297,6 +296,11 @@ namespace Arma3BEClient.Libs.Repositories
                     Name = source.Name
                 };
             }
+        }
+
+        IPlayerRepository IFactory<IPlayerRepository>.Create()
+        {
+            return Create();
         }
     }
 

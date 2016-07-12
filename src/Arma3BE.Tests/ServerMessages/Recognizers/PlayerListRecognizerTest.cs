@@ -1,5 +1,5 @@
-﻿using Arma3BE.Server.Messaging.Recognizers;
-using Arma3BE.Server.Models;
+﻿using Arma3BE.Server.Models;
+using Arma3BE.Server.Recognizers;
 using NUnit.Framework;
 
 namespace Arma3BEClient.Tests.ServerMessages.Recognizers
