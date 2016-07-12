@@ -51,18 +51,18 @@ namespace Arma3BE.Server.Models
             unchecked
             {
                 var hashCode = Num;
-                hashCode = (hashCode*397) ^ (IP != null ? IP.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ Port;
-                hashCode = (hashCode*397) ^ Ping;
-                hashCode = (hashCode*397) ^ (Guid != null ? Guid.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (Name != null ? Name.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (int) State;
+                hashCode = (hashCode * 397) ^ (IP?.GetHashCode() ?? 0);
+                hashCode = (hashCode * 397) ^ Port;
+                hashCode = (hashCode * 397) ^ Ping;
+                hashCode = (hashCode * 397) ^ (Guid?.GetHashCode() ?? 0);
+                hashCode = (hashCode * 397) ^ (Name?.GetHashCode() ?? 0);
+                hashCode = (hashCode * 397) ^ (int)State;
                 return hashCode;
             }
         }
 
 
-        private static Regex compidelRegex = new Regex(
+        private static readonly Regex CompidelRegex = new Regex(
                         @"(\d{1,3})[ ]+(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):([\d]+)[ ]+(-?[\d]+)[ ]+([^ ]+)[ ]+(.*)",
                         RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
@@ -70,15 +70,21 @@ namespace Arma3BE.Server.Models
         {
             try
             {
-                var match = compidelRegex.Match(input);
+                var match = CompidelRegex.Match(input);
 
                 if (match.Success || match.Groups.Count != 6)
                 {
-                    var num = int.Parse(match.Groups[1].Value);
+                    int num;
+                    if (!int.TryParse(match.Groups[1].Value, out num)) return null;
                     var ip = match.Groups[2].Value;
-                    var port = int.Parse(match.Groups[3].Value);
-                    var ping = int.Parse(match.Groups[4].Value);
+                    int port;
+                    if (!int.TryParse(match.Groups[3].Value, out port)) return null;
+
+                    int ping;
+                    if (!int.TryParse(match.Groups[4].Value, out ping)) return null;
+
                     var guid = match.Groups[5].Value;
+
 
                     var ind = guid.IndexOf("(", StringComparison.Ordinal);
                     guid = guid.Substring(0, ind);
@@ -109,7 +115,7 @@ namespace Arma3BE.Server.Models
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != GetType()) return false;
-            return Equals((Player) obj);
+            return Equals((Player)obj);
         }
     }
 }

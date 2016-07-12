@@ -74,17 +74,10 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>main.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Castle.Windsor, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -97,56 +90,43 @@
       <HintPath>..\packages\EntityFramework.SqlServerCompact.6.1.3\lib\net45\EntityFramework.SqlServerCompact.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="GalaSoft.MvvmLight, Version=5.2.0.37222, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">
-      <HintPath>..\packages\MvvmLightLibs.5.2.0.0\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="GalaSoft.MvvmLight.Extras, Version=5.2.0.37222, Culture=neutral, PublicKeyToken=669f0b5e8f868abf, processorArchitecture=MSIL">
-      <HintPath>..\packages\MvvmLightLibs.5.2.0.0\lib\net45\GalaSoft.MvvmLight.Extras.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="GalaSoft.MvvmLight.Platform, Version=5.2.0.37226, Culture=neutral, PublicKeyToken=5f873c45e98af8a1, processorArchitecture=MSIL">
-      <HintPath>..\packages\MvvmLightLibs.5.2.0.0\lib\net45\GalaSoft.MvvmLight.Platform.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="MaxMind.Db, Version=1.0.1.0, Culture=neutral, PublicKeyToken=66afa4cc5ae853ac, processorArchitecture=MSIL">
-      <HintPath>..\packages\MaxMind.Db.1.2.0\lib\net40\MaxMind.Db.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="MaxMind.GeoIP2, Version=2.5.0.0, Culture=neutral, PublicKeyToken=66afa4cc5ae853ac, processorArchitecture=MSIL">
-      <HintPath>..\packages\MaxMind.GeoIP2.2.5.0\lib\net452\MaxMind.GeoIP2.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Microsoft.Practices.Unity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RestSharp.105.2.3\lib\net45\RestSharp.dll</HintPath>
+    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.RegistrationByConvention, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Prism, Version=6.1.0.0, Culture=neutral, PublicKeyToken=91a96d2a154366d8, processorArchitecture=MSIL">
+      <HintPath>..\packages\Prism.Core.6.1.0\lib\net45\Prism.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Prism.Unity.Wpf, Version=6.1.0.0, Culture=neutral, PublicKeyToken=91a96d2a154366d8, processorArchitecture=MSIL">
+      <HintPath>..\packages\Prism.Unity.6.1.1\lib\net45\Prism.Unity.Wpf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Prism.Wpf, Version=6.1.0.0, Culture=neutral, PublicKeyToken=91a96d2a154366d8, processorArchitecture=MSIL">
+      <HintPath>..\packages\Prism.Wpf.6.1.0\lib\net45\Prism.Wpf.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
-    </Reference>
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\MvvmLightLibs.5.2.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -158,30 +138,6 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Xceed.Wpf.AvalonDock, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Xceed.Wpf.DataGrid, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Xceed.Wpf.Toolkit, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -191,155 +147,20 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="About.xaml.cs">
-      <DependentUpon>About.xaml</DependentUpon>
+    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Shell.xaml.cs">
+      <DependentUpon>Shell.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Boxes\BanPlayerWindow.xaml.cs">
-      <DependentUpon>BanPlayerWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Boxes\ChatHistory.xaml.cs">
-      <DependentUpon>ChatHistory.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Boxes\KickPlayerWindow.xaml.cs">
-      <DependentUpon>KickPlayerWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Boxes\PlayerViewWindow.xaml.cs">
-      <DependentUpon>PlayerViewWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Chat\ChatControl.xaml.cs">
-      <DependentUpon>ChatControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Commands\ActionCommand.cs" />
-    <Compile Include="Commands\BaseCommand.cs" />
-    <Compile Include="Contracts\DisposableUserControl.cs" />
-    <Compile Include="Contracts\DisposableViewModelBase.cs" />
-    <Compile Include="Converters\BoolToVisibilityConverter .cs" />
-    <Compile Include="Converters\BoolToVisibilityConverterInverse.cs" />
-    <Compile Include="Converters\BrushColorConverter.cs" />
-    <Compile Include="Converters\InverseBooleanConverter.cs" />
-    <Compile Include="Converters\PlayerNumberToColorConverter.cs" />
-    <Compile Include="Extensions\GridHelper.cs" />
-    <Compile Include="Grids\AdminsControl.xaml.cs">
-      <DependentUpon>AdminsControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Grids\BansControl.xaml.cs">
-      <DependentUpon>BansControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Grids\ManageServer.xaml.cs">
-      <DependentUpon>ManageServer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Grids\OnlinePlayers.xaml.cs">
-      <DependentUpon>OnlinePlayers.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Grids\SteamQuery.xaml.cs">
-      <DependentUpon>SteamQuery.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Helpers\AdminHelper.cs" />
-    <Compile Include="Helpers\BanHelper.cs" />
-    <Compile Include="Helpers\IPInfo.cs" />
-    <Compile Include="Helpers\ChatHelper.cs" />
-    <Compile Include="Helpers\PlayerHelper.cs" />
-    <Compile Include="Helpers\StateHelper.cs" />
-    <Compile Include="Helpers\Views\BanView.cs" />
-    <Compile Include="Helpers\Views\PlayerView.cs" />
-    <Compile Include="IoC\CoreInstaller.cs" />
-    <Compile Include="Models\ChatHistoryViewModel.cs" />
-    <Compile Include="Models\Export\PlayerXML.cs" />
-    <Compile Include="Models\PlayerView.cs" />
-    <Compile Include="Grids\PlayersControl.xaml.cs">
-      <DependentUpon>PlayersControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Models\PlayerViewModel.cs" />
-    <Compile Include="Models\ServerMonitorAdminsViewModel.cs" />
-    <Compile Include="Models\ServerMonitorBansViewModel.cs" />
-    <Compile Include="Models\ServerMonitorBaseViewModel.cs" />
-    <Compile Include="Models\ServerMonitorChatViewModel.cs" />
-    <Compile Include="Models\ServerMonitorManageServerViewModel.cs" />
-    <Compile Include="Models\ServerMonitorPlayerViewModel.cs" />
-    <Compile Include="Models\ServerMonitorSteamQueryViewModel.cs" />
-    <Compile Include="Properties\Annotations.cs" />
-    <Compile Include="ServerInfoControl.xaml.cs">
-      <DependentUpon>ServerInfoControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="ViewModel\OnlinePlayersModelView.cs" />
-    <Compile Include="ViewModel\OptionsModel.cs" />
-    <Compile Include="ViewModel\PlayerListModelView.cs" />
-    <Compile Include="ViewModel\ServerMonitorModel.cs" />
-    <Compile Include="ViewModel\ViewModelLocator.cs" />
-    <Page Include="About.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Boxes\BanPlayerWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Boxes\ChatHistory.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Boxes\KickPlayerWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Boxes\PlayerViewWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Chat\ChatControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Grids\AdminsControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Grids\BansControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Grids\ManageServer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Grids\OnlinePlayers.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Grids\SteamQuery.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="Options.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Grids\PlayersControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ServerInfoControl.xaml">
+    <Page Include="Shell.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Options.xaml.cs">
-      <DependentUpon>Options.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -350,17 +171,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Resource Include="main.ico" />
     <SplashScreen Include="SplashScreen.png" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <Content Include="control.ps1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Resource Include="Icons\main.ico" />
-    <Content Include="IPDatabase\GeoLite2-City.mmdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />
@@ -374,38 +190,64 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Arma3BE.Client.Infrastructure\Arma3BE.Client.Infrastructure.csproj">
+      <Project>{b58670e5-011f-4318-964e-35c8b63870a5}</Project>
+      <Name>Arma3BE.Client.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Modules.AdminsModule\Arma3BE.Client.Modules.AdminsModule.csproj">
+      <Project>{50e80fcc-87bd-4982-901e-38fd22482d02}</Project>
+      <Name>Arma3BE.Client.Modules.AdminsModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Modules.BanModule\Arma3BE.Client.Modules.BanModule.csproj">
+      <Project>{b9350497-d13c-4a2b-b4f9-51c53d28a55a}</Project>
+      <Name>Arma3BE.Client.Modules.BanModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Modules.BEServerModule\Arma3BE.Client.Modules.BEServerModule.csproj">
+      <Project>{35dba2b4-0519-44cf-ba45-7aa6754866fd}</Project>
+      <Name>Arma3BE.Client.Modules.BEServerModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Modules.ChatModule\Arma3BE.Client.Modules.ChatModule.csproj">
+      <Project>{49e36c5f-4a81-4338-8a34-c0e52fcfa5dc}</Project>
+      <Name>Arma3BE.Client.Modules.ChatModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Modules.MainModule\Arma3BE.Client.Modules.MainModule.csproj">
+      <Project>{58dbdf91-7ad0-4780-a3ef-0fa5c39e2869}</Project>
+      <Name>Arma3BE.Client.Modules.MainModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Modules.ManageServerModule\Arma3BE.Client.Modules.ManageServerModule.csproj">
+      <Project>{da176f41-7db9-4678-868b-c585c95cb48e}</Project>
+      <Name>Arma3BE.Client.Modules.ManageServerModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Modules.NetModule\Arma3BE.Client.Modules.NetModule.csproj">
+      <Project>{e7c5ab59-5824-40ea-ae0c-f8c75b6c919c}</Project>
+      <Name>Arma3BE.Client.Modules.NetModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Modules.OnlinePlayersModule\Arma3BE.Client.Modules.OnlinePlayersModule.csproj">
+      <Project>{017F121B-3AF0-4E98-A107-0CC3F2B67FCE}</Project>
+      <Name>Arma3BE.Client.Modules.OnlinePlayersModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Modules.OptionsModule\Arma3BE.Client.Modules.OptionsModule.csproj">
+      <Project>{09d6c875-0877-40b7-b52c-7fa0476c1d5d}</Project>
+      <Name>Arma3BE.Client.Modules.OptionsModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Modules.PlayersModule\Arma3BE.Client.Modules.PlayersModule.csproj">
+      <Project>{cd6c99be-b22b-4b78-ae37-a7561e1ff837}</Project>
+      <Name>Arma3BE.Client.Modules.PlayersModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Modules.SteamModule\Arma3BE.Client.Modules.SteamModule.csproj">
+      <Project>{6ce098a8-dff1-4c66-ad16-909903945e2b}</Project>
+      <Name>Arma3BE.Client.Modules.SteamModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Styles\Arma3BE.Client.Styles.csproj">
+      <Project>{cf43b82b-1f25-4385-b315-ab7b4c010a4b}</Project>
+      <Name>Arma3BE.Client.Styles</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Arma3BE.Common\Arma3BE.Common.csproj">
       <Project>{d507e532-7de6-4028-9dbe-aa76c54cc92a}</Project>
       <Name>Arma3BE.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Arma3BE.Client.Libs\Arma3BE.Client.Libs.csproj">
-      <Project>{E5240A50-E944-4F50-A353-2E3C9E547447}</Project>
-      <Name>Arma3BE.Client.Libs</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Arma3BE.Server\Arma3BE.Server.csproj">
-      <Project>{992fab3c-6505-41e4-a4d0-4d0657661695}</Project>
-      <Name>Arma3BE.Server</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Arma3BE.Steam\Arma3BE.Steam.csproj">
-      <Project>{b2948bd4-b413-4e9d-b9ed-41261b0c56da}</Project>
-      <Name>Arma3BE.Steam</Name>
-    </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Boxes\BoxesGrids\" />
-    <Folder Include="DataSources\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icons\add.ico" />
-    <Resource Include="Icons\bg_header.jpg" />
-    <Resource Include="Icons\delete.ico" />
-    <Resource Include="Icons\download.ico" />
-    <Resource Include="Icons\gear.png" />
-    <Resource Include="Icons\refresh.ico" />
-    <Resource Include="Icons\save 2.ico" />
-    <Resource Include="Icons\site_logo.png" />
-    <Resource Include="Icons\tehgam.jpg" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
       <Visible>False</Visible>
@@ -426,10 +268,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
-    if not exist "$(TargetDir)x86" md "$(TargetDir)x86"
-    xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\x86\*.*" "$(TargetDir)x86"
-    if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"
-    xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\amd64\*.*" "$(TargetDir)amd64"</PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -1,0 +1,35 @@
+﻿<Window x:Class="Arma3BE.Client.Modules.BanModule.Boxes.KickPlayerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        Title="{Binding Path=PlayerName , StringFormat=Kick player {0}}" WindowStyle="ToolWindow"
+        SizeToContent="WidthAndHeight" ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+
+        <TextBlock Text="Reason" Margin="5" />
+        <TextBox Grid.Column="1" Margin="5" MinLines="2" Width="300" Name="tbReason"
+                 Text="{Binding Reason, Mode=TwoWay}" />
+
+        <TextBlock Text="Template" Grid.Row="1" Margin="5" />
+        <ComboBox Grid.Row="1" Grid.Column="1" Margin="5" SelectedItem="{Binding Reason, Mode=TwoWay}"
+                  ItemsSource="{Binding Reasons, Mode=OneWay}" />
+
+        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Kick" Margin="5 2" Padding="5 0" Click="KickClick" />
+            <Button Content="Cancel" Margin="5 2" Padding="5 0" Click="CancelClick" />
+        </StackPanel>
+
+    </Grid>
+</Window>

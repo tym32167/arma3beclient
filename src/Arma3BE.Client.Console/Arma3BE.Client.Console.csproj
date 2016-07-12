@@ -105,6 +105,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Arma3BE.Client.Modules.MainModule\Arma3BE.Client.Modules.MainModule.csproj">
+      <Project>{58dbdf91-7ad0-4780-a3ef-0fa5c39e2869}</Project>
+      <Name>Arma3BE.Client.Modules.MainModule</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Arma3BE.Common\Arma3BE.Common.csproj">
       <Project>{d507e532-7de6-4028-9dbe-aa76c54cc92a}</Project>
       <Name>Arma3BE.Common</Name>
@@ -112,10 +116,6 @@
     <ProjectReference Include="..\Arma3BE.Client.Libs\Arma3BE.Client.Libs.csproj">
       <Project>{E5240A50-E944-4F50-A353-2E3C9E547447}</Project>
       <Name>Arma3BE.Client.Libs</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Arma3BE.Client\Arma3BE.Client.csproj">
-      <Project>{46B9AF55-01D0-45B0-95CB-16F5B61A9F03}</Project>
-      <Name>Arma3BE.Client</Name>
     </ProjectReference>
     <ProjectReference Include="..\Arma3BE.Server\Arma3BE.Server.csproj">
       <Project>{992fab3c-6505-41e4-a4d0-4d0657661695}</Project>
