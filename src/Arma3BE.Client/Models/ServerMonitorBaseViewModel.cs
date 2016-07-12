@@ -1,29 +1,24 @@
-﻿using Arma3BEClient.Commands;
-using GalaSoft.MvvmLight;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+using Arma3BEClient.Commands;
+using GalaSoft.MvvmLight;
 
 namespace Arma3BEClient.Models
 {
     public abstract class ServerMonitorBaseViewModel<T, TK> : ViewModelBase where T : class where TK : class
     {
-        private readonly IEqualityComparer<TK> _comparer;
         protected IEnumerable<TK> _data;
-        protected ObservableCollection<TK> FilteredData;
 
-        protected ServerMonitorBaseViewModel(ICommand refreshCommand, IEqualityComparer<TK> comparer)
+        protected ServerMonitorBaseViewModel(ICommand refreshCommand)
         {
-            _comparer = comparer;
             RefreshCommand = refreshCommand;
             FilterCommand = new ActionCommand(UpdateData);
         }
 
-        public ObservableCollection<TK> Data
+        public IEnumerable<TK> Data
         {
-            get { return FilteredData; }
+            get { return FilterData(_data); }
         }
 
         public string Filter { get; set; }
@@ -46,47 +41,16 @@ namespace Arma3BEClient.Models
 
         public virtual void UpdateData()
         {
-            var newData = FilterData(_data).ToArray();
-            UpdateFilteredData(newData);
-
             RaisePropertyChanged("Data");
             RaisePropertyChanged("DataCount");
         }
 
-        private object _locker = new object();
-        private void UpdateFilteredData(TK[] newData)
-        {
-            lock (_locker)
-            {
-                if (FilteredData == null)
-                {
-                    FilteredData = new ObservableCollection<TK>(newData);
-                    return;
-                }
-
-                var exists = FilteredData.ToArray();
-
-                var todelete = exists.Where(x => newData.All(n => _comparer.Equals(n,x) == false)).ToArray();
-                var toAdd = newData.Where(x => exists.All(n => _comparer.Equals(n, x) == false)).ToArray();
-
-                foreach (var d in todelete)
-                {
-                    FilteredData.Remove(d);
-                }
-
-                foreach (var a in toAdd)
-                {
-                    FilteredData.Add(a);
-                }
-            }
-        }
-
         protected abstract IEnumerable<TK> RegisterData(IEnumerable<T> initialData);
 
-        protected virtual ObservableCollection<TK> FilterData(IEnumerable<TK> initialData)
+        protected virtual IEnumerable<TK> FilterData(IEnumerable<TK> initialData)
         {
-            if (initialData == null) return null;
-            return new ObservableCollection<TK>(initialData.Where(x => F(x, Filter)));
+            if (initialData == null) return initialData;
+            return initialData.Where(x => F(x, Filter));
         }
 
         private bool F(TK element, string initialFilter)
@@ -94,7 +58,7 @@ namespace Arma3BEClient.Models
             if (string.IsNullOrEmpty(initialFilter)) return true;
             var filter = initialFilter.ToLower();
 
-            var type = typeof(TK);
+            var type = typeof (TK);
 
 
             var members = type.GetProperties();

@@ -1,4 +1,9 @@
-﻿using Arma3BE.Server;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Windows.Input;
+using Arma3BE.Server;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Boxes;
 using Arma3BEClient.Commands;
@@ -6,11 +11,6 @@ using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Helpers;
 using Arma3BEClient.Helpers.Views;
 using Arma3BEClient.Libs.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Windows.Input;
 
 namespace Arma3BEClient.Models
 {
@@ -23,7 +23,7 @@ namespace Arma3BEClient.Models
         private readonly Guid _serverInfoId;
 
         public ServerMonitorBansViewModel(ILog log, Guid serverInfoId, IBEServer beServer)
-            : base(new ActionCommand(() => beServer.SendCommand(CommandType.Bans)), new BanViewComparer())
+            : base(new ActionCommand(() => beServer.SendCommand(CommandType.Bans)))
         {
             _log = log;
             _serverInfoId = serverInfoId;
@@ -50,8 +50,7 @@ namespace Arma3BEClient.Models
                         }
 
                         _beServer.SendCommand(CommandType.Bans);
-                    })
-                    { IsBackground = true };
+                    }) {IsBackground = true};
 
                     t.Start();
                 }
@@ -123,19 +122,6 @@ namespace Arma3BEClient.Models
             base.SetData(initialData);
             RaisePropertyChanged("AvailibleBans");
             RaisePropertyChanged("AvailibleBansCount");
-        }
-
-        private class BanViewComparer : IEqualityComparer<BanView>
-        {
-            public bool Equals(BanView x, BanView y)
-            {
-                return x.GuidIp == y.GuidIp;
-            }
-
-            public int GetHashCode(BanView obj)
-            {
-                return obj.GetHashCode();
-            }
         }
     }
 }
