@@ -1,24 +1,25 @@
 ﻿using Arma3BE.Client.Infrastructure.Commands;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace Arma3BE.Client.Infrastructure.Models
 {
     public abstract class ServerMonitorBaseViewModel<T, TK> : ViewModelBase where T : class where TK : class
     {
+        private readonly IEqualityComparer<TK> _comparer;
         protected IEnumerable<TK> _data;
+        protected ObservableCollection<TK> FilteredData;
         private TK _selectedItem;
 
-        protected ServerMonitorBaseViewModel(ICommand refreshCommand)
+        protected ServerMonitorBaseViewModel(ICommand refreshCommand, IEqualityComparer<TK> comparer)
         {
+            _comparer = comparer;
             RefreshCommand = refreshCommand;
             FilterCommand = new ActionCommand(UpdateData);
-        }
-
-        public IEnumerable<TK> Data
-        {
-            get { return FilterData(_data); }
         }
 
         public TK SelectedItem
@@ -29,6 +30,11 @@ namespace Arma3BE.Client.Infrastructure.Models
                 _selectedItem = value;
                 OnPropertyChanged();
             }
+        }
+
+        public ObservableCollection<TK> Data
+        {
+            get { return FilteredData; }
         }
 
         public string Filter { get; set; }
@@ -51,16 +57,49 @@ namespace Arma3BE.Client.Infrastructure.Models
 
         public virtual void UpdateData()
         {
+            var newData = FilterData(_data).ToArray();
+            UpdateFilteredData(newData);
+
             OnPropertyChanged(nameof(Data));
             OnPropertyChanged(nameof(DataCount));
         }
 
+        private object _locker = new object();
+        private void UpdateFilteredData(TK[] newData)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+
+                if (FilteredData == null)
+                {
+                    FilteredData = new ObservableCollection<TK>(newData);
+                    return;
+                }
+
+                var exists = FilteredData.ToArray();
+
+                var todelete = exists.Where(x => newData.All(n => _comparer.Equals(n, x) == false)).ToArray();
+                var toAdd = newData.Where(x => exists.All(n => _comparer.Equals(n, x) == false)).ToArray();
+
+                foreach (var d in todelete)
+                {
+                    FilteredData.Remove(d);
+                }
+
+                foreach (var a in toAdd)
+                {
+                    FilteredData.Add(a);
+                }
+
+            });
+        }
+
         protected abstract IEnumerable<TK> RegisterData(IEnumerable<T> initialData);
 
-        protected virtual IEnumerable<TK> FilterData(IEnumerable<TK> initialData)
+        protected virtual ObservableCollection<TK> FilterData(IEnumerable<TK> initialData)
         {
-            if (initialData == null) return initialData;
-            return initialData.Where(x => F(x, Filter));
+            if (initialData == null) return null;
+            return new ObservableCollection<TK>(initialData.Where(x => F(x, Filter)));
         }
 
         private bool F(TK element, string initialFilter)

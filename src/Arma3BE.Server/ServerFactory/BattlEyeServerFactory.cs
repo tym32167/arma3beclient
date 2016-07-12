@@ -17,12 +17,12 @@ namespace Arma3BE.Server.ServerFactory
 
         public IBattlEyeServer Create(BattlEyeLoginCredentials credentials)
         {
-            return new ThreadSafeBattleEyeServer(new BattlEyeServerProxy(new BattlEyeClient(credentials)
-            {
-                ReconnectOnPacketLoss = true
-            }), _log);
+            //return new ThreadSafeBattleEyeServer(new BattlEyeServerProxy(new BattlEyeClient(credentials)
+            //{
+            //    ReconnectOnPacketLoss = true
+            //}), _log);
 
-            //return new BattlEyeServerLogProxy(new MockBattleEyeServer(), _log);
+            return new BattlEyeServerLogProxy(new MockBattleEyeServer(), _log);
         }
     }
 }

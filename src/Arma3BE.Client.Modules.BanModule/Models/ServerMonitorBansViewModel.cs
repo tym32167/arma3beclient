@@ -26,7 +26,7 @@ namespace Arma3BE.Client.Modules.BanModule.Models
         private readonly Guid _serverInfoId;
 
         public ServerMonitorBansViewModel(ILog log, ServerInfo serverInfo, IEventAggregator eventAggregator)
-            : base(new ActionCommand(() => SendCommand(eventAggregator, serverInfo.Id, CommandType.Bans)))
+            : base(new ActionCommand(() => SendCommand(eventAggregator, serverInfo.Id, CommandType.Bans)), new BanViewComparer())
         {
             _log = log;
             _serverInfoId = serverInfo.Id;
@@ -139,6 +139,19 @@ namespace Arma3BE.Client.Modules.BanModule.Models
         {
             eventAggregator.GetEvent<BEMessageEvent<BECommand>>()
                 .Publish(new BECommand(serverId, commandType, parameters));
+        }
+
+        private class BanViewComparer : IEqualityComparer<BanView>
+        {
+            public bool Equals(BanView x, BanView y)
+            {
+                return x.GuidIp == y.GuidIp;
+            }
+
+            public int GetHashCode(BanView obj)
+            {
+                return obj.GetHashCode();
+            }
         }
     }
 }

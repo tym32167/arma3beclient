@@ -19,7 +19,7 @@ namespace Arma3BE.Client.Modules.AdminsModule.Models
         private readonly ILog _log;
 
         public ServerMonitorAdminsViewModel(ILog log, ServerInfo serverInfo, IEventAggregator eventAggregator)
-            : base(new ActionCommand(() => SendCommand(eventAggregator, serverInfo.Id, CommandType.Admins)))
+            : base(new ActionCommand(() => SendCommand(eventAggregator, serverInfo.Id, CommandType.Admins)), new AdminComparer())
         {
             _log = log;
             _helper = new AdminHelper(_log, serverInfo.Id);
@@ -43,6 +43,19 @@ namespace Arma3BE.Client.Modules.AdminsModule.Models
         {
             eventAggregator.GetEvent<BEMessageEvent<BECommand>>()
                 .Publish(new BECommand(serverId, commandType, parameters));
+        }
+
+        private class AdminComparer : IEqualityComparer<Admin>
+        {
+            public bool Equals(Admin x, Admin y)
+            {
+                return x.Num == y.Num && x.IP == y.IP && x.Port == y.Port;
+            }
+
+            public int GetHashCode(Admin obj)
+            {
+                return obj.GetHashCode();
+            }
         }
     }
 }
