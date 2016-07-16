@@ -73,6 +73,8 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
                 });
         }
 
+        public string Title { get { return "Steam Query"; } }
+
         public ICommand ExcecuteCommand { get; set; }
         public string Host { get; set; }
         public int Port { get; set; }

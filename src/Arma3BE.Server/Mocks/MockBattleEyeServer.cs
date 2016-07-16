@@ -19,9 +19,9 @@ namespace Arma3BE.Server.Mocks
         {
             var pl = GetPlayers();
             MockMessage(pl);
-            //MockMessage(bans);
-            //MockMessage(admins);
-            //MockMessage(missions);
+            MockMessage(bans);
+            MockMessage(admins);
+            MockMessage(missions);
             MockMessage($"(Global) bot: Текущее время {DateTime.UtcNow} - pl {pl.Length}");
             _timer?.Change(5000, Timeout.Infinite);
         }

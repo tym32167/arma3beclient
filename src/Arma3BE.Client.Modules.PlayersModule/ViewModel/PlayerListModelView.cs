@@ -31,6 +31,8 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
             PlayerInfoCommand = new DelegateCommand(PlayerInfoDialog, CanShowDialog);
         }
 
+        public string Title { get { return "Players"; } }
+
         public PlayerView SelectedPlayer { get; set; }
 
         private void ShowBan()

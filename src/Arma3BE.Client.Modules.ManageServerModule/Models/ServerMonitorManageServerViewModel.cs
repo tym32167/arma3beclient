@@ -94,6 +94,8 @@ namespace Arma3BE.Client.Modules.ManageServerModule.Models
            });
         }
 
+        public string Title { get { return "Manage Server"; } }
+
         public Mission SelectedMission
         {
             get { return _selectedMission; }
