@@ -17,8 +17,6 @@ namespace Arma3BE.Client.Modules.ManageServerModule
 
         public void Initialize()
         {
-            _container.RegisterInstance(new ManageServerService(_container.Resolve<IEventAggregator>()));
-            _container.RegisterType<IServerMonitorManageServerViewModel, ServerMonitorManageServerViewModel>();
         }
     }
 }

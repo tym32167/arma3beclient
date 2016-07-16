@@ -14,7 +14,7 @@ using System.Windows.Input;
 
 namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
 {
-    public class PlayerListModelView : ViewModelBase, IPlayerListModelView
+    public class PlayerListModelView : ViewModelBase
     {
         private readonly Guid _serverId;
         private readonly IEventAggregator _eventAggregator;

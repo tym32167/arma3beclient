@@ -7,6 +7,8 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              
              xmlns:converters="clr-namespace:Arma3BE.Client.Infrastructure.Converters;assembly=Arma3BE.Client.Infrastructure"
+             xmlns:regions="http://prismlibrary.com/"
+             xmlns:inf="clr-namespace:Arma3BE.Client.Infrastructure;assembly=Arma3BE.Client.Infrastructure"
              mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -34,7 +36,17 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TabControl>
+            <TabControl regions:RegionManager.RegionName="{x:Static inf:RegionNames.ServerTabPartRegion}" regions:RegionManager.RegionContext="{Binding CurrentServer, Mode=OneWay}">
+                
+            </TabControl>
+            
+
+            <!--<TabControl>
+
+                <TabItem Header="SessionP">
+                    <ContentControl regions:RegionManager.RegionName="{x:Static inf:RegionNames.OnlinePlayersRegion}" ></ContentControl>
+                </TabItem>
+
                 <TabItem Header="Session">
                     <ContentControl Content="{Binding OnlinePlayersControl}"></ContentControl>
                 </TabItem>
@@ -58,7 +70,7 @@
                 <TabItem Header="Steam Query">
                     <ContentControl Content="{Binding SteamControl}"></ContentControl>
                 </TabItem>
-            </TabControl>
+            </TabControl>-->
 
             <GridSplitter Grid.Row="0" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="5" />
 
@@ -70,6 +82,8 @@
                            Visibility="{Binding Connected, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
                     <TextBlock Foreground="Red" Text="Disonnected"
                            Visibility="{Binding Connected, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverterInverse}}" />
+
+                    <ContentControl regions:RegionManager.RegionName="{x:Static inf:RegionNames.BottomUpdateIndicatorRegion}" ></ContentControl>
                 </StackPanel>
             </StatusBar>
         </Grid>

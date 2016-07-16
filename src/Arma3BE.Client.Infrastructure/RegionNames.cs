@@ -3,5 +3,7 @@
     public static class RegionNames
     {
         public static string MainRegionRegion = "MainRegion";
+        public static string BottomUpdateIndicatorRegion = "BottomUpdateIndicatorRegion";
+        public static string ServerTabPartRegion = "ServerTabPartRegion";
     }
 }

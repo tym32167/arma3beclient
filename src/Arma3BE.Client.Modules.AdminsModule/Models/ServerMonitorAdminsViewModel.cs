@@ -13,7 +13,7 @@ using Admin = Arma3BE.Server.Models.Admin;
 
 namespace Arma3BE.Client.Modules.AdminsModule.Models
 {
-    public class ServerMonitorAdminsViewModel : ServerMonitorBaseViewModel<Admin, Admin>, IServerMonitorAdminsViewModel
+    public class ServerMonitorAdminsViewModel : ServerMonitorBaseViewModel<Admin, Admin>
     {
         private readonly AdminHelper _helper;
         private readonly ILog _log;

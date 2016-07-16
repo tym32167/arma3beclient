@@ -19,7 +19,7 @@ using Player = Arma3BE.Server.Models.Player;
 
 namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
 {
-    public class ServerMonitorPlayerViewModel : ServerMonitorBaseViewModel<Player, Helpers.Views.PlayerView>, IServerMonitorPlayerViewModel
+    public class ServerMonitorPlayerViewModel : ServerMonitorBaseViewModel<Player, Helpers.Views.PlayerView>
     {
         private readonly ServerInfo _serverInfo;
         private readonly IEventAggregator _eventAggregator;
@@ -54,6 +54,8 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
             });
         }
 
+        public string Title { get { return "Session"; } }
+        
         private static void SendCommand(IEventAggregator eventAggregator, Guid serverId, CommandType commandType,
             string parameters = null)
         {

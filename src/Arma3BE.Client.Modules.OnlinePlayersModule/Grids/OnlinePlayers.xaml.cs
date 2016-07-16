@@ -2,12 +2,14 @@
 using Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views;
 using System.Linq;
 using System.Windows.Controls;
+using Prism.Regions;
 
 namespace Arma3BE.Client.Modules.OnlinePlayersModule.Grids
 {
     /// <summary>
     ///     Interaction logic for OnlinePlayers.xaml
     /// </summary>
+    [ViewSortHint("0100")]
     public partial class OnlinePlayers : UserControl
     {
         public OnlinePlayers()

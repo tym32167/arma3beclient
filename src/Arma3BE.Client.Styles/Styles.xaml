@@ -5,4 +5,9 @@
         <Setter Property="Margin" Value="2" />
     </Style>
 
+
+    <Style TargetType="TabItem">
+        <Setter Property="Header" Value="{Binding DataContext.Title}" />
+    </Style>
+
 </ResourceDictionary>

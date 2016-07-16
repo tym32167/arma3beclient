@@ -17,8 +17,6 @@ namespace Arma3BE.Client.Modules.ChatModule
 
         public void Initialize()
         {
-            _container.RegisterInstance(new ChatService(_container.Resolve<IEventAggregator>()));
-            _container.RegisterType<IServerMonitorChatViewModel, ServerMonitorChatViewModel>();
         }
     }
 }

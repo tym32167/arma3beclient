@@ -17,8 +17,6 @@ namespace Arma3BE.Client.Modules.SteamModule
 
         public void Initialize()
         {
-            _container.RegisterInstance(new SteamService(_container.Resolve<IEventAggregator>()));
-            _container.RegisterType<IServerMonitorSteamQueryViewModel, ServerMonitorSteamQueryViewModel>();
         }
     }
 }

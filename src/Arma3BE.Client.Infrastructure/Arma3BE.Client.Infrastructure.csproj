@@ -116,13 +116,6 @@
     <Compile Include="Helpers\StateHelper.cs" />
     <Compile Include="Helpers\Views\BanView.cs" />
     <Compile Include="IIpService.cs" />
-    <Compile Include="Models\IPlayerListModelView.cs" />
-    <Compile Include="Models\IServerMonitorAdminsViewModel.cs" />
-    <Compile Include="Models\IServerMonitorBansViewModel.cs" />
-    <Compile Include="Models\IServerMonitorChatViewModel.cs" />
-    <Compile Include="Models\IServerMonitorManageServerViewModel.cs" />
-    <Compile Include="Models\IServerMonitorPlayerViewModel.cs" />
-    <Compile Include="Models\IServerMonitorSteamQueryViewModel.cs" />
     <Compile Include="Models\ServerMonitorBaseViewModel.cs" />
     <Compile Include="Models\ViewModelBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

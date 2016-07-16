@@ -16,6 +16,7 @@ using Prism.Modularity;
 using Prism.Unity;
 using System;
 using System.Windows;
+using Arma3BE.Client.Modules.IndicatorsModule;
 
 namespace Arma3BEClient
 {
@@ -50,6 +51,7 @@ namespace Arma3BEClient
             AddModule(typeof(ManageServerModuleInit));
             AddModule(typeof(OnlinePlayersModuleInit));
             AddModule(typeof(SteamModuleInit));
+            AddModule(typeof(IndicatorsModuleInit));
             AddModule(typeof(MainModuleInit));
         }
 

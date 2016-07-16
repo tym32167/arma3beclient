@@ -18,7 +18,7 @@ using Ban = Arma3BE.Server.Models.Ban;
 
 namespace Arma3BE.Client.Modules.BanModule.Models
 {
-    public class ServerMonitorBansViewModel : ServerMonitorBaseViewModel<Ban, BanView>, IServerMonitorBansViewModel
+    public class ServerMonitorBansViewModel : ServerMonitorBaseViewModel<Ban, BanView>
     {
         private readonly IEventAggregator _eventAggregator;
         private readonly BanHelper _helper;
@@ -68,6 +68,8 @@ namespace Arma3BE.Client.Modules.BanModule.Models
                         SetData(e.Items);
                 });
         }
+
+        public string Title { get { return "Bans"; } }
 
         public IEnumerable<BanView> SelectedAvailibleBans { get; set; }
 

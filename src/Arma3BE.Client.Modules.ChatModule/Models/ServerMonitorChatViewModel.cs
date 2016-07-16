@@ -18,7 +18,7 @@ using Player = Arma3BE.Server.Models.Player;
 
 namespace Arma3BE.Client.Modules.ChatModule.Models
 {
-    public class ServerMonitorChatViewModel : ViewModelBase, IServerMonitorChatViewModel
+    public class ServerMonitorChatViewModel : ViewModelBase
     {
         private readonly IEventAggregator _eventAggregator;
         private readonly ChatHelper _chatHelper;

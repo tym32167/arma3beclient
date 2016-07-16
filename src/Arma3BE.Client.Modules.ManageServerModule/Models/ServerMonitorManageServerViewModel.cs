@@ -12,7 +12,7 @@ using System.Windows;
 
 namespace Arma3BE.Client.Modules.ManageServerModule.Models
 {
-    public class ServerMonitorManageServerViewModel : ViewModelBase, IServerMonitorManageServerViewModel
+    public class ServerMonitorManageServerViewModel : ViewModelBase
     {
         private readonly IEventAggregator _eventAggregator;
         private readonly ILog _log;
