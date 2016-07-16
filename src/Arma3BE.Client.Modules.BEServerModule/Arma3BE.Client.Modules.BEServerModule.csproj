@@ -71,6 +71,7 @@
   <ItemGroup>
     <Compile Include="BEServerModuleInit.cs" />
     <Compile Include="BEService.cs" />
+    <Compile Include="BEServiceLogic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
