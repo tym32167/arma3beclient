@@ -103,10 +103,8 @@
     <Compile Include="Events\BE\BEPlayerLogMessage.cs" />
     <Compile Include="Events\BE\CloseServerEvent.cs" />
     <Compile Include="Events\BE\RunServerEvent.cs" />
-    <Compile Include="Events\CreateViewEvent.cs" />
     <Compile Include="Events\KickUserEvent.cs" />
     <Compile Include="Events\Models\BanUserModel.cs" />
-    <Compile Include="Events\Models\CreateViewModel.cs" />
     <Compile Include="Events\Models\KickUserModel.cs" />
     <Compile Include="Events\Models\ShowUserModel.cs" />
     <Compile Include="Events\ShowOptionsEvent.cs" />

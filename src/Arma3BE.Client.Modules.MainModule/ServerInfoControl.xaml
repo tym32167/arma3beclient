@@ -41,36 +41,7 @@
             </TabControl>
             
 
-            <!--<TabControl>
-
-                <TabItem Header="SessionP">
-                    <ContentControl regions:RegionManager.RegionName="{x:Static inf:RegionNames.OnlinePlayersRegion}" ></ContentControl>
-                </TabItem>
-
-                <TabItem Header="Session">
-                    <ContentControl Content="{Binding OnlinePlayersControl}"></ContentControl>
-                </TabItem>
-
-                <TabItem Header="Bans">
-                    <ContentControl Content="{Binding BanControl}"></ContentControl>
-                </TabItem>
-
-                <TabItem Header="Admins">
-                    <ContentControl Content="{Binding AdminsControl}"></ContentControl>
-                </TabItem>
-
-                <TabItem Header="Players">
-                    <ContentControl Content="{Binding PlayersControl}"></ContentControl>
-                </TabItem>
-
-                <TabItem Header="Manage Server">
-                    <ContentControl Content="{Binding ManageServerControl}"></ContentControl>
-                </TabItem>
-
-                <TabItem Header="Steam Query">
-                    <ContentControl Content="{Binding SteamControl}"></ContentControl>
-                </TabItem>
-            </TabControl>-->
+          
 
             <GridSplitter Grid.Row="0" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="5" />
 
