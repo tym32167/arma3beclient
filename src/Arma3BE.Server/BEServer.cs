@@ -57,13 +57,6 @@ namespace Arma3BE.Server
         public event EventHandler DisconnectHandler;
         public event EventHandler MessageHandler;
 
-
-        //public Task SendCommandAsync(CommandType type, string parameters = null)
-        //{
-        //    return Task.Run(() => SendCommand(type, parameters));
-        //}
-
-
         public void SendCommand(CommandType type, string parameters = null)
         {
             _log.Info($"SERVER: {_host}:{_port} - TRY TO RCON COMMAND {type} WITH PARAMS {parameters}");

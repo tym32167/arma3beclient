@@ -1,7 +1,6 @@
 ﻿using Arma3BE.Server.Abstract;
 using Arma3BEClient.Common.Logging;
 using BattleNET;
-using System.Diagnostics;
 
 namespace Arma3BE.Server.Mocks
 {
@@ -58,7 +57,6 @@ namespace Arma3BE.Server.Mocks
         protected virtual void OnBattlEyeMessageReceived(BattlEyeMessageEventArgs args)
         {
             _log.Info(args.Message);
-            Debug.WriteLine(args.Message);
             BattlEyeMessageReceived?.Invoke(args);
         }
 
