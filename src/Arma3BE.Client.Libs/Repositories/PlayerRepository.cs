@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
-using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -38,19 +37,17 @@ namespace Arma3BEClient.Libs.Repositories
 
         private class PlayerRepositoryCache : DisposeObject, IPlayerRepository
         {
-            private static object _lock = new object();
+            private static readonly object Lock = new object();
             private readonly IPlayerRepository _playerRepository;
-            private static volatile bool _validCache = false;
+            private static volatile bool _validCache;
             private static volatile ConcurrentDictionary<string, PlayerDto> _playersByGuidsCache;
 
             private void ResetCache()
             {
                 if (_validCache) return;
-                lock (_lock)
+                lock (Lock)
                 {
                     if (_validCache) return;
-
-                    Debug.WriteLine("---------------- ResetCache");
                     var playersByGuidsCache = new ConcurrentDictionary<string, PlayerDto>();
                     var players = _playerRepository.GetAllPlayers().GroupBy(x => x.GUID).Select(x => x.First());
                     foreach (var playerDto in players)

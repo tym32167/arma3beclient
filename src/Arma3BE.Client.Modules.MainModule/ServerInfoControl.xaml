@@ -55,7 +55,7 @@
                     <TextBlock Foreground="Red" Text="Disonnected"
                            Visibility="{Binding Connected, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverterInverse}}" />
 
-                    <ContentControl regions:RegionManager.RegionName="{x:Static inf:RegionNames.BottomUpdateIndicatorRegion}" ></ContentControl>
+                    <ContentControl regions:RegionManager.RegionName="{x:Static inf:RegionNames.BottomUpdateIndicatorRegion}"  regions:RegionManager.RegionContext="{Binding CurrentServer, Mode=OneWay}"></ContentControl>
                 </StackPanel>
             </StatusBar>
         </Grid>

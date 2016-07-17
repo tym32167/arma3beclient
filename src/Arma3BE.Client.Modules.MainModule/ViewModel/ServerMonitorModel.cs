@@ -57,6 +57,8 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             }
         }
 
+        public string Title { get { return CurrentServer.Name; } }
+
         private void InitModel()
         {
             _eventAggregator.GetEvent<ConnectServerEvent>().Subscribe(BeServerConnectHandler);

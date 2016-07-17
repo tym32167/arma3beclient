@@ -89,6 +89,7 @@
     <Compile Include="LastUpdateIndicator.xaml.cs">
       <DependentUpon>LastUpdateIndicator.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LastUpdateIndicatorViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -103,6 +104,10 @@
     <ProjectReference Include="..\Arma3BE.Client.Infrastructure\Arma3BE.Client.Infrastructure.csproj">
       <Project>{B58670E5-011F-4318-964E-35C8B63870A5}</Project>
       <Name>Arma3BE.Client.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Libs\Arma3BE.Client.Libs.csproj">
+      <Project>{E5240A50-E944-4F50-A353-2E3C9E547447}</Project>
+      <Name>Arma3BE.Client.Libs</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
