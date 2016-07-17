@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 using System.Xml.Serialization;
 using Xceed.Wpf.AvalonDock.Controls;
 using Xceed.Wpf.AvalonDock.Layout;
@@ -37,9 +38,9 @@ namespace Arma3BE.Client.Modules.MainModule
 
         private void OpenServerInfo(ServerInfo serverInfo)
         {
-            Dispatcher.BeginInvoke(new Action(() =>
+            if (Dispatcher.CheckAccess())
             {
-                var doc = new LayoutDocument { Title = serverInfo.Name };
+                var doc = new LayoutDocument {Title = serverInfo.Name};
 
                 var control =
                     _container.Resolve<ServerInfoControl>(
@@ -48,16 +49,9 @@ namespace Arma3BE.Client.Modules.MainModule
 
                 doc.Content = control;
 
-                var firstDocumentPane = DockManager.Layout.Descendents().OfType<LayoutDocumentPane>().FirstOrDefault();
-                if (firstDocumentPane != null)
-                {
-                    firstDocumentPane.Children.Add(doc);
-                }
-
                 doc.Closed += (s, a) =>
                 {
                     control.Cleanup();
-                    // ReSharper disable once RedundantArgumentDefaultValue
                     _model.SetActive(serverInfo.Id, false);
                     _model.Reload();
                 };
@@ -67,14 +61,21 @@ namespace Arma3BE.Client.Modules.MainModule
 
                 _model.Reload();
 
+                var firstDocumentPane = DockManager.Layout.Descendents().OfType<LayoutDocumentPane>().FirstOrDefault();
+                firstDocumentPane?.Children.Add(doc);
+
                 doc.IsActive = true;
-            }));
+            }
+            else
+            {
+                Dispatcher.Invoke(()=>OpenServerInfo(serverInfo));
+            }
         }
 
         private void ServerClick(object sender, RoutedEventArgs e)
         {
             var orig = e.OriginalSource as FrameworkElement;
-            if (orig != null && orig.DataContext is ServerInfo)
+            if (orig?.DataContext is ServerInfo)
             {
                 var serverInfo = (ServerInfo)orig.DataContext;
                 OpenServerInfo(serverInfo);
