@@ -45,7 +45,8 @@
 
             <GridSplitter Grid.Row="0" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="5" />
 
-            <ContentControl Content="{Binding ChatControl}" Grid.Row="0" Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></ContentControl>
+            <ContentControl  Grid.Row="0" Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                             regions:RegionManager.RegionName="{x:Static inf:RegionNames.ServerSidePartRegion}" regions:RegionManager.RegionContext="{Binding CurrentServer, Mode=OneWay}"></ContentControl>
 
             <StatusBar Grid.Row="1" Grid.ColumnSpan="3" Height="20">
                 <StackPanel Orientation="Horizontal">
