@@ -15,49 +15,42 @@
         <Style TargetType="{x:Type xcdg:GroupByControl}">
             <Setter Property="Visibility" Value="Collapsed" />
         </Style>
-       
         <converters:BoolToVisibilityConverter x:Uid="local:BoolToVisibilityConverter_1"
                                               x:Key="BoolToVisibilityConverter" />
         <converters:BoolToVisibilityConverterInverse x:Uid="local:BoolToVisibilityConverterInverse"
                                                      x:Key="BoolToVisibilityConverterInverse" />
-
     </UserControl.Resources>
-    <xctk:BusyIndicator IsBusy="{Binding IsBusy}" BusyContent="Please, wait..." >
-        <Grid>
 
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+    <Grid>
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-            <TabControl regions:RegionManager.RegionName="{x:Static inf:RegionNames.ServerTabPartRegion}" regions:RegionManager.RegionContext="{Binding CurrentServer, Mode=OneWay}">
-                
-            </TabControl>
-            
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-          
+        <TabControl regions:RegionManager.RegionName="{x:Static inf:RegionNames.ServerTabPartRegion}" regions:RegionManager.RegionContext="{Binding CurrentServer, Mode=OneWay}">
+        </TabControl>
 
-            <GridSplitter Grid.Row="0" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="5" />
-
-            <ContentControl  Grid.Row="0" Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+        <GridSplitter Grid.Row="0" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="5" />
+        
+        <ContentControl  Grid.Row="0" Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                              regions:RegionManager.RegionName="{x:Static inf:RegionNames.ServerSidePartRegion}" regions:RegionManager.RegionContext="{Binding CurrentServer, Mode=OneWay}"></ContentControl>
-
-            <StatusBar Grid.Row="1" Grid.ColumnSpan="3" Height="20">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Connected" Foreground="DarkGreen"
+        
+        <StatusBar Grid.Row="1" Grid.ColumnSpan="3" Height="20">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Connected" Foreground="DarkGreen"
                            Visibility="{Binding Connected, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
-                    <TextBlock Foreground="Red" Text="Disonnected"
+                <TextBlock Foreground="Red" Text="Disonnected"
                            Visibility="{Binding Connected, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverterInverse}}" />
 
-                    <ContentControl regions:RegionManager.RegionName="{x:Static inf:RegionNames.BottomUpdateIndicatorRegion}"  regions:RegionManager.RegionContext="{Binding CurrentServer, Mode=OneWay}"></ContentControl>
-                </StackPanel>
-            </StatusBar>
-        </Grid>
-    </xctk:BusyIndicator>
+                <ContentControl regions:RegionManager.RegionName="{x:Static inf:RegionNames.BottomUpdateIndicatorRegion}"  regions:RegionManager.RegionContext="{Binding CurrentServer, Mode=OneWay}"></ContentControl>
+            </StackPanel>
+        </StatusBar>
+    </Grid>
 </UserControl>

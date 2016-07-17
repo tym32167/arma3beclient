@@ -25,10 +25,9 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             _log = log;
             _eventAggregator = eventAggregator;
 
-            IsBusy = true;
-
-            Task.Factory.StartNew(InitModel)
-                .ContinueWith(t => IsBusy = false);
+            _eventAggregator.GetEvent<ConnectServerEvent>().Subscribe(BeServerConnectHandler, ThreadOption.UIThread);
+            _eventAggregator.GetEvent<DisConnectServerEvent>().Subscribe(BeServerDisconnectHandler, ThreadOption.UIThread);
+            _eventAggregator.GetEvent<RunServerEvent>().Publish(CurrentServer);
         }
 
         public ServerInfo CurrentServer { get; }
@@ -43,28 +42,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             }
         }
 
-
-        public bool IsBusy
-        {
-            get { return _isBusy; }
-            set
-            {
-                if (_isBusy != value)
-                {
-                    _isBusy = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
         public string Title { get { return CurrentServer.Name; } }
-
-        private void InitModel()
-        {
-            _eventAggregator.GetEvent<ConnectServerEvent>().Subscribe(BeServerConnectHandler);
-            _eventAggregator.GetEvent<DisConnectServerEvent>().Subscribe(BeServerDisconnectHandler);
-            _eventAggregator.GetEvent<RunServerEvent>().Publish(CurrentServer);
-        }
 
         private void BeServerDisconnectHandler(ServerInfo info)
         {

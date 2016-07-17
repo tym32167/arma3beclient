@@ -67,9 +67,8 @@ namespace Arma3BE.Client.Infrastructure.Models
         private object _locker = new object();
         private void UpdateFilteredData(TK[] newData)
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            if (Application.Current.Dispatcher.CheckAccess())
             {
-
                 if (FilteredData == null)
                 {
                     FilteredData = new ObservableCollection<TK>(newData);
@@ -90,8 +89,11 @@ namespace Arma3BE.Client.Infrastructure.Models
                 {
                     FilteredData.Add(a);
                 }
-
-            });
+            }
+            else
+            {
+                Application.Current.Dispatcher.Invoke(()=> UpdateFilteredData(newData));
+            }
         }
 
         protected abstract IEnumerable<TK> RegisterData(IEnumerable<T> initialData);

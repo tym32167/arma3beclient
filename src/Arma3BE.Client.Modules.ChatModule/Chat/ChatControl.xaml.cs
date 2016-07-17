@@ -26,15 +26,12 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
 
         private void _model_ChatMessageEventHandler(object sender, ServerMonitorChatViewModelEventArgs e)
         {
-            Dispatcher.Invoke(() =>
-            {
-                if (!Model.EnableChat) return;
-                var type = e.Message.Type;
-                if (type != ChatMessage.MessageType.Unknown)
-                    AppendText(_paragraph, ChatScrollViewer, e.Message);
-                else
-                    AppendText(msgConsole, ConsoleScrollViewer, e.Message);
-            });
+            if (!Model.EnableChat) return;
+            var type = e.Message.Type;
+            if (type != ChatMessage.MessageType.Unknown)
+                AppendText(_paragraph, ChatScrollViewer, e.Message);
+            else
+                AppendText(msgConsole, ConsoleScrollViewer, e.Message);
         }
 
         private void SendMessage(object sender, RoutedEventArgs e)

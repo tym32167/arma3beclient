@@ -41,14 +41,14 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             _chatHelper = new ChatHelper(_log, _serverId);
 
             _eventAggregator.GetEvent<BEMessageEvent<BEChatMessage>>()
-                .Subscribe(BeServerChatMessageHandler);
+                .Subscribe(BeServerChatMessageHandler, ThreadOption.UIThread);
 
             _eventAggregator.GetEvent<BEMessageEvent<BEAdminLogMessage>>()
-                .Subscribe(_beServer_PlayerLog);
+                .Subscribe(_beServer_PlayerLog, ThreadOption.UIThread);
             _eventAggregator.GetEvent<BEMessageEvent<BEPlayerLogMessage>>()
-                .Subscribe(_beServer_PlayerLog);
+                .Subscribe(_beServer_PlayerLog, ThreadOption.UIThread);
             _eventAggregator.GetEvent<BEMessageEvent<BEBanLogMessage>>()
-                .Subscribe(_beServer_PlayerLog);
+                .Subscribe(_beServer_PlayerLog, ThreadOption.UIThread);
 
             _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Player>>>()
                 .Subscribe(_beServer_PlayerHandler);

@@ -27,8 +27,8 @@ namespace Arma3BE.Client.Modules.BEServerModule
             _ipService = ipService;
             _eventAggregator = eventAggregator;
 
-            _eventAggregator.GetEvent<RunServerEvent>().Subscribe(CheckServer);
-            _eventAggregator.GetEvent<CloseServerEvent>().Subscribe(CloseServer);
+            _eventAggregator.GetEvent<RunServerEvent>().Subscribe(CheckServer, ThreadOption.BackgroundThread);
+            _eventAggregator.GetEvent<CloseServerEvent>().Subscribe(CloseServer, ThreadOption.BackgroundThread);
         }
 
         private void CloseServer(ServerInfo info)
