@@ -1,9 +1,9 @@
 ﻿using Arma3BE.Client.Infrastructure;
-using Arma3BE.Client.Infrastructure.Models;
+using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Modules.ManageServerModule.Grids;
 using Arma3BE.Client.Modules.ManageServerModule.Models;
+using Arma3BEClient.Libs.ModelCompact;
 using Microsoft.Practices.Unity;
-using Prism.Events;
 using Prism.Modularity;
 using Prism.Regions;
 
@@ -27,11 +27,8 @@ namespace Arma3BE.Client.Modules.ManageServerModule
 
         private object CreateView()
         {
-            var view = _container.Resolve<ManageServer>();
-            var ctx = _regionManager.Regions[RegionNames.ServerTabPartRegion].Context;
-            var vm = _container.Resolve<ServerMonitorManageServerViewModel>(new ParameterOverride("serverInfo", ctx));
-            view.DataContext = vm;
-            return view;
+            return ServerTabViewHelper.RegisterView<ManageServer, ServerInfo, ServerMonitorManageServerViewModel>(_container,
+                "serverInfo");
         }
     }
 }

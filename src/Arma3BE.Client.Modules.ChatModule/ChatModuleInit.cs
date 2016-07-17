@@ -1,6 +1,8 @@
 ﻿using Arma3BE.Client.Infrastructure;
+using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Modules.ChatModule.Chat;
 using Arma3BE.Client.Modules.ChatModule.Models;
+using Arma3BEClient.Libs.ModelCompact;
 using Microsoft.Practices.Unity;
 using Prism.Modularity;
 using Prism.Regions;
@@ -25,11 +27,8 @@ namespace Arma3BE.Client.Modules.ChatModule
 
         private object CreateView()
         {
-            var view = _container.Resolve<ChatControl>();
-            var ctx = _regionManager.Regions[RegionNames.ServerSidePartRegion].Context;
-            var vm = _container.Resolve<ServerMonitorChatViewModel>(new ParameterOverride("serverInfo", ctx));
-            view.DataContext = vm;
-            return view;
+            return ServerTabViewHelper.RegisterView<ChatControl, ServerInfo, ServerMonitorChatViewModel>(_container,
+                "serverInfo");
         }
     }
 }

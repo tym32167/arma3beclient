@@ -1,3 +1,4 @@
+using System.Configuration;
 using Arma3BE.Server.Abstract;
 using Arma3BE.Server.Mocks;
 using Arma3BE.Server.ServerDecorators;
@@ -9,6 +10,7 @@ namespace Arma3BE.Server.ServerFactory
     public class BattlEyeServerFactory : IBattlEyeServerFactory
     {
         private readonly ILog _log;
+        private const string DebugServerKey = "DebugServerEnabled";
 
         public BattlEyeServerFactory(ILog log)
         {
@@ -17,12 +19,16 @@ namespace Arma3BE.Server.ServerFactory
 
         public IBattlEyeServer Create(BattlEyeLoginCredentials credentials)
         {
-            //return new ThreadSafeBattleEyeServer(new BattlEyeServerProxy(new BattlEyeClient(credentials)
-            //{
-            //    ReconnectOnPacketLoss = true
-            //}), _log);
 
-            return new BattlEyeServerLogProxy(new MockBattleEyeServer(), _log);
+            if (ConfigurationManager.AppSettings[DebugServerKey] == bool.TrueString)
+            {
+                return new BattlEyeServerLogProxy(new MockBattleEyeServer(), _log);
+            }
+
+            return new ThreadSafeBattleEyeServer(new BattlEyeServerProxy(new BattlEyeClient(credentials)
+            {
+                ReconnectOnPacketLoss = true
+            }), _log);
         }
     }
 }

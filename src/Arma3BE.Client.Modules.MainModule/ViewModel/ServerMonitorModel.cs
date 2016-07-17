@@ -1,10 +1,13 @@
-﻿using System.Threading.Tasks;
-using Arma3BE.Client.Infrastructure.Contracts;
+﻿using Arma3BE.Client.Infrastructure.Contracts;
+using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Server;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Repositories;
 using Prism.Events;
+using System;
+using System.Threading.Tasks;
 
 namespace Arma3BE.Client.Modules.MainModule.ViewModel
 {
@@ -89,6 +92,26 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             base.DisposeManagedResources();
             _eventAggregator.GetEvent<CloseServerEvent>()
                 .Publish(CurrentServer);
+        }
+
+        public void SetActive(Guid serverId, bool active = false)
+        {
+            using (var repo = new ServerInfoRepository())
+            {
+                repo.SetServerInfoActive(serverId, active);
+            }
+
+            _eventAggregator.GetEvent<BEServersChangedEvent>().Publish(null);
+        }
+
+        public void CloseServer()
+        {
+            SetActive(CurrentServer.Id, false);
+        }
+
+        public void OpenServer()
+        {
+            SetActive(CurrentServer.Id, true);
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using Arma3BE.Client.Infrastructure;
-using Arma3BE.Client.Infrastructure.Models;
+using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Modules.SteamModule.Grids;
 using Arma3BE.Client.Modules.SteamModule.Models;
+using Arma3BEClient.Libs.ModelCompact;
 using Microsoft.Practices.Unity;
-using Prism.Events;
 using Prism.Modularity;
 using Prism.Regions;
 
@@ -27,11 +27,8 @@ namespace Arma3BE.Client.Modules.SteamModule
 
         private object CreateView()
         {
-            var view = _container.Resolve<SteamQuery>();
-            var ctx = _regionManager.Regions[RegionNames.ServerTabPartRegion].Context;
-            var vm = _container.Resolve<ServerMonitorSteamQueryViewModel>(new ParameterOverride("serverInfo", ctx));
-            view.DataContext = vm;
-            return view;
+            return ServerTabViewHelper.RegisterView<SteamQuery, ServerInfo, ServerMonitorSteamQueryViewModel>(_container,
+                "serverInfo");
         }
     }
 }

@@ -1,19 +1,19 @@
-﻿using Arma3BE.Client.Modules.MainModule.Models.Export;
+﻿using Arma3BE.Client.Infrastructure;
+using Arma3BE.Client.Modules.MainModule.Models.Export;
 using Arma3BE.Client.Modules.MainModule.ViewModel;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using Microsoft.Practices.Unity;
 using Microsoft.Win32;
+using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
 using System.Xml.Serialization;
 using Xceed.Wpf.AvalonDock.Controls;
-using Xceed.Wpf.AvalonDock.Layout;
 using MessageBox = Xceed.Wpf.Toolkit.MessageBox;
 
 namespace Arma3BE.Client.Modules.MainModule
@@ -26,50 +26,27 @@ namespace Arma3BE.Client.Modules.MainModule
     {
         private readonly MainViewModel _model;
         private readonly IUnityContainer _container;
+        private readonly IRegionManager _regionManager;
 
-        public MainWindow(MainViewModel model, IUnityContainer container)
+        public MainWindow(MainViewModel model, IUnityContainer container, IRegionManager regionManager)
         {
             InitializeComponent();
 
             _model = model;
             _container = container;
+            _regionManager = regionManager;
             DataContext = _model;
         }
 
         private void OpenServerInfo(ServerInfo serverInfo)
         {
-            if (Dispatcher.CheckAccess())
-            {
-                var doc = new LayoutDocument {Title = serverInfo.Name};
+            var control =
+                _container.Resolve<ServerInfoControl>(
+                    new ParameterOverride("currentServer", serverInfo).OnType<ServerMonitorModel>(),
+                    new ParameterOverride("console", false).OnType<ServerMonitorModel>());
 
-                var control =
-                    _container.Resolve<ServerInfoControl>(
-                        new ParameterOverride("currentServer", serverInfo).OnType<ServerMonitorModel>(),
-                        new ParameterOverride("console", false).OnType<ServerMonitorModel>());
-
-                doc.Content = control;
-
-                doc.Closed += (s, a) =>
-                {
-                    control.Cleanup();
-                    _model.SetActive(serverInfo.Id, false);
-                    _model.Reload();
-                };
-
-
-                _model.SetActive(serverInfo.Id, true);
-
-                _model.Reload();
-
-                var firstDocumentPane = DockManager.Layout.Descendents().OfType<LayoutDocumentPane>().FirstOrDefault();
-                firstDocumentPane?.Children.Add(doc);
-
-                doc.IsActive = true;
-            }
-            else
-            {
-                Dispatcher.Invoke(()=>OpenServerInfo(serverInfo));
-            }
+            _model.Reload();
+            _regionManager.Regions[RegionNames.ServerTabRegion].Add(control, null, true);
         }
 
         private void ServerClick(object sender, RoutedEventArgs e)
@@ -93,7 +70,10 @@ namespace Arma3BE.Client.Modules.MainModule
             using (var r = new ServerInfoRepository())
             {
                 var servers = r.GetActiveServerInfo();
-                Parallel.ForEach(servers, OpenServerInfo);
+                foreach (var server in servers)
+                {
+                    OpenServerInfo(server);
+                }
             }
         }
 

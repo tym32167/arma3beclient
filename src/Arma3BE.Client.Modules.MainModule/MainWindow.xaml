@@ -3,6 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:regions="http://prismlibrary.com/"
+        xmlns:inf="clr-namespace:Arma3BE.Client.Infrastructure;assembly=Arma3BE.Client.Infrastructure"
         Loaded="LoadedWindow">
     <Grid>
         <Grid.RowDefinitions>
@@ -32,6 +34,16 @@
                 <MenuItem Header="About" Click="AboutClick" />
             </MenuItem>
         </Menu>
-        <xcad:DockingManager x:Name="DockManager" Grid.Row="1" Margin="0,0,0,0" />
+        <xcad:DockingManager x:Name="DockManager" Grid.Row="1" Margin="0,0,0,0" regions:RegionManager.RegionName="{x:Static inf:RegionNames.ServerTabRegion}">
+            <xcad:LayoutRoot>
+                <xcad:LayoutPanel>
+                    <xcad:LayoutDocumentPaneGroup>
+                        <xcad:LayoutDocumentPane>
+
+                        </xcad:LayoutDocumentPane>
+                    </xcad:LayoutDocumentPaneGroup>
+                </xcad:LayoutPanel>
+            </xcad:LayoutRoot>
+        </xcad:DockingManager>
     </Grid>
 </UserControl>

@@ -1,7 +1,8 @@
 ﻿using Arma3BE.Client.Infrastructure;
-using Arma3BE.Client.Infrastructure.Models;
+using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Modules.PlayersModule.Grids;
 using Arma3BE.Client.Modules.PlayersModule.ViewModel;
+using Arma3BEClient.Libs.ModelCompact;
 using Microsoft.Practices.Unity;
 using Prism.Modularity;
 using Prism.Regions;
@@ -27,11 +28,8 @@ namespace Arma3BE.Client.Modules.PlayersModule
 
         private object CreateView()
         {
-            var view = _container.Resolve<PlayersControl>();
-            var ctx = _regionManager.Regions[RegionNames.ServerTabPartRegion].Context;
-            var vm = _container.Resolve<PlayerListModelView>(new ParameterOverride("serverInfo", ctx));
-            view.DataContext = vm;
-            return view;
+            return ServerTabViewHelper.RegisterView<PlayersControl, ServerInfo, PlayerListModelView>(_container,
+                "serverInfo");
         }
 
         public static IUnityContainer Current => _container;
