@@ -1,24 +1,34 @@
-﻿using Arma3BE.Client.Infrastructure.Models;
+﻿using Arma3BE.Client.Infrastructure;
+using Arma3BE.Client.Infrastructure.Helpers;
+using Arma3BE.Client.Modules.AdminsModule.Grids;
 using Arma3BE.Client.Modules.AdminsModule.Models;
+using Arma3BEClient.Libs.ModelCompact;
 using Microsoft.Practices.Unity;
-using Prism.Events;
 using Prism.Modularity;
+using Prism.Regions;
 
 namespace Arma3BE.Client.Modules.AdminsModule
 {
     public class AdminsModuleInit : IModule
     {
         private readonly IUnityContainer _container;
+        private readonly IRegionManager _regionManager;
 
-        public AdminsModuleInit(IUnityContainer container)
+        public AdminsModuleInit(IUnityContainer container, IRegionManager regionManager)
         {
             _container = container;
+            _regionManager = regionManager;
         }
 
         public void Initialize()
         {
-            _container.RegisterInstance(new AdminsService(_container.Resolve<IEventAggregator>()));
-            _container.RegisterType<IServerMonitorAdminsViewModel, ServerMonitorAdminsViewModel>();
+            _regionManager.RegisterViewWithRegion(RegionNames.ServerTabPartRegion, CreateView);
+        }
+
+        private object CreateView()
+        {
+            return ServerTabViewHelper.RegisterView<AdminsControl, ServerInfo, ServerMonitorAdminsViewModel>(_container,
+                "serverInfo");
         }
     }
 }

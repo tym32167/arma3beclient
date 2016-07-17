@@ -4,6 +4,7 @@ using Arma3BE.Client.Modules.BanModule.Models;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using Prism.Regions;
 using Xceed.Wpf.DataGrid;
 
 namespace Arma3BE.Client.Modules.BanModule.Grids
@@ -11,6 +12,7 @@ namespace Arma3BE.Client.Modules.BanModule.Grids
     /// <summary>
     ///     Interaction logic for BansControl.xaml
     /// </summary>
+    [ViewSortHint("0200")]
     public partial class BansControl : UserControl
     {
         public BansControl()

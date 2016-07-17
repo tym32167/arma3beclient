@@ -105,7 +105,6 @@
     <Compile Include="Boxes\ChatHistory.xaml.cs">
       <DependentUpon>ChatHistory.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ChatService.cs" />
     <Compile Include="Chat\ChatControl.xaml.cs">
       <DependentUpon>ChatControl.xaml</DependentUpon>
     </Compile>

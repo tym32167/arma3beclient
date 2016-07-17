@@ -2,12 +2,14 @@
 using System.Windows.Controls;
 using Arma3BE.Client.Infrastructure.Extensions;
 using Arma3BE.Client.Modules.PlayersModule.Models;
+using Prism.Regions;
 
 namespace Arma3BE.Client.Modules.PlayersModule.Grids
 {
     /// <summary>
     ///     Interaction logic for PlayersControl.xaml
     /// </summary>
+    [ViewSortHint("0400")]
     public partial class PlayersControl : UserControl
     {
         public PlayersControl()

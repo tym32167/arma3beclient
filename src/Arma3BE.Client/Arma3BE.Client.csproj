@@ -126,6 +126,10 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -210,6 +214,10 @@
       <Project>{49e36c5f-4a81-4338-8a34-c0e52fcfa5dc}</Project>
       <Name>Arma3BE.Client.Modules.ChatModule</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Modules.IndicatorsModule\Arma3BE.Client.Modules.IndicatorsModule.csproj">
+      <Project>{dee7ad82-5abd-4a16-90fa-b46da96f3049}</Project>
+      <Name>Arma3BE.Client.Modules.IndicatorsModule</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Arma3BE.Client.Modules.MainModule\Arma3BE.Client.Modules.MainModule.csproj">
       <Project>{58dbdf91-7ad0-4780-a3ef-0fa5c39e2869}</Project>
       <Name>Arma3BE.Client.Modules.MainModule</Name>
@@ -268,7 +276,10 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
-    </PostBuildEvent>
+    if not exist "$(TargetDir)x86" md "$(TargetDir)x86"
+    xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\x86\*.*" "$(TargetDir)x86"
+    if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"
+    xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\amd64\*.*" "$(TargetDir)amd64"</PostBuildEvent>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

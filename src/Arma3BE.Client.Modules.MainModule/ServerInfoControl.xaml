@@ -7,6 +7,8 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              
              xmlns:converters="clr-namespace:Arma3BE.Client.Infrastructure.Converters;assembly=Arma3BE.Client.Infrastructure"
+             xmlns:regions="http://prismlibrary.com/"
+             xmlns:inf="clr-namespace:Arma3BE.Client.Infrastructure;assembly=Arma3BE.Client.Infrastructure"
              mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -34,35 +36,17 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TabControl>
-                <TabItem Header="Session">
-                    <ContentControl Content="{Binding OnlinePlayersControl}"></ContentControl>
-                </TabItem>
-
-                <TabItem Header="Bans">
-                    <ContentControl Content="{Binding BanControl}"></ContentControl>
-                </TabItem>
-
-                <TabItem Header="Admins">
-                    <ContentControl Content="{Binding AdminsControl}"></ContentControl>
-                </TabItem>
-
-                <TabItem Header="Players">
-                    <ContentControl Content="{Binding PlayersControl}"></ContentControl>
-                </TabItem>
-
-                <TabItem Header="Manage Server">
-                    <ContentControl Content="{Binding ManageServerControl}"></ContentControl>
-                </TabItem>
-
-                <TabItem Header="Steam Query">
-                    <ContentControl Content="{Binding SteamControl}"></ContentControl>
-                </TabItem>
+            <TabControl regions:RegionManager.RegionName="{x:Static inf:RegionNames.ServerTabPartRegion}" regions:RegionManager.RegionContext="{Binding CurrentServer, Mode=OneWay}">
+                
             </TabControl>
+            
+
+          
 
             <GridSplitter Grid.Row="0" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="5" />
 
-            <ContentControl Content="{Binding ChatControl}" Grid.Row="0" Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></ContentControl>
+            <ContentControl  Grid.Row="0" Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                             regions:RegionManager.RegionName="{x:Static inf:RegionNames.ServerSidePartRegion}" regions:RegionManager.RegionContext="{Binding CurrentServer, Mode=OneWay}"></ContentControl>
 
             <StatusBar Grid.Row="1" Grid.ColumnSpan="3" Height="20">
                 <StackPanel Orientation="Horizontal">
@@ -70,6 +54,8 @@
                            Visibility="{Binding Connected, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
                     <TextBlock Foreground="Red" Text="Disonnected"
                            Visibility="{Binding Connected, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverterInverse}}" />
+
+                    <ContentControl regions:RegionManager.RegionName="{x:Static inf:RegionNames.BottomUpdateIndicatorRegion}"  regions:RegionManager.RegionContext="{Binding CurrentServer, Mode=OneWay}"></ContentControl>
                 </StackPanel>
             </StatusBar>
         </Grid>

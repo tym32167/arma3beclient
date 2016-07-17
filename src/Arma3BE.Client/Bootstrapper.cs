@@ -2,6 +2,7 @@
 using Arma3BE.Client.Modules.BanModule;
 using Arma3BE.Client.Modules.BEServerModule;
 using Arma3BE.Client.Modules.ChatModule;
+using Arma3BE.Client.Modules.IndicatorsModule;
 using Arma3BE.Client.Modules.MainModule;
 using Arma3BE.Client.Modules.ManageServerModule;
 using Arma3BE.Client.Modules.NetModule;
@@ -13,6 +14,7 @@ using Arma3BEClient.Common.Logging;
 using log4net.Config;
 using Microsoft.Practices.Unity;
 using Prism.Modularity;
+using Prism.Regions;
 using Prism.Unity;
 using System;
 using System.Windows;
@@ -50,6 +52,7 @@ namespace Arma3BEClient
             AddModule(typeof(ManageServerModuleInit));
             AddModule(typeof(OnlinePlayersModuleInit));
             AddModule(typeof(SteamModuleInit));
+            AddModule(typeof(IndicatorsModuleInit));
             AddModule(typeof(MainModuleInit));
         }
 
@@ -67,6 +70,22 @@ namespace Arma3BEClient
         {
             base.ConfigureContainer();
             Container.RegisterType<ILog, Log>();
+        }
+
+        protected override RegionAdapterMappings ConfigureRegionAdapterMappings()
+        {
+            // Call base method
+            var mappings = base.ConfigureRegionAdapterMappings();
+            if (mappings == null) return null;
+
+            MainModuleInit.CreateRegionAdapterMappings(mappings);
+
+            // Add custom mappings
+            //mappings.RegisterMapping(typeof(DockingManager),
+            //    ServiceLocator.Current.GetInstance<AvalonDockRegionAdapter>());
+
+            // Set return value
+            return mappings;
         }
     }
 }

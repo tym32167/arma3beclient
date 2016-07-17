@@ -14,7 +14,7 @@ using System.Windows.Input;
 
 namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
 {
-    public class PlayerListModelView : ViewModelBase, IPlayerListModelView
+    public class PlayerListModelView : ViewModelBase
     {
         private readonly Guid _serverId;
         private readonly IEventAggregator _eventAggregator;
@@ -30,6 +30,8 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
             BanCommand = new ActionCommand(ShowBan);
             PlayerInfoCommand = new DelegateCommand(PlayerInfoDialog, CanShowDialog);
         }
+
+        public string Title { get { return "Players"; } }
 
         public PlayerView SelectedPlayer { get; set; }
 

@@ -4,7 +4,6 @@ using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using Prism.Commands;
 using Prism.Events;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
@@ -50,14 +49,6 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
         public void Reload()
         {
             OnPropertyChanged(nameof(Servers));
-        }
-
-        public void SetActive(Guid serverId, bool active = false)
-        {
-            using (var repo = new ServerInfoRepository())
-            {
-                repo.SetServerInfoActive(serverId, active);
-            }
         }
     }
 }

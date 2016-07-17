@@ -13,7 +13,7 @@ using Arma3BEClient.Libs.ModelCompact;
 
 namespace Arma3BE.Client.Modules.SteamModule.Models
 {
-    public class ServerMonitorSteamQueryViewModel : ViewModelBase, IServerMonitorSteamQueryViewModel
+    public class ServerMonitorSteamQueryViewModel : ViewModelBase
     {
         private readonly ILog _log;
         private readonly IIpService _ipService;
@@ -72,6 +72,8 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
                     return true;
                 });
         }
+
+        public string Title { get { return "Steam Query"; } }
 
         public ICommand ExcecuteCommand { get; set; }
         public string Host { get; set; }

@@ -19,7 +19,7 @@ using Player = Arma3BE.Server.Models.Player;
 
 namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
 {
-    public class ServerMonitorPlayerViewModel : ServerMonitorBaseViewModel<Player, Helpers.Views.PlayerView>, IServerMonitorPlayerViewModel
+    public class ServerMonitorPlayerViewModel : ServerMonitorBaseViewModel<Player, Helpers.Views.PlayerView>
     {
         private readonly ServerInfo _serverInfo;
         private readonly IEventAggregator _eventAggregator;
@@ -27,7 +27,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
 
         public ServerMonitorPlayerViewModel(ILog log, ServerInfo serverInfo,
             IBanHelper banHelper, IEventAggregator eventAggregator)
-            : base(new ActionCommand(() => SendCommand(eventAggregator, serverInfo.Id, CommandType.Players)))
+            : base(new ActionCommand(() => SendCommand(eventAggregator, serverInfo.Id, CommandType.Players)), new PlayerViewComperer())
         {
             _serverInfo = serverInfo;
             _eventAggregator = eventAggregator;
@@ -54,6 +54,8 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
             });
         }
 
+        public string Title { get { return "Session"; } }
+        
         private static void SendCommand(IEventAggregator eventAggregator, Guid serverId, CommandType commandType,
             string parameters = null)
         {
@@ -111,6 +113,19 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
                 playerView.CanBeAdmin = adminsIps.Contains(playerView.IP.ToLower());
             }
             return view;
+        }
+
+        private class PlayerViewComperer : IEqualityComparer<Helpers.Views.PlayerView>
+        {
+            public bool Equals(Helpers.Views.PlayerView x, Helpers.Views.PlayerView y)
+            {
+                return x.Id == y.Id && x.Guid == y.Guid && x.State == y.State;
+            }
+
+            public int GetHashCode(Helpers.Views.PlayerView obj)
+            {
+                return obj.GetHashCode();
+            }
         }
     }
 }

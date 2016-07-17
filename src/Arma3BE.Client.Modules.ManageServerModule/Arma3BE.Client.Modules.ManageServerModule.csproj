@@ -80,7 +80,6 @@
     <Compile Include="Models\ServerMonitorManageServerViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ManageServerModuleInit.cs" />
-    <Compile Include="ManageServerService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

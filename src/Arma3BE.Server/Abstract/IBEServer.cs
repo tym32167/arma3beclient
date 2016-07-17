@@ -1,6 +1,6 @@
+using Arma3BE.Server.Models;
 using System;
 using System.Collections.Generic;
-using Arma3BE.Server.Models;
 
 namespace Arma3BE.Server.Abstract
 {
@@ -19,6 +19,7 @@ namespace Arma3BE.Server.Abstract
         event EventHandler ConnectHandler;
         event EventHandler ConnectingHandler;
         event EventHandler DisconnectHandler;
+        event EventHandler MessageHandler;
 
         //Task SendCommandAsync(CommandType type, string parameters = null);
         void SendCommand(CommandType type, string parameters = null);

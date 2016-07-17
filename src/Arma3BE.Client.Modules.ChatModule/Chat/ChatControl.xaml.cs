@@ -88,8 +88,12 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
 
         private void ToolBar_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            Model.ChatMessageEventHandler += _model_ChatMessageEventHandler;
-            Model.LogMessageEventHandler += Model_LogMessageEventHandler;
+            var model = e.NewValue as ServerMonitorChatViewModel;
+            if (model != null)
+            {
+                model.ChatMessageEventHandler += _model_ChatMessageEventHandler;
+                model.LogMessageEventHandler += Model_LogMessageEventHandler;
+            }
         }
 
         private void Model_LogMessageEventHandler(object sender, ServerMonitorLogViewModelEventArgs e)

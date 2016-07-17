@@ -37,24 +37,27 @@ namespace Arma3BEClient.Libs.Repositories
 
         private class PlayerRepositoryCache : DisposeObject, IPlayerRepository
         {
-            private object _lock = new object();
+            private static readonly object Lock = new object();
             private readonly IPlayerRepository _playerRepository;
-            private static volatile bool _validCache = false;
+            private static volatile bool _validCache;
             private static volatile ConcurrentDictionary<string, PlayerDto> _playersByGuidsCache;
 
             private void ResetCache()
             {
                 if (_validCache) return;
-
-                var playersByGuidsCache = new ConcurrentDictionary<string, PlayerDto>();
-                var players = _playerRepository.GetAllPlayers().GroupBy(x => x.GUID).Select(x => x.First());
-                foreach (var playerDto in players)
+                lock (Lock)
                 {
-                    playersByGuidsCache.AddOrUpdate(playerDto.GUID, playerDto, (key, value) => value);
-                }
+                    if (_validCache) return;
+                    var playersByGuidsCache = new ConcurrentDictionary<string, PlayerDto>();
+                    var players = _playerRepository.GetAllPlayers().GroupBy(x => x.GUID).Select(x => x.First());
+                    foreach (var playerDto in players)
+                    {
+                        playersByGuidsCache.AddOrUpdate(playerDto.GUID, playerDto, (key, value) => value);
+                    }
 
-                _playersByGuidsCache = playersByGuidsCache;
-                _validCache = true;
+                    _playersByGuidsCache = playersByGuidsCache;
+                    _validCache = true;
+                }
             }
 
             public PlayerRepositoryCache(IPlayerRepository playerRepository)

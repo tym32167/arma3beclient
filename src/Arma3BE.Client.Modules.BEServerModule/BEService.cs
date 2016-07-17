@@ -96,7 +96,15 @@ namespace Arma3BE.Client.Modules.BEServerModule
                 BEServer.ConnectingHandler += BEServer_ConnectingHandler;
                 BEServer.DisconnectHandler += BEServer_DisconnectHandler;
 
+                BEServer.MessageHandler += BEServer_MessageHandler;
+
                 _eventAggregator.GetEvent<BEMessageEvent<BECommand>>().Subscribe(Command);
+            }
+
+            private void BEServer_MessageHandler(object sender, EventArgs e)
+            {
+                _eventAggregator.GetEvent<BEMessageEvent<BEMessage>>()
+                  .Publish(new BEMessage(Info.Id));
             }
 
             private void BEServer_DisconnectHandler(object sender, EventArgs e)
@@ -135,6 +143,8 @@ namespace Arma3BE.Client.Modules.BEServerModule
                 BEServer.ConnectHandler -= BEServer_ConnectHandler;
                 BEServer.ConnectingHandler -= BEServer_ConnectingHandler;
                 BEServer.DisconnectHandler -= BEServer_DisconnectHandler;
+
+                BEServer.MessageHandler -= BEServer_MessageHandler;
 
                 _eventAggregator.GetEvent<BEMessageEvent<BECommand>>().Unsubscribe(Command);
 
