@@ -41,7 +41,7 @@ configuration: Release
 
 
 build:  
-  project: "src\Arma3BE.sln"     # path to Visual Studio solution or project  
+  project: src\Arma3BE.sln     # path to Visual Studio solution or project  
   # MSBuild verbosity level
   verbosity:normal
 
