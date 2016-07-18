@@ -1,5 +1,5 @@
 version: 0.5.5.{build}
 before_build:
-  - nuget restore
+  - nuget restore "$env:appveyor_build_folder\src\Arma3BE.sln"
 build:
   verbosity: minimal
