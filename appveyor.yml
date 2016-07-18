@@ -1,3 +1,5 @@
 version: 0.5.5.{build}
+before_build:
+  - nuget restore
 build:
   verbosity: minimal
