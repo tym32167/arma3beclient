@@ -43,7 +43,7 @@ configuration: Release
 build:  
   project: src\Arma3BE.sln     # path to Visual Studio solution or project  
   # MSBuild verbosity level
-  verbosity:normal
+  verbosity: normal
 
 # scripts to run before build
 before_build:
