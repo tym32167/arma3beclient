@@ -54,7 +54,7 @@ before_build:
 #---------------------------------#
 
 artifacts:
-  - path: Arma3BEClient.zip
+  - path: src\Arma3BE.Client\bin\$(configuration)\
     name: Arma3BEClient
 
 #---------------------------------#
