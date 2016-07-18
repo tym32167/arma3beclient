@@ -1,3 +1,69 @@
-version: 0.5.5.{build}
-build:
-  verbosity: minimal
+# Notes:
+#   - Minimal appveyor.yml file is an empty file. All sections are optional.
+#   - Indent each level of configuration with 2 spaces. Do not use tabs!
+#   - All section names are case-sensitive.
+#   - Section names should be unique on each level.
+
+#---------------------------------#
+#      general configuration      #
+#---------------------------------#
+
+# version format
+version: 0.5.5.{build}-{branch}
+
+# you can use {branch} name in version format too
+# version: 1.0.{build}-{branch}
+
+
+#---------------------------------#
+#    environment configuration    #
+#---------------------------------#
+
+# Build worker image (VM template)
+image: Visual Studio 2015
+
+
+
+#---------------------------------#
+#       build configuration       #
+#---------------------------------#
+
+# build platform, i.e. x86, x64, Any CPU. This setting is optional.
+platform: Any CPU
+
+# to add several platforms to build matrix:
+#platform:
+#  - x86
+#  - Any CPU
+
+# build Configuration, i.e. Debug, Release, etc.
+configuration: Release
+
+
+build:  
+  project: src\Arma3BE.sln     # path to Visual Studio solution or project  
+  # MSBuild verbosity level
+  verbosity: normal
+
+# scripts to run before build
+before_build:
+  - nuget restore "src\Arma3BE.sln"
+
+#---------------------------------#
+#      artifacts configuration    #
+#---------------------------------#
+
+artifacts:
+  - path: src\Arma3BE.Client\bin\$(configuration)\
+    name: Arma3BEClient
+
+#---------------------------------#
+#         notifications           #
+#---------------------------------#
+  
+notifications:
+
+  # Email
+  - provider: Email
+    to:
+      - tym32167@gmail.com
