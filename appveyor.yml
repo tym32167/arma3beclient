@@ -49,6 +49,12 @@ build:
 before_build:
   - nuget restore "src\Arma3BE.sln"
 
+after_build:
+  - del src\Arma3BE.Client\bin\$(configuration)\*.xml
+  - del src\Arma3BE.Client\bin\$(configuration)\*.pdb
+  - rd src\Arma3BE.Client\bin\$(configuration)\de /s /q
+
+
 #---------------------------------#
 #      artifacts configuration    #
 #---------------------------------#
