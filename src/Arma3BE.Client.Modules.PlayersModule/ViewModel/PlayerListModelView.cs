@@ -40,7 +40,7 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
             var local = SelectedPlayer;
             if (local != null)
             {
-                _eventAggregator.GetEvent<BanUserEvent>().Publish(new BanUserModel(_serverId, local.Guid, true, local.Name, null));
+                _eventAggregator.GetEvent<BanUserEvent>().Publish(new BanUserModel(_serverId, local.Guid, false, local.Name, null));
             }
         }
 
