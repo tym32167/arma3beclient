@@ -51,7 +51,7 @@ namespace Arma3BE.Server.Recognizers
         public bool CanRecognizeLine(string line)
         {
             var lines = line.Split(" \t".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            if (lines.Length < 4) return false;
+            if (lines.Length < 3) return false;
 
             int test;
             if (!int.TryParse(lines[0], out test)) return false;
