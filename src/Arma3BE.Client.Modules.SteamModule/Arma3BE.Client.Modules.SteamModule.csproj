@@ -74,12 +74,14 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Grids\SteamQuery.xaml.cs">
       <DependentUpon>SteamQuery.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\ServerMonitorSteamQueryViewModel.cs" />
     <Compile Include="SteamModuleInit.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
