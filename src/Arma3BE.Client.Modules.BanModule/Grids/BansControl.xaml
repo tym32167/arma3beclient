@@ -75,7 +75,7 @@
 
                     <xcdg:DataGridControl.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Header="Player Info" Click="PlayerInfo2_Click" />
+                            <MenuItem Header="Player Info" Click="PlayerInfo_Click" />
                         </ContextMenu>
                     </xcdg:DataGridControl.ContextMenu>
 

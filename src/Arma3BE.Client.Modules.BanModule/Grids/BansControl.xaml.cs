@@ -84,18 +84,10 @@ namespace Arma3BE.Client.Modules.BanModule.Grids
 
             if (si != null)
             {
+                Model.ShowPlayerInfo(si);
                 //_playerViewService.ShowDialog(si.GuidIp);
             }
         }
-
-        private void PlayerInfo2_Click(object sender, RoutedEventArgs e)
-        {
-            var si = dg2.SelectedItem as BanView;
-
-            if (si != null)
-            {
-                // _playerViewService.ShowDialog(si.GuidIp);
-            }
-        }
+       
     }
 }

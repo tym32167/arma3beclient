@@ -14,6 +14,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Windows.Input;
+using Arma3BE.Client.Infrastructure.Events;
+using Arma3BE.Client.Infrastructure.Events.Models;
 using Ban = Arma3BE.Server.Models.Ban;
 
 namespace Arma3BE.Client.Modules.BanModule.Models
@@ -154,6 +156,12 @@ namespace Arma3BE.Client.Modules.BanModule.Models
             {
                 return obj.GetHashCode();
             }
+        }
+
+        public void ShowPlayerInfo(BanView si)
+        {
+            if (string.IsNullOrEmpty(si.GuidIp) == false)
+                _eventAggregator.GetEvent<ShowUserInfoEvent>().Publish(new ShowUserModel(si.GuidIp));
         }
     }
 }
