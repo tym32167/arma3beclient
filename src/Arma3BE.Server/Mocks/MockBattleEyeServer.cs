@@ -94,7 +94,7 @@ namespace Arma3BE.Server.Mocks
             @"Players on server:
 [#] [IP Address]:[Port] [Ping] [GUID] [Name]
 --------------------------------------------------
-0   46.0.154.187:2304     140  2c65319280ac51b220aef667552a7f06(OK) Jonh Silver
+0   46.149.73.255:2304     140  2c65319280ac51b220aef667552a7f06(OK) admin
 1   195.64.206.232:50652  205  5b0f07ce2400706dc9b3c7519beb5372(OK) SEGITO
 2   81.20.205.242:17319   105  80f14b5add6cad33d5efe876cead577b(OK) Shinku
 3   88.214.186.177:62404  435  2b3a3b6556a8c55dbb982de15f936a04(OK) portugalec
@@ -117,7 +117,7 @@ namespace Arma3BE.Server.Mocks
             @"Players on server:
 [#] [IP Address]:[Port] [Ping] [GUID] [Name]
 --------------------------------------------------
-2   81.20.205.242:17319   105  80f14b5add6cad33d5efe876cead577b(OK) Shinku
+0   46.149.73.255:2304     140  2c65319280ac51b220aef667552a7f06(OK) admin
 3   88.214.186.177:62404  435  2b3a3b6556a8c55dbb982de15f936a04(OK) portugalec
 4   212.3.137.202:52971   105  2bae76795dc6dde5daf4681946530dcf(OK) DAN
 5   78.60.57.242:2304     205  44ecfad5812b18f1cb6fce2ba0656de3(OK) Xenus
