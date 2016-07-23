@@ -18,6 +18,7 @@ using Prism.Regions;
 using Prism.Unity;
 using System;
 using System.Windows;
+using Arma3BE.Client.Modules.CoreModule;
 
 namespace Arma3BEClient
 {
@@ -42,6 +43,7 @@ namespace Arma3BEClient
         {
             base.ConfigureModuleCatalog();
 
+            AddModule(typeof(CoreModuleInit));
             AddModule(typeof(NetModuleInit));
             AddModule(typeof(OptionsModuleInit));
             AddModule(typeof(BEServerModuleInit));

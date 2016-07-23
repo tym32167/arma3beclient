@@ -13,10 +13,14 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
-    <SccProjectName></SccProjectName>
-    <SccLocalPath></SccLocalPath>
-    <SccAuxPath></SccAuxPath>
-    <SccProvider></SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>D:\temp\be\</PublishUrl>
     <Install>true</Install>
@@ -214,6 +218,10 @@
     <ProjectReference Include="..\Arma3BE.Client.Modules.ChatModule\Arma3BE.Client.Modules.ChatModule.csproj">
       <Project>{49e36c5f-4a81-4338-8a34-c0e52fcfa5dc}</Project>
       <Name>Arma3BE.Client.Modules.ChatModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Modules.CoreModule\Arma3BE.Client.Modules.CoreModule.csproj">
+      <Project>{308eef0c-5de3-435e-8249-7a658bfafd08}</Project>
+      <Name>Arma3BE.Client.Modules.CoreModule</Name>
     </ProjectReference>
     <ProjectReference Include="..\Arma3BE.Client.Modules.IndicatorsModule\Arma3BE.Client.Modules.IndicatorsModule.csproj">
       <Project>{dee7ad82-5abd-4a16-90fa-b46da96f3049}</Project>
