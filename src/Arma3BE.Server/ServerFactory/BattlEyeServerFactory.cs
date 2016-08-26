@@ -20,10 +20,10 @@ namespace Arma3BE.Server.ServerFactory
         public IBattlEyeServer Create(BattlEyeLoginCredentials credentials)
         {
 
-            if (ConfigurationManager.AppSettings[DebugServerKey] == bool.TrueString)
-            {
-                return new BattlEyeServerLogProxy(new MockBattleEyeServer(), _log);
-            }
+            //if (ConfigurationManager.AppSettings[DebugServerKey] == bool.TrueString)
+            //{
+            //    return new BattlEyeServerLogProxy(new MockBattleEyeServer(), _log);
+            //}
 
             return new ThreadSafeBattleEyeServer(new BattlEyeServerProxy(new BattlEyeClient(credentials)
             {
