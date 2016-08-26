@@ -45,10 +45,6 @@
     <Compile Include="Repositories\AdminRepository.cs" />
     <Compile Include="Repositories\BanRepository.cs" />
     <Compile Include="Repositories\ChatRepository.cs" />
-    <Compile Include="Context\Context.cs" />
-    <Compile Include="Context\ContextManager.cs" />
-    <Compile Include="Context\IContext.cs" />
-    <Compile Include="Context\IContextManager.cs" />
     <Compile Include="Repositories\PlayerRepository.cs" />
     <Compile Include="Repositories\ServerInfoRepository.cs" />
     <Compile Include="ModelCompact\Admin.cs" />
