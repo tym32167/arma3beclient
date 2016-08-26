@@ -41,6 +41,7 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Context\Arma3BEClientContext.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModelCompact\Reason.cs" />
     <Compile Include="Repositories\AdminRepository.cs" />
     <Compile Include="Repositories\BanRepository.cs" />
@@ -101,7 +102,6 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
