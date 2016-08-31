@@ -52,6 +52,7 @@
     <Compile Include="Repositories\BanRepository.cs" />
     <Compile Include="Repositories\ChatRepository.cs" />
     <Compile Include="Repositories\PlayerRepository.cs" />
+    <Compile Include="Repositories\ReasonRepository.cs" />
     <Compile Include="Repositories\ServerInfoRepository.cs" />
     <Compile Include="ModelCompact\Admin.cs" />
     <Compile Include="ModelCompact\Ban.cs" />

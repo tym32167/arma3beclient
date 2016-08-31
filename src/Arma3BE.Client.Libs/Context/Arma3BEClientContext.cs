@@ -9,6 +9,7 @@ namespace Arma3BEClient.Libs.Context
     {
         static Arma3BeClientContext()
         {
+            // ensuring obsolette schema initialization.
             new Arma3BeClientContextObsolete.ObsoletteRepository().EnsureDatabase();
 
             Database.SetInitializer(new ProjectInitializer());
