@@ -134,6 +134,7 @@ namespace Arma3BE.Client.Modules.MainModule
                             currentILayoutDocumentPane.ReplaceChild(currentILayoutDocumentPane.Children.ToList()[0], newLayoutDocumentPane);
                             regionTarget.Layout.RootPanel.ReplaceChildAt(0, currentILayoutDocumentPane);
                         }
+
                         newLayoutDocument.IsActive = true;
                     }
                 }

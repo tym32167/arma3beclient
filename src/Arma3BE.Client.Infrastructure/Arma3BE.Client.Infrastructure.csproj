@@ -100,11 +100,13 @@
     <Compile Include="Commands\BaseCommand.cs" />
     <Compile Include="Contracts\DisposableUserControl.cs" />
     <Compile Include="Contracts\DisposableViewModelBase.cs" />
+    <Compile Include="Converters\BisyBoolToColorConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter .cs" />
     <Compile Include="Converters\BoolToVisibilityConverterInverse.cs" />
     <Compile Include="Converters\BrushColorConverter.cs" />
     <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Converters\PlayerNumberToColorConverter.cs" />
+    <Compile Include="Data\IBasicRepository.cs" />
     <Compile Include="Events\BanUserEvent.cs" />
     <Compile Include="Events\BEServersChangedEvent.cs" />
     <Compile Include="Events\BE\BEAdminLogMessage.cs" />

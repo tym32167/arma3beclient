@@ -67,7 +67,10 @@ namespace Arma3BE.Client.Modules.BanModule.Models
                 .Subscribe(e =>
                 {
                     if (_serverInfoId == e.ServerId)
+                    {
                         SetData(e.Items);
+                        WaitingForEvent = false;
+                    }
                 });
         }
 

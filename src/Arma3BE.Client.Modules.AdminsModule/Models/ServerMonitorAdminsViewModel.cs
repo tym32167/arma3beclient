@@ -27,7 +27,10 @@ namespace Arma3BE.Client.Modules.AdminsModule.Models
             eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Admin>>>().Subscribe(e =>
             {
                 if (e.ServerId == serverInfo.Id)
+                {
                     SetData(e.Items);
+                    WaitingForEvent = false;
+                }
             });
         }
 

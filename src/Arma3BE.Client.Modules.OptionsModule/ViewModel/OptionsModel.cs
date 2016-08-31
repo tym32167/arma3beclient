@@ -25,9 +25,33 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
             {
                 Servers = servierInfoRepository.GetServerInfo().Select(x => new ServerInfoModel(x)).ToList();
             }
+
+            using (var dc = new ReasonRepository())
+            {
+                BanReasons = dc.GetBanReasons().Select(x => new ReasonEdit() { Text = x }).ToList();
+                KickReasons = dc.GetKickReasons().Select(x => new ReasonEdit() { Text = x }).ToList();
+                BanTimes =
+                    dc.GetBanTimes().Select(x => new BanTimeEdit() { Text = x.Title, Minutes = x.TimeInMinutes }).ToList();
+            }
         }
 
         public List<ServerInfoModel> Servers { get; set; }
+
+        public class ReasonEdit
+        {
+            public string Text { get; set; }
+        }
+
+        public class BanTimeEdit
+        {
+            public string Text { get; set; }
+            public int Minutes { get; set; }
+        }
+
+        public List<ReasonEdit> BanReasons { get; set; }
+        public List<ReasonEdit> KickReasons { get; set; }
+        public List<BanTimeEdit> BanTimes { get; set; }
+
 
         public SettingsStore Settings
         {
@@ -67,6 +91,13 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
                         }
                         servierInfoRepository.AddOrUpdate(m);
                     }
+                }
+
+                using (var dc = new ReasonRepository())
+                {
+                    dc.UpdateBanReasons(BanReasons.Select(x => x.Text).ToArray());
+                    dc.UpdateBanTimes(BanTimes.Select(x => new BanTime() { TimeInMinutes = x.Minutes, Title = x.Text }).ToArray());
+                    dc.UpdateKickReasons(KickReasons.Select(x => x.Text).ToArray());
                 }
 
                 _eventAggregator.GetEvent<BEServersChangedEvent>().Publish(null);

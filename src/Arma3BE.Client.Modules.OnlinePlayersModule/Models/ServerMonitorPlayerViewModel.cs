@@ -42,6 +42,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
                 if (e.ServerId == serverInfo.Id)
                 {
                     base.SetData(e.Items);
+                    WaitingForEvent = false;
                 }
             });
 
@@ -55,7 +56,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
         }
 
         public string Title { get { return "Session"; } }
-        
+
         private static void SendCommand(IEventAggregator eventAggregator, Guid serverId, CommandType commandType,
             string parameters = null)
         {
