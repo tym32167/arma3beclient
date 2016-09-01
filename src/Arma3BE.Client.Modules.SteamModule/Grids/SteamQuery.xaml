@@ -3,31 +3,33 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-
-        <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto"
+        <xctk:BusyIndicator IsBusy="{Binding IsBisy}" BusyContent="Please, wait...">
+            <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Auto">
 
-            <StackPanel Orientation="Vertical" Margin="5">
+                <StackPanel Orientation="Vertical" Margin="5">
 
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding Host}" Width="Auto" Margin="2" />
-                    <TextBox Text="{Binding Port, Mode=TwoWay}" Width="50" Margin="2" />
-                    <Button Content="Go" Command="{Binding ExcecuteCommand}" Width="20" Margin="2" />
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Host}" Width="Auto" Margin="2" />
+                        <TextBox Text="{Binding Port, Mode=TwoWay}" Width="50" Margin="2" />
+                        <Button Content="Go" Command="{Binding ExcecuteCommand}" Width="20" Margin="2" />
+                    </StackPanel>
+
+
+                    <StackPanel Orientation="Horizontal">
+                        <DataGrid ItemsSource="{Binding Path=ServerPlayers.Players}" AutoGenerateColumns="True" Margin="5" />
+                        <DataGrid ItemsSource="{Binding ServerInfo}" AutoGenerateColumns="True" Margin="5" />
+
+                    </StackPanel>
+
+                    <DataGrid ItemsSource="{Binding ServerRules}" AutoGenerateColumns="True" Margin="5" />
+
                 </StackPanel>
-
-
-                <StackPanel Orientation="Horizontal">
-                    <DataGrid ItemsSource="{Binding Path=ServerPlayers.Players}" AutoGenerateColumns="True" Margin="5" />
-                    <DataGrid ItemsSource="{Binding ServerInfo}" AutoGenerateColumns="True" Margin="5" />
-
-                </StackPanel>
-
-                <DataGrid ItemsSource="{Binding ServerRules}" AutoGenerateColumns="True" Margin="5" />
-
-            </StackPanel>
-        </ScrollViewer>
+            </ScrollViewer>
+        </xctk:BusyIndicator>
     </Grid>
 </UserControl>

@@ -46,6 +46,10 @@
     <Compile Include="Migrations\201608261724176_Kick_Ban_Times_Reasons_Migration.Designer.cs">
       <DependentUpon>201608261724176_Kick_Ban_Times_Reasons_Migration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201609011936124_AddSteamPortToServerInfo.cs" />
+    <Compile Include="Migrations\201609011936124_AddSteamPortToServerInfo.Designer.cs">
+      <DependentUpon>201609011936124_AddSteamPortToServerInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModelCompact\Reason.cs" />
     <Compile Include="Repositories\AdminRepository.cs" />
@@ -111,6 +115,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201608261724176_Kick_Ban_Times_Reasons_Migration.resx">
       <DependentUpon>201608261724176_Kick_Ban_Times_Reasons_Migration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609011936124_AddSteamPortToServerInfo.resx">
+      <DependentUpon>201609011936124_AddSteamPortToServerInfo.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

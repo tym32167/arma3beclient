@@ -122,6 +122,7 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
             {
                 Host = _info.Host;
                 Port = _info.Port;
+                SteamPort = _info.SteamPort;
                 Password = _info.Password;
                 Name = _info.Name;
             }
@@ -146,6 +147,12 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
         {
             get { return _info.Port; }
             set { _info.Port = value; }
+        }
+
+        public int SteamPort
+        {
+            get { return _info.SteamPort; }
+            set { _info.SteamPort = value; }
         }
 
         //[Required]
