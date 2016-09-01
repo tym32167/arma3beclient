@@ -95,9 +95,9 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
 
                 using (var dc = new ReasonRepository())
                 {
-                    dc.UpdateBanReasons(BanReasons.Select(x => x.Text).ToArray());
-                    dc.UpdateBanTimes(BanTimes.Select(x => new BanTime() { TimeInMinutes = x.Minutes, Title = x.Text }).ToArray());
-                    dc.UpdateKickReasons(KickReasons.Select(x => x.Text).ToArray());
+                    dc.UpdateBanReasons(BanReasons.Select(x => x.Text).Where(x=>string.IsNullOrEmpty(x) == false).Distinct().ToArray());
+                    dc.UpdateBanTimes(BanTimes.Where(x => string.IsNullOrEmpty(x.Text) == false).Select(x => new BanTime() { TimeInMinutes = x.Minutes, Title = x.Text }).ToArray());
+                    dc.UpdateKickReasons(KickReasons.Select(x => x.Text).Where(x => string.IsNullOrEmpty(x) == false).Distinct().ToArray());
                 }
 
                 _eventAggregator.GetEvent<BEServersChangedEvent>().Publish(null);
