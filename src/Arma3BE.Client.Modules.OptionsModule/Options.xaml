@@ -43,18 +43,37 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="Ban / Kick Reasons">
-                    <Grid>
-                        <StackPanel Orientation="Vertical">
-                            <TextBlock>Ban reasons</TextBlock>
-                            <DataGrid ItemsSource="{Binding BanReasons}" IsReadOnly="False"></DataGrid>
+                    <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
 
-                            <TextBlock>Ban times</TextBlock>
-                            <DataGrid ItemsSource="{Binding BanTimes}" IsReadOnly="False"></DataGrid>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
 
-                            <TextBlock>Kick reasons</TextBlock>
-                            <DataGrid ItemsSource="{Binding KickReasons}" IsReadOnly="False"></DataGrid>
-                        </StackPanel>
-                    </Grid>
+                            <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="0">
+                                <TextBlock>Ban reasons</TextBlock>
+                                <DataGrid ItemsSource="{Binding BanReasons}" IsReadOnly="False"></DataGrid>
+
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1">
+
+                                <TextBlock>Ban times</TextBlock>
+                                <DataGrid ItemsSource="{Binding BanTimes}" IsReadOnly="False"></DataGrid>
+
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
+
+                                <TextBlock>Kick reasons</TextBlock>
+                                <DataGrid ItemsSource="{Binding KickReasons}" IsReadOnly="False"></DataGrid>
+                            </StackPanel>
+                        </Grid>
+                    </ScrollViewer>
                 </TabItem>
 
             </TabControl>
