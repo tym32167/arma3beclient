@@ -9,6 +9,7 @@ using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Arma3BEClient.Libs.Repositories
 {
@@ -63,7 +64,7 @@ namespace Arma3BEClient.Libs.Repositories
             public PlayerRepositoryCache(IPlayerRepository playerRepository)
             {
                 _playerRepository = playerRepository;
-                ResetCache();
+                Task.Run(() => ResetCache());
             }
 
             public IEnumerable<PlayerDto> GetAllPlayers()
