@@ -1,9 +1,12 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Diagnostics;
+using System.Windows.Input;
 using Arma3BE.Client.Infrastructure;
 using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
+using Prism.Commands;
 
 namespace Arma3BE.Client.Modules.PlayersModule.Models
 {
@@ -20,6 +23,17 @@ namespace Arma3BE.Client.Modules.PlayersModule.Models
             _ipService = ipService;
 
             SaveComment = new ActionCommand(SaveUserComment);
+            GoToSteamCommand = new ActionCommand(GoToSteam);
+        }
+
+        private void GoToSteam()
+        {
+            var id = _player?.SteamId;
+            if (string.IsNullOrEmpty(id) == false)
+            {
+                var suri = $"http://steamcommunity.com/profiles/{id}/";
+                Process.Start(new ProcessStartInfo(new Uri(suri).AbsoluteUri));
+            }
         }
 
         public Player Player
@@ -56,6 +70,7 @@ namespace Arma3BE.Client.Modules.PlayersModule.Models
         }
 
         public ICommand SaveComment { get; set; }
+        public ICommand GoToSteamCommand { get; set; }
 
         private void SaveUserComment()
         {
