@@ -320,6 +320,9 @@ namespace Arma3BEClient.Libs.Repositories
         public Guid Id { get; set; }
 
         public string GUID { get; set; }
+
+        public string SteamId { get; set; }
+
         public string Name { get; set; }
         public string Comment { get; set; }
 

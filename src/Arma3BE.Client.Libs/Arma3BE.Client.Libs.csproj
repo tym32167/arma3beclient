@@ -50,6 +50,10 @@
     <Compile Include="Migrations\201609011936124_AddSteamPortToServerInfo.Designer.cs">
       <DependentUpon>201609011936124_AddSteamPortToServerInfo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201609111835579_Added_SteamId.cs" />
+    <Compile Include="Migrations\201609111835579_Added_SteamId.Designer.cs">
+      <DependentUpon>201609111835579_Added_SteamId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModelCompact\Reason.cs" />
     <Compile Include="Repositories\AdminRepository.cs" />
@@ -118,6 +122,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201609011936124_AddSteamPortToServerInfo.resx">
       <DependentUpon>201609011936124_AddSteamPortToServerInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609111835579_Added_SteamId.resx">
+      <DependentUpon>201609111835579_Added_SteamId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
