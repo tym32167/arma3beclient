@@ -22,13 +22,22 @@ namespace Arma3BE.Client.Modules.SteamModule
 
         public void Initialize()
         {
-            _regionManager.RegisterViewWithRegion(RegionNames.ServerTabPartRegion, CreateView);
+            _regionManager.RegisterViewWithRegion(RegionNames.ServerTabPartRegion, CreateSteamQueryView);
+            _regionManager.RegisterViewWithRegion(RegionNames.ServerTabPartRegion, CreateSteamDiscoveryView);
         }
 
-        private object CreateView()
+        private object CreateSteamQueryView()
         {
             return ServerTabViewHelper.RegisterView<SteamQuery, ServerInfo, ServerMonitorSteamQueryViewModel>(_container,
                 "serverInfo");
+        }
+
+        private object CreateSteamDiscoveryView()
+        {
+            var vm = _container.Resolve<SteamDiscoveryViewModel>();
+            var view = _container.Resolve<SteamDiscovery>();
+            view.DataContext = vm;
+            return view;
         }
     }
 }
