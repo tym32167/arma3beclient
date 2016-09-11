@@ -12,6 +12,9 @@ namespace Arma3BE.Client.Modules.MainModule.Models.Export
         public string Guid { get; set; }
 
         [XmlAttribute]
+        public string SteamId { get; set; }
+
+        [XmlAttribute]
         public string LastIP { get; set; }
 
         [XmlAttribute]

@@ -108,6 +108,7 @@ namespace Arma3BE.Client.Modules.MainModule
                             new PlayerXML
                             {
                                 Guid = x.GUID,
+                                SteamId = x.SteamId,
                                 LastIP = x.LastIp,
                                 LastSeen = x.LastSeen,
                                 Name = x.Name,
@@ -153,6 +154,7 @@ namespace Arma3BE.Client.Modules.MainModule
                             LastIp = p.LastIP,
                             LastSeen = p.LastSeen,
                             Name = p.Name,
+                            SteamId = p.SteamId,
                             Id = Guid.NewGuid()
                         });
                     }
@@ -162,6 +164,10 @@ namespace Arma3BE.Client.Modules.MainModule
                         if (string.IsNullOrEmpty(lp.Comment) && !string.IsNullOrEmpty(p.Comment))
                         {
                             lp.Comment = p.Comment;
+                        }
+                        if (string.IsNullOrEmpty(lp.SteamId) && !string.IsNullOrEmpty(p.SteamId))
+                        {
+                            lp.SteamId = p.SteamId;
                         }
                     }
                 }
