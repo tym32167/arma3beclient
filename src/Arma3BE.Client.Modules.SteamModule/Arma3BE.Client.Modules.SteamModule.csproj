@@ -101,14 +101,22 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Grids\SteamDiscovery.xaml.cs">
+      <DependentUpon>SteamDiscovery.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Grids\SteamQuery.xaml.cs">
       <DependentUpon>SteamQuery.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\ServerMonitorSteamQueryViewModel.cs" />
+    <Compile Include="Models\SteamDiscoveryViewModel.cs" />
     <Compile Include="SteamModuleInit.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Page Include="Grids\SteamDiscovery.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Grids\SteamQuery.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

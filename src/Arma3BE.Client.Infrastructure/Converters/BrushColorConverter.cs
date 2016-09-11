@@ -5,12 +5,12 @@ using System.Windows.Media;
 
 namespace Arma3BE.Client.Infrastructure.Converters
 {
-    [ValueConversion(typeof (bool), typeof (SolidColorBrush))]
+    [ValueConversion(typeof(bool), typeof(SolidColorBrush))]
     public class BrushColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if ((bool) value)
+            if ((bool)value)
             {
                 {
                     return new SolidColorBrush(Colors.Black);
