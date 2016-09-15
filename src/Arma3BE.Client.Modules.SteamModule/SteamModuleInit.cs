@@ -1,11 +1,7 @@
-﻿using System;
-using System.Linq;
-using System.Windows;
+﻿using System.Linq;
 using System.Windows.Controls;
 using Arma3BE.Client.Infrastructure;
-using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Client.Infrastructure.Helpers;
-using Arma3BE.Client.Infrastructure.UI;
 using Arma3BE.Client.Modules.SteamModule.Grids;
 using Arma3BE.Client.Modules.SteamModule.Models;
 using Arma3BEClient.Libs.ModelCompact;
