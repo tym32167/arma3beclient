@@ -29,31 +29,41 @@ namespace Arma3BE.Client.Modules.BanModule
            
         }
 
-        public void ShowBanDialog(Guid serverId, string playerGuid, bool isOnline, string playerName,
+        public void ShowBanDialog(Guid? serverId, string playerGuid, bool isOnline, string playerName,
             string playerNum)
         {
-            if (playerNum != null)
-            {
-                var w = _container.Resolve<BanPlayerWindow>(
-                    new ParameterOverride("serverId", serverId),
-                    new ParameterOverride("playerGuid", playerGuid),
-                    new ParameterOverride("isOnline", isOnline),
-                    new ParameterOverride("playerName", playerName),
-                    new ParameterOverride("playerNum", playerNum)
-                    );
-                w.ShowDialog();
-            }
-            else
-            {
-                var w = _container.Resolve<BanPlayerWindow>(
-                   new ParameterOverride("serverId", serverId),
+
+            var w = _container.Resolve<BanPlayerWindow>(
+                   new ParameterOverride("serverId", serverId ?? Guid.Empty),
                    new ParameterOverride("playerGuid", playerGuid),
                    new ParameterOverride("isOnline", isOnline),
                    new ParameterOverride("playerName", playerName),
-                    new ParameterOverride("playerNum", string.Empty)
+                   new ParameterOverride("playerNum", playerNum ?? string.Empty)
                    );
-                w.ShowDialog();
-            }
+            w.ShowDialog();
+
+            //if (playerNum != null)
+            //{
+            //    var w = _container.Resolve<BanPlayerWindow>(
+            //        new ParameterOverride("serverId", serverId),
+            //        new ParameterOverride("playerGuid", playerGuid),
+            //        new ParameterOverride("isOnline", isOnline),
+            //        new ParameterOverride("playerName", playerName),
+            //        new ParameterOverride("playerNum", playerNum)
+            //        );
+            //    w.ShowDialog();
+            //}
+            //else
+            //{
+            //    var w = _container.Resolve<BanPlayerWindow>(
+            //       new ParameterOverride("serverId", serverId),
+            //       new ParameterOverride("playerGuid", playerGuid),
+            //       new ParameterOverride("isOnline", isOnline),
+            //       new ParameterOverride("playerName", playerName),
+            //        new ParameterOverride("playerNum", string.Empty)
+            //       );
+            //    w.ShowDialog();
+            //}
         }
 
         public void ShowKickDialog(Guid serverId, int playerNum, string playerGuid, string playerName)
