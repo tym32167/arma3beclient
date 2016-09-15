@@ -1,9 +1,12 @@
-﻿using Arma3BE.Client.Infrastructure;
+﻿using System.Linq;
+using System.Windows.Controls;
+using Arma3BE.Client.Infrastructure;
 using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Modules.PlayersModule.Grids;
 using Arma3BE.Client.Modules.PlayersModule.ViewModel;
 using Arma3BEClient.Libs.ModelCompact;
 using Microsoft.Practices.Unity;
+using Prism.Commands;
 using Prism.Modularity;
 using Prism.Regions;
 
@@ -23,13 +26,33 @@ namespace Arma3BE.Client.Modules.PlayersModule
         public void Initialize()
         {
             _container.RegisterInstance(new PlayerService(_container));
-            _regionManager.RegisterViewWithRegion(RegionNames.ServerTabPartRegion, CreateView);
+            _regionManager.RegisterViewWithRegion(RegionNames.MenuToolsRegion, CreateView);
         }
 
         private object CreateView()
         {
-            return ServerTabViewHelper.RegisterView<PlayersControl, ServerInfo, PlayerListModelView>(_container,
-                "serverInfo");
+
+            var vm = _container.Resolve<PlayerListModelView>();
+
+
+            return new MenuItem()
+            {
+                Command = new DelegateCommand(() =>
+                {
+                    var view = _container.Resolve<PlayersControl>();
+                    view.DataContext = vm;
+                    _regionManager.Regions[RegionNames.ServerTabRegion].Add(view, null, true);
+                },
+                    () =>
+                        _regionManager.Regions[RegionNames.ServerTabRegion].Views.OfType<PlayersControl>().Any() ==
+                        false),
+                Header = vm.Title
+            };
+
+
+
+            //return ServerTabViewHelper.RegisterView<PlayersControl, ServerInfo, PlayerListModelView>(_container,
+            //    "serverInfo");
         }
 
         public static IUnityContainer Current => _container;
