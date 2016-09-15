@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Client.Infrastructure.Models;
+using Arma3BEClient.Common.Core;
 using Arma3BEClient.Libs.Repositories;
 
 namespace Arma3BE.Client.Modules.SteamModule.Models
 {
-    public class SteamDiscoveryViewModel : ViewModelBase
+    public class SteamDiscoveryViewModel : DisposableViewModelBase, ITitledItem
     {
         private CancellationTokenSource _cancelatioTokenSource;
         private long _current;
-
-
+        
         private bool _isBusy;
         private ObservableCollection<Tuple<string, string>> _playersFound;
         private int _progress;
@@ -25,7 +25,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
         private long _min;
         private long _max;
         private bool _inProcess;
-
+        
 
         public SteamDiscoveryViewModel()
         {
@@ -37,7 +37,15 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
             Min = 7959000000L;
 
             Current = Min;
+            
         }
+
+        protected override void DisposeManagedResources()
+        {
+            base.DisposeManagedResources();
+            _cancelatioTokenSource?.Cancel();
+        }
+
 
         public string Title
         {
@@ -192,8 +200,6 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
 
         private void Generate(long min, long max, CancellationToken token)
         {
-            var d = new Dictionary<string, long>();
-
             var start = Current;
 
             for (var i = start; i <= max; i++)

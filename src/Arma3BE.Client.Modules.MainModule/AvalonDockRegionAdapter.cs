@@ -6,6 +6,8 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using Arma3BE.Client.Infrastructure.Models;
 using Xceed.Wpf.AvalonDock;
 using Xceed.Wpf.AvalonDock.Layout;
 
@@ -59,6 +61,25 @@ namespace Arma3BE.Client.Modules.MainModule
         /// <param name="regionTarget">The region target.</param>
         void OnViewsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e, IRegion region, DockingManager regionTarget)
         {
+            if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (var eOldItem in e.OldItems)
+                {
+                    var disposables = new[]
+                    {
+                        eOldItem as IDisposable,
+                        (eOldItem as FrameworkElement)?.DataContext as IDisposable,
+                        (eOldItem as ContentControl)?.Content as IDisposable,
+                        ((eOldItem as ContentControl)?.Content as FrameworkElement)?.DataContext as IDisposable
+                    };
+
+                    foreach (var disposable in disposables)
+                    {
+                        if (disposable!=null) disposable.Dispose();
+                    }
+                }
+            }
+
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 foreach (FrameworkElement item in e.NewItems)
@@ -71,9 +92,9 @@ namespace Arma3BE.Client.Modules.MainModule
                         LayoutDocument newLayoutDocument = new LayoutDocument();
                         //Set the content of the LayoutDocument
                         newLayoutDocument.Content = item;
+                        newLayoutDocument.Title = (item.DataContext as ITitledItem)?.Title;
 
                         ServerMonitorModel viewModel = item.DataContext as ServerMonitorModel;
-
                         if (viewModel != null)
                         {
                             //All my viewmodels have properties DisplayName and IconKey

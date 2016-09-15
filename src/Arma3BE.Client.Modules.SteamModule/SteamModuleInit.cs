@@ -1,9 +1,16 @@
-﻿using Arma3BE.Client.Infrastructure;
+﻿using System;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using Arma3BE.Client.Infrastructure;
+using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Client.Infrastructure.Helpers;
+using Arma3BE.Client.Infrastructure.UI;
 using Arma3BE.Client.Modules.SteamModule.Grids;
 using Arma3BE.Client.Modules.SteamModule.Models;
 using Arma3BEClient.Libs.ModelCompact;
 using Microsoft.Practices.Unity;
+using Prism.Commands;
 using Prism.Modularity;
 using Prism.Regions;
 
@@ -23,7 +30,10 @@ namespace Arma3BE.Client.Modules.SteamModule
         public void Initialize()
         {
             _regionManager.RegisterViewWithRegion(RegionNames.ServerTabPartRegion, CreateSteamQueryView);
-            _regionManager.RegisterViewWithRegion(RegionNames.ServerTabPartRegion, CreateSteamDiscoveryView);
+            _regionManager.RegisterViewWithRegion(RegionNames.MenuToolsRegion, CreateSteamDiscoveryView);
+
+
+            _container.RegisterInstance(_container.Resolve<SteamDiscoveryViewModel>());
         }
 
         private object CreateSteamQueryView()
@@ -35,9 +45,21 @@ namespace Arma3BE.Client.Modules.SteamModule
         private object CreateSteamDiscoveryView()
         {
             var vm = _container.Resolve<SteamDiscoveryViewModel>();
-            var view = _container.Resolve<SteamDiscovery>();
-            view.DataContext = vm;
-            return view;
+
+
+            return new MenuItem()
+            {
+                Command = new DelegateCommand(() =>
+                    {
+                        var view = _container.Resolve<SteamDiscovery>();
+                        view.DataContext = vm;
+                        _regionManager.Regions[RegionNames.ServerTabRegion].Add(view, null, true);
+                    },
+                    () =>
+                        _regionManager.Regions[RegionNames.ServerTabRegion].Views.OfType<SteamDiscovery>().Any() ==
+                        false),
+                Header = vm.Title
+            };
         }
     }
 }

@@ -29,6 +29,10 @@
                     </Style>
                 </MenuItem.ItemContainerStyle>
             </MenuItem>
+
+            <MenuItem Header="Tools" regions:RegionManager.RegionName="{x:Static inf:RegionNames.MenuToolsRegion}">
+            </MenuItem>
+
             <Separator/>
             <MenuItem Header="Help">
                 <MenuItem Header="About" Click="AboutClick" />
