@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.BanModule.Helpers;
+using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 
 namespace Arma3BE.Client.Modules.BanModule.Boxes
@@ -15,7 +17,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
     {
         private readonly BanPlayerViewModel _model;
 
-        public BanPlayerWindow(Guid serverId, BanHelper banHelper, string playerGuid, bool isOnline, string playerName,
+        public BanPlayerWindow(Guid? serverId, BanHelper banHelper, string playerGuid, bool isOnline, string playerName,
             string playerNum)
         {
             InitializeComponent();
@@ -46,25 +48,35 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
         private readonly bool _isOnline;
         private readonly BanHelper _playerHelper;
         private readonly string _playerNum;
-        private readonly Guid _serverId;
         private long? _minutes;
         private string _playerGuid;
         private string _playerName;
         private string _reason;
         private BanFullTime _timeSpan;
 
-        public BanPlayerViewModel(Guid serverId, string playerGuid, bool isOnline, BanHelper playerHelper,
+        public BanPlayerViewModel(Guid? serverId, string playerGuid, bool isOnline, BanHelper playerHelper,
             string playerName,
             string playerNum)
         {
-            _serverId = serverId;
             _playerGuid = playerGuid;
             _isOnline = isOnline;
             _playerHelper = playerHelper;
             _playerName = playerName;
             _playerNum = playerNum;
             _minutes = 0;
+
+            using (var repo = new ServerInfoRepository())
+                Servers = repo.GetActiveServerInfo().OrderBy(x => x.Name).ToList();
+
+            SelectedServers = new ObservableCollection<ServerInfo>();
+
+            if (serverId.HasValue)
+                SelectedServers.AddRange(Servers.Where(s => s.Id == serverId.Value));
         }
+
+        public List<ServerInfo> Servers { get; }
+
+        public ObservableCollection<ServerInfo> SelectedServers { get; }
 
         public string PlayerName
         {
@@ -165,10 +177,13 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
         {
             if (Minutes != null)
             {
-                if (_isOnline)
-                    _playerHelper.BanGuidOnline(_serverId, _playerNum, _playerGuid, Reason, Minutes.Value);
-                else
-                    _playerHelper.BanGUIDOffline(_serverId, _playerGuid, Reason, Minutes.Value);
+                foreach (var selectedServer in SelectedServers)
+                {
+                    if (_isOnline)
+                        _playerHelper.BanGuidOnline(selectedServer.Id, _playerNum, _playerGuid, Reason, Minutes.Value);
+                    else
+                        _playerHelper.BanGUIDOffline(selectedServer.Id, _playerGuid, Reason, Minutes.Value);
+                }
             }
         }
 
