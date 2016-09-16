@@ -106,6 +106,7 @@
     <Compile Include="Converters\BrushColorConverter.cs" />
     <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Converters\PlayerNumberToColorConverter.cs" />
+    <Compile Include="Converters\UtcToLocalDateTimeConverter.cs" />
     <Compile Include="Data\IBasicRepository.cs" />
     <Compile Include="Events\BanUserEvent.cs" />
     <Compile Include="Events\BEServersChangedEvent.cs" />
@@ -126,6 +127,7 @@
     <Compile Include="Events\Models\ShowUserModel.cs" />
     <Compile Include="Events\ShowOptionsEvent.cs" />
     <Compile Include="Events\ShowUserInfoEvent.cs" />
+    <Compile Include="Extensions\DateTimeExtension.cs" />
     <Compile Include="Extensions\GridHelper.cs" />
     <Compile Include="Helpers\IBanHelper.cs" />
     <Compile Include="Helpers\ServerTabViewHelper.cs" />

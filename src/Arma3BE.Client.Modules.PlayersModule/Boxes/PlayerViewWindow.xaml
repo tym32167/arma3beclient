@@ -2,9 +2,15 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
+        xmlns:converters="clr-namespace:Arma3BE.Client.Infrastructure.Converters;assembly=Arma3BE.Client.Infrastructure"
         Title="{Binding Path=Player.Name, StringFormat=Player info: {0}}"
         WindowStyle="ToolWindow" Width="700" Height="500"
         WindowStartupLocation="CenterScreen">
+    
+    <Window.Resources>
+        <converters:UtcToLocalDateTimeConverter x:Uid="local:"
+                                              x:Key="utcToLocalDateTimeConverter" />
+    </Window.Resources>
     <Grid>
         <TabControl>
             <TabItem Header="Common">
@@ -56,7 +62,7 @@
                     <TextBlock Text="{Binding Path=Player.Name}" Grid.Row="2" Grid.Column="1" />
                     <TextBlock Text="{Binding Path=Player.LastIp}" Grid.Row="3" Grid.Column="1" />
                     <TextBlock Text="{Binding Path=PlayerIPInfo}" Grid.Row="4" Grid.Column="1" />
-                    <TextBlock Text="{Binding Path=Player.LastSeen, StringFormat=\{0:dd.MM.yy HH:mm:ss\}}" Grid.Row="5"
+                    <TextBlock Text="{Binding Path=Player.LastSeen, Converter={StaticResource utcToLocalDateTimeConverter}, StringFormat=\{0:dd.MM.yy HH:mm:ss\}}" Grid.Row="5"
                                Grid.Column="1" />
 
                     <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="1">
@@ -133,7 +139,7 @@
                         <xcdg:Column FieldName="Date" AllowGroup="False" Title="Date">
                             <xcdg:Column.CellContentTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding ., StringFormat=\{0:dd.MM.yy HH:mm:ss\}}" />
+                                    <TextBlock Text="{Binding ., Converter={StaticResource utcToLocalDateTimeConverter}, StringFormat=\{0:dd.MM.yy HH:mm:ss\}}" />
                                 </DataTemplate>
                             </xcdg:Column.CellContentTemplate>
                         </xcdg:Column>
@@ -170,7 +176,7 @@
                         <xcdg:Column FieldName="Date" AllowGroup="False" Title="Date">
                             <xcdg:Column.CellContentTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding ., StringFormat=\{0:dd.MM.yy HH:mm:ss\}}" />
+                                    <TextBlock Text="{Binding ., Converter={StaticResource utcToLocalDateTimeConverter}, StringFormat=\{0:dd.MM.yy HH:mm:ss\}}" />
                                 </DataTemplate>
                             </xcdg:Column.CellContentTemplate>
                         </xcdg:Column>

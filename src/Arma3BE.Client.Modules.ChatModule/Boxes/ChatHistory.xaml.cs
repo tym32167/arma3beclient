@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
+using Arma3BE.Client.Infrastructure.Extensions;
 
 namespace Arma3BE.Client.Modules.ChatModule.Boxes
 {
@@ -49,7 +50,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
 
         public void AppendText(Paragraph p, ScrollViewer scroll, ChatMessage message, string servername)
         {
-            var text = string.Format("[{0}] [ {1:yyyy-MM-dd HH:mm:ss} ]  {2}\n", servername, message.Date,
+            var text = string.Format("[{0}] [ {1:yyyy-MM-dd HH:mm:ss} ]  {2}\n", servername, message.Date.UtcToLocalFromSettings(),
                 message.Message);
             var color = ServerMonitorChatViewModel.GetMessageColor(message);
             var brush = new SolidColorBrush(color);

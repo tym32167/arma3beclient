@@ -33,6 +33,17 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
                 BanTimes =
                     dc.GetBanTimes().Select(x => new BanTimeEdit() { Text = x.Title, Minutes = x.TimeInMinutes }).ToList();
             }
+
+            var zones = TimeZoneInfo.GetSystemTimeZones().ToArray();
+            for (var i = 0; i < zones.Length; i++)
+            {
+                if (zones[i].Id == Settings.TimeZoneInfo.Id)
+                {
+                    zones[i] = Settings.TimeZoneInfo;
+                }
+            }
+
+            TimeZones = zones;
         }
 
         public List<ServerInfoModel> Servers { get; set; }
@@ -55,7 +66,7 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
 
         public SettingsStore Settings
         {
-            get { return _settingsStore ?? (_settingsStore = SettingsStore.Instance); }
+            get { return _settingsStore ?? (_settingsStore = new SettingsStore() {TimeZoneInfo = SettingsStore.Instance.TimeZoneInfo, AdminName = SettingsStore.Instance.AdminName}); }
             set { _settingsStore = value; }
         }
 
@@ -64,12 +75,16 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
             get { return new List<Type> { typeof(ServerInfoModel) }; }
         }
 
+        public IEnumerable<TimeZoneInfo> TimeZones { get; }
+
         public void Save()
         {
             try
             {
-                Settings.AdminName = Settings.AdminName.Replace(" ", string.Empty);
-                Settings.Save();
+                var settings = SettingsStore.Instance;
+                settings.TimeZoneInfo = Settings.TimeZoneInfo;
+                settings.AdminName = Settings.AdminName.Replace(" ", string.Empty);
+                settings.Save();
 
                 using (var servierInfoRepository = new ServerInfoRepository())
                 {

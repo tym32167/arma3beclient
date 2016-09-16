@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
+using Arma3BE.Client.Infrastructure.Extensions;
 using Player = Arma3BE.Server.Models.Player;
 
 namespace Arma3BE.Client.Modules.ChatModule.Models
@@ -60,7 +61,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             ShowHistoryCommand = new ActionCommand(() =>
             {
                 var model = new ChatHistoryViewModel(_serverId);
-                model.StartDate = DateTime.UtcNow.AddHours(-5);
+                model.StartDate = DateTime.UtcNow.UtcToLocalFromSettings().AddHours(-5);
                 var wnd = new ChatHistory(model);
                 wnd.Show();
                 wnd.Activate();

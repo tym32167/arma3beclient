@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Arma3BE.Client.Infrastructure.Extensions;
 
 namespace Arma3BE.Client.Modules.ChatModule.Models
 {
@@ -52,7 +53,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
         {
             using (var dc = new ChatRepository())
             {
-                var log = dc.GetChatLogs(SelectedServers, StartDate, EndDate, Filter);
+                var log = dc.GetChatLogs(SelectedServers, StartDate.LocalToUtcFromSettings(), EndDate.LocalToUtcFromSettings(), Filter);
 
                 Log = log.OrderBy(x => x.Date).Select(x => new ChatView
                 {

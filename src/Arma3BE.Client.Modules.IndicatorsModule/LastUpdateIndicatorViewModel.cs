@@ -3,6 +3,7 @@ using Arma3BE.Client.Infrastructure.Models;
 using Arma3BEClient.Libs.ModelCompact;
 using Prism.Events;
 using System;
+using Arma3BE.Client.Infrastructure.Extensions;
 
 namespace Arma3BE.Client.Modules.IndicatorsModule
 {
@@ -19,7 +20,7 @@ namespace Arma3BE.Client.Modules.IndicatorsModule
         private void AddMessage(BEMessage message)
         {
             if (_serverInfo.Id != message.ServerId) return;
-            LastUpdate = $"Last update at {DateTime.UtcNow.ToLongTimeString()} (UTC)";
+            LastUpdate = $"Last update at {DateTime.UtcNow.UtcToLocalFromSettings().ToLongTimeString()} (UTC)";
             OnPropertyChanged(nameof(LastUpdate));
         }
 

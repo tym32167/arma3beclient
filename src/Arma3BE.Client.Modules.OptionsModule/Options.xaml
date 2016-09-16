@@ -36,10 +36,22 @@
 
                         <Grid.RowDefinitions>
                             <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
                         </Grid.RowDefinitions>
+                         
+                        
+                        <TextBlock Grid.Row="0" Grid.Column="0"  Text="AdminName" Margin="2" />
+                        <TextBox Grid.Row="0" Grid.Column="1" Width="100" Margin="2" Text="{Binding Settings.AdminName, Mode=TwoWay}" />
 
-                        <TextBlock Text="AdminName" Margin="2" />
-                        <TextBox Grid.Column="1" Width="100" Margin="2" Text="{Binding Settings.AdminName, Mode=TwoWay}" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="0"  Text="Time Zone" Margin="2" />
+                        <ComboBox Grid.Row="1" Grid.Column="1"
+                                  ItemsSource="{Binding TimeZones}"
+                                  DisplayMemberPath="DisplayName"
+                                  SelectedItem="{Binding Settings.TimeZoneInfo, Mode=TwoWay}"
+                                  ></ComboBox>
+
+
                     </Grid>
                 </TabItem>
                 <TabItem Header="Ban / Kick Reasons">

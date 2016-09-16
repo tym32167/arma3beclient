@@ -23,6 +23,9 @@ namespace Arma3BE.Server.Mocks
             MockMessage(admins);
             MockMessage(missions);
             MockMessage($"(Global) bot: Текущее время {DateTime.UtcNow} - pl {pl.Length}");
+            MockMessage("RCon admin #4 (99.99.99.99:9999) logged in");
+
+            
             _timer?.Change(5000, Timeout.Infinite);
         }
 
