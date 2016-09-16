@@ -29,7 +29,7 @@ namespace Arma3BE.Client.Modules.SteamModule
             _regionManager.RegisterViewWithRegion(RegionNames.MenuToolsRegion, CreateSteamDiscoveryView);
 
 
-            _container.RegisterInstance(_container.Resolve<SteamDiscoveryViewModel>());
+            //_container.RegisterInstance(_container.Resolve<SteamDiscoveryViewModel>());
         }
 
         private object CreateSteamQueryView()
@@ -40,13 +40,11 @@ namespace Arma3BE.Client.Modules.SteamModule
 
         private object CreateSteamDiscoveryView()
         {
-            var vm = _container.Resolve<SteamDiscoveryViewModel>();
-
-
             return new MenuItem()
             {
                 Command = new DelegateCommand(() =>
                     {
+                        var vm = _container.Resolve<SteamDiscoveryViewModel>();
                         var view = _container.Resolve<SteamDiscovery>();
                         view.DataContext = vm;
                         _regionManager.Regions[RegionNames.ServerTabRegion].Add(view, null, true);
@@ -54,7 +52,7 @@ namespace Arma3BE.Client.Modules.SteamModule
                     () =>
                         _regionManager.Regions[RegionNames.ServerTabRegion].Views.OfType<SteamDiscovery>().Any() ==
                         false),
-                Header = vm.Title
+                Header = SteamDiscoveryViewModel.StaticTitle
             };
         }
     }

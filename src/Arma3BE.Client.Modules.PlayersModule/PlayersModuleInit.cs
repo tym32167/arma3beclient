@@ -31,14 +31,11 @@ namespace Arma3BE.Client.Modules.PlayersModule
 
         private object CreateView()
         {
-
-            var vm = _container.Resolve<PlayerListModelView>();
-
-
             return new MenuItem()
             {
                 Command = new DelegateCommand(() =>
                 {
+                    var vm = _container.Resolve<PlayerListModelView>();
                     var view = _container.Resolve<PlayersControl>();
                     view.DataContext = vm;
                     _regionManager.Regions[RegionNames.ServerTabRegion].Add(view, null, true);
@@ -46,13 +43,8 @@ namespace Arma3BE.Client.Modules.PlayersModule
                     () =>
                         _regionManager.Regions[RegionNames.ServerTabRegion].Views.OfType<PlayersControl>().Any() ==
                         false),
-                Header = vm.Title
+                Header = PlayerListModelView.StaticTitle
             };
-
-
-
-            //return ServerTabViewHelper.RegisterView<PlayersControl, ServerInfo, PlayerListModelView>(_container,
-            //    "serverInfo");
         }
 
         public static IUnityContainer Current => _container;

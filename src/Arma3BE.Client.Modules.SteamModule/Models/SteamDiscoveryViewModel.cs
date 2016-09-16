@@ -46,11 +46,10 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
             _cancelatioTokenSource?.Cancel();
         }
 
+        
+        public static string StaticTitle = "Steam Discovery";
 
-        public string Title
-        {
-            get { return "Steam Discovery"; }
-        }
+        public string Title => StaticTitle;
 
         public ICommand StartCommand { get; set; }
         public ICommand StopCommand { get; set; }

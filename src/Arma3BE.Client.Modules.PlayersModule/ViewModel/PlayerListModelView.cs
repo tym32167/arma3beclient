@@ -71,10 +71,8 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
             }
         }
 
-        public string Title
-        {
-            get { return "Players"; }
-        }
+        public static string StaticTitle = "Players";
+        public string Title => StaticTitle;
 
         private void ShowBan()
         {
