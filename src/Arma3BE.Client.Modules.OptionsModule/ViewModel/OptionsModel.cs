@@ -66,7 +66,7 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
 
         public SettingsStore Settings
         {
-            get { return _settingsStore ?? (_settingsStore = SettingsStore.Instance); }
+            get { return _settingsStore ?? (_settingsStore = new SettingsStore() {TimeZoneInfo = SettingsStore.Instance.TimeZoneInfo, AdminName = SettingsStore.Instance.AdminName}); }
             set { _settingsStore = value; }
         }
 
@@ -81,8 +81,10 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
         {
             try
             {
-                Settings.AdminName = Settings.AdminName.Replace(" ", string.Empty);
-                Settings.Save();
+                var settings = SettingsStore.Instance;
+                settings.TimeZoneInfo = Settings.TimeZoneInfo;
+                settings.AdminName = Settings.AdminName.Replace(" ", string.Empty);
+                settings.Save();
 
                 using (var servierInfoRepository = new ServerInfoRepository())
                 {

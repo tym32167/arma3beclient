@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using Arma3BE.Client.Infrastructure.Extensions;
 
 namespace Arma3BE.Client.Modules.ChatModule.Chat
 {
@@ -58,7 +59,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
 
         public void AppendText(Paragraph p, ScrollViewer scroll, ChatMessage message)
         {
-            var text = $"[ {message.Date:HH:mm:ss} ]  {message.Message}\n";
+            var text = $"[ {message.Date.UtcToLocalFromSettings():HH:mm:ss} ]  {message.Message}\n";
             var color = ServerMonitorChatViewModel.GetMessageColor(message);
 
             var brush = new SolidColorBrush(color);
@@ -76,7 +77,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
 
         public void AppendText(TextBox block, ScrollViewer scroll, MessageBase message)
         {
-            var text = $"[ {message.Date:HH:mm:ss} ]  {message.Message}\n";
+            var text = $"[ {message.Date.UtcToLocalFromSettings():HH:mm:ss} ]  {message.Message}\n";
             block.Text += text;
 
             if (Model.AutoScroll)

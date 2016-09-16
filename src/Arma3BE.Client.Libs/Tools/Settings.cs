@@ -14,8 +14,8 @@ namespace Arma3BEClient.Libs.Tools
         public string AdminName { get; set; }
         public TimeZoneInfo TimeZoneInfo { get; set; }
 
-        private static Lazy<SettingsStore> _instance = new Lazy<SettingsStore>(()=>Load());
-        public static SettingsStore Instance => _instance.Value;
+        private static SettingsStore _instance;
+        public static SettingsStore Instance => _instance ?? (_instance = Load());
 
         public void Save()
         {

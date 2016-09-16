@@ -126,6 +126,7 @@
     <Compile Include="Events\Models\ShowUserModel.cs" />
     <Compile Include="Events\ShowOptionsEvent.cs" />
     <Compile Include="Events\ShowUserInfoEvent.cs" />
+    <Compile Include="Extensions\DateTimeExtension.cs" />
     <Compile Include="Extensions\GridHelper.cs" />
     <Compile Include="Helpers\IBanHelper.cs" />
     <Compile Include="Helpers\ServerTabViewHelper.cs" />
