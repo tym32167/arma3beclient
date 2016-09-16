@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Windows.Input;
 using Arma3BE.Client.Infrastructure;
 using Arma3BE.Client.Infrastructure.Commands;
+using Arma3BE.Client.Infrastructure.Extensions;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;

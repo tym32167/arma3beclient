@@ -4,6 +4,7 @@ using System.Windows.Input;
 using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Events.Models;
+using Arma3BE.Client.Infrastructure.Extensions;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.PlayersModule.Models;
 using Arma3BEClient.Libs.Repositories;
@@ -135,6 +136,11 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
                     LastIp = x.LastIp,
                     LastSeen = x.LastSeen
                 }).OrderBy(x => x.Name).ToList();
+
+                foreach (var playerView in r)
+                {
+                    playerView.LastSeen = playerView.LastSeen.UtcToLocalFromSettings();
+                }
 
                 PlayerCount = r.Count;
 
