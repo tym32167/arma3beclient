@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Server;
@@ -34,8 +35,19 @@ namespace Arma3BE.Client.Modules.BEServerModule
 
             _aggregator.GetEvent<SettingsChangedEvent>()
                 .Subscribe(SettingsChanged);
+
+            _aggregator.GetEvent<BEMessageEvent<BECommand>>().Subscribe(ProcessCommand);
         }
 
+
+
+        private void ProcessCommand(BECommand command)
+        {
+            if (command.CommandType == CommandType.RemoveBan || command.CommandType == CommandType.AddBan || command.CommandType == CommandType.Ban)
+            {
+                Task.Delay(2000).ContinueWith(t => _bansUpdater.Update(command.ServerId));
+            }
+        }
 
 
         private void SettingsChanged(SettingsStore settings)
