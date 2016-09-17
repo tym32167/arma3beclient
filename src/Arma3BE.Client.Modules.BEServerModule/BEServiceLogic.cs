@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,6 +9,7 @@ using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Server;
 using Arma3BEClient.Common.Core;
 using Arma3BEClient.Common.Logging;
+using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Tools;
 using Prism.Events;
 
@@ -22,7 +22,6 @@ namespace Arma3BE.Client.Modules.BEServerModule
 
         private readonly TimedAction _playersUpdater;
         private readonly TimedAction _bansUpdater;
-
 
         public BEServiceLogic(IEventAggregator aggregator, BEService beService, ILog log)
         {
@@ -38,9 +37,20 @@ namespace Arma3BE.Client.Modules.BEServerModule
             _aggregator.GetEvent<BEMessageEvent<BECommand>>().Subscribe(ProcessCommand, ThreadOption.BackgroundThread);
 
             _aggregator.GetEvent<BEMessageEvent<BEPlayerLogMessage>>().Subscribe(Proc_BEPlayerLogMessage, ThreadOption.BackgroundThread);
+            _aggregator.GetEvent<ConnectServerEvent>().Subscribe(BeServerConnectHandler, ThreadOption.BackgroundThread);
         }
 
+        private void BeServerConnectHandler(ServerInfo info)
+        {
+            _bansUpdater.Update(info.Id);
+            _playersUpdater.Update(info.Id);
 
+            _aggregator.GetEvent<BEMessageEvent<BECommand>>()
+                        .Publish(new BECommand(info.Id, CommandType.Missions));
+
+            _aggregator.GetEvent<BEMessageEvent<BECommand>>()
+                        .Publish(new BECommand(info.Id, CommandType.Admins));
+        }
 
         private void ProcessCommand(BECommand command)
         {
