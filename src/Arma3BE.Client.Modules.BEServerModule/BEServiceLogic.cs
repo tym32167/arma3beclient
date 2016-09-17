@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Events.BE;
@@ -33,6 +36,8 @@ namespace Arma3BE.Client.Modules.BEServerModule
                 .Subscribe(SettingsChanged);
         }
 
+
+
         private void SettingsChanged(SettingsStore settings)
         {
             _playersUpdater.SetTimer(SettingsStore.Instance.PlayersUpdateSeconds);
@@ -45,21 +50,27 @@ namespace Arma3BE.Client.Modules.BEServerModule
                    .Publish(new BECommand(message.ServerId, CommandType.Players));
         }
 
-        private void UpdatePlayers()
+        private void UpdatePlayers(HashSet<Guid> servers)
         {
             foreach (var server in _beService.ConnectedServers())
             {
-                _aggregator.GetEvent<BEMessageEvent<BECommand>>()
-                   .Publish(new BECommand(server, CommandType.Players));
+                if (servers.Contains(server))
+                {
+                    _aggregator.GetEvent<BEMessageEvent<BECommand>>()
+                        .Publish(new BECommand(server, CommandType.Players));
+                }
             }
         }
         
-        private void UpdateBans()
+        private void UpdateBans(HashSet<Guid> servers)
         {
             foreach (var server in _beService.ConnectedServers())
             {
-                _aggregator.GetEvent<BEMessageEvent<BECommand>>()
-                   .Publish(new BECommand(server, CommandType.Bans));
+                if (servers.Contains(server))
+                {
+                    _aggregator.GetEvent<BEMessageEvent<BECommand>>()
+                        .Publish(new BECommand(server, CommandType.Bans));
+                }
             }
         }
     }
@@ -67,12 +78,13 @@ namespace Arma3BE.Client.Modules.BEServerModule
     public class TimedAction : DisposeObject
     {
         private int _interval;
-        private readonly Action _action;
+        private readonly Action<HashSet<Guid>> _action;
 
         private Timer _timer;
-        private bool _requiredCall;
 
-        public TimedAction(int interval, Action action)
+        private ConcurrentDictionary<Guid, byte> _servers = new ConcurrentDictionary<Guid, byte>();
+
+        public TimedAction(int interval, Action<HashSet<Guid>> action)
         {
             _interval = interval;
             _action = action;
@@ -80,9 +92,9 @@ namespace Arma3BE.Client.Modules.BEServerModule
             _timer = new Timer(Tick, null, Interval(), Timeout.Infinite);
         }
 
-        public void Update()
+        public void Update(Guid server)
         {
-            _requiredCall = true;
+            _servers.AddOrUpdate(server, 0, (guid, b) => b);
         }
 
         public void SetTimer(int intervalInSeconds)
@@ -96,15 +108,16 @@ namespace Arma3BE.Client.Modules.BEServerModule
         private int Interval()
         {
             var i = _interval;
-            return Math.Max(1000, i*1000);
+            return Math.Max(5000, i*1000);
         }
 
         private void Tick(object state)
         {
-            if (_requiredCall)
+            if (_servers.Any())
             {
-                _requiredCall = false;
-                _action();
+                var set = new HashSet<Guid>(_servers.Keys.ToArray());
+                _servers.Clear();
+                _action(set);
             }
 
             _timer?.Change(Interval(), Timeout.Infinite);
