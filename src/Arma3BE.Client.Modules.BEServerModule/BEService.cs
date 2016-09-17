@@ -8,7 +8,10 @@ using Arma3BEClient.Libs.ModelCompact;
 using Microsoft.Practices.Unity;
 using Prism.Events;
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Arma3BE.Client.Modules.BEServerModule
 {
@@ -29,6 +32,11 @@ namespace Arma3BE.Client.Modules.BEServerModule
 
             _eventAggregator.GetEvent<RunServerEvent>().Subscribe(CheckServer, ThreadOption.BackgroundThread);
             _eventAggregator.GetEvent<CloseServerEvent>().Subscribe(CloseServer, ThreadOption.BackgroundThread);
+        }
+
+        public IEnumerable<Guid> ConnectedServers()
+        {
+            return _serverPool.Keys.ToArray();
         }
 
         private void CloseServer(ServerInfo info)

@@ -209,7 +209,6 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
                         context.UpdatePlayerComment(user.GUID, user.Comment);
                     }
                 }
-                SendCommand(serverId, CommandType.Players);
             }
         }
 
@@ -236,10 +235,6 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
                     }
                 }
 
-
-#pragma warning disable 4014
-                SendCommand(serverId, CommandType.Bans);
-#pragma warning restore 4014
             }
             else
             {
@@ -248,6 +243,15 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
 #pragma warning restore 4014
                             $"{guid} {minutes} {reason}");
             }
+        }
+
+        public void BanGUIDOffline(Guid serverId, BanView[] bans, bool syncMode = false)
+        {
+            foreach (var ban in bans)
+            {
+                BanGUIDOffline(serverId, ban.GuidIp, ban.Reason, ban.Minutesleft, syncMode);
+            }
+            
         }
 
         public async void BanGuidOnline(Guid serverId, string num, string guid, string reason, long minutes)
@@ -270,11 +274,6 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
                     context.UpdatePlayerComment(user.GUID, user.Comment);
                 }
             }
-
-
-#pragma warning disable 4014
-            SendCommand(serverId, CommandType.Players);
-            SendCommand(serverId, CommandType.Bans);
         }
     }
 }

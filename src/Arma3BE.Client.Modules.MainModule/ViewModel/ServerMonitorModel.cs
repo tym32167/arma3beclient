@@ -52,19 +52,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 
         private void BeServerConnectHandler(ServerInfo info)
         {
-            if (info.Id != CurrentServer.Id) return;
-            SendCommand(CommandType.Players);
-            SendCommand(CommandType.Admins);
-            SendCommand(CommandType.Missions);
-            SendCommand(CommandType.Bans);
-
             Connected = true;
-        }
-
-        private void SendCommand(CommandType commandType, string parameters = null)
-        {
-            _eventAggregator.GetEvent<BEMessageEvent<BECommand>>()
-                .Publish(new BECommand(CurrentServer.Id, commandType, parameters));
         }
 
         protected override void DisposeManagedResources()

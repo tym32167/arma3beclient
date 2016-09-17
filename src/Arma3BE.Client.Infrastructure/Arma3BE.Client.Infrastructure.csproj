@@ -125,6 +125,7 @@
     <Compile Include="Events\Models\BanUserModel.cs" />
     <Compile Include="Events\Models\KickUserModel.cs" />
     <Compile Include="Events\Models\ShowUserModel.cs" />
+    <Compile Include="Events\SettingsChangedEvent.cs" />
     <Compile Include="Events\ShowOptionsEvent.cs" />
     <Compile Include="Events\ShowUserInfoEvent.cs" />
     <Compile Include="Extensions\DateTimeExtension.cs" />
