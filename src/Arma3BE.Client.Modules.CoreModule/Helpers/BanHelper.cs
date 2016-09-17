@@ -1,4 +1,9 @@
-﻿using Arma3BE.Client.Infrastructure.Events.BE;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Infrastructure.Helpers.Views;
 using Arma3BE.Server;
@@ -7,13 +12,8 @@ using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.Repositories;
 using Arma3BEClient.Libs.Tools;
 using Prism.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
-namespace Arma3BE.Client.Modules.BanModule.Helpers
+namespace Arma3BE.Client.Modules.CoreModule.Helpers
 {
     public class BanHelper : StateHelper<Ban>, IBanHelper
     {

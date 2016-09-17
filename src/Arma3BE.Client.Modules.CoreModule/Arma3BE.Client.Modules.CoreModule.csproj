@@ -90,6 +90,7 @@
     </Compile>
     <Compile Include="CoreModuleInit.cs" />
     <Compile Include="Helpers\BanHelper.cs" />
+    <Compile Include="Services\BECommandManagerService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
