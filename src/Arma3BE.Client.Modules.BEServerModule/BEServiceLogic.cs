@@ -15,7 +15,7 @@ using Prism.Events;
 
 namespace Arma3BE.Client.Modules.BEServerModule
 {
-    public class BEServiceLogic
+    public class BEServiceLogic : DisposeObject
     {
         private readonly IEventAggregator _aggregator;
         private readonly BEService _beService;
@@ -94,6 +94,14 @@ namespace Arma3BE.Client.Modules.BEServerModule
                         .Publish(new BECommand(server, CommandType.Bans));
                 }
             }
+        }
+
+        protected override void DisposeManagedResources()
+        {
+            base.DisposeManagedResources();
+
+            _playersUpdater?.Dispose();
+            _bansUpdater?.Dispose();
         }
     }
 
