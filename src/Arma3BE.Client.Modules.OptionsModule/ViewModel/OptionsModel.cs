@@ -127,6 +127,7 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
                 }
 
                 _eventAggregator.GetEvent<BEServersChangedEvent>().Publish(null);
+                _eventAggregator.GetEvent<SettingsChangedEvent>().Publish(SettingsStore.Instance);
             }
             catch (Exception e)
             {
