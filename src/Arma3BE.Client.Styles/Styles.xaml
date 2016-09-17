@@ -1,0 +1,13 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style TargetType="Button">
+        <Setter Property="Margin" Value="2" />
+    </Style>
+
+
+    <Style TargetType="TabItem">
+        <Setter Property="Header" Value="{Binding DataContext.Title}" />
+    </Style>
+
+</ResourceDictionary>

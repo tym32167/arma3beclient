@@ -31,6 +31,9 @@ namespace Arma3BEClient.Libs.ModelCompact
         public int Port { get; set; }
 
         [Required]
+        public int SteamPort { get; set; }
+
+        [Required]
         public string Password { get; set; }
 
         [Required]

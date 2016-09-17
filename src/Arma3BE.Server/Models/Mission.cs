@@ -4,7 +4,7 @@ namespace Arma3BE.Server.Models
 {
     public class Mission
     {
-        public Mission(string name)
+        private Mission(string name)
         {
             Name = name;
         }

@@ -1,33 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
+﻿using Arma3BE.Server.Abstract;
 using Arma3BE.Server.Messaging;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Core;
 using Arma3BEClient.Common.Logging;
 using BattleNET;
+using System;
+using System.Collections.Generic;
+using System.Net;
 
 namespace Arma3BE.Server
 {
     public sealed class BEServer : DisposeObject, IBEServer
     {
-        private readonly IBattlEyeClientFactory _battlEyeClientFactory;
+        private readonly IBattlEyeServerFactory _battlEyeServerFactory;
         private readonly string _host;
 
         private readonly object _lock = new object();
         private readonly ILog _log;
         private readonly string _password;
         private readonly int _port;
-        private IBattlEyeClient _battlEyeClient;
+        private IBattlEyeServer _battlEyeServer;
 
 
-        public BEServer(string host, int port, string password, ILog log, IBattlEyeClientFactory battlEyeClientFactory)
+        public BEServer(string host, int port, string password, ILog log, IBattlEyeServerFactory battlEyeServerFactory)
         {
             _host = host;
             _port = port;
             _password = password;
             _log = log;
-            _battlEyeClientFactory = battlEyeClientFactory;
+            _battlEyeServerFactory = battlEyeServerFactory;
 
             InitClients();
         }
@@ -36,13 +37,13 @@ namespace Arma3BE.Server
 
         public bool Connected
         {
-            get { return _battlEyeClient != null && _battlEyeClient.Connected; }
+            get { return _battlEyeServer != null && _battlEyeServer.Connected; }
         }
 
-        public event EventHandler<UpdateClientEventArgs<IEnumerable<Player>>> PlayerHandler;
-        public event EventHandler<UpdateClientEventArgs<IEnumerable<Ban>>> BanHandler;
-        public event EventHandler<UpdateClientEventArgs<IEnumerable<Admin>>> AdminHandler;
-        public event EventHandler<UpdateClientEventArgs<IEnumerable<Mission>>> MissionHandler;
+        public event EventHandler<BEClientEventArgs<IEnumerable<Player>>> PlayerHandler;
+        public event EventHandler<BEClientEventArgs<IEnumerable<Ban>>> BanHandler;
+        public event EventHandler<BEClientEventArgs<IEnumerable<Admin>>> AdminHandler;
+        public event EventHandler<BEClientEventArgs<IEnumerable<Mission>>> MissionHandler;
 
         public event EventHandler<ChatMessage> ChatMessageHandler;
 
@@ -54,13 +55,7 @@ namespace Arma3BE.Server
         public event EventHandler ConnectHandler;
         public event EventHandler ConnectingHandler;
         public event EventHandler DisconnectHandler;
-
-
-        //public Task SendCommandAsync(CommandType type, string parameters = null)
-        //{
-        //    return Task.Run(() => SendCommand(type, parameters));
-        //}
-
+        public event EventHandler MessageHandler;
 
         public void SendCommand(CommandType type, string parameters = null)
         {
@@ -76,84 +71,84 @@ namespace Arma3BE.Server
             switch (type)
             {
                 case CommandType.Players:
-                    _battlEyeClient.SendCommand(BattlEyeCommand.Players);
+                    _battlEyeServer.SendCommand(BattlEyeCommand.Players);
                     break;
                 case CommandType.Bans:
-                    _battlEyeClient.SendCommand(BattlEyeCommand.Bans);
+                    _battlEyeServer.SendCommand(BattlEyeCommand.Bans);
                     break;
                 case CommandType.Admins:
-                    _battlEyeClient.SendCommand(BattlEyeCommand.admins);
+                    _battlEyeServer.SendCommand(BattlEyeCommand.admins);
                     break;
 
                 case CommandType.Say:
-                    _battlEyeClient.SendCommand(BattlEyeCommand.Say, parameters);
+                    _battlEyeServer.SendCommand(BattlEyeCommand.Say, parameters);
                     break;
                 case CommandType.AddBan:
                     if (!string.IsNullOrEmpty(parameters))
-                        _battlEyeClient.SendCommand(BattlEyeCommand.AddBan, parameters);
+                        _battlEyeServer.SendCommand(BattlEyeCommand.AddBan, parameters);
                     break;
 
                 case CommandType.Ban:
                     if (!string.IsNullOrEmpty(parameters))
-                        _battlEyeClient.SendCommand(BattlEyeCommand.Ban, parameters);
+                        _battlEyeServer.SendCommand(BattlEyeCommand.Ban, parameters);
                     break;
 
                 case CommandType.Kick:
                     if (!string.IsNullOrEmpty(parameters))
-                        _battlEyeClient.SendCommand(BattlEyeCommand.Kick, parameters);
+                        _battlEyeServer.SendCommand(BattlEyeCommand.Kick, parameters);
                     break;
 
 
                 case CommandType.RemoveBan:
                     if (!string.IsNullOrEmpty(parameters))
-                        _battlEyeClient.SendCommand(BattlEyeCommand.RemoveBan, parameters);
+                        _battlEyeServer.SendCommand(BattlEyeCommand.RemoveBan, parameters);
                     break;
 
                 case CommandType.Missions:
-                    _battlEyeClient.SendCommand(BattlEyeCommand.Missions);
+                    _battlEyeServer.SendCommand(BattlEyeCommand.Missions);
                     break;
 
                 case CommandType.Mission:
                     if (!string.IsNullOrEmpty(parameters))
-                        _battlEyeClient.SendCommand(BattlEyeCommand.Mission, parameters);
+                        _battlEyeServer.SendCommand(BattlEyeCommand.Mission, parameters);
                     break;
 
 
                 case CommandType.Init:
-                    _battlEyeClient.SendCommand(BattlEyeCommand.Init);
+                    _battlEyeServer.SendCommand(BattlEyeCommand.Init);
                     break;
 
                 case CommandType.Shutdown:
-                    _battlEyeClient.SendCommand(BattlEyeCommand.Shutdown);
+                    _battlEyeServer.SendCommand(BattlEyeCommand.Shutdown);
                     break;
 
                 case CommandType.Reassign:
-                    _battlEyeClient.SendCommand(BattlEyeCommand.Reassign);
+                    _battlEyeServer.SendCommand(BattlEyeCommand.Reassign);
                     break;
 
                 case CommandType.Restart:
-                    _battlEyeClient.SendCommand(BattlEyeCommand.Restart);
+                    _battlEyeServer.SendCommand(BattlEyeCommand.Restart);
                     break;
 
                 case CommandType.Lock:
-                    _battlEyeClient.SendCommand(BattlEyeCommand.Lock);
+                    _battlEyeServer.SendCommand(BattlEyeCommand.Lock);
                     break;
 
                 case CommandType.Unlock:
-                    _battlEyeClient.SendCommand(BattlEyeCommand.Unlock);
+                    _battlEyeServer.SendCommand(BattlEyeCommand.Unlock);
                     break;
 
 
                 case CommandType.LoadBans:
-                    _battlEyeClient.SendCommand(BattlEyeCommand.LoadBans);
+                    _battlEyeServer.SendCommand(BattlEyeCommand.LoadBans);
                     break;
 
                 case CommandType.LoadEvents:
-                    _battlEyeClient.SendCommand(BattlEyeCommand.loadEvents);
+                    _battlEyeServer.SendCommand(BattlEyeCommand.loadEvents);
                     break;
 
                 case CommandType.LoadScripts:
-                    _battlEyeClient.SendCommand(BattlEyeCommand.LoadScripts);
+                    _battlEyeServer.SendCommand(BattlEyeCommand.LoadScripts);
                     break;
             }
         }
@@ -162,20 +157,20 @@ namespace Arma3BE.Server
         {
             _log.Info($"{_host}:{_port} Update client - connect");
 
-            _battlEyeClient?.Connect();
+            _battlEyeServer?.Connect();
         }
 
         public void Disconnect()
         {
             _log.Info($"{_host}:{_port} Update client - Disconnect");
-            _battlEyeClient?.Disconnect();
+            _battlEyeServer?.Disconnect();
         }
 
 
         private void OnMissionHandler(IEnumerable<Mission> e)
         {
             var handler = MissionHandler;
-            handler?.Invoke(this, new UpdateClientEventArgs<IEnumerable<Mission>>(e));
+            handler?.Invoke(this, new BEClientEventArgs<IEnumerable<Mission>>(e));
         }
 
         private void OnConnectingHandler()
@@ -205,7 +200,7 @@ namespace Arma3BE.Server
         private void OnAdminHandler(IEnumerable<Admin> e)
         {
             var handler = AdminHandler;
-            handler?.Invoke(this, new UpdateClientEventArgs<IEnumerable<Admin>>(e));
+            handler?.Invoke(this, new BEClientEventArgs<IEnumerable<Admin>>(e));
         }
 
         private void OnChatMessageHandler(ChatMessage e)
@@ -218,7 +213,13 @@ namespace Arma3BE.Server
         private void OnBanHandler(IEnumerable<Ban> e)
         {
             var handler = BanHandler;
-            handler?.Invoke(this, new UpdateClientEventArgs<IEnumerable<Ban>>(e));
+            handler?.Invoke(this, new BEClientEventArgs<IEnumerable<Ban>>(e));
+        }
+
+        private void OnMessageHandler()
+        {
+            var handler = MessageHandler;
+            handler?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnDisconnectHandler()
@@ -238,15 +239,15 @@ namespace Arma3BE.Server
         private void OnPlayerHandler(IEnumerable<Player> e)
         {
             var handler = PlayerHandler;
-            handler?.Invoke(this, new UpdateClientEventArgs<IEnumerable<Player>>(e));
+            handler?.Invoke(this, new BEClientEventArgs<IEnumerable<Player>>(e));
         }
 
-        private void _battlEyeClient_BattlEyeDisconnected(BattlEyeDisconnectEventArgs args)
+        private void BattlEyeServerBattlEyeDisconnected(BattlEyeDisconnectEventArgs args)
         {
             OnDisconnectHandler();
         }
 
-        private void battlEyeClient_BattlEyeMessageReceived(BattlEyeMessageEventArgs args)
+        private void BattlEyeServerBattlEyeMessageReceived(BattlEyeMessageEventArgs args)
         {
             try
             {
@@ -255,6 +256,7 @@ namespace Arma3BE.Server
                 lock (_lock)
                 {
                     ProcessMessage(message);
+                    OnMessageHandler();
                 }
             }
             catch (Exception e)
@@ -263,7 +265,7 @@ namespace Arma3BE.Server
             }
         }
 
-        private void battlEyeClient_BattlEyeConnected(BattlEyeConnectEventArgs args)
+        private void BattlEyeServerBattlEyeConnected(BattlEyeConnectEventArgs args)
         {
             OnConnectHandler();
         }
@@ -345,13 +347,13 @@ namespace Arma3BE.Server
             _log.Info($"{_host}:{_port} Update client - InitClients");
             lock (_lock)
             {
-                if (_battlEyeClient != null) ReleaseClient();
+                if (_battlEyeServer != null) ReleaseClient();
 
                 var credentials = new BattlEyeLoginCredentials(IPAddress.Parse(_host), _port, _password);
-                _battlEyeClient = _battlEyeClientFactory.Create(credentials);
-                _battlEyeClient.BattlEyeConnected += battlEyeClient_BattlEyeConnected;
-                _battlEyeClient.BattlEyeDisconnected += _battlEyeClient_BattlEyeDisconnected;
-                _battlEyeClient.BattlEyeMessageReceived += battlEyeClient_BattlEyeMessageReceived;
+                _battlEyeServer = _battlEyeServerFactory.Create(credentials);
+                _battlEyeServer.BattlEyeConnected += BattlEyeServerBattlEyeConnected;
+                _battlEyeServer.BattlEyeDisconnected += BattlEyeServerBattlEyeDisconnected;
+                _battlEyeServer.BattlEyeMessageReceived += BattlEyeServerBattlEyeMessageReceived;
             }
         }
 
@@ -360,21 +362,21 @@ namespace Arma3BE.Server
             _log.Info($"{_host}:{_port} Update client - ReleaseClient");
             lock (_lock)
             {
-                if (_battlEyeClient != null)
+                if (_battlEyeServer != null)
                 {
                     try
                     {
-                        if (_battlEyeClient.Connected) _battlEyeClient.Disconnect();
+                        if (_battlEyeServer.Connected) _battlEyeServer.Disconnect();
 
-                        _battlEyeClient.BattlEyeConnected -= battlEyeClient_BattlEyeConnected;
-                        _battlEyeClient.BattlEyeDisconnected -= _battlEyeClient_BattlEyeDisconnected;
-                        _battlEyeClient.BattlEyeMessageReceived -= battlEyeClient_BattlEyeMessageReceived;
+                        _battlEyeServer.BattlEyeConnected -= BattlEyeServerBattlEyeConnected;
+                        _battlEyeServer.BattlEyeDisconnected -= BattlEyeServerBattlEyeDisconnected;
+                        _battlEyeServer.BattlEyeMessageReceived -= BattlEyeServerBattlEyeMessageReceived;
 
-                        _battlEyeClient.Dispose();
+                        _battlEyeServer.Dispose();
                     }
                     finally
                     {
-                        _battlEyeClient = null;
+                        _battlEyeServer = null;
                     }
                 }
             }
@@ -391,15 +393,15 @@ namespace Arma3BE.Server
             }
             finally
             {
-                _battlEyeClient = null;
+                _battlEyeServer = null;
             }
         }
     }
 
 
-    public class UpdateClientEventArgs<T> : EventArgs
+    public class BEClientEventArgs<T> : EventArgs
     {
-        public UpdateClientEventArgs(T data)
+        public BEClientEventArgs(T data)
         {
             Data = data;
         }

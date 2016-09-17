@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using Arma3BE.Server;
+using Arma3BE.Server.ServerFactory;
 using Arma3BEClient.Common.Logging;
 
 namespace Arma3BEClient.Sheduler
@@ -56,7 +57,7 @@ namespace Arma3BEClient.Sheduler
             Console.WriteLine(interval);
 
 
-            using (var uc = new BEServer(host, port, password, new FakeLog(), new BattlEyeClientFactory(new FakeLog())))
+            using (var uc = new BEServer(host, port, password, new FakeLog(), new BattlEyeServerFactory(new FakeLog())))
             {
                 while (true)
                 {

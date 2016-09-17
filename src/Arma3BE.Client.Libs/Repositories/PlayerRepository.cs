@@ -1,19 +1,20 @@
+using Arma3BEClient.Common.Core;
+using Arma3BEClient.Libs.Context;
+using Arma3BEClient.Libs.ModelCompact;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading;
-using Arma3BEClient.Common.Core;
-using Arma3BEClient.Libs.Context;
-using Arma3BEClient.Libs.ModelCompact;
+using System.Threading.Tasks;
 
 namespace Arma3BEClient.Libs.Repositories
 {
-    public class PlayerRepositoryFactory
+    public class PlayerRepositoryFactory : IFactory<PlayerRepositoryFactory.IPlayerRepository>
     {
         public static IPlayerRepository Create()
         {
@@ -34,34 +35,39 @@ namespace Arma3BEClient.Libs.Repositories
             void AddOrUpdate(IEnumerable<PlayerDto> players);
             void AddHistory(List<PlayerHistory> histories);
             void AddNotes(Guid id, string s);
+            HashSet<string> GetAllGuidsWithoutSteam();
+            void SaveSteamId(Dictionary<string, string> found);
         }
 
         private class PlayerRepositoryCache : DisposeObject, IPlayerRepository
         {
-            private object _lock = new object();
+            private static readonly object Lock = new object();
             private readonly IPlayerRepository _playerRepository;
-            private static volatile bool _validCache = false;
+            private static volatile bool _validCache;
             private static volatile ConcurrentDictionary<string, PlayerDto> _playersByGuidsCache;
 
             private void ResetCache()
             {
                 if (_validCache) return;
-
-                var playersByGuidsCache = new ConcurrentDictionary<string, PlayerDto>();
-                var players = _playerRepository.GetAllPlayers().GroupBy(x => x.GUID).Select(x => x.First());
-                foreach (var playerDto in players)
+                lock (Lock)
                 {
-                    playersByGuidsCache.AddOrUpdate(playerDto.GUID, playerDto, (key, value) => value);
-                }
+                    if (_validCache) return;
+                    var playersByGuidsCache = new ConcurrentDictionary<string, PlayerDto>();
+                    var players = _playerRepository.GetAllPlayers().GroupBy(x => x.GUID).Select(x => x.First());
+                    foreach (var playerDto in players)
+                    {
+                        playersByGuidsCache.AddOrUpdate(playerDto.GUID, playerDto, (key, value) => value);
+                    }
 
-                _playersByGuidsCache = playersByGuidsCache;
-                _validCache = true;
+                    _playersByGuidsCache = playersByGuidsCache;
+                    _validCache = true;
+                }
             }
 
             public PlayerRepositoryCache(IPlayerRepository playerRepository)
             {
                 _playerRepository = playerRepository;
-                ResetCache();
+                Task.Run(() => ResetCache());
             }
 
             public IEnumerable<PlayerDto> GetAllPlayers()
@@ -160,6 +166,27 @@ namespace Arma3BEClient.Libs.Repositories
             public void AddNotes(Guid id, string s)
             {
                 _playerRepository.AddNotes(id, s);
+            }
+
+            public HashSet<string> GetAllGuidsWithoutSteam()
+            {
+                if (_validCache)
+                {
+                    return new HashSet<string>(_playersByGuidsCache.Values
+                        .Where(x => string.IsNullOrEmpty(x.SteamId))
+                        .Select(x => x.GUID)
+                        .Distinct());
+                }
+                else
+                {
+                    return _playerRepository.GetAllGuidsWithoutSteam();
+                }
+            }
+
+            public void SaveSteamId(Dictionary<string, string> found)
+            {
+                _playerRepository.SaveSteamId(found);
+                _validCache = false;
             }
         }
 
@@ -284,6 +311,37 @@ namespace Arma3BEClient.Libs.Repositories
                 }
             }
 
+            public HashSet<string> GetAllGuidsWithoutSteam()
+            {
+                using (var dc = new Arma3BeClientContext())
+                {
+                    return
+                        new HashSet<string>(
+                            dc.Player.Where(x => string.IsNullOrEmpty(x.SteamId)).Select(x => x.GUID).Distinct());
+                }
+            }
+
+            public void SaveSteamId(Dictionary<string, string> found)
+            {
+                var guids = found.Keys.ToArray();
+                using (var dc = new Arma3BeClientContext())
+                {
+                    var players = dc.Player
+                        .Where(x => string.IsNullOrEmpty(x.GUID) == false && string.IsNullOrEmpty(x.SteamId) == true)
+                        .Where(x => guids.Contains(x.GUID)).ToArray();
+
+                    foreach (var player in players)
+                    {
+                        if (found.ContainsKey(player.GUID))
+                        {
+                            player.SteamId = found[player.GUID];
+                        }
+                    }
+
+                    dc.SaveChanges();
+                }
+            }
+
 
             private Player Map(PlayerDto source)
             {
@@ -294,9 +352,15 @@ namespace Arma3BEClient.Libs.Repositories
                     GUID = source.GUID,
                     LastIp = source.LastIp,
                     LastSeen = source.LastSeen,
-                    Name = source.Name
+                    Name = source.Name,
+                    SteamId = source.SteamId
                 };
             }
+        }
+
+        IPlayerRepository IFactory<IPlayerRepository>.Create()
+        {
+            return Create();
         }
     }
 
@@ -312,6 +376,9 @@ namespace Arma3BEClient.Libs.Repositories
         public Guid Id { get; set; }
 
         public string GUID { get; set; }
+
+        public string SteamId { get; set; }
+
         public string Name { get; set; }
         public string Comment { get; set; }
 

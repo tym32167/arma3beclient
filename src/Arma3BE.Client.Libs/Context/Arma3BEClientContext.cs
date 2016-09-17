@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using Arma3BEClient.Libs.Migrations;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Tools;
 
@@ -8,7 +9,10 @@ namespace Arma3BEClient.Libs.Context
     {
         static Arma3BeClientContext()
         {
-            Database.SetInitializer(new DbInitializer());
+            // ensuring obsolette schema initialization.
+            new Arma3BeClientContextObsolete.ObsoletteRepository().EnsureDatabase();
+
+            Database.SetInitializer(new ProjectInitializer());
             using (var db = new Arma3BeClientContext())
                 db.Database.Initialize(false);
         }
@@ -25,10 +29,13 @@ namespace Arma3BEClient.Libs.Context
         public DbSet<Ban> Bans { get; set; }
         public DbSet<Admin> Admins { get; set; }
         public DbSet<PlayerHistory> PlayerHistory { get; set; }
+
+
+        public DbSet<BanReason> BanReasons { get; set; }
+        public DbSet<KickReason> KickReasons { get; set; }
+        public DbSet<BanTime> BanTimes { get; set; }
     }
-
-
-    internal class DbInitializer : CreateDatabaseIfNotExists<Arma3BeClientContext>
+    internal class ProjectInitializer : MigrateDatabaseToLatestVersion<Arma3BeClientContext, Configuration>
     {
     }
 }
