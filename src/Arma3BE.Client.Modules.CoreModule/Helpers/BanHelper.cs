@@ -35,7 +35,6 @@ namespace Arma3BE.Client.Modules.BanModule.Helpers
         private bool RegisterBansInternal(IEnumerable<Ban> list, Guid currentServerId)
         {
             var bans = list.ToList();
-            var userIds = bans.Select(x => x.GuidIp).Distinct().ToArray();
 
             if (!HaveChanges(bans, x => x.Num, (x, y) => x.GuidIp == y.GuidIp && x.Reason == y.Reason && x.Num == y.Num))
                 return false;

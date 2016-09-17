@@ -17,14 +17,8 @@ namespace Arma3BE.Server.Mocks
 
         private void Tick(object state)
         {
-            var pl = GetPlayers();
-            MockMessage(pl);
-            MockMessage(bans);
-            MockMessage(admins);
-            MockMessage(missions);
-            MockMessage($"(Global) bot: Текущее время {DateTime.UtcNow} - pl {pl.Length}");
+            MockMessage($"(Global) bot: Текущее время {DateTime.UtcNow}");
             MockMessage("RCon admin #4 (99.99.99.99:9999) logged in");
-
             
             _timer?.Change(5000, Timeout.Infinite);
         }
@@ -52,6 +46,29 @@ namespace Arma3BE.Server.Mocks
 
         public int SendCommand(BattlEyeCommand command, string parameters = "")
         {
+            Task.Factory.StartNew(() =>
+            {
+                MockMessage($"(Global) bot: Sended command {command} with params {parameters}");
+
+                switch (command)
+                {
+                    case BattlEyeCommand.Players:
+                        var pl = GetPlayers();
+                        MockMessage(pl);
+                        break;
+                    case BattlEyeCommand.Bans:
+                        MockMessage(bans);
+                        break;
+                    case BattlEyeCommand.Missions:
+                        MockMessage(missions);
+                        break;
+                    case BattlEyeCommand.admins:
+                        MockMessage(admins);
+                        break;
+                }
+
+            });
+            
             return 0;
         }
 

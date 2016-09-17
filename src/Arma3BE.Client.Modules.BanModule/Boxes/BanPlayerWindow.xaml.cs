@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Infrastructure.Models;
-using Arma3BE.Client.Modules.BanModule.Helpers;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 
@@ -17,7 +17,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
     {
         private readonly BanPlayerViewModel _model;
 
-        public BanPlayerWindow(Guid? serverId, BanHelper banHelper, string playerGuid, bool isOnline, string playerName,
+        public BanPlayerWindow(Guid? serverId, IBanHelper banHelper, string playerGuid, bool isOnline, string playerName,
             string playerNum)
         {
             InitializeComponent();
@@ -46,7 +46,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
     public class BanPlayerViewModel : ViewModelBase
     {
         private readonly bool _isOnline;
-        private readonly BanHelper _playerHelper;
+        private readonly IBanHelper _playerHelper;
         private readonly string _playerNum;
         private long? _minutes;
         private string _playerGuid;
@@ -54,7 +54,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
         private string _reason;
         private BanFullTime _timeSpan;
 
-        public BanPlayerViewModel(Guid? serverId, string playerGuid, bool isOnline, BanHelper playerHelper,
+        public BanPlayerViewModel(Guid? serverId, string playerGuid, bool isOnline, IBanHelper playerHelper,
             string playerName,
             string playerNum)
         {

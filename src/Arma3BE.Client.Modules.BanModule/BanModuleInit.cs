@@ -1,7 +1,6 @@
 ﻿using Arma3BE.Client.Infrastructure;
 using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Modules.BanModule.Grids;
-using Arma3BE.Client.Modules.BanModule.Helpers;
 using Arma3BE.Client.Modules.BanModule.Models;
 using Arma3BEClient.Libs.ModelCompact;
 using Microsoft.Practices.Unity;
@@ -25,8 +24,6 @@ namespace Arma3BE.Client.Modules.BanModule
         public void Initialize()
         {
             _container.RegisterInstance(new BanService(_container, _container.Resolve<IEventAggregator>()));
-            _container.RegisterType<IBanHelper, BanHelper>();
-
             _regionManager.RegisterViewWithRegion(RegionNames.ServerTabPartRegion, CreateView);
         }
 
