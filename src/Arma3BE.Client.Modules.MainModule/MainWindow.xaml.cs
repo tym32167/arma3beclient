@@ -8,11 +8,13 @@ using Microsoft.Win32;
 using Prism.Regions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Serialization;
+using Arma3BEClient.Common.Extensions;
 using Xceed.Wpf.AvalonDock.Controls;
 using MessageBox = Xceed.Wpf.Toolkit.MessageBox;
 
@@ -124,8 +126,26 @@ namespace Arma3BE.Client.Modules.MainModule
             }
         }
 
-        private void Import(string fname)
+
+        private class ImportResult
         {
+            public int Added { get; set; }
+            public int Updated { get; set; }
+        }
+
+        
+
+        private ImportResult Import(string fname)
+        {
+            var result = new ImportResult();
+
+            List<PlayerXML> players;
+            using (var sr = new StreamReader(fname))
+            {
+                var ser = new XmlSerializer(typeof(List<PlayerXML>));
+                players = (List<PlayerXML>)ser.Deserialize(sr);
+            }
+
             using (var repo = PlayerRepositoryFactory.Create())
             {
                 var db =
@@ -133,21 +153,15 @@ namespace Arma3BE.Client.Modules.MainModule
                         .GroupBy(x => x.GUID)
                         .Select(x => x.OrderByDescending(y => y.Name).First())
                         .ToDictionary(x => x.GUID);
-                List<PlayerXML> players;
 
-                using (var sr = new StreamReader(fname))
-                {
-                    var ser = new XmlSerializer(typeof(List<PlayerXML>));
-                    players = (List<PlayerXML>)ser.Deserialize(sr);
-                }
-
-                var toadd = new List<Player>();
+                var toadd = new List<PlayerDto>();
 
                 foreach (var p in players)
                 {
                     if (!db.ContainsKey(p.Guid))
                     {
-                        toadd.Add(new Player
+                        result.Added++;
+                        toadd.Add(new PlayerDto
                         {
                             Comment = p.Comment,
                             GUID = p.Guid,
@@ -160,6 +174,7 @@ namespace Arma3BE.Client.Modules.MainModule
                     }
                     else
                     {
+                        result.Updated++;
                         var lp = db[p.Guid];
                         if (string.IsNullOrEmpty(lp.Comment) && !string.IsNullOrEmpty(p.Comment))
                         {
@@ -169,11 +184,16 @@ namespace Arma3BE.Client.Modules.MainModule
                         {
                             lp.SteamId = p.SteamId;
                         }
+
+                        toadd.Add(lp);
                     }
                 }
 
-                repo.AddPlayers(toadd);
+
+                repo.AddOrUpdatePlayers(toadd);
             }
+
+            return result;
         }
 
         private async void ImportClick(object sender, RoutedEventArgs e)
@@ -189,8 +209,8 @@ namespace Arma3BE.Client.Modules.MainModule
 
             if (res.HasValue && res.Value)
             {
-                await Task.Run(() => Import(ofd.FileName));
-                MessageBox.Show("Import finished!");
+                var result = await Task.Run(() => Import(ofd.FileName));
+                MessageBox.Show($"Import finished! Added {result.Added}, updated {result.Updated}");
             }
         }
 

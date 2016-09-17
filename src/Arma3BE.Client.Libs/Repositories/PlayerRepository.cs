@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -30,7 +31,7 @@ namespace Arma3BEClient.Libs.Repositories
             PlayerDto GetPlayer(string guid);
             Player GetPlayerInfo(string guid);
 
-            void AddPlayers(IEnumerable<PlayerDto> players);
+            void AddOrUpdatePlayers(IEnumerable<PlayerDto> players);
             void UpdatePlayerComment(string guid, string comment);
             void UpdateCommant(Dictionary<Guid, string> playersToUpdateComments);
             void AddOrUpdate(IEnumerable<PlayerDto> players);
@@ -111,12 +112,16 @@ namespace Arma3BEClient.Libs.Repositories
                 return _playerRepository.GetPlayerInfo(guid);
             }
 
-            public void AddPlayers(IEnumerable<PlayerDto> players)
+            public void AddOrUpdatePlayers(IEnumerable<PlayerDto> players)
             {
                 var playerDtos = players?.ToArray() ?? new PlayerDto[0];
                 if (!playerDtos.Any()) return;
 
-                _playerRepository.AddPlayers(playerDtos);
+                foreach (var dtos in playerDtos.Paged(1000))
+                {
+                    _playerRepository.AddOrUpdatePlayers(dtos);
+                }
+
                 _validCache = false;
             }
 
@@ -204,13 +209,13 @@ namespace Arma3BEClient.Libs.Repositories
                 }
             }
 
-            public void AddPlayers(IEnumerable<PlayerDto> players)
+            public void AddOrUpdatePlayers(IEnumerable<PlayerDto> players)
             {
                 var playerList = players.Select(Map).ToArray();
 
                 using (var dc = new Arma3BeClientContext())
                 {
-                    dc.Player.AddRange(playerList);
+                    dc.Player.AddOrUpdate(playerList);
                     dc.SaveChanges();
                 }
             }
