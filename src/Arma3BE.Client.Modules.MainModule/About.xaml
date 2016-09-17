@@ -11,52 +11,55 @@
         Width="350"
         Height="300"
         >
-    <Grid >
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-        </Grid.RowDefinitions>
 
-        <Label Grid.Column="0" Grid.Row="0" VerticalAlignment="Center">Company</Label>
-        <Label Grid.Column="0" Grid.Row="1" VerticalAlignment="Center">Title</Label>
-        <Label Grid.Column="0" Grid.Row="2" VerticalAlignment="Center">Product</Label>
-        <Label Grid.Column="0" Grid.Row="3" VerticalAlignment="Center">Description</Label>
-        <Label Grid.Column="0" Grid.Row="4" VerticalAlignment="Center">Sources</Label>
-        <Label Grid.Column="0" Grid.Row="5" VerticalAlignment="Center">Latest version</Label>
-        <Label Grid.Column="0" Grid.Row="6" VerticalAlignment="Center">Author</Label>
-        <Label Grid.Column="0" Grid.Row="7" VerticalAlignment="Center">Copyright</Label>
+    <Border BorderThickness="1" BorderBrush="Gray" Margin="5" Padding="2">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
 
-
-        <Label Grid.Column="1" Grid.Row="0" Name="lbCompany" FontSize="20">Company</Label>
-        <Label Grid.Column="1" Grid.Row="1" Name="lbTitle" FontSize="20">Title</Label>
-        <Label Grid.Column="1" Grid.Row="2" Name="lbProduct" FontSize="20">Product</Label>
-        <Label Grid.Column="1" Grid.Row="3" MaxWidth="300">
-            <TextBlock Name="lbDescription" TextWrapping="WrapWithOverflow"></TextBlock>
-        </Label>
-        <Label Grid.Column="1" Grid.Row="7" Name="lbCopyright">Copyright</Label>
+            <Label Grid.Column="0" Grid.Row="0" VerticalAlignment="Center">Company</Label>
+            <Label Grid.Column="0" Grid.Row="1" VerticalAlignment="Center">Title</Label>
+            <Label Grid.Column="0" Grid.Row="2" VerticalAlignment="Center">Product</Label>
+            <Label Grid.Column="0" Grid.Row="3" VerticalAlignment="Center">Description</Label>
+            <Label Grid.Column="0" Grid.Row="4" VerticalAlignment="Center">Sources</Label>
+            <Label Grid.Column="0" Grid.Row="5" VerticalAlignment="Center">Latest version</Label>
+            <Label Grid.Column="0" Grid.Row="6" VerticalAlignment="Center">Author</Label>
+            <Label Grid.Column="0" Grid.Row="7" VerticalAlignment="Center">Copyright</Label>
 
 
-        <Label Grid.Column="1" Grid.Row="4">
-            <Hyperlink NavigateUri="https://github.com/tym32167/arma3beclient" RequestNavigate="Hyperlink_RequestNavigate">github</Hyperlink>
-        </Label>
+            <Label Grid.Column="1" Grid.Row="0" Name="lbCompany" FontSize="20">Company</Label>
+            <Label Grid.Column="1" Grid.Row="1" Name="lbTitle" FontSize="20">Title</Label>
+            <Label Grid.Column="1" Grid.Row="2" Name="lbProduct" FontSize="20">Product</Label>
+            <Label Grid.Column="1" Grid.Row="3" MaxWidth="300">
+                <TextBlock Name="lbDescription" TextWrapping="WrapWithOverflow"></TextBlock>
+            </Label>
+            <Label Grid.Column="1" Grid.Row="7" Name="lbCopyright">Copyright</Label>
 
-        <Label Grid.Column="1" Grid.Row="5">
-            <Hyperlink NavigateUri="https://github.com/tym32167/arma3beclient/releases/latest" RequestNavigate="Hyperlink_RequestNavigate">download</Hyperlink>
-        </Label>
 
-        <Label Grid.Column="1" Grid.Row="6">
-            <Hyperlink NavigateUri="mailto:tym32167@gmail.com" RequestNavigate="Hyperlink_RequestNavigate">Artem Muradov (tym32167@gmail.com)</Hyperlink>
-        </Label>
+            <Label Grid.Column="1" Grid.Row="4">
+                <Hyperlink NavigateUri="https://github.com/tym32167/arma3beclient" RequestNavigate="Hyperlink_RequestNavigate">github</Hyperlink>
+            </Label>
 
-    </Grid>
+            <Label Grid.Column="1" Grid.Row="5">
+                <Hyperlink NavigateUri="https://github.com/tym32167/arma3beclient/releases/latest" RequestNavigate="Hyperlink_RequestNavigate">download</Hyperlink>
+            </Label>
+
+            <Label Grid.Column="1" Grid.Row="6">
+                <Hyperlink NavigateUri="mailto:tym32167@gmail.com" RequestNavigate="Hyperlink_RequestNavigate">Artem Muradov (tym32167@gmail.com)</Hyperlink>
+            </Label>
+
+        </Grid>
+    </Border>
 </Window>

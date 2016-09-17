@@ -17,85 +17,89 @@
 
             <TabControl VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" Margin="5">
                 <TabItem Header="Servers">
-                    <Grid>
+                    <Border BorderThickness="1" BorderBrush="Gray" Margin="5" Padding="2">
                         <xctk:CollectionControl Name="ServerCollectionControl" IsReadOnly="False"
                                             ItemsSource="{Binding Servers}"
                                             ItemAdded="ServerAdded" ItemDeleted="ServerDeleted"
                                             ItemsSourceType="viewModel:ServerInfoModel"
                                             NewItemTypes="{Binding NewListItemTypes}" />
-                    </Grid>
+                    </Border>
                 </TabItem>
 
                 <TabItem Header="Settings">
-                    <Grid Margin="5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
+                    <Border BorderThickness="1" BorderBrush="Gray" Margin="5" Padding="2">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto"  />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
 
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="25" />
-                            <RowDefinition Height="25" />
-                            <RowDefinition Height="25" />
-                            <RowDefinition Height="25" />
-                        </Grid.RowDefinitions>
-                         
-                        
-                        <TextBlock Grid.Row="0" Grid.Column="0"  Text="AdminName" Margin="2" />
-                        <TextBox Grid.Row="0" Grid.Column="1" Width="100" Margin="2" Text="{Binding Settings.AdminName, Mode=TwoWay}" />
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="25" />
+                                <RowDefinition Height="25" />
+                                <RowDefinition Height="25" />
+                                <RowDefinition Height="25" />
+                            </Grid.RowDefinitions>
 
 
-                        <TextBlock Grid.Row="1" Grid.Column="0"  Text="Time Zone" Margin="2" />
-                        <ComboBox Grid.Row="1" Grid.Column="1"
+                            <TextBlock Grid.Row="0" Grid.Column="0"  Text="AdminName" Margin="2" />
+                            <TextBox Grid.Row="0" Grid.Column="1" Width="100" HorizontalAlignment="Left" Margin="2" Text="{Binding Settings.AdminName, Mode=TwoWay}" />
+
+
+                            <TextBlock Grid.Row="1" Grid.Column="0"  Text="Time Zone" Margin="2" />
+                            <ComboBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="2"
                                   ItemsSource="{Binding TimeZones}"
                                   DisplayMemberPath="DisplayName"
                                   SelectedItem="{Binding Settings.TimeZoneInfo, Mode=TwoWay}"
                                   ></ComboBox>
 
 
-                        <TextBlock Grid.Row="2" Grid.Column="0"  Text="Players update interval (seconds)" Margin="2" />
-                        <TextBox Grid.Row="2" Grid.Column="1" Width="100" Margin="2" Text="{Binding Settings.PlayersUpdateSeconds, Mode=TwoWay}" />
+                            <TextBlock Grid.Row="2" Grid.Column="0"  Text="Players update interval (seconds)" Margin="2" />
+                            <TextBox Grid.Row="2" Grid.Column="1" Width="100" HorizontalAlignment="Left" Margin="2" Text="{Binding Settings.PlayersUpdateSeconds, Mode=TwoWay}" />
 
 
-                        <TextBlock Grid.Row="3" Grid.Column="0"  Text="Bans update interval (seconds)" Margin="2" />
-                        <TextBox Grid.Row="3" Grid.Column="1" Width="100" Margin="2" Text="{Binding Settings.BansUpdateSeconds, Mode=TwoWay}" />
+                            <TextBlock Grid.Row="3" Grid.Column="0"  Text="Bans update interval (seconds)" Margin="2" />
+                            <TextBox Grid.Row="3" Grid.Column="1" Width="100" HorizontalAlignment="Left" Margin="2" Text="{Binding Settings.BansUpdateSeconds, Mode=TwoWay}" />
 
 
-                    </Grid>
+                        </Grid>
+                    </Border>
                 </TabItem>
                 <TabItem Header="Ban / Kick Reasons">
-                    <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+                    <Border BorderThickness="1" BorderBrush="Gray" Margin="5" Padding="2">
+                        <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
 
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"></RowDefinition>
-                                <RowDefinition Height="Auto"></RowDefinition>
-                                <RowDefinition Height="*"></RowDefinition>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition></ColumnDefinition>
-                                <ColumnDefinition></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
 
-                            <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="0">
-                                <TextBlock>Ban reasons</TextBlock>
-                                <DataGrid ItemsSource="{Binding BanReasons}" IsReadOnly="False"></DataGrid>
+                                <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="0">
+                                    <TextBlock>Ban reasons</TextBlock>
+                                    <DataGrid ItemsSource="{Binding BanReasons}" IsReadOnly="False"></DataGrid>
 
-                            </StackPanel>
-                            <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1">
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1">
 
-                                <TextBlock>Ban times</TextBlock>
-                                <DataGrid ItemsSource="{Binding BanTimes}" IsReadOnly="False"></DataGrid>
+                                    <TextBlock>Ban times</TextBlock>
+                                    <DataGrid ItemsSource="{Binding BanTimes}" IsReadOnly="False"></DataGrid>
 
-                            </StackPanel>
-                            <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
 
-                                <TextBlock>Kick reasons</TextBlock>
-                                <DataGrid ItemsSource="{Binding KickReasons}" IsReadOnly="False"></DataGrid>
-                            </StackPanel>
-                        </Grid>
-                    </ScrollViewer>
+                                    <TextBlock>Kick reasons</TextBlock>
+                                    <DataGrid ItemsSource="{Binding KickReasons}" IsReadOnly="False"></DataGrid>
+                                </StackPanel>
+                            </Grid>
+                        </ScrollViewer>
+                    </Border>
                 </TabItem>
 
             </TabControl>
