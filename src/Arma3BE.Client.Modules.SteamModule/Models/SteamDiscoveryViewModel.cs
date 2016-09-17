@@ -21,7 +21,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
         private bool _isBusy;
         private ObservableCollection<Tuple<string, string>> _playersFound;
         private int _progress;
-        private HashSet<string> _totalPlayers;
+        private Dictionary<string, Guid> _totalPlayers;
         private long _min;
         private long _max;
         private bool _inProcess;
@@ -104,7 +104,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
             }
         }
 
-        public HashSet<string> TotalPlayers
+        public Dictionary<string, Guid> TotalPlayers
         {
             get { return _totalPlayers; }
             set
@@ -158,13 +158,15 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
 
         private void Save()
         {
-            var found = PlayersFound;
+            var found = PlayersFound?.Where(x => _totalPlayers.ContainsKey(x.Item1))
+                .Select(x => new {Id = _totalPlayers[x.Item1], steamId = x.Item2})
+                .ToDictionary(x => x.Id, x => x.steamId);
+                
             if (found != null && found.Count > 0)
             {
                 using (var repo = PlayerRepositoryFactory.Create())
                 {
-                    var data = found.GroupBy(x => x.Item1, x => x.Item2).ToDictionary(x => x.Key, x => x.First());
-                    repo.SaveSteamId(data);
+                    repo.SaveSteamId(found);
                 }
             }
 
@@ -182,7 +184,11 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
             {
                 using (var repo = PlayerRepositoryFactory.Create())
                 {
-                    TotalPlayers = repo.GetAllGuidsWithoutSteam();
+                    TotalPlayers = repo.GetAllPlayersWithoutSteam()
+                        .Where(x => string.IsNullOrEmpty(x.GUID) == false)
+                        .GroupBy(x => x.GUID)
+                        .ToDictionary(x => x.Key, x => x.First().Id);
+
                 }
             }
 
@@ -221,7 +227,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
 
         private void CheckHash(string currentId, string hash)
         {
-            if (TotalPlayers?.Contains(hash) == true)
+            if (TotalPlayers?.ContainsKey(hash) == true)
             {
                 PlayersFound.Add(new Tuple<string, string>(hash, currentId));
             }

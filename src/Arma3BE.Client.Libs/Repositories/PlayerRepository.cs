@@ -11,6 +11,7 @@ using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Arma3BEClient.Common.Extensions;
 
 namespace Arma3BEClient.Libs.Repositories
 {
@@ -35,8 +36,8 @@ namespace Arma3BEClient.Libs.Repositories
             void AddOrUpdate(IEnumerable<PlayerDto> players);
             void AddHistory(List<PlayerHistory> histories);
             void AddNotes(Guid id, string s);
-            HashSet<string> GetAllGuidsWithoutSteam();
-            void SaveSteamId(Dictionary<string, string> found);
+            IEnumerable<PlayerDto> GetAllPlayersWithoutSteam();
+            void SaveSteamId(Dictionary<Guid, string> found);
         }
 
         private class PlayerRepositoryCache : DisposeObject, IPlayerRepository
@@ -168,24 +169,26 @@ namespace Arma3BEClient.Libs.Repositories
                 _playerRepository.AddNotes(id, s);
             }
 
-            public HashSet<string> GetAllGuidsWithoutSteam()
+            public IEnumerable<PlayerDto> GetAllPlayersWithoutSteam()
             {
                 if (_validCache)
                 {
-                    return new HashSet<string>(_playersByGuidsCache.Values
-                        .Where(x => string.IsNullOrEmpty(x.SteamId))
-                        .Select(x => x.GUID)
-                        .Distinct());
+                    return _playersByGuidsCache.Values
+                        .Where(x => string.IsNullOrEmpty(x.SteamId));
                 }
                 else
                 {
-                    return _playerRepository.GetAllGuidsWithoutSteam();
+                    return _playerRepository.GetAllPlayersWithoutSteam();
                 }
             }
 
-            public void SaveSteamId(Dictionary<string, string> found)
+            public void SaveSteamId(Dictionary<Guid, string> found)
             {
-                _playerRepository.SaveSteamId(found);
+                foreach (var paged in found.Paged(2000))
+                {
+                    _playerRepository.SaveSteamId(paged.ToDictionary(x=>x.Key, x=>x.Value));
+                }
+                
                 _validCache = false;
             }
         }
@@ -311,30 +314,29 @@ namespace Arma3BEClient.Libs.Repositories
                 }
             }
 
-            public HashSet<string> GetAllGuidsWithoutSteam()
+            public IEnumerable<PlayerDto> GetAllPlayersWithoutSteam()
             {
                 using (var dc = new Arma3BeClientContext())
                 {
                     return
-                        new HashSet<string>(
-                            dc.Player.Where(x => string.IsNullOrEmpty(x.SteamId)).Select(x => x.GUID).Distinct());
+                        dc.Player.Where(x => string.IsNullOrEmpty(x.SteamId)).ToArray();
                 }
             }
 
-            public void SaveSteamId(Dictionary<string, string> found)
+            public void SaveSteamId(Dictionary<Guid, string> found)
             {
                 var guids = found.Keys.ToArray();
                 using (var dc = new Arma3BeClientContext())
                 {
                     var players = dc.Player
                         .Where(x => string.IsNullOrEmpty(x.GUID) == false && string.IsNullOrEmpty(x.SteamId) == true)
-                        .Where(x => guids.Contains(x.GUID)).ToArray();
+                        .Where(x => guids.Contains(x.Id)).ToArray();
 
                     foreach (var player in players)
                     {
-                        if (found.ContainsKey(player.GUID))
+                        if (found.ContainsKey(player.Id))
                         {
-                            player.SteamId = found[player.GUID];
+                            player.SteamId = found[player.Id];
                         }
                     }
 
