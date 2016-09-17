@@ -37,6 +37,8 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="25" />
                             <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
                         </Grid.RowDefinitions>
                          
                         
@@ -50,6 +52,14 @@
                                   DisplayMemberPath="DisplayName"
                                   SelectedItem="{Binding Settings.TimeZoneInfo, Mode=TwoWay}"
                                   ></ComboBox>
+
+
+                        <TextBlock Grid.Row="2" Grid.Column="0"  Text="Players update interval (seconds)" Margin="2" />
+                        <TextBox Grid.Row="2" Grid.Column="1" Width="100" Margin="2" Text="{Binding Settings.PlayersUpdateSeconds, Mode=TwoWay}" />
+
+
+                        <TextBlock Grid.Row="3" Grid.Column="0"  Text="Bans update interval (seconds)" Margin="2" />
+                        <TextBox Grid.Row="3" Grid.Column="1" Width="100" Margin="2" Text="{Binding Settings.BansUpdateSeconds, Mode=TwoWay}" />
 
 
                     </Grid>
