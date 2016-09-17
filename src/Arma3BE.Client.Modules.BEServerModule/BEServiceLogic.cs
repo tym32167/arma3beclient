@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Server;
 using Arma3BEClient.Common.Core;
+using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.Tools;
 using Prism.Events;
 
@@ -22,21 +24,20 @@ namespace Arma3BE.Client.Modules.BEServerModule
         private readonly TimedAction _bansUpdater;
 
 
-        public BEServiceLogic(IEventAggregator aggregator, BEService beService)
+        public BEServiceLogic(IEventAggregator aggregator, BEService beService, ILog log)
         {
             _aggregator = aggregator;
             _beService = beService;
 
-            _playersUpdater = new TimedAction(SettingsStore.Instance.PlayersUpdateSeconds, UpdatePlayers);
-            _bansUpdater = new TimedAction(SettingsStore.Instance.BansUpdateSeconds, UpdateBans);
-
-            _aggregator.GetEvent<BEMessageEvent<BEPlayerLogMessage>>()
-                .Subscribe(PlayerLogMessage);
+            _playersUpdater = new TimedAction(SettingsStore.Instance.PlayersUpdateSeconds, UpdatePlayers, log);
+            _bansUpdater = new TimedAction(SettingsStore.Instance.BansUpdateSeconds, UpdateBans, log);
 
             _aggregator.GetEvent<SettingsChangedEvent>()
                 .Subscribe(SettingsChanged);
 
-            _aggregator.GetEvent<BEMessageEvent<BECommand>>().Subscribe(ProcessCommand);
+            _aggregator.GetEvent<BEMessageEvent<BECommand>>().Subscribe(ProcessCommand, ThreadOption.BackgroundThread);
+
+            _aggregator.GetEvent<BEMessageEvent<BEPlayerLogMessage>>().Subscribe(Proc_BEPlayerLogMessage, ThreadOption.BackgroundThread);
         }
 
 
@@ -49,17 +50,16 @@ namespace Arma3BE.Client.Modules.BEServerModule
             }
         }
 
+        private void Proc_BEPlayerLogMessage(BEPlayerLogMessage message)
+        {
+            _playersUpdater.Update(message.ServerId);
+        }
+
 
         private void SettingsChanged(SettingsStore settings)
         {
             _playersUpdater.SetTimer(SettingsStore.Instance.PlayersUpdateSeconds);
             _bansUpdater.SetTimer(SettingsStore.Instance.BansUpdateSeconds);
-        }
-
-        private void PlayerLogMessage(BEPlayerLogMessage message)
-        {
-            _aggregator.GetEvent<BEMessageEvent<BECommand>>()
-                   .Publish(new BECommand(message.ServerId, CommandType.Players));
         }
 
         private void UpdatePlayers(HashSet<Guid> servers)
@@ -91,16 +91,18 @@ namespace Arma3BE.Client.Modules.BEServerModule
     {
         private int _interval;
         private readonly Action<HashSet<Guid>> _action;
+        private readonly ILog _log;
 
         private Timer _timer;
 
         private ConcurrentDictionary<Guid, byte> _servers = new ConcurrentDictionary<Guid, byte>();
 
-        public TimedAction(int interval, Action<HashSet<Guid>> action)
+        public TimedAction(int interval, Action<HashSet<Guid>> action, ILog log)
         {
             _interval = interval;
             _action = action;
-            
+            _log = log;
+
             _timer = new Timer(Tick, null, Interval(), Timeout.Infinite);
         }
 
@@ -125,14 +127,23 @@ namespace Arma3BE.Client.Modules.BEServerModule
 
         private void Tick(object state)
         {
-            if (_servers.Any())
+            try
             {
-                var set = new HashSet<Guid>(_servers.Keys.ToArray());
-                _servers.Clear();
-                _action(set);
+                if (_servers.Any())
+                {
+                    var set = new HashSet<Guid>(_servers.Keys.ToArray());
+                    _servers.Clear();
+                    _action(set);
+                }
             }
-
-            _timer?.Change(Interval(), Timeout.Infinite);
+            catch (Exception ex)
+            {
+                _log.Error(ex);
+            }
+            finally
+            {
+                _timer?.Change(Interval(), Timeout.Infinite);
+            }
         }
 
         protected override void DisposeManagedResources()

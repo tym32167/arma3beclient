@@ -20,6 +20,14 @@ namespace Arma3BE.Server.Mocks
             MockMessage($"(Global) bot: Текущее время {DateTime.UtcNow}");
             MockMessage("RCon admin #4 (99.99.99.99:9999) logged in");
             
+            //MockMessage($"Player #12 sanya disconnected");
+            //MockMessage($"Player #1 Baz (be1a6a29ee0eb0851b586b2ed97ad110) has been kicked by BattlEye: Client not responding");
+            //MockMessage($"Player #19 Gektor (23d1b17ce5e26ce5f69f2bddbe781d9e) has been kicked by BattlEye: Admin Ban ([vosur][15.09.15 15:14:56] Sabotage)");
+            //MockMessage($"Player #6 Atamur (002da0e59f61916bc13ef5ef9bfee7e7) has been kicked by BattlEye: Admin Kick ([tim][22.11.15 15:19:44] Flud)");
+            //MockMessage($"Player #11 Iteron (46.98.121.255:2304) connected");
+            //MockMessage($"Verified GUID (e3807f6355d182b3ecb7eb7cf1540d40) of player #11 Iteron");
+            //MockMessage($"Player #21 TipsyOstrich - GUID: c7679b5ec67c557e479a2a5057083a26 (unverified)");
+
             _timer?.Change(5000, Timeout.Infinite);
         }
 
