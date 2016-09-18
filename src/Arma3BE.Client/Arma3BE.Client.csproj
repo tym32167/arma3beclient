@@ -223,6 +223,10 @@
       <Project>{308eef0c-5de3-435e-8249-7a658bfafd08}</Project>
       <Name>Arma3BE.Client.Modules.CoreModule</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Modules.DevTools\Arma3BE.Client.Modules.DevTools.csproj">
+      <Project>{1ee247d9-ead2-4e52-82da-270bbeb688e9}</Project>
+      <Name>Arma3BE.Client.Modules.DevTools</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Arma3BE.Client.Modules.IndicatorsModule\Arma3BE.Client.Modules.IndicatorsModule.csproj">
       <Project>{dee7ad82-5abd-4a16-90fa-b46da96f3049}</Project>
       <Name>Arma3BE.Client.Modules.IndicatorsModule</Name>

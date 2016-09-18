@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Arma3BEClient.Common.Logging
 {
     public interface ILog
     {
+        void Debug(object message);
         //void DebugFormat(string format, object arg0);
         //void DebugFormat(string format, object arg0, object arg1);
         //void DebugFormat(string format, object arg0, object arg1, object arg2);

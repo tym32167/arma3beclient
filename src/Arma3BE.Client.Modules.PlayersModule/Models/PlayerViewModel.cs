@@ -15,13 +15,15 @@ namespace Arma3BE.Client.Modules.PlayersModule.Models
     {
         private readonly string _userGuid;
         private readonly IIpService _ipService;
+        private readonly IPlayerRepository _playerRepository;
         private Player _player;
         private string _playerIPInfo;
 
-        public PlayerViewModel(string userGuid, IIpService ipService)
+        public PlayerViewModel(string userGuid, IIpService ipService, IPlayerRepository playerRepository)
         {
             _userGuid = userGuid;
             _ipService = ipService;
+            _playerRepository = playerRepository;
 
             SaveComment = new ActionCommand(SaveUserComment);
             GoToSteamCommand = new ActionCommand(GoToSteam);
@@ -43,11 +45,10 @@ namespace Arma3BE.Client.Modules.PlayersModule.Models
             {
                 if (_player == null)
                 {
-                    using (var dc = PlayerRepositoryFactory.Create())
-                    {
-                        var player = dc.GetPlayerInfo(_userGuid);
-                        _player = player;
-                    }
+
+                    var player = _playerRepository.GetPlayerInfo(_userGuid);
+                    _player = player;
+
                 }
                 return _player;
             }
@@ -75,11 +76,7 @@ namespace Arma3BE.Client.Modules.PlayersModule.Models
 
         private void SaveUserComment()
         {
-            using (var repo = PlayerRepositoryFactory.Create())
-            {
-                repo.UpdatePlayerComment(Player.GUID, Player.Comment);
-            }
-
+            _playerRepository.UpdatePlayerComment(Player.GUID, Player.Comment);
             _player = null;
             OnPropertyChanged(nameof(Player));
         }

@@ -8,27 +8,29 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Client.Infrastructure.Models;
-using Arma3BEClient.Common.Core;
 using Arma3BEClient.Libs.Repositories;
 
 namespace Arma3BE.Client.Modules.SteamModule.Models
 {
     public class SteamDiscoveryViewModel : DisposableViewModelBase, ITitledItem
     {
+        public static string StaticTitle = "Steam Discovery";
+        private readonly IPlayerRepository _playerRepository;
         private CancellationTokenSource _cancelatioTokenSource;
         private long _current;
-        
+        private bool _inProcess;
+
         private bool _isBusy;
+        private long _max;
+        private long _min;
         private ObservableCollection<Tuple<string, string>> _playersFound;
         private int _progress;
         private Dictionary<string, Guid> _totalPlayers;
-        private long _min;
-        private long _max;
-        private bool _inProcess;
-        
 
-        public SteamDiscoveryViewModel()
+
+        public SteamDiscoveryViewModel(IPlayerRepository playerRepository)
         {
+            _playerRepository = playerRepository;
             PlayersFound = new ObservableCollection<Tuple<string, string>>();
             StartCommand = new ActionCommand(Start);
             StopCommand = new ActionCommand(Stop);
@@ -37,19 +39,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
             Min = 7959000000L;
 
             Current = Min;
-            
         }
-
-        protected override void DisposeManagedResources()
-        {
-            base.DisposeManagedResources();
-            _cancelatioTokenSource?.Cancel();
-        }
-
-        
-        public static string StaticTitle = "Steam Discovery";
-
-        public string Title => StaticTitle;
 
         public ICommand StartCommand { get; set; }
         public ICommand StopCommand { get; set; }
@@ -137,6 +127,14 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
             }
         }
 
+        public string Title => StaticTitle;
+
+        protected override void DisposeManagedResources()
+        {
+            base.DisposeManagedResources();
+            _cancelatioTokenSource?.Cancel();
+        }
+
         private void Stop()
         {
             IsBusy = true;
@@ -161,14 +159,9 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
             var found = PlayersFound?.Where(x => _totalPlayers.ContainsKey(x.Item1))
                 .Select(x => new {Id = _totalPlayers[x.Item1], steamId = x.Item2})
                 .ToDictionary(x => x.Id, x => x.steamId);
-                
-            if (found != null && found.Count > 0)
-            {
-                using (var repo = PlayerRepositoryFactory.Create())
-                {
-                    repo.SaveSteamId(found);
-                }
-            }
+
+            if ((found != null) && (found.Count > 0))
+                _playerRepository.SaveSteamId(found);
 
             InProcess = false;
         }
@@ -181,16 +174,10 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
             found.Clear();
 
             if (TotalPlayers == null)
-            {
-                using (var repo = PlayerRepositoryFactory.Create())
-                {
-                    TotalPlayers = repo.GetAllPlayersWithoutSteam()
-                        .Where(x => string.IsNullOrEmpty(x.GUID) == false)
-                        .GroupBy(x => x.GUID)
-                        .ToDictionary(x => x.Key, x => x.First().Id);
-
-                }
-            }
+                TotalPlayers = _playerRepository.GetAllPlayersWithoutSteam()
+                    .Where(x => string.IsNullOrEmpty(x.GUID) == false)
+                    .GroupBy(x => x.GUID)
+                    .ToDictionary(x => x.Key, x => x.First().Id);
 
             _cancelatioTokenSource?.Cancel();
             _cancelatioTokenSource = new CancellationTokenSource();
@@ -211,15 +198,13 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
             {
                 var l = 76561190000000000L + i;
                 var hash = Steam_Hash(l);
-                Progress = (int)((i - min) * 100.0 / (max - min));
+                Progress = (int) ((i - min)*100.0/(max - min));
 
                 CheckHash(l.ToString(), hash);
 
                 Current = i;
                 if (token.IsCancellationRequested)
-                {
                     return;
-                }
             }
 
             Save();
@@ -228,9 +213,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
         private void CheckHash(string currentId, string hash)
         {
             if (TotalPlayers?.ContainsKey(hash) == true)
-            {
                 PlayersFound.Add(new Tuple<string, string>(hash, currentId));
-            }
         }
 
         private static string Steam_Hash(long num)
@@ -238,13 +221,13 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
             // http://steamcommunity.com/profiles/7656119xxxxxxxxxx 
             // http://steamcommunity.com/profiles/76561198053877632
             var steamId = num;
-            var parts = new byte[] { 0x42, 0x45, 0, 0, 0, 0, 0, 0, 0, 0 };
+            var parts = new byte[] {0x42, 0x45, 0, 0, 0, 0, 0, 0, 0, 0};
 
             for (var i = 2; i < 10; i++)
             {
-                var res = steamId % 256;
-                steamId = steamId / 256;
-                parts[i] = (byte)res;
+                var res = steamId%256;
+                steamId = steamId/256;
+                parts[i] = (byte) res;
             }
 
             var md5 = new MD5CryptoServiceProvider();
@@ -252,9 +235,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
 
             var result = "";
             foreach (var b in hash)
-            {
                 result += b.ToString("x2");
-            }
 
             return result;
         }

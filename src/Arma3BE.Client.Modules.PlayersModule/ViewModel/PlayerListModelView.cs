@@ -16,12 +16,14 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
     public class PlayerListModelView : ViewModelBase, ITitledItem
     {
         private readonly IEventAggregator _eventAggregator;
+        private readonly IPlayerRepository _playerRepository;
         private int _playerCount;
         private ICommand _refreshCommand;
 
-        public PlayerListModelView(IEventAggregator eventAggregator)
+        public PlayerListModelView(IEventAggregator eventAggregator, IPlayerRepository playerRepository)
         {
             _eventAggregator = eventAggregator;
+            _playerRepository = playerRepository;
             SelectedOptions = "Name,IP,Guid,Comment";
 
             BanCommand = new ActionCommand(ShowBan);
@@ -96,8 +98,7 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
 
         public void Refresh()
         {
-            using (var repo = PlayerRepositoryFactory.Create())
-            {
+            
                 var opts = SelectedOptions.Split(',');
 
                 var searchName = opts.Contains("Name");
@@ -110,7 +111,7 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
                 IEnumerable<PlayerDto> result;
 
                 if (!string.IsNullOrEmpty(Filter))
-                    result = repo.GetPlayers(x =>
+                    result = _playerRepository.GetPlayers(x =>
                         (searchGuid && (x.GUID == Filter))
                         ||
                         (searchComment && x.Comment.Contains(Filter))
@@ -123,7 +124,7 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
                         ||
                         (searchLastNames && x.PlayerHistory.Any(y => y.Name.Contains(Filter))));
                 else
-                    result = repo.GetAllPlayers();
+                    result = _playerRepository.GetAllPlayers();
 
                 var r = result.Select(x => new PlayerView
                 {
@@ -143,7 +144,7 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
                 PlayerCount = r.Count;
 
                 Players = r;
-            }
+         
 
             OnPropertyChanged(nameof(Players));
         }

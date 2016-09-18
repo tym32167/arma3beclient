@@ -19,6 +19,7 @@ using Prism.Unity;
 using System;
 using System.Windows;
 using Arma3BE.Client.Modules.CoreModule;
+using Arma3BE.Client.Modules.DevTools;
 
 namespace Arma3BEClient
 {
@@ -46,6 +47,7 @@ namespace Arma3BEClient
             AddModule(typeof(CoreModuleInit));
             AddModule(typeof(NetModuleInit));
             AddModule(typeof(OptionsModuleInit));
+            AddModule(typeof(DevToolsModuleInit));
             AddModule(typeof(BEServerModuleInit));
             AddModule(typeof(PlayersModuleInit));
             AddModule(typeof(BanModuleInit));
@@ -71,7 +73,7 @@ namespace Arma3BEClient
         protected override void ConfigureContainer()
         {
             base.ConfigureContainer();
-            Container.RegisterType<ILog, Log>();
+            //Container.RegisterType<ILog, Log>();
         }
 
         protected override RegionAdapterMappings ConfigureRegionAdapterMappings()

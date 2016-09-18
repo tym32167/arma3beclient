@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+using Arma3BEClient.Libs.Repositories;
 using Admin = Arma3BE.Server.Models.Admin;
 using Player = Arma3BE.Server.Models.Player;
 
@@ -26,12 +27,12 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
         private readonly PlayerHelper _playerHelper;
 
         public ServerMonitorPlayerViewModel(ILog log, ServerInfo serverInfo,
-            IBanHelper banHelper, IEventAggregator eventAggregator)
+            IBanHelper banHelper, IEventAggregator eventAggregator, IPlayerRepository playerRepository)
             : base(new ActionCommand(() => SendCommand(eventAggregator, serverInfo.Id, CommandType.Players)), new PlayerViewComperer())
         {
             _serverInfo = serverInfo;
             _eventAggregator = eventAggregator;
-            _playerHelper = new PlayerHelper(log, serverInfo.Id, banHelper);
+            _playerHelper = new PlayerHelper(log, serverInfo.Id, banHelper, playerRepository);
 
             KickUserCommand = new DelegateCommand(ShowKickDialog, CanShowDialog);
             BanUserCommand = new DelegateCommand(ShowBanDialog, CanShowDialog);
