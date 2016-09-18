@@ -53,7 +53,7 @@ namespace Arma3BE.Client.Infrastructure.Models
 
         public int DataCount
         {
-            get { return _data == null ? 0 : Data.Count(); }
+            get { return Data?.Count ?? 0; }
         }
 
         public ICommand RefreshCommand { get; }
