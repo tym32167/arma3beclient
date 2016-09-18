@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using System.Diagnostics;
 using Arma3BEClient.Libs.Migrations;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Tools;
@@ -19,6 +20,10 @@ namespace Arma3BEClient.Libs.Context
 
         public Arma3BeClientContext() : base(new ConnectionFactory().Create(), true)
         {
+            //this.Database.Log = s =>
+            //{
+            //    Debug.WriteLine(s);
+            //};
         }
 
         public DbSet<ChatLog> ChatLog { get; set; }

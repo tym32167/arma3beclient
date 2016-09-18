@@ -161,14 +161,24 @@ namespace Arma3BE.Client.Modules.MainModule
                 }
                 else
                 {
-                    result.Updated++;
+                    bool updated = false;
+
                     var lp = db[p.Guid];
                     if (string.IsNullOrEmpty(lp.Comment) && !string.IsNullOrEmpty(p.Comment))
+                    {
                         lp.Comment = p.Comment;
+                        updated = true;
+                    }
                     if (string.IsNullOrEmpty(lp.SteamId) && !string.IsNullOrEmpty(p.SteamId))
+                    {
                         lp.SteamId = p.SteamId;
-
-                    toadd.Add(lp);
+                        updated = true;
+                    }
+                    if (updated)
+                    {
+                        toadd.Add(lp);
+                        result.Updated++;
+                    }
                 }
 
 
