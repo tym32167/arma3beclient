@@ -20,7 +20,7 @@ namespace Arma3BE.Client.Modules.IndicatorsModule
         private void AddMessage(BEMessage message)
         {
             if (_serverInfo.Id != message.ServerId) return;
-            LastUpdate = $"Last update at {DateTime.UtcNow.UtcToLocalFromSettings().ToLongTimeString()} (UTC)";
+            LastUpdate = $"Last update at {DateTime.UtcNow.UtcToLocalFromSettings().ToLongTimeString()}";
             OnPropertyChanged(nameof(LastUpdate));
         }
 
