@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using log4net;
 using log4net.Repository.Hierarchy;
 
@@ -17,6 +18,12 @@ namespace Arma3BEClient.Common.Logging
         #region Implementation of ILog
 
         public void Debug(object message)
+        {
+            DebugConditional(message);
+        }
+
+        [Conditional("DEBUG")]
+        private void DebugConditional(object message)
         {
             _log.Debug(message);
         }

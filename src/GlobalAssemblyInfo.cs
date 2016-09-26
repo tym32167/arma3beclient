@@ -17,4 +17,5 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 [assembly: AssemblyVersion("0.5.*")]
+[assembly: System.Resources.NeutralResourcesLanguageAttribute("en")]
 //[assembly: AssemblyFileVersion("0.5.5.*")]

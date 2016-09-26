@@ -8,7 +8,10 @@ using Arma3BEClient.Libs.ModelCompact;
 using Microsoft.Practices.Unity;
 using Prism.Events;
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Arma3BE.Client.Modules.BEServerModule
 {
@@ -27,8 +30,13 @@ namespace Arma3BE.Client.Modules.BEServerModule
             _ipService = ipService;
             _eventAggregator = eventAggregator;
 
-            _eventAggregator.GetEvent<RunServerEvent>().Subscribe(CheckServer);
-            _eventAggregator.GetEvent<CloseServerEvent>().Subscribe(CloseServer);
+            _eventAggregator.GetEvent<RunServerEvent>().Subscribe(CheckServer, ThreadOption.BackgroundThread);
+            _eventAggregator.GetEvent<CloseServerEvent>().Subscribe(CloseServer, ThreadOption.BackgroundThread);
+        }
+
+        public IEnumerable<Guid> ConnectedServers()
+        {
+            return _serverPool.Keys.ToArray();
         }
 
         private void CloseServer(ServerInfo info)
@@ -96,7 +104,15 @@ namespace Arma3BE.Client.Modules.BEServerModule
                 BEServer.ConnectingHandler += BEServer_ConnectingHandler;
                 BEServer.DisconnectHandler += BEServer_DisconnectHandler;
 
+                BEServer.MessageHandler += BEServer_MessageHandler;
+
                 _eventAggregator.GetEvent<BEMessageEvent<BECommand>>().Subscribe(Command);
+            }
+
+            private void BEServer_MessageHandler(object sender, EventArgs e)
+            {
+                _eventAggregator.GetEvent<BEMessageEvent<BEMessage>>()
+                  .Publish(new BEMessage(Info.Id));
             }
 
             private void BEServer_DisconnectHandler(object sender, EventArgs e)
@@ -135,6 +151,8 @@ namespace Arma3BE.Client.Modules.BEServerModule
                 BEServer.ConnectHandler -= BEServer_ConnectHandler;
                 BEServer.ConnectingHandler -= BEServer_ConnectingHandler;
                 BEServer.DisconnectHandler -= BEServer_DisconnectHandler;
+
+                BEServer.MessageHandler -= BEServer_MessageHandler;
 
                 _eventAggregator.GetEvent<BEMessageEvent<BECommand>>().Unsubscribe(Command);
 

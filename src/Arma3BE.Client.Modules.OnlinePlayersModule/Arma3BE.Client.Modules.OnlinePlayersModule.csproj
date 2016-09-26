@@ -110,7 +110,6 @@
     <Compile Include="Helpers\Views\PlayerView.cs" />
     <Compile Include="Models\ServerMonitorPlayerViewModel.cs" />
     <Compile Include="OnlinePlayersModuleInit.cs" />
-    <Compile Include="OnlinePlayerService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

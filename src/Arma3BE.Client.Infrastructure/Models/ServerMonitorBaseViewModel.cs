@@ -1,24 +1,37 @@
-﻿using Arma3BE.Client.Infrastructure.Commands;
+﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
+using Arma3BE.Client.Infrastructure.Commands;
 
 namespace Arma3BE.Client.Infrastructure.Models
 {
     public abstract class ServerMonitorBaseViewModel<T, TK> : ViewModelBase where T : class where TK : class
     {
+        private readonly IEqualityComparer<TK> _comparer;
         protected IEnumerable<TK> _data;
-        private TK _selectedItem;
 
-        protected ServerMonitorBaseViewModel(ICommand refreshCommand)
+        private TK _selectedItem;
+        private bool _waitingForEvent = true;
+        protected ObservableCollection<TK> FilteredData;
+
+        protected ServerMonitorBaseViewModel(ICommand refreshCommand, IEqualityComparer<TK> comparer)
         {
-            RefreshCommand = refreshCommand;
+            _comparer = comparer;
+            RefreshCommand = new CommandWrapper(refreshCommand, this);
             FilterCommand = new ActionCommand(UpdateData);
         }
 
-        public IEnumerable<TK> Data
+        public bool WaitingForEvent
         {
-            get { return FilterData(_data); }
+            get { return _waitingForEvent; }
+            set
+            {
+                _waitingForEvent = value;
+                OnPropertyChanged();
+            }
         }
 
         public TK SelectedItem
@@ -31,11 +44,16 @@ namespace Arma3BE.Client.Infrastructure.Models
             }
         }
 
+        public ObservableCollection<TK> Data
+        {
+            get { return FilteredData; }
+        }
+
         public string Filter { get; set; }
 
         public int DataCount
         {
-            get { return _data == null ? 0 : Data.Count(); }
+            get { return Data?.Count ?? 0; }
         }
 
         public ICommand RefreshCommand { get; }
@@ -51,16 +69,50 @@ namespace Arma3BE.Client.Infrastructure.Models
 
         public virtual void UpdateData()
         {
+            var newData = FilterData(_data).ToArray();
+            UpdateFilteredData(newData);
+
             OnPropertyChanged(nameof(Data));
             OnPropertyChanged(nameof(DataCount));
         }
 
+        private void UpdateFilteredData(TK[] newData)
+        {
+            if (Application.Current.Dispatcher.CheckAccess())
+            {
+                if (FilteredData == null)
+                {
+                    FilteredData = new ObservableCollection<TK>(newData);
+                    return;
+                }
+
+                var exists = FilteredData.ToArray();
+
+                var todelete = exists.Where(x => newData.All(n => _comparer.Equals(n, x) == false)).ToArray();
+                var toAdd = newData.Where(x => exists.All(n => _comparer.Equals(n, x) == false)).ToArray();
+
+                foreach (var d in todelete)
+                {
+                    FilteredData.Remove(d);
+                }
+
+                foreach (var a in toAdd)
+                {
+                    FilteredData.Add(a);
+                }
+            }
+            else
+            {
+                Application.Current.Dispatcher.Invoke(() => UpdateFilteredData(newData));
+            }
+        }
+
         protected abstract IEnumerable<TK> RegisterData(IEnumerable<T> initialData);
 
-        protected virtual IEnumerable<TK> FilterData(IEnumerable<TK> initialData)
+        protected virtual ObservableCollection<TK> FilterData(IEnumerable<TK> initialData)
         {
-            if (initialData == null) return initialData;
-            return initialData.Where(x => F(x, Filter));
+            if (initialData == null) return null;
+            return new ObservableCollection<TK>(initialData.Where(x => F(x, Filter)));
         }
 
         private bool F(TK element, string initialFilter)
@@ -96,6 +148,35 @@ namespace Arma3BE.Client.Infrastructure.Models
 
 
             return false;
+        }
+
+        private class CommandWrapper : ICommand
+        {
+            private readonly ICommand _command;
+            private readonly ServerMonitorBaseViewModel<T, TK> _viewModel;
+
+            public CommandWrapper(ICommand command, ServerMonitorBaseViewModel<T, TK> viewModel)
+            {
+                _command = command;
+                _viewModel = viewModel;
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                return _command.CanExecute(parameter);
+            }
+
+            public void Execute(object parameter)
+            {
+                _viewModel.WaitingForEvent = true;
+                _command.Execute(parameter);
+            }
+
+            public event EventHandler CanExecuteChanged
+            {
+                add { _command.CanExecuteChanged += value; }
+                remove { _command.CanExecuteChanged -= value; }
+            }
         }
     }
 }

@@ -17,12 +17,19 @@ namespace Arma3BE.Server.Mocks
 
         private void Tick(object state)
         {
-            MockMessage(players);
-            MockMessage(bans);
-            MockMessage(admins);
-            MockMessage(missions);
-            MockMessage(ChatMessage);
-            _timer?.Change(10000, Timeout.Infinite);
+            MockMessage($"(Global) bot: Текущее время {DateTime.UtcNow}");
+            MockMessage("RCon admin #4 (99.99.99.99:9999) logged in");
+            MockMessage("(Unknown) ToxaBes: тест для тима");
+
+            //MockMessage($"Player #12 sanya disconnected");
+            //MockMessage($"Player #1 Baz (be1a6a29ee0eb0851b586b2ed97ad110) has been kicked by BattlEye: Client not responding");
+            //MockMessage($"Player #19 Gektor (23d1b17ce5e26ce5f69f2bddbe781d9e) has been kicked by BattlEye: Admin Ban ([vosur][15.09.15 15:14:56] Sabotage)");
+            //MockMessage($"Player #6 Atamur (002da0e59f61916bc13ef5ef9bfee7e7) has been kicked by BattlEye: Admin Kick ([tim][22.11.15 15:19:44] Flud)");
+            //MockMessage($"Player #11 Iteron (46.98.121.255:2304) connected");
+            //MockMessage($"Verified GUID (e3807f6355d182b3ecb7eb7cf1540d40) of player #11 Iteron");
+            //MockMessage($"Player #21 TipsyOstrich - GUID: c7679b5ec67c557e479a2a5057083a26 (unverified)");
+
+            _timer?.Change(5000, Timeout.Infinite);
         }
 
 
@@ -48,6 +55,29 @@ namespace Arma3BE.Server.Mocks
 
         public int SendCommand(BattlEyeCommand command, string parameters = "")
         {
+            Task.Factory.StartNew(() =>
+            {
+                MockMessage($"(Global) bot: Sended command {command} with params {parameters}");
+
+                switch (command)
+                {
+                    case BattlEyeCommand.Players:
+                        var pl = GetPlayers();
+                        MockMessage(pl);
+                        break;
+                    case BattlEyeCommand.Bans:
+                        MockMessage(bans);
+                        break;
+                    case BattlEyeCommand.Missions:
+                        MockMessage(missions);
+                        break;
+                    case BattlEyeCommand.admins:
+                        MockMessage(admins);
+                        break;
+                }
+
+            });
+            
             return 0;
         }
 
@@ -70,7 +100,7 @@ namespace Arma3BE.Server.Mocks
             {
                 Connected = true;
                 OnBattlEyeConnected(new BattlEyeConnectEventArgs(default(BattlEyeLoginCredentials), BattlEyeConnectionResult.Success));
-            });
+            }).ConfigureAwait(false);
 
             return BattlEyeConnectionResult.Success;
         }
@@ -80,11 +110,20 @@ namespace Arma3BE.Server.Mocks
             get { return $"(Global) bot: Текущее время {DateTime.UtcNow}"; }
         }
 
+
+        private static string prev = null;
+        static string GetPlayers()
+        {
+            prev = prev == players2 ? players : players2;
+            return prev;
+        }
+
+
         private static string players =
             @"Players on server:
 [#] [IP Address]:[Port] [Ping] [GUID] [Name]
 --------------------------------------------------
-0   46.0.154.187:2304     140  2c65319280ac51b220aef667552a7f06(OK) Jonh Silver
+0   46.149.73.255:2304     140  2c65319280ac51b220aef667552a7f06(OK) 0dmin
 1   195.64.206.232:50652  205  5b0f07ce2400706dc9b3c7519beb5372(OK) SEGITO
 2   81.20.205.242:17319   105  80f14b5add6cad33d5efe876cead577b(OK) Shinku
 3   88.214.186.177:62404  435  2b3a3b6556a8c55dbb982de15f936a04(OK) portugalec
@@ -101,6 +140,27 @@ namespace Arma3BE.Server.Mocks
 15  128.71.57.216:2304    105  1abb90bd84d47007f1ea369ea1d2f15c(OK) rinat
 17  95.56.214.138:11069   205  ac93a589cc1b5b89396caa6f322fb2f3(OK) GhostWarrior
 (16 players in total)";
+
+
+        private static string players2 =
+            @"Players on server:
+[#] [IP Address]:[Port] [Ping] [GUID] [Name]
+--------------------------------------------------
+0   46.149.73.255:2304     140  2c65319280ac51b220aef667552a7f06(OK) 0dmin
+3   88.214.186.177:62404  435  2b3a3b6556a8c55dbb982de15f936a04(OK) portugalec
+4   212.3.137.202:52971   105  2bae76795dc6dde5daf4681946530dcf(OK) DAN
+5   78.60.57.242:2304     205  44ecfad5812b18f1cb6fce2ba0656de3(OK) Xenus
+6   5.167.178.186:2304    105  ebabb77436d464d69f34741666f2cff3(OK) Free Style
+7   83.149.44.204:63055   205  8fd0670162548982c2b780ba0397efeb(OK) Alex
+8   128.71.243.56:2304    112  e0ebb4d1c80afc7d4063ace915e4a1b0(OK) FunnyBlooD
+9   31.8.2.185:19945      265  bb70b1a929a5c20cb4e4ee04cb3f31da(OK) Renegade
+10  37.232.159.82:2354    105  20446897121fafa82c1069ed07820f27(OK) Максим
+11  176.213.109.193:2304  134  9d255d146ad8dc7a4aef240f828b1fb2(OK) ГНК
+12  90.226.223.35:2304    123  6696c4be65554dd945475f3746bbcfa4(OK) Cheeki Breeki
+14  78.60.254.40:2304     123  a0e3a667e2df374b2bcb153f83eaa172(OK) RomaFreemen417
+15  128.71.57.216:2304    105  1abb90bd84d47007f1ea369ea1d2f15c(OK) rinat
+17  95.56.214.138:11069   205  ac93a589cc1b5b89396caa6f322fb2f3(OK) GhostWarrior
+(14 players in total)";
 
         private static string admins =
             @"Connected RCon admins:

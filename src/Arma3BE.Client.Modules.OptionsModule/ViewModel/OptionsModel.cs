@@ -25,13 +25,57 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
             {
                 Servers = servierInfoRepository.GetServerInfo().Select(x => new ServerInfoModel(x)).ToList();
             }
+
+            using (var dc = new ReasonRepository())
+            {
+                BanReasons = dc.GetBanReasons().Select(x => new ReasonEdit() { Text = x }).ToList();
+                KickReasons = dc.GetKickReasons().Select(x => new ReasonEdit() { Text = x }).ToList();
+                BanTimes =
+                    dc.GetBanTimes().Select(x => new BanTimeEdit() { Text = x.Title, Minutes = x.TimeInMinutes }).ToList();
+            }
+
+            var zones = TimeZoneInfo.GetSystemTimeZones().ToArray();
+            for (var i = 0; i < zones.Length; i++)
+            {
+                if (zones[i].Id == Settings.TimeZoneInfo.Id)
+                {
+                    zones[i] = Settings.TimeZoneInfo;
+                }
+            }
+
+            TimeZones = zones;
         }
 
         public List<ServerInfoModel> Servers { get; set; }
 
+        public class ReasonEdit
+        {
+            public string Text { get; set; }
+        }
+
+        public class BanTimeEdit
+        {
+            public string Text { get; set; }
+            public int Minutes { get; set; }
+        }
+
+        public List<ReasonEdit> BanReasons { get; set; }
+        public List<ReasonEdit> KickReasons { get; set; }
+        public List<BanTimeEdit> BanTimes { get; set; }
+
+
         public SettingsStore Settings
         {
-            get { return _settingsStore ?? (_settingsStore = SettingsStore.Instance); }
+            get
+            {
+                return _settingsStore ?? (_settingsStore = new SettingsStore()
+                       {
+                           TimeZoneInfo = SettingsStore.Instance.TimeZoneInfo,
+                           AdminName = SettingsStore.Instance.AdminName,
+                           BansUpdateSeconds = SettingsStore.Instance.BansUpdateSeconds,
+                           PlayersUpdateSeconds = SettingsStore.Instance.PlayersUpdateSeconds,
+                       });
+            }
             set { _settingsStore = value; }
         }
 
@@ -40,12 +84,18 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
             get { return new List<Type> { typeof(ServerInfoModel) }; }
         }
 
+        public IEnumerable<TimeZoneInfo> TimeZones { get; }
+
         public void Save()
         {
             try
             {
-                Settings.AdminName = Settings.AdminName.Replace(" ", string.Empty);
-                Settings.Save();
+                var settings = SettingsStore.Instance;
+                settings.TimeZoneInfo = Settings.TimeZoneInfo;
+                settings.AdminName = Settings.AdminName.Replace(" ", string.Empty);
+                settings.BansUpdateSeconds = Settings.BansUpdateSeconds;
+                settings.PlayersUpdateSeconds = Settings.PlayersUpdateSeconds;
+                settings.Save();
 
                 using (var servierInfoRepository = new ServerInfoRepository())
                 {
@@ -69,7 +119,15 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
                     }
                 }
 
+                using (var dc = new ReasonRepository())
+                {
+                    dc.UpdateBanReasons(BanReasons.Select(x => x.Text).Where(x=>string.IsNullOrEmpty(x) == false).Distinct().ToArray());
+                    dc.UpdateBanTimes(BanTimes.Where(x => string.IsNullOrEmpty(x.Text) == false).Select(x => new BanTime() { TimeInMinutes = x.Minutes, Title = x.Text }).ToArray());
+                    dc.UpdateKickReasons(KickReasons.Select(x => x.Text).Where(x => string.IsNullOrEmpty(x) == false).Distinct().ToArray());
+                }
+
                 _eventAggregator.GetEvent<BEServersChangedEvent>().Publish(null);
+                _eventAggregator.GetEvent<SettingsChangedEvent>().Publish(SettingsStore.Instance);
             }
             catch (Exception e)
             {
@@ -91,6 +149,7 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
             {
                 Host = _info.Host;
                 Port = _info.Port;
+                SteamPort = _info.SteamPort;
                 Password = _info.Password;
                 Name = _info.Name;
             }
@@ -115,6 +174,12 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
         {
             get { return _info.Port; }
             set { _info.Port = value; }
+        }
+
+        public int SteamPort
+        {
+            get { return _info.SteamPort; }
+            set { _info.SteamPort = value; }
         }
 
         //[Required]

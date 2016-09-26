@@ -14,11 +14,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
+using Arma3BE.Client.Infrastructure.Extensions;
 using Player = Arma3BE.Server.Models.Player;
 
 namespace Arma3BE.Client.Modules.ChatModule.Models
 {
-    public class ServerMonitorChatViewModel : ViewModelBase, IServerMonitorChatViewModel
+    public class ServerMonitorChatViewModel : ViewModelBase
     {
         private readonly IEventAggregator _eventAggregator;
         private readonly ChatHelper _chatHelper;
@@ -41,14 +42,14 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             _chatHelper = new ChatHelper(_log, _serverId);
 
             _eventAggregator.GetEvent<BEMessageEvent<BEChatMessage>>()
-                .Subscribe(BeServerChatMessageHandler);
+                .Subscribe(BeServerChatMessageHandler, ThreadOption.UIThread);
 
             _eventAggregator.GetEvent<BEMessageEvent<BEAdminLogMessage>>()
-                .Subscribe(_beServer_PlayerLog);
+                .Subscribe(_beServer_PlayerLog, ThreadOption.UIThread);
             _eventAggregator.GetEvent<BEMessageEvent<BEPlayerLogMessage>>()
-                .Subscribe(_beServer_PlayerLog);
+                .Subscribe(_beServer_PlayerLog, ThreadOption.UIThread);
             _eventAggregator.GetEvent<BEMessageEvent<BEBanLogMessage>>()
-                .Subscribe(_beServer_PlayerLog);
+                .Subscribe(_beServer_PlayerLog, ThreadOption.UIThread);
 
             _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Player>>>()
                 .Subscribe(_beServer_PlayerHandler);
@@ -60,7 +61,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             ShowHistoryCommand = new ActionCommand(() =>
             {
                 var model = new ChatHistoryViewModel(_serverId);
-                model.StartDate = DateTime.UtcNow.AddHours(-5);
+                model.StartDate = DateTime.UtcNow.UtcToLocalFromSettings().AddHours(-5);
                 var wnd = new ChatHistory(model);
                 wnd.Show();
                 wnd.Activate();
@@ -241,6 +242,9 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
                     break;
                 case ChatMessage.MessageType.Vehicle:
                     color = Color.FromRgb(155, 115, 0);
+                    break;
+                case ChatMessage.MessageType.NonCommon:
+                    color = Color.FromRgb(89, 173, 10);
                     break;
                 default:
                     break;

@@ -16,7 +16,8 @@ namespace Arma3BE.Server.Models
             Global,
             Group,
             Command,
-            RCon
+            RCon,
+            NonCommon
         }
 
         private bool? _isImportantMessage = null;
@@ -39,6 +40,7 @@ namespace Arma3BE.Server.Models
                 if (Message.StartsWith("(Group)")) return MessageType.Group;
                 if (Message.StartsWith("(Command)")) return MessageType.Command;
                 if (Message.StartsWith("(Direct)")) return MessageType.Direct;
+                if (Message.StartsWith("(Unknown)")) return MessageType.NonCommon;
                 if (Message.StartsWith("RCon") &&
                     !Message.Contains("logged in") && !Message.Contains("Connection Lost!")) return MessageType.RCon;
 

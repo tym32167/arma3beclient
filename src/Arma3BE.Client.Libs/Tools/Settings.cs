@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Data.Entity.Migrations;
+using System.Linq;
+using Arma3BEClient.Common.Extensions;
 using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
 
@@ -7,28 +10,28 @@ namespace Arma3BEClient.Libs.Tools
     public class SettingsStore
     {
         private const int AdminNameKey = 1;
-        private static SettingsStore _instance;
-        public string AdminName { get; set; }
+        private const int TimeZoneKey = 2;
+        private const int PlayersUpdateKey = 3;
+        private const int BansUpdateKey = 4;
 
-        public static SettingsStore Instance
-        {
-            get { return _instance ?? (_instance = Load()); }
-            private set { _instance = value; }
-        }
+        public string AdminName { get; set; }
+        public TimeZoneInfo TimeZoneInfo { get; set; }
+        public int PlayersUpdateSeconds { get; set; }
+        public int BansUpdateSeconds { get; set; }
+
+        private static SettingsStore _instance;
+        public static SettingsStore Instance => _instance ?? (_instance = Load());
 
         public void Save()
         {
             using (var context = new Arma3BeClientContext())
             {
-                var aname = context.Settings.FirstOrDefault(x => x.Id == AdminNameKey);
-                if (aname == null)
-                {
-                    context.Settings.Add(new Settings {Id = AdminNameKey, Value = AdminName});
-                }
-                else
-                {
-                    aname.Value = AdminName;
-                }
+                context.Settings.AddOrUpdate(
+                    new Settings {Id = AdminNameKey, Value = AdminName}, 
+                    new Settings {Id = TimeZoneKey, Value = TimeZoneInfo?.Id},
+                    new Settings { Id = PlayersUpdateKey, Value = PlayersUpdateSeconds.ToString() },
+                    new Settings { Id = BansUpdateKey, Value = BansUpdateSeconds.ToString() }
+                    );
 
                 context.SaveChanges();
                 _instance = null;
@@ -39,23 +42,23 @@ namespace Arma3BEClient.Libs.Tools
         {
             using (var context = new Arma3BeClientContext())
             {
+                var settings = context.Settings.ToArray();
+
                 var ss = new SettingsStore();
+                ss.AdminName = settings.FirstOrDefault(x => x.Id == AdminNameKey)?.Value ?? "Admin";
 
-                var needSave = false;
-                var aname = context.Settings.FirstOrDefault(x => x.Id == AdminNameKey);
-                if (aname == null)
+                ss.PlayersUpdateSeconds = (settings.FirstOrDefault(x => x.Id == PlayersUpdateKey)?.Value).FromString(5);
+                ss.BansUpdateSeconds = (settings.FirstOrDefault(x => x.Id == BansUpdateKey)?.Value).FromString(5);
+                
+                try
                 {
-                    var def = "Admin";
-                    context.Settings.Add(new Settings {Id = AdminNameKey, Value = def});
-                    needSave = true;
-                    ss.AdminName = def;
+                    var zone = settings.FirstOrDefault(x => x.Id == TimeZoneKey)?.Value;
+                    ss.TimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(zone);
                 }
-                else
+                catch (Exception)
                 {
-                    ss.AdminName = aname.Value;
+                    ss.TimeZoneInfo = TimeZoneInfo.Local;
                 }
-
-                if (needSave) context.SaveChanges();
 
                 return ss;
             }

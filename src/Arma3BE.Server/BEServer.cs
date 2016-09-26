@@ -55,13 +55,7 @@ namespace Arma3BE.Server
         public event EventHandler ConnectHandler;
         public event EventHandler ConnectingHandler;
         public event EventHandler DisconnectHandler;
-
-
-        //public Task SendCommandAsync(CommandType type, string parameters = null)
-        //{
-        //    return Task.Run(() => SendCommand(type, parameters));
-        //}
-
+        public event EventHandler MessageHandler;
 
         public void SendCommand(CommandType type, string parameters = null)
         {
@@ -222,6 +216,12 @@ namespace Arma3BE.Server
             handler?.Invoke(this, new BEClientEventArgs<IEnumerable<Ban>>(e));
         }
 
+        private void OnMessageHandler()
+        {
+            var handler = MessageHandler;
+            handler?.Invoke(this, EventArgs.Empty);
+        }
+
         private void OnDisconnectHandler()
         {
             var handler = DisconnectHandler;
@@ -256,6 +256,7 @@ namespace Arma3BE.Server
                 lock (_lock)
                 {
                     ProcessMessage(message);
+                    OnMessageHandler();
                 }
             }
             catch (Exception e)

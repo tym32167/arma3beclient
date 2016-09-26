@@ -4,6 +4,7 @@ using Arma3BE.Client.Modules.BanModule.Models;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using Prism.Regions;
 using Xceed.Wpf.DataGrid;
 
 namespace Arma3BE.Client.Modules.BanModule.Grids
@@ -11,6 +12,7 @@ namespace Arma3BE.Client.Modules.BanModule.Grids
     /// <summary>
     ///     Interaction logic for BansControl.xaml
     /// </summary>
+    [ViewSortHint("0200")]
     public partial class BansControl : UserControl
     {
         public BansControl()
@@ -82,18 +84,10 @@ namespace Arma3BE.Client.Modules.BanModule.Grids
 
             if (si != null)
             {
+                Model.ShowPlayerInfo(si);
                 //_playerViewService.ShowDialog(si.GuidIp);
             }
         }
-
-        private void PlayerInfo2_Click(object sender, RoutedEventArgs e)
-        {
-            var si = dg2.SelectedItem as BanView;
-
-            if (si != null)
-            {
-                // _playerViewService.ShowDialog(si.GuidIp);
-            }
-        }
+       
     }
 }

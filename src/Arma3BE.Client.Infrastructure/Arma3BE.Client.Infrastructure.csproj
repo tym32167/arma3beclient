@@ -35,6 +35,18 @@
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Practices.Unity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.RegistrationByConvention, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="Prism, Version=6.1.0.0, Culture=neutral, PublicKeyToken=91a96d2a154366d8, processorArchitecture=MSIL">
@@ -81,15 +93,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Commands\ActionCommand.cs" />
     <Compile Include="Commands\BaseCommand.cs" />
     <Compile Include="Contracts\DisposableUserControl.cs" />
     <Compile Include="Contracts\DisposableViewModelBase.cs" />
+    <Compile Include="Converters\BisyBoolToColorConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter .cs" />
     <Compile Include="Converters\BoolToVisibilityConverterInverse.cs" />
     <Compile Include="Converters\BrushColorConverter.cs" />
     <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Converters\PlayerNumberToColorConverter.cs" />
+    <Compile Include="Converters\UtcToLocalDateTimeConverter.cs" />
+    <Compile Include="Data\IBasicRepository.cs" />
     <Compile Include="Events\BanUserEvent.cs" />
     <Compile Include="Events\BEServersChangedEvent.cs" />
     <Compile Include="Events\BE\BEAdminLogMessage.cs" />
@@ -103,29 +121,24 @@
     <Compile Include="Events\BE\BEPlayerLogMessage.cs" />
     <Compile Include="Events\BE\CloseServerEvent.cs" />
     <Compile Include="Events\BE\RunServerEvent.cs" />
-    <Compile Include="Events\CreateViewEvent.cs" />
     <Compile Include="Events\KickUserEvent.cs" />
+    <Compile Include="Events\LoggerMessageEvent.cs" />
     <Compile Include="Events\Models\BanUserModel.cs" />
-    <Compile Include="Events\Models\CreateViewModel.cs" />
     <Compile Include="Events\Models\KickUserModel.cs" />
+    <Compile Include="Events\Models\LoggerMessage.cs" />
     <Compile Include="Events\Models\ShowUserModel.cs" />
+    <Compile Include="Events\SettingsChangedEvent.cs" />
     <Compile Include="Events\ShowOptionsEvent.cs" />
     <Compile Include="Events\ShowUserInfoEvent.cs" />
+    <Compile Include="Extensions\DateTimeExtension.cs" />
     <Compile Include="Extensions\GridHelper.cs" />
     <Compile Include="Helpers\IBanHelper.cs" />
+    <Compile Include="Helpers\ServerTabViewHelper.cs" />
     <Compile Include="Helpers\StateHelper.cs" />
     <Compile Include="Helpers\Views\BanView.cs" />
     <Compile Include="IIpService.cs" />
-    <Compile Include="Models\IPlayerListModelView.cs" />
-    <Compile Include="Models\IServerMonitorAdminsViewModel.cs" />
-    <Compile Include="Models\IServerMonitorBansViewModel.cs" />
-    <Compile Include="Models\IServerMonitorChatViewModel.cs" />
-    <Compile Include="Models\IServerMonitorManageServerViewModel.cs" />
-    <Compile Include="Models\IServerMonitorPlayerViewModel.cs" />
-    <Compile Include="Models\IServerMonitorSteamQueryViewModel.cs" />
     <Compile Include="Models\ServerMonitorBaseViewModel.cs" />
     <Compile Include="Models\ViewModelBase.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegionNames.cs" />
   </ItemGroup>
   <ItemGroup>

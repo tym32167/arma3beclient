@@ -1,11 +1,12 @@
-﻿using Arma3BE.Client.Infrastructure.Models;
-using Arma3BE.Client.Modules.BanModule.Helpers;
-using Arma3BE.Server.Abstract;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using Arma3BE.Client.Infrastructure.Helpers;
+using Arma3BE.Client.Infrastructure.Models;
+using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Repositories;
 
 namespace Arma3BE.Client.Modules.BanModule.Boxes
 {
@@ -16,23 +17,13 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
     {
         private readonly BanPlayerViewModel _model;
 
-        public BanPlayerWindow(Guid serverId, BanHelper banHelper, string playerGuid, bool isOnline, string playerName,
+        public BanPlayerWindow(Guid? serverId, IBanHelper banHelper, string playerGuid, bool isOnline, string playerName,
             string playerNum)
         {
             InitializeComponent();
             _model = new BanPlayerViewModel(serverId, playerGuid, isOnline, banHelper, playerName, playerNum);
 
             tbGuid.IsEnabled = string.IsNullOrEmpty(playerGuid);
-
-            var tsdata = new List<TimeSpan>
-            {
-                TimeSpan.FromDays(0),
-                TimeSpan.FromDays(1),
-                TimeSpan.FromDays(7),
-                TimeSpan.FromDays(30)
-            };
-
-            ts.ItemsSource = tsdata;
 
             DataContext = _model;
         }
@@ -55,26 +46,37 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
     public class BanPlayerViewModel : ViewModelBase
     {
         private readonly bool _isOnline;
-        private readonly BanHelper _playerHelper;
+        private readonly IBanHelper _playerHelper;
         private readonly string _playerNum;
         private long? _minutes;
-        private readonly Guid _serverId;
         private string _playerGuid;
         private string _playerName;
         private string _reason;
-        private TimeSpan _timeSpan;
+        private BanFullTime _timeSpan;
 
-        public BanPlayerViewModel(Guid serverId, string playerGuid, bool isOnline, BanHelper playerHelper, string playerName,
+        public BanPlayerViewModel(Guid? serverId, string playerGuid, bool isOnline, IBanHelper playerHelper,
+            string playerName,
             string playerNum)
         {
-            _serverId = serverId;
             _playerGuid = playerGuid;
             _isOnline = isOnline;
             _playerHelper = playerHelper;
             _playerName = playerName;
             _playerNum = playerNum;
             _minutes = 0;
+
+            using (var repo = new ServerInfoRepository())
+                Servers = repo.GetActiveServerInfo().OrderBy(x => x.Name).ToList();
+
+            SelectedServers = new ObservableCollection<ServerInfo>();
+
+            if (serverId.HasValue)
+                SelectedServers.AddRange(Servers.Where(s => s.Id == serverId.Value));
         }
+
+        public List<ServerInfo> Servers { get; }
+
+        public ObservableCollection<ServerInfo> SelectedServers { get; }
 
         public string PlayerName
         {
@@ -92,13 +94,11 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             {
                 try
                 {
-                    var str =
-                        ConfigurationManager.AppSettings["Ban_reasons"].Split('|')
-                            .Where(x => !string.IsNullOrEmpty(x))
-                            .Select(x => x.Trim())
-                            .ToArray();
-
-                    return str;
+                    using (var repo = new ReasonRepository())
+                    {
+                        var str = repo.GetBanReasons();
+                        return str;
+                    }
                 }
                 catch (Exception)
                 {
@@ -106,6 +106,31 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
                 }
             }
         }
+
+        public IEnumerable<BanFullTime> BanTimes
+        {
+            get
+            {
+                try
+                {
+                    using (var repo = new ReasonRepository())
+                    {
+                        var str = repo.GetBanTimes().Select(x => new BanFullTime
+                        {
+                            Text = x.Title,
+                            Period = System.TimeSpan.FromMinutes(x.TimeInMinutes),
+                            PeriodMinutes = x.TimeInMinutes
+                        }).ToArray();
+                        return str;
+                    }
+                }
+                catch (Exception)
+                {
+                    return Enumerable.Empty<BanFullTime>();
+                }
+            }
+        }
+
 
         public string PlayerGuid
         {
@@ -137,14 +162,14 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             }
         }
 
-        public TimeSpan TimeSpan
+        public BanFullTime TimeSpan
         {
             get { return _timeSpan; }
             set
             {
                 _timeSpan = value;
                 OnPropertyChanged();
-                Minutes = (long)_timeSpan.TotalMinutes;
+                Minutes = _timeSpan.PeriodMinutes;
             }
         }
 
@@ -152,10 +177,25 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
         {
             if (Minutes != null)
             {
-                if (_isOnline)
-                    _playerHelper.BanGuidOnline(_serverId, _playerNum, _playerGuid, Reason, Minutes.Value);
-                else
-                    _playerHelper.BanGUIDOffline(_serverId, _playerGuid, Reason, Minutes.Value);
+                foreach (var selectedServer in SelectedServers)
+                {
+                    if (_isOnline)
+                        _playerHelper.BanGuidOnline(selectedServer.Id, _playerNum, _playerGuid, Reason, Minutes.Value);
+                    else
+                        _playerHelper.BanGUIDOffline(selectedServer.Id, _playerGuid, Reason, Minutes.Value);
+                }
+            }
+        }
+
+        public class BanFullTime
+        {
+            public string Text { get; set; }
+            public TimeSpan Period { get; set; }
+            public int PeriodMinutes { get; set; }
+
+            public string Display
+            {
+                get { return $"{Text} ({Period})"; }
             }
         }
     }

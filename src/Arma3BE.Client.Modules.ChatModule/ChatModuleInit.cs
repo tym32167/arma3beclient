@@ -1,24 +1,34 @@
-﻿using Arma3BE.Client.Infrastructure.Models;
+﻿using Arma3BE.Client.Infrastructure;
+using Arma3BE.Client.Infrastructure.Helpers;
+using Arma3BE.Client.Modules.ChatModule.Chat;
 using Arma3BE.Client.Modules.ChatModule.Models;
+using Arma3BEClient.Libs.ModelCompact;
 using Microsoft.Practices.Unity;
-using Prism.Events;
 using Prism.Modularity;
+using Prism.Regions;
 
 namespace Arma3BE.Client.Modules.ChatModule
 {
     public class ChatModuleInit : IModule
     {
         private readonly IUnityContainer _container;
+        private readonly IRegionManager _regionManager;
 
-        public ChatModuleInit(IUnityContainer container)
+        public ChatModuleInit(IUnityContainer container, IRegionManager regionManager)
         {
             _container = container;
+            _regionManager = regionManager;
         }
 
         public void Initialize()
         {
-            _container.RegisterInstance(new ChatService(_container.Resolve<IEventAggregator>()));
-            _container.RegisterType<IServerMonitorChatViewModel, ServerMonitorChatViewModel>();
+            _regionManager.RegisterViewWithRegion(RegionNames.ServerSidePartRegion, CreateView);
+        }
+
+        private object CreateView()
+        {
+            return ServerTabViewHelper.RegisterView<ChatControl, ServerInfo, ServerMonitorChatViewModel>(_container,
+                "serverInfo");
         }
     }
 }

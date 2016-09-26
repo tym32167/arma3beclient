@@ -113,7 +113,6 @@
     <Compile Include="Grids\BansControl.xaml.cs">
       <DependentUpon>BansControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\BanHelper.cs" />
     <Compile Include="Models\ServerMonitorBansViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

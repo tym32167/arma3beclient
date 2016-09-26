@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Windows;
+using Arma3BEClient.Libs.Repositories;
 
 namespace Arma3BE.Client.Modules.BanModule.Boxes
 {
@@ -72,13 +73,11 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             {
                 try
                 {
-                    var str =
-                        ConfigurationManager.AppSettings["Kick_reasons"].Split('|')
-                            .Where(x => !string.IsNullOrEmpty(x))
-                            .Select(x => x.Trim())
-                            .ToArray();
-
-                    return str;
+                    using (var repo = new ReasonRepository())
+                    {
+                        var str = repo.GetKickReasons();
+                        return str;
+                    }
                 }
                 catch (Exception)
                 {

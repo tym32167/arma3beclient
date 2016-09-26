@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using Arma3BE.Client.Infrastructure.Extensions;
 
 namespace Arma3BE.Client.Modules.ChatModule.Chat
 {
@@ -26,15 +27,12 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
 
         private void _model_ChatMessageEventHandler(object sender, ServerMonitorChatViewModelEventArgs e)
         {
-            Dispatcher.Invoke(() =>
-            {
-                if (!Model.EnableChat) return;
-                var type = e.Message.Type;
-                if (type != ChatMessage.MessageType.Unknown)
-                    AppendText(_paragraph, ChatScrollViewer, e.Message);
-                else
-                    AppendText(msgConsole, ConsoleScrollViewer, e.Message);
-            });
+            if (!Model.EnableChat) return;
+            var type = e.Message.Type;
+            if (type != ChatMessage.MessageType.Unknown)
+                AppendText(_paragraph, ChatScrollViewer, e.Message);
+            else
+                AppendText(msgConsole, ConsoleScrollViewer, e.Message);
         }
 
         private void SendMessage(object sender, RoutedEventArgs e)
@@ -61,7 +59,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
 
         public void AppendText(Paragraph p, ScrollViewer scroll, ChatMessage message)
         {
-            var text = $"[ {message.Date:HH:mm:ss} ]  {message.Message}\n";
+            var text = $"[ {message.Date.UtcToLocalFromSettings():HH:mm:ss} ]  {message.Message}\n";
             var color = ServerMonitorChatViewModel.GetMessageColor(message);
 
             var brush = new SolidColorBrush(color);
@@ -79,7 +77,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
 
         public void AppendText(TextBox block, ScrollViewer scroll, MessageBase message)
         {
-            var text = $"[ {message.Date:HH:mm:ss} ]  {message.Message}\n";
+            var text = $"[ {message.Date.UtcToLocalFromSettings():HH:mm:ss} ]  {message.Message}\n";
             block.Text += text;
 
             if (Model.AutoScroll)
@@ -88,8 +86,12 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
 
         private void ToolBar_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            Model.ChatMessageEventHandler += _model_ChatMessageEventHandler;
-            Model.LogMessageEventHandler += Model_LogMessageEventHandler;
+            var model = e.NewValue as ServerMonitorChatViewModel;
+            if (model != null)
+            {
+                model.ChatMessageEventHandler += _model_ChatMessageEventHandler;
+                model.LogMessageEventHandler += Model_LogMessageEventHandler;
+            }
         }
 
         private void Model_LogMessageEventHandler(object sender, ServerMonitorLogViewModelEventArgs e)

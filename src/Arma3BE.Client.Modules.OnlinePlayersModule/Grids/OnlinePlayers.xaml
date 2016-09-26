@@ -5,9 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:converters="clr-namespace:Arma3BE.Client.Infrastructure.Converters;assembly=Arma3BE.Client.Infrastructure"
 
              mc:Ignorable="d">
 
+    <UserControl.Resources>
+        <converters:BisyBoolToColorConverter x:Uid="local:BisyBoolToColorConverter"
+                                                     x:Key="BisyBoolToColorConverter" />
+    </UserControl.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -17,7 +22,9 @@
 
 
         <ToolBar Height="30">
-            <Button Command="{Binding RefreshCommand, Mode=OneWay}">
+            <Button Command="{Binding RefreshCommand, Mode=OneWay}" 
+                    BorderThickness="1" BorderBrush="{Binding WaitingForEvent, Mode=OneWay, Converter={StaticResource BisyBoolToColorConverter}}"
+                    >
                 <Image Source="{StaticResource refresh_icon}" Height="16" Width="16" />
             </Button>
 

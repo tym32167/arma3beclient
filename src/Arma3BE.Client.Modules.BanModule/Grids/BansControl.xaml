@@ -4,7 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
+             xmlns:converters="clr-namespace:Arma3BE.Client.Infrastructure.Converters;assembly=Arma3BE.Client.Infrastructure"
              mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:BisyBoolToColorConverter x:Uid="local:BisyBoolToColorConverter"
+                                                     x:Key="BisyBoolToColorConverter" />
+    </UserControl.Resources>
     <Grid>
 
         <Grid.RowDefinitions>
@@ -13,7 +18,8 @@
         </Grid.RowDefinitions>
 
         <ToolBar Height="30">
-            <Button Command="{Binding RefreshCommand, Mode=OneWay}">
+            <Button Command="{Binding RefreshCommand, Mode=OneWay}"
+                    BorderThickness="1" BorderBrush="{Binding WaitingForEvent, Mode=OneWay, Converter={StaticResource BisyBoolToColorConverter}}">
                 <Image x:Uid="Image_1" Source="{StaticResource ResourceKey=refresh_icon}" Height="16" Width="16" />
             </Button>
 
@@ -75,7 +81,7 @@
 
                     <xcdg:DataGridControl.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Header="Player Info" Click="PlayerInfo2_Click" />
+                            <MenuItem Header="Player Info" Click="PlayerInfo_Click" />
                         </ContextMenu>
                     </xcdg:DataGridControl.ContextMenu>
 

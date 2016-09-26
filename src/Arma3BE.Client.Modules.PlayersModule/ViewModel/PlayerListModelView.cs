@@ -1,30 +1,29 @@
-﻿using Arma3BE.Client.Infrastructure.Commands;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Input;
+using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Events.Models;
+using Arma3BE.Client.Infrastructure.Extensions;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.PlayersModule.Models;
-using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using Prism.Commands;
 using Prism.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Input;
 
 namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
 {
-    public class PlayerListModelView : ViewModelBase, IPlayerListModelView
+    public class PlayerListModelView : ViewModelBase, ITitledItem
     {
-        private readonly Guid _serverId;
         private readonly IEventAggregator _eventAggregator;
+        private readonly IPlayerRepository _playerRepository;
         private int _playerCount;
         private ICommand _refreshCommand;
 
-        public PlayerListModelView(ServerInfo serverInfo, IEventAggregator eventAggregator)
+        public PlayerListModelView(IEventAggregator eventAggregator, IPlayerRepository playerRepository)
         {
-            _serverId = serverInfo.Id;
             _eventAggregator = eventAggregator;
+            _playerRepository = playerRepository;
             SelectedOptions = "Name,IP,Guid,Comment";
 
             BanCommand = new ActionCommand(ShowBan);
@@ -32,29 +31,6 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
         }
 
         public PlayerView SelectedPlayer { get; set; }
-
-        private void ShowBan()
-        {
-            var local = SelectedPlayer;
-            if (local != null)
-            {
-                _eventAggregator.GetEvent<BanUserEvent>().Publish(new BanUserModel(_serverId, local.Guid, true, local.Name, null));
-            }
-        }
-
-        private bool CanShowDialog()
-        {
-            return SelectedPlayer != null;
-        }
-
-        private void PlayerInfoDialog()
-        {
-            var local = SelectedPlayer;
-            if (local != null)
-            {
-                _eventAggregator.GetEvent<ShowUserInfoEvent>().Publish(new ShowUserModel(local.Guid));
-            }
-        }
 
         public ICommand BanCommand { get; set; }
         public ICommand PlayerInfoCommand { get; set; }
@@ -97,10 +73,32 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
             }
         }
 
+        public static string StaticTitle = "Players";
+        public string Title => StaticTitle;
+
+        private void ShowBan()
+        {
+            var local = SelectedPlayer;
+            if (local != null)
+                _eventAggregator.GetEvent<BanUserEvent>()
+                    .Publish(new BanUserModel(null, local.Guid, false, local.Name, null));
+        }
+
+        private bool CanShowDialog()
+        {
+            return SelectedPlayer != null;
+        }
+
+        private void PlayerInfoDialog()
+        {
+            var local = SelectedPlayer;
+            if (local != null)
+                _eventAggregator.GetEvent<ShowUserInfoEvent>().Publish(new ShowUserModel(local.Guid));
+        }
+
         public void Refresh()
         {
-            using (var repo = PlayerRepositoryFactory.Create())
-            {
+            
                 var opts = SelectedOptions.Split(',');
 
                 var searchName = opts.Contains("Name");
@@ -113,9 +111,8 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
                 IEnumerable<PlayerDto> result;
 
                 if (!string.IsNullOrEmpty(Filter))
-                {
-                    result = repo.GetPlayers(x =>
-                        (searchGuid && x.GUID == Filter)
+                    result = _playerRepository.GetPlayers(x =>
+                        (searchGuid && (x.GUID == Filter))
                         ||
                         (searchComment && x.Comment.Contains(Filter))
                         ||
@@ -126,11 +123,8 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
                         (searchIP && x.LastIp.Contains(Filter))
                         ||
                         (searchLastNames && x.PlayerHistory.Any(y => y.Name.Contains(Filter))));
-                }
                 else
-                {
-                    result = repo.GetAllPlayers();
-                }
+                    result = _playerRepository.GetAllPlayers();
 
                 var r = result.Select(x => new PlayerView
                 {
@@ -142,10 +136,15 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
                     LastSeen = x.LastSeen
                 }).OrderBy(x => x.Name).ToList();
 
+                foreach (var playerView in r)
+                {
+                    playerView.LastSeen = playerView.LastSeen.UtcToLocalFromSettings();
+                }
+
                 PlayerCount = r.Count;
 
                 Players = r;
-            }
+         
 
             OnPropertyChanged(nameof(Players));
         }

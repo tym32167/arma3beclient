@@ -1,5 +1,5 @@
-﻿using System;
-using Arma3BE.Client.Infrastructure.Models;
+﻿using Arma3BE.Client.Infrastructure.Models;
+using System;
 
 namespace Arma3BE.Client.Infrastructure.Contracts
 {
@@ -40,7 +40,7 @@ namespace Arma3BE.Client.Infrastructure.Contracts
         }
 
         // TODO: do not forget about cleaning!
-        public void Cleanup()
+        public virtual void Cleanup()
         {
             //base.Cleanup();
             Dispose();

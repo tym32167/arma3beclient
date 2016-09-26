@@ -20,34 +20,10 @@ namespace Arma3BE.Client.Modules.PlayersModule
 
             var eventAggregator = _container.Resolve<IEventAggregator>();
 
-            eventAggregator.GetEvent<CreateViewEvent<IPlayerListModelView>>().Subscribe(e =>
-            {
-                CreateView(e.Parent, e.ViewModel);
-            });
-
             eventAggregator.GetEvent<ShowUserInfoEvent>().Subscribe(model =>
             {
                 ShowDialog(model.UserGuid);
             });
-        }
-
-        private void CreateView(ContentControl parent, IPlayerListModelView model)
-        {
-            var dispatcher = Application.Current.Dispatcher;
-
-            if (dispatcher.CheckAccess())
-            {
-                FrameworkElement control = new PlayersControl();
-                control.DataContext = model;
-                parent.Content = control;
-            }
-            else
-            {
-                dispatcher.Invoke(() =>
-                {
-                    CreateView(parent, model);
-                });
-            }
         }
 
         private void ShowDialog(string userGuid)

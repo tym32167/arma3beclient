@@ -26,38 +26,44 @@ namespace Arma3BE.Client.Modules.BanModule
 
             _eventAggregator.GetEvent<KickUserEvent>()
                 .Subscribe(e => ShowKickDialog(e.ServerId, e.PlayerNum, e.PlayerGuid, e.PlayerName));
-
-            _eventAggregator.GetEvent<CreateViewEvent<IServerMonitorBansViewModel>>().Subscribe(e =>
-            {
-                CreateBanView(e.Parent, e.ViewModel);
-            });
+           
         }
 
-        public void ShowBanDialog(Guid serverId, string playerGuid, bool isOnline, string playerName,
+        public void ShowBanDialog(Guid? serverId, string playerGuid, bool isOnline, string playerName,
             string playerNum)
         {
-            if (playerNum != null)
-            {
-                var w = _container.Resolve<BanPlayerWindow>(
-                    new ParameterOverride("serverId", serverId),
-                    new ParameterOverride("playerGuid", playerGuid),
-                    new ParameterOverride("isOnline", isOnline),
-                    new ParameterOverride("playerName", playerName),
-                    new ParameterOverride("playerNum", playerNum)
-                    );
-                w.ShowDialog();
-            }
-            else
-            {
-                var w = _container.Resolve<BanPlayerWindow>(
-                   new ParameterOverride("serverId", serverId),
+
+            var w = _container.Resolve<BanPlayerWindow>(
+                   new ParameterOverride("serverId", serverId ?? Guid.Empty),
                    new ParameterOverride("playerGuid", playerGuid),
                    new ParameterOverride("isOnline", isOnline),
                    new ParameterOverride("playerName", playerName),
-                    new ParameterOverride("playerNum", string.Empty)
+                   new ParameterOverride("playerNum", playerNum ?? string.Empty)
                    );
-                w.ShowDialog();
-            }
+            w.ShowDialog();
+
+            //if (playerNum != null)
+            //{
+            //    var w = _container.Resolve<BanPlayerWindow>(
+            //        new ParameterOverride("serverId", serverId),
+            //        new ParameterOverride("playerGuid", playerGuid),
+            //        new ParameterOverride("isOnline", isOnline),
+            //        new ParameterOverride("playerName", playerName),
+            //        new ParameterOverride("playerNum", playerNum)
+            //        );
+            //    w.ShowDialog();
+            //}
+            //else
+            //{
+            //    var w = _container.Resolve<BanPlayerWindow>(
+            //       new ParameterOverride("serverId", serverId),
+            //       new ParameterOverride("playerGuid", playerGuid),
+            //       new ParameterOverride("isOnline", isOnline),
+            //       new ParameterOverride("playerName", playerName),
+            //        new ParameterOverride("playerNum", string.Empty)
+            //       );
+            //    w.ShowDialog();
+            //}
         }
 
         public void ShowKickDialog(Guid serverId, int playerNum, string playerGuid, string playerName)
@@ -68,27 +74,6 @@ namespace Arma3BE.Client.Modules.BanModule
                 new ParameterOverride("playerName", playerName),
                 new ParameterOverride("playerNum", playerNum));
             w.ShowDialog();
-        }
-
-        public void CreateBanView(ContentControl parent, IServerMonitorBansViewModel model)
-        {
-            var dispatcher = Application.Current.Dispatcher;
-
-            FrameworkElement control = null;
-
-            if (dispatcher.CheckAccess())
-            {
-                control = new BansControl();
-                control.DataContext = model;
-                parent.Content = control;
-            }
-            else
-            {
-                dispatcher.Invoke(() =>
-                {
-                    CreateBanView(parent, model);
-                });
-            }
         }
     }
 }
