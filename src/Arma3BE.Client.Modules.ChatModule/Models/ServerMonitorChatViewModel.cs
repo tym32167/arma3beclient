@@ -243,6 +243,9 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
                 case ChatMessage.MessageType.Vehicle:
                     color = Color.FromRgb(155, 115, 0);
                     break;
+                case ChatMessage.MessageType.NonCommon:
+                    color = Color.FromRgb(89, 173, 10);
+                    break;
                 default:
                     break;
             }

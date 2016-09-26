@@ -13,7 +13,7 @@ namespace Arma3BE.Server.Recognizers
 
         public bool CanRecognize(ServerMessage serverMessage)
         {
-            if (serverMessage.Message.StartsWith("(Side)") || serverMessage.Message.StartsWith("(Vehicle)") ||
+            if (serverMessage.Message.StartsWith("(Side)") || serverMessage.Message.StartsWith("(Vehicle)") || serverMessage.Message.StartsWith("(Unknown)") ||
                 (serverMessage.Message.StartsWith("(Global)") || serverMessage.Message.StartsWith("(Group)")) ||
                 (serverMessage.Message.StartsWith("(Command)") || serverMessage.Message.StartsWith("(Direct)")))
                 return true;

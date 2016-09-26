@@ -19,7 +19,8 @@ namespace Arma3BE.Server.Mocks
         {
             MockMessage($"(Global) bot: Текущее время {DateTime.UtcNow}");
             MockMessage("RCon admin #4 (99.99.99.99:9999) logged in");
-            
+            MockMessage("(Unknown) ToxaBes: тест для тима");
+
             //MockMessage($"Player #12 sanya disconnected");
             //MockMessage($"Player #1 Baz (be1a6a29ee0eb0851b586b2ed97ad110) has been kicked by BattlEye: Client not responding");
             //MockMessage($"Player #19 Gektor (23d1b17ce5e26ce5f69f2bddbe781d9e) has been kicked by BattlEye: Admin Ban ([vosur][15.09.15 15:14:56] Sabotage)");
