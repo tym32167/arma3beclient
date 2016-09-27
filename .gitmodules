@@ -1,0 +1,3 @@
+[submodule "arma3beclient.wiki"]
+	path = arma3beclient.wiki
+	url = https://github.com/tym32167/arma3beclient.wiki.git
