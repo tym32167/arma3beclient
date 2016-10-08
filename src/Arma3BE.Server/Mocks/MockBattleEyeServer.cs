@@ -29,6 +29,8 @@ namespace Arma3BE.Server.Mocks
             //MockMessage($"Verified GUID (e3807f6355d182b3ecb7eb7cf1540d40) of player #11 Iteron");
             //MockMessage($"Player #21 TipsyOstrich - GUID: c7679b5ec67c557e479a2a5057083a26 (unverified)");
 
+            MockMessage(GetPlayers());
+
             _timer?.Change(5000, Timeout.Infinite);
         }
 
@@ -77,7 +79,7 @@ namespace Arma3BE.Server.Mocks
                 }
 
             });
-            
+
             return 0;
         }
 

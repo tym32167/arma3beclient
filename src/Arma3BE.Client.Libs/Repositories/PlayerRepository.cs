@@ -1,19 +1,17 @@
 using Arma3BEClient.Common.Core;
+using Arma3BEClient.Common.Extensions;
+using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
-using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Arma3BEClient.Common.Extensions;
-using Arma3BEClient.Common.Logging;
 
 namespace Arma3BEClient.Libs.Repositories
 {
@@ -194,7 +192,7 @@ namespace Arma3BEClient.Libs.Repositories
             _validCache = false;
         }
     }
-    
+
     public class PlayerRepository : DisposeObject, IPlayerRepository
     {
         public IEnumerable<PlayerDto> GetAllPlayers()
@@ -360,7 +358,7 @@ namespace Arma3BEClient.Libs.Repositories
             };
         }
     }
-    
+
     public class PlayerDto
     {
         public PlayerDto()

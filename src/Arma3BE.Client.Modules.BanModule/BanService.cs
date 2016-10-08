@@ -37,7 +37,7 @@ namespace Arma3BE.Client.Modules.BanModule
                    new ParameterOverride("serverId", serverId ?? Guid.Empty),
                    new ParameterOverride("playerGuid", playerGuid),
                    new ParameterOverride("isOnline", isOnline),
-                   new ParameterOverride("playerName", playerName),
+                   new ParameterOverride("playerName", playerName ?? string.Empty),
                    new ParameterOverride("playerNum", playerNum ?? string.Empty)
                    );
             w.ShowDialog();

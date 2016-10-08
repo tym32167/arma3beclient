@@ -25,7 +25,7 @@ namespace Arma3BE.Client.Modules.PlayersModule.Dialogs
             if (model.Player != null)
             {
                 var window = _container.Resolve<PlayerViewWindow>(new ParameterOverride("model", model));
-                window.ShowDialog();
+                window.Show();
             }
         }
     }

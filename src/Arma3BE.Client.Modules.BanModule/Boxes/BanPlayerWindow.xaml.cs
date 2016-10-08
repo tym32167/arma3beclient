@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Arma3BE.Client.Infrastructure.Helpers;
+using Arma3BE.Client.Infrastructure.Models;
+using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
-using Arma3BE.Client.Infrastructure.Helpers;
-using Arma3BE.Client.Infrastructure.Models;
-using Arma3BEClient.Libs.ModelCompact;
-using Arma3BEClient.Libs.Repositories;
 
 namespace Arma3BE.Client.Modules.BanModule.Boxes
 {
@@ -67,6 +67,14 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
 
             using (var repo = new ServerInfoRepository())
                 Servers = repo.GetActiveServerInfo().OrderBy(x => x.Name).ToList();
+
+
+            if (string.IsNullOrEmpty(playerName))
+                using (var userRepo = new PlayerRepository())
+                {
+                    var player = userRepo.GetPlayer(playerGuid);
+                    _playerName = player?.Name;
+                }
 
             SelectedServers = new ObservableCollection<ServerInfo>();
 
