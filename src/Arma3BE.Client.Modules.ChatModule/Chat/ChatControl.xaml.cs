@@ -180,7 +180,6 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
             InitBox();
 
             msgBox.AppendText(Environment.NewLine);
-            histBox.AppendText(Environment.NewLine);
         }
     }
 }
