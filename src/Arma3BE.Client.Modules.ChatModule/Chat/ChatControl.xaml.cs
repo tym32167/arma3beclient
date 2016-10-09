@@ -105,6 +105,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
 
         private void ModelOnPlayersOutHandler(object sender, IEnumerable<KeyValuePair<string, string>> keyValuePairs)
         {
+            if (!Model.EnableChat) return;
             foreach (var pair in keyValuePairs)
             {
                 AppendPlayerText(HistoryScrollViewer, pair, false);
@@ -114,6 +115,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
 
         private void ModelOnPlayersInHandler(object sender, IEnumerable<KeyValuePair<string, string>> keyValuePairs)
         {
+            if (!Model.EnableChat) return;
             foreach (var pair in keyValuePairs)
             {
                 AppendPlayerText(HistoryScrollViewer, pair, true);
