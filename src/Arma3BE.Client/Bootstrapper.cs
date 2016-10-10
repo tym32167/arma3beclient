@@ -20,6 +20,7 @@ using System;
 using System.Windows;
 using Arma3BE.Client.Modules.CoreModule;
 using Arma3BE.Client.Modules.DevTools;
+using Arma3BE.Client.Modules.ToolsModule;
 
 namespace Arma3BEClient
 {
@@ -46,16 +47,17 @@ namespace Arma3BEClient
 
             AddModule(typeof(CoreModuleInit));
             AddModule(typeof(NetModuleInit));
-            AddModule(typeof(OptionsModuleInit));
-            AddModule(typeof(DevToolsModuleInit));
+            // AddModule(typeof(OptionsModuleInit));
+            // AddModule(typeof(DevToolsModuleInit));
+             AddModule(typeof(ToolsModuleInit));
             AddModule(typeof(BEServerModuleInit));
-            AddModule(typeof(PlayersModuleInit));
-            AddModule(typeof(BanModuleInit));
-            AddModule(typeof(AdminsModuleInit));
-            AddModule(typeof(ChatModuleInit));
-            AddModule(typeof(ManageServerModuleInit));
-            AddModule(typeof(OnlinePlayersModuleInit));
-            AddModule(typeof(SteamModuleInit));
+           // AddModule(typeof(PlayersModuleInit));
+           // AddModule(typeof(BanModuleInit));
+           // AddModule(typeof(AdminsModuleInit));
+           // AddModule(typeof(ChatModuleInit));
+          //  AddModule(typeof(ManageServerModuleInit));
+          //  AddModule(typeof(OnlinePlayersModuleInit));
+          //  AddModule(typeof(SteamModuleInit));
             AddModule(typeof(IndicatorsModuleInit));
             AddModule(typeof(MainModuleInit));
         }

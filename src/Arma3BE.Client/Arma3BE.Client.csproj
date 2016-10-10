@@ -259,6 +259,10 @@
       <Project>{6ce098a8-dff1-4c66-ad16-909903945e2b}</Project>
       <Name>Arma3BE.Client.Modules.SteamModule</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Modules.ToolsModule\Arma3BE.Client.Modules.ToolsModule.csproj">
+      <Project>{57ef9e36-98d1-4dfe-a56b-ade958bab019}</Project>
+      <Name>Arma3BE.Client.Modules.ToolsModule</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Arma3BE.Client.Styles\Arma3BE.Client.Styles.csproj">
       <Project>{cf43b82b-1f25-4385-b315-ab7b4c010a4b}</Project>
       <Name>Arma3BE.Client.Styles</Name>

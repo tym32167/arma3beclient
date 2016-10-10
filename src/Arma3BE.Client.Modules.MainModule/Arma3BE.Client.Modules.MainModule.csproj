@@ -135,7 +135,6 @@
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Models\Export\PlayerXML.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ServerInfoControl.xaml.cs">
       <DependentUpon>ServerInfoControl.xaml</DependentUpon>
