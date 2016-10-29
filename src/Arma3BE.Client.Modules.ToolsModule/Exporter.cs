@@ -1,8 +1,11 @@
 ﻿using Arma3BE.Client.Modules.MainModule.Models.Export;
 using Arma3BEClient.Libs.Repositories;
+using Microsoft.Win32;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Xml.Serialization;
 
 namespace Arma3BE.Client.Modules.ToolsModule
@@ -16,7 +19,25 @@ namespace Arma3BE.Client.Modules.ToolsModule
             _playerRepository = playerRepository;
         }
 
-        public void Export(string fname)
+        public async void Export()
+        {
+            var dlg = new SaveFileDialog
+            {
+                DefaultExt = "*.xml",
+                Filter = "*.xml|*.xml",
+                Title = "Select file to save players"
+            };
+
+            var res = dlg.ShowDialog();
+
+            if (res.HasValue && res.Value)
+            {
+                await Task.Run(() => Export(dlg.FileName));
+                MessageBox.Show("Export finished!");
+            }
+        }
+
+        private void Export(string fname)
         {
             var list =
                 _playerRepository.GetAllPlayers()
