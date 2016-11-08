@@ -54,6 +54,7 @@ namespace Arma3BE.Server.ServerDecorators
         {
             lock (_lock)
             {
+                _log.Info($"TRY TO CONNECT TO");
                 return _battlEyeServer.Connect();
             }
         }

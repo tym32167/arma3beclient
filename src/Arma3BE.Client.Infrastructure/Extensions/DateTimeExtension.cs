@@ -1,21 +1,22 @@
-﻿using System;
-using Arma3BEClient.Libs.ModelCompact;
-using Arma3BEClient.Libs.Tools;
+﻿using Arma3BEClient.Libs.Tools;
+using System;
 
 namespace Arma3BE.Client.Infrastructure.Extensions
 {
     public static class DateTimeExtensions
     {
+        private static ISettingsStore _settingsStore => new SettingsStoreSource().GetSettingsStore();
+
         public static DateTime UtcToLocalFromSettings(this DateTime source)
         {
-            var zone = SettingsStore.Instance.TimeZoneInfo;
+            var zone = _settingsStore.TimeZoneInfo;
             return TimeZoneInfo.ConvertTimeFromUtc(source, zone);
         }
 
 
         public static DateTime LocalToUtcFromSettings(this DateTime source)
         {
-            var zone = SettingsStore.Instance.TimeZoneInfo;
+            var zone = _settingsStore.TimeZoneInfo;
             return TimeZoneInfo.ConvertTimeToUtc(source, zone);
         }
 

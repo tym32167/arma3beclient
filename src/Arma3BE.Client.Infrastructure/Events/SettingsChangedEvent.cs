@@ -3,8 +3,8 @@ using Prism.Events;
 
 namespace Arma3BE.Client.Infrastructure.Events
 {
-    public class SettingsChangedEvent : PubSubEvent<SettingsStore>
+    public class SettingsChangedEvent : PubSubEvent<ISettingsStore>
     {
-        
+
     }
 }

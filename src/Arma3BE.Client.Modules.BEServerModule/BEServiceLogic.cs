@@ -1,75 +1,66 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Arma3BE.Client.Infrastructure.Events;
+﻿using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Server;
 using Arma3BEClient.Common.Core;
 using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Tools;
 using Prism.Events;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 
 namespace Arma3BE.Client.Modules.BEServerModule
 {
     public class BEServiceLogic : DisposeObject
     {
         private readonly IEventAggregator _aggregator;
-        private readonly BEService _beService;
+        private readonly IBEService _beService;
+        private readonly ISettingsStoreSource _settingsStoreSource;
+        private readonly IBELogic _beLogic;
 
         private readonly TimedAction _playersUpdater;
         private readonly TimedAction _bansUpdater;
 
-        public BEServiceLogic(IEventAggregator aggregator, BEService beService, ILog log)
+        public BEServiceLogic(IEventAggregator aggregator, IBEService beService, ILog log, ISettingsStoreSource settingsStoreSource, IBELogic beLogic)
         {
             _aggregator = aggregator;
             _beService = beService;
+            _settingsStoreSource = settingsStoreSource;
+            _beLogic = beLogic;
 
-            _playersUpdater = new TimedAction(SettingsStore.Instance.PlayersUpdateSeconds, UpdatePlayers, log);
-            _bansUpdater = new TimedAction(SettingsStore.Instance.BansUpdateSeconds, UpdateBans, log);
+            _playersUpdater = new TimedAction(_settingsStoreSource.GetSettingsStore().PlayersUpdateSeconds, UpdatePlayers, log);
+            _bansUpdater = new TimedAction(_settingsStoreSource.GetSettingsStore().BansUpdateSeconds, UpdateBans, log);
 
             _aggregator.GetEvent<SettingsChangedEvent>()
                 .Subscribe(SettingsChanged);
 
-            _aggregator.GetEvent<BEMessageEvent<BECommand>>().Subscribe(ProcessCommand, ThreadOption.BackgroundThread);
 
-            _aggregator.GetEvent<BEMessageEvent<BEPlayerLogMessage>>().Subscribe(Proc_BEPlayerLogMessage, ThreadOption.BackgroundThread);
-            _aggregator.GetEvent<ConnectServerEvent>().Subscribe(BeServerConnectHandler, ThreadOption.BackgroundThread);
+            _beLogic.ServerUpdateHandler += _beLogic_ServerUpdateHandler;
         }
 
-        private void BeServerConnectHandler(ServerInfo info)
+        private void _beLogic_ServerUpdateHandler(object sender, ServerCommandEventArgs e)
         {
-            _bansUpdater.Update(info.Id);
-            _playersUpdater.Update(info.Id);
-
-            _aggregator.GetEvent<BEMessageEvent<BECommand>>()
-                        .Publish(new BECommand(info.Id, CommandType.Missions));
-
-            _aggregator.GetEvent<BEMessageEvent<BECommand>>()
-                        .Publish(new BECommand(info.Id, CommandType.Admins));
-        }
-
-        private void ProcessCommand(BECommand command)
-        {
-            if (command.CommandType == CommandType.RemoveBan || command.CommandType == CommandType.AddBan || command.CommandType == CommandType.Ban)
+            switch (e.Command.CommandType)
             {
-                Task.Delay(2000).ContinueWith(t => _bansUpdater.Update(command.ServerId));
+                case CommandType.Players:
+                    _playersUpdater.Update(e.Command.ServerId);
+                    break;
+                case CommandType.Bans:
+                    _bansUpdater.Update(e.Command.ServerId);
+                    break;
+                default:
+                    _aggregator.GetEvent<BEMessageEvent<BECommand>>()
+                        .Publish(e.Command);
+                    break;
             }
         }
 
-        private void Proc_BEPlayerLogMessage(BEPlayerLogMessage message)
+        private void SettingsChanged(ISettingsStore settings)
         {
-            _playersUpdater.Update(message.ServerId);
-        }
-
-
-        private void SettingsChanged(SettingsStore settings)
-        {
-            _playersUpdater.SetTimer(SettingsStore.Instance.PlayersUpdateSeconds);
-            _bansUpdater.SetTimer(SettingsStore.Instance.BansUpdateSeconds);
+            _playersUpdater.SetTimer(_settingsStoreSource.GetSettingsStore().PlayersUpdateSeconds);
+            _bansUpdater.SetTimer(_settingsStoreSource.GetSettingsStore().BansUpdateSeconds);
         }
 
         private void UpdatePlayers(HashSet<Guid> servers)
@@ -83,7 +74,7 @@ namespace Arma3BE.Client.Modules.BEServerModule
                 }
             }
         }
-        
+
         private void UpdateBans(HashSet<Guid> servers)
         {
             foreach (var server in _beService.ConnectedServers())
@@ -100,6 +91,7 @@ namespace Arma3BE.Client.Modules.BEServerModule
         {
             base.DisposeManagedResources();
 
+            _beLogic.ServerUpdateHandler -= _beLogic_ServerUpdateHandler;
             _playersUpdater?.Dispose();
             _bansUpdater?.Dispose();
         }
@@ -140,7 +132,7 @@ namespace Arma3BE.Client.Modules.BEServerModule
         private int Interval()
         {
             var i = _interval;
-            return Math.Max(5000, i*1000);
+            return Math.Max(5000, i * 1000);
         }
 
         private void Tick(object state)

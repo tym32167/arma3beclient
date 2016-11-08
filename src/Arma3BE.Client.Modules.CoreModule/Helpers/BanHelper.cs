@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Arma3BE.Client.Infrastructure.Events.BE;
+﻿using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Infrastructure.Helpers.Views;
 using Arma3BE.Server;
@@ -12,6 +7,11 @@ using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.Repositories;
 using Arma3BEClient.Libs.Tools;
 using Prism.Events;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Arma3BE.Client.Modules.CoreModule.Helpers
 {
@@ -20,13 +20,15 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
         private readonly ILog _log;
         private readonly IEventAggregator _eventAggregator;
         private readonly IPlayerRepository _playerRepository;
+        private readonly ISettingsStoreSource _settingsStoreSource;
         private readonly Regex replace = new Regex(@"\[[^\]^\[]*\]", RegexOptions.Compiled | RegexOptions.Multiline);
 
-        public BanHelper(ILog log, IEventAggregator eventAggregator, IPlayerRepository playerRepository)
+        public BanHelper(ILog log, IEventAggregator eventAggregator, IPlayerRepository playerRepository, ISettingsStoreSource settingsStoreSource)
         {
             _log = log;
             _eventAggregator = eventAggregator;
             _playerRepository = playerRepository;
+            _settingsStoreSource = settingsStoreSource;
         }
 
         public void RegisterBans(IEnumerable<Ban> list, Guid currentServerId)
@@ -193,7 +195,7 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
         public void Kick(Guid serverId, int playerNum, string playerGuid, string reason, bool isAuto = false)
         {
             var totalreason =
-                $"[{SettingsStore.Instance.AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
+                $"[{_settingsStoreSource.GetSettingsStore().AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
 
             SendCommand(serverId, CommandType.Kick,
                 $"{playerNum} {totalreason}");
@@ -217,7 +219,7 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
             if (!syncMode)
             {
                 var totalreason =
-                    $"[{SettingsStore.Instance.AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
+                    $"[{_settingsStoreSource.GetSettingsStore().AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
 
 
                 SendCommand(serverId, CommandType.AddBan,
@@ -256,7 +258,7 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
         public async void BanGuidOnline(Guid serverId, string num, string guid, string reason, long minutes)
         {
             var totalreason =
-                $"[{SettingsStore.Instance.AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
+                $"[{_settingsStoreSource.GetSettingsStore().AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
 
 
             SendCommand(serverId, CommandType.Ban,

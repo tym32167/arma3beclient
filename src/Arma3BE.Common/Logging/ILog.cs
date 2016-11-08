@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-
-namespace Arma3BEClient.Common.Logging
+﻿namespace Arma3BEClient.Common.Logging
 {
     public interface ILog
     {

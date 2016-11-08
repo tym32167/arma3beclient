@@ -2,6 +2,8 @@
 using Arma3BE.Client.Modules.BanModule;
 using Arma3BE.Client.Modules.BEServerModule;
 using Arma3BE.Client.Modules.ChatModule;
+using Arma3BE.Client.Modules.CoreModule;
+using Arma3BE.Client.Modules.DevTools;
 using Arma3BE.Client.Modules.IndicatorsModule;
 using Arma3BE.Client.Modules.MainModule;
 using Arma3BE.Client.Modules.ManageServerModule;
@@ -10,7 +12,7 @@ using Arma3BE.Client.Modules.OnlinePlayersModule;
 using Arma3BE.Client.Modules.OptionsModule;
 using Arma3BE.Client.Modules.PlayersModule;
 using Arma3BE.Client.Modules.SteamModule;
-using Arma3BEClient.Common.Logging;
+using Arma3BE.Client.Modules.ToolsModule;
 using log4net.Config;
 using Microsoft.Practices.Unity;
 using Prism.Modularity;
@@ -18,9 +20,6 @@ using Prism.Regions;
 using Prism.Unity;
 using System;
 using System.Windows;
-using Arma3BE.Client.Modules.CoreModule;
-using Arma3BE.Client.Modules.DevTools;
-using Arma3BE.Client.Modules.ToolsModule;
 
 namespace Arma3BEClient
 {
@@ -47,17 +46,17 @@ namespace Arma3BEClient
 
             AddModule(typeof(CoreModuleInit));
             AddModule(typeof(NetModuleInit));
-            // AddModule(typeof(OptionsModuleInit));
-            // AddModule(typeof(DevToolsModuleInit));
-             AddModule(typeof(ToolsModuleInit));
+            AddModule(typeof(OptionsModuleInit));
+            AddModule(typeof(DevToolsModuleInit));
+            AddModule(typeof(ToolsModuleInit));
             AddModule(typeof(BEServerModuleInit));
-           // AddModule(typeof(PlayersModuleInit));
-           // AddModule(typeof(BanModuleInit));
-           // AddModule(typeof(AdminsModuleInit));
-           // AddModule(typeof(ChatModuleInit));
-          //  AddModule(typeof(ManageServerModuleInit));
-          //  AddModule(typeof(OnlinePlayersModuleInit));
-          //  AddModule(typeof(SteamModuleInit));
+            AddModule(typeof(PlayersModuleInit));
+            AddModule(typeof(BanModuleInit));
+            AddModule(typeof(AdminsModuleInit));
+            AddModule(typeof(ChatModuleInit));
+            AddModule(typeof(ManageServerModuleInit));
+            AddModule(typeof(OnlinePlayersModuleInit));
+            AddModule(typeof(SteamModuleInit));
             AddModule(typeof(IndicatorsModuleInit));
             AddModule(typeof(MainModuleInit));
         }

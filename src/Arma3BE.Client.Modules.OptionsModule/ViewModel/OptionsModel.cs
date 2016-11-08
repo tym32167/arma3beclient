@@ -15,12 +15,14 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
     public class OptionsModel : DisposableViewModelBase
     {
         private readonly IEventAggregator _eventAggregator;
+        private readonly ISettingsStoreSource _settingsStoreSource;
         private readonly ILog _log = new Log();
-        private SettingsStore _settingsStore;
+        private ISettingsStore _settingsStore;
 
-        public OptionsModel(IEventAggregator eventAggregator)
+        public OptionsModel(IEventAggregator eventAggregator, ISettingsStoreSource settingsStoreSource)
         {
             _eventAggregator = eventAggregator;
+            _settingsStoreSource = settingsStoreSource;
             using (var servierInfoRepository = new ServerInfoRepository())
             {
                 Servers = servierInfoRepository.GetServerInfo().Select(x => new ServerInfoModel(x)).ToList();
@@ -64,17 +66,11 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
         public List<BanTimeEdit> BanTimes { get; set; }
 
 
-        public SettingsStore Settings
+        public ISettingsStore Settings
         {
             get
             {
-                return _settingsStore ?? (_settingsStore = new SettingsStore()
-                       {
-                           TimeZoneInfo = SettingsStore.Instance.TimeZoneInfo,
-                           AdminName = SettingsStore.Instance.AdminName,
-                           BansUpdateSeconds = SettingsStore.Instance.BansUpdateSeconds,
-                           PlayersUpdateSeconds = SettingsStore.Instance.PlayersUpdateSeconds,
-                       });
+                return _settingsStore ?? (_settingsStore = _settingsStoreSource.GetSettingsStore().Clone() as ISettingsStore);
             }
             set { _settingsStore = value; }
         }
@@ -90,7 +86,7 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
         {
             try
             {
-                var settings = SettingsStore.Instance;
+                var settings = _settingsStoreSource.GetSettingsStore();
                 settings.TimeZoneInfo = Settings.TimeZoneInfo;
                 settings.AdminName = Settings.AdminName.Replace(" ", string.Empty);
                 settings.BansUpdateSeconds = Settings.BansUpdateSeconds;
@@ -121,13 +117,13 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
 
                 using (var dc = new ReasonRepository())
                 {
-                    dc.UpdateBanReasons(BanReasons.Select(x => x.Text).Where(x=>string.IsNullOrEmpty(x) == false).Distinct().ToArray());
+                    dc.UpdateBanReasons(BanReasons.Select(x => x.Text).Where(x => string.IsNullOrEmpty(x) == false).Distinct().ToArray());
                     dc.UpdateBanTimes(BanTimes.Where(x => string.IsNullOrEmpty(x.Text) == false).Select(x => new BanTime() { TimeInMinutes = x.Minutes, Title = x.Text }).ToArray());
                     dc.UpdateKickReasons(KickReasons.Select(x => x.Text).Where(x => string.IsNullOrEmpty(x) == false).Distinct().ToArray());
                 }
 
                 _eventAggregator.GetEvent<BEServersChangedEvent>().Publish(null);
-                _eventAggregator.GetEvent<SettingsChangedEvent>().Publish(SettingsStore.Instance);
+                _eventAggregator.GetEvent<SettingsChangedEvent>().Publish(_settingsStoreSource.GetSettingsStore());
             }
             catch (Exception e)
             {
