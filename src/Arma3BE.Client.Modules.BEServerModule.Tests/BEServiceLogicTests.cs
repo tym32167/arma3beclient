@@ -1,11 +1,13 @@
 ﻿using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Server;
 using Arma3BE.Server.Models;
+using Arma3BEClient.Libs.ModelCompact;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Arma3BE.Client.Modules.BEServerModule.Tests
@@ -14,7 +16,7 @@ namespace Arma3BE.Client.Modules.BEServerModule.Tests
     public class BEServiceLogicTests
     {
         [TestMethod]
-        public void Player_Kick_Test()
+        public void Player_Log_Test()
         {
             var serverGuid = Guid.NewGuid();
 
@@ -36,6 +38,92 @@ namespace Arma3BE.Client.Modules.BEServerModule.Tests
 
             Assert.IsNotNull(command);
             Assert.AreEqual(CommandType.Players, command.CommandType);
+
+            GC.KeepAlive(logic);
+        }
+
+        [TestMethod]
+        public void Admin_Test()
+        {
+            var serverGuid = Guid.NewGuid();
+
+            var ev = new FakeEventAggregator();
+
+            var logic = new BELogic(ev);
+
+            BECommand command = null;
+
+            logic.ServerUpdateHandler += (s, e) =>
+            {
+                command = e.Command;
+            };
+
+
+            ev.GetEvent<BEMessageEvent<BEAdminLogMessage>>()
+               .Publish(new BEAdminLogMessage(new LogMessage(), serverGuid));
+
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual(CommandType.Admins, command.CommandType);
+
+            GC.KeepAlive(logic);
+        }
+
+
+        [TestMethod]
+        public void Connect_Test()
+        {
+            var serverGuid = Guid.NewGuid();
+
+            var ev = new FakeEventAggregator();
+
+            var logic = new BELogic(ev);
+
+            var commands = new List<BECommand>();
+
+            logic.ServerUpdateHandler += (s, e) =>
+            {
+                commands.Add(e.Command);
+            };
+
+
+            ev.GetEvent<ConnectServerEvent>()
+               .Publish(new ServerInfo() { Id = serverGuid });
+
+
+            Assert.IsNotNull(commands);
+            Assert.IsNotNull(commands.FirstOrDefault(x => x.CommandType == CommandType.Bans && x.ServerId == serverGuid));
+            Assert.IsNotNull(commands.FirstOrDefault(x => x.CommandType == CommandType.Players && x.ServerId == serverGuid));
+            Assert.IsNotNull(commands.FirstOrDefault(x => x.CommandType == CommandType.Admins && x.ServerId == serverGuid));
+            Assert.IsNotNull(commands.FirstOrDefault(x => x.CommandType == CommandType.Missions && x.ServerId == serverGuid));
+
+            GC.KeepAlive(logic);
+        }
+
+
+        [TestMethod]
+        public void Player_Ban_Test()
+        {
+            var serverGuid = Guid.NewGuid();
+
+            var ev = new FakeEventAggregator();
+
+            var logic = new BELogic(ev);
+
+            var commands = new List<BECommand>();
+
+            logic.ServerUpdateHandler += (s, e) =>
+            {
+                commands.Add(e.Command);
+            };
+
+
+            ev.GetEvent<BEMessageEvent<BEBanLogMessage>>()
+               .Publish(new BEBanLogMessage(new LogMessage(), serverGuid));
+
+            Assert.IsNotNull(commands);
+            Assert.IsNotNull(commands.FirstOrDefault(x => x.CommandType == CommandType.Bans && x.ServerId == serverGuid));
+            Assert.IsNotNull(commands.FirstOrDefault(x => x.CommandType == CommandType.Players && x.ServerId == serverGuid));
 
             GC.KeepAlive(logic);
         }

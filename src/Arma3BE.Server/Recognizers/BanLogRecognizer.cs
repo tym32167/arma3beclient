@@ -14,7 +14,7 @@ namespace Arma3BE.Server.Recognizers
         public bool CanRecognize(ServerMessage serverMessage)
         {
             return serverMessage.Message.StartsWith("Player") && (
-                serverMessage.Message.Contains("kicked")
+                serverMessage.Message.Contains("kicked") && serverMessage.Message.Contains("BattlEye: Admin Ban")
                 );
         }
     }

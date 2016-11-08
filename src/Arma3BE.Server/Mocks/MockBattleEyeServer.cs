@@ -21,6 +21,13 @@ namespace Arma3BE.Server.Mocks
             MockMessage("RCon admin #4 (99.99.99.99:9999) logged in");
             MockMessage("(Unknown) ToxaBes: тест для тима");
 
+
+            MockMessage("Player #11 RuuT (2838840b88a3001b58f3d59fb03d23a1) has been kicked by BattlEye: Admin Ban ([tim][01.11.16 11:29:06] Teamkill)");
+
+            MockMessage("Player #15 Z11 (8de887bdecc30ad372459776b6d7cb94) has been kicked by BattlEye: Admin Kick ([ReNegadE][05.11.16 11:47:51] )");
+
+
+
             //MockMessage($"Player #12 sanya disconnected");
             //MockMessage($"Player #1 Baz (be1a6a29ee0eb0851b586b2ed97ad110) has been kicked by BattlEye: Client not responding");
             //MockMessage($"Player #19 Gektor (23d1b17ce5e26ce5f69f2bddbe781d9e) has been kicked by BattlEye: Admin Ban ([vosur][15.09.15 15:14:56] Sabotage)");

@@ -15,6 +15,8 @@ namespace Arma3BE.Client.Modules.BEServerModule
 
             aggregator1.GetEvent<BEMessageEvent<BECommand>>().Subscribe(ProcessCommand, ThreadOption.BackgroundThread);
             aggregator1.GetEvent<BEMessageEvent<BEPlayerLogMessage>>().Subscribe(BEPlayerLogMessage, ThreadOption.BackgroundThread);
+            aggregator1.GetEvent<BEMessageEvent<BEBanLogMessage>>().Subscribe(BEBanLogMessage, ThreadOption.BackgroundThread);
+            aggregator1.GetEvent<BEMessageEvent<BEAdminLogMessage>>().Subscribe(BEAdminLogMessage, ThreadOption.BackgroundThread);
             aggregator1.GetEvent<ConnectServerEvent>().Subscribe(BeServerConnectHandler, ThreadOption.BackgroundThread);
         }
 
@@ -44,6 +46,17 @@ namespace Arma3BE.Client.Modules.BEServerModule
         private void BEPlayerLogMessage(BEPlayerLogMessage message)
         {
             OnServerUpdateHandler(new BECommand(message.ServerId, CommandType.Players));
+        }
+
+        private void BEAdminLogMessage(BEAdminLogMessage message)
+        {
+            OnServerUpdateHandler(new BECommand(message.ServerId, CommandType.Admins));
+        }
+
+        private void BEBanLogMessage(BEBanLogMessage message)
+        {
+            OnServerUpdateHandler(new BECommand(message.ServerId, CommandType.Players));
+            OnServerUpdateHandler(new BECommand(message.ServerId, CommandType.Bans));
         }
 
         private void OnServerUpdateHandler(BECommand command)
