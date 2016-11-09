@@ -150,7 +150,7 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
 
                 banRepository.AddOrUpdate(bansToAdd);
                 banRepository.AddOrUpdate(bansToUpdate);
-                _playerRepository.UpdateCommant(playersToUpdateComments);
+                _playerRepository.UpdateComment(playersToUpdateComments);
             }
 
 

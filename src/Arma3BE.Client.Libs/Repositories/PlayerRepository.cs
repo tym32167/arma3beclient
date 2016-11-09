@@ -23,15 +23,16 @@ namespace Arma3BEClient.Libs.Repositories
         IEnumerable<PlayerDto> GetPlayers(IEnumerable<string> guids);
         PlayerDto GetPlayer(string guid);
         Player GetPlayerInfo(string guid);
-
-        void AddOrUpdatePlayers(IEnumerable<PlayerDto> players);
+        
         void UpdatePlayerComment(string guid, string comment);
-        void UpdateCommant(Dictionary<Guid, string> playersToUpdateComments);
+        void UpdateComment(Dictionary<Guid, string> playersToUpdateComments);
         void AddOrUpdate(IEnumerable<PlayerDto> players);
         void AddHistory(List<PlayerHistory> histories);
         void AddNotes(Guid id, string s);
         IEnumerable<PlayerDto> GetAllPlayersWithoutSteam();
         void SaveSteamId(Dictionary<Guid, string> found);
+
+        void ImportPlayers(List<PlayerDto> toAdd, List<PlayerDto> toUpdate);
     }
 
     public class PlayerRepositoryCache : DisposeObject, IPlayerRepository
@@ -107,19 +108,6 @@ namespace Arma3BEClient.Libs.Repositories
             return _playerRepository.GetPlayerInfo(guid);
         }
 
-        public void AddOrUpdatePlayers(IEnumerable<PlayerDto> players)
-        {
-            var playerDtos = players?.ToArray() ?? new PlayerDto[0];
-            if (!playerDtos.Any()) return;
-
-            foreach (var dtos in playerDtos.Paged(1000))
-            {
-                _playerRepository.AddOrUpdatePlayers(dtos);
-            }
-
-            _validCache = false;
-        }
-
         public void UpdatePlayerComment(string guid, string comment)
         {
             _playerRepository.UpdatePlayerComment(guid, comment);
@@ -131,12 +119,12 @@ namespace Arma3BEClient.Libs.Repositories
             }
         }
 
-        public void UpdateCommant(Dictionary<Guid, string> playersToUpdateComments)
+        public void UpdateComment(Dictionary<Guid, string> playersToUpdateComments)
         {
             var dto = playersToUpdateComments ?? new Dictionary<Guid, string>();
             if (dto.Count == 0) return;
 
-            _playerRepository.UpdateCommant(dto);
+            _playerRepository.UpdateComment(dto);
 
             PlayerDto element;
             var local = _playersByGuidsCache.Values.ToDictionary(x => x.Id);
@@ -191,10 +179,21 @@ namespace Arma3BEClient.Libs.Repositories
 
             _validCache = false;
         }
+
+        public void ImportPlayers(List<PlayerDto> toAdd, List<PlayerDto> toUpdate)
+        {
+            if (toAdd.Any() || toUpdate.Any())
+            {
+                _playerRepository.ImportPlayers(toAdd, toUpdate);
+                _validCache = false;
+            }
+        }
     }
 
     public class PlayerRepository : DisposeObject, IPlayerRepository
     {
+        private ILog _log = new Log();
+
         public IEnumerable<PlayerDto> GetAllPlayers()
         {
             using (var dc = new Arma3BeClientContext())
@@ -203,15 +202,44 @@ namespace Arma3BEClient.Libs.Repositories
             }
         }
 
-        public void AddOrUpdatePlayers(IEnumerable<PlayerDto> players)
+        public void ImportPlayers(List<PlayerDto> toAdd, List<PlayerDto> toUpdate)
         {
-            var playerList = players.Select(Map).ToArray();
-
+            _log.Info("ImportPlayers - Import started");
+            _log.Info($"ImportPlayers - ToAdd {toAdd.Count}, ToUpdate {toUpdate.Count}");
             using (var dc = new Arma3BeClientContext())
             {
-                dc.Player.AddOrUpdate(playerList);
+                var toAddDto = toAdd.Select(Map).ToArray();
+                dc.Player.AddRange(toAddDto);
                 dc.SaveChanges();
             }
+
+            _log.Info($"Inserted {toAdd.Count}");
+
+            _log.Info("ImportPlayers - Update started");
+            using (var dc = new Arma3BeClientContext())
+            {
+                var allPlayers = dc.Player.ToArray().ToDictionary(x => x.Id);
+
+                _log.Info($"Players loaded");
+
+                foreach (var player in toUpdate)
+                {
+                    if (allPlayers.ContainsKey(player.Id))
+                    {
+                        var dto = allPlayers[player.Id];
+
+                        if (string.IsNullOrEmpty(dto.SteamId))
+                            dto.SteamId = player.SteamId;
+
+                        if (string.IsNullOrEmpty(dto.Comment))
+                            dto.Comment = player.Comment;
+                    }
+                }
+
+                dc.SaveChanges();
+            }
+
+            _log.Info("ImportPlayers - Update finished");
         }
 
         public IEnumerable<PlayerDto> GetPlayers(Expression<Func<Player, bool>> expression)
@@ -265,7 +293,7 @@ namespace Arma3BEClient.Libs.Repositories
             }
         }
 
-        public void UpdateCommant(Dictionary<Guid, string> playersToUpdateComments)
+        public void UpdateComment(Dictionary<Guid, string> playersToUpdateComments)
         {
             var ids = playersToUpdateComments.Keys.ToArray();
 

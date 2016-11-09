@@ -1,8 +1,10 @@
 ﻿using Arma3BE.Client.Modules.MainModule.Models.Export;
+using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.Repositories;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,14 +16,19 @@ namespace Arma3BE.Client.Modules.ToolsModule
     public class Importer
     {
         private readonly IPlayerRepository _playerRepository;
+        private readonly ILog _log;
 
-        public Importer(IPlayerRepository playerRepository)
+        public Importer(IPlayerRepository playerRepository, ILog log)
         {
             _playerRepository = playerRepository;
+            _log = log;
         }
 
         private ImportResult Import(string fname)
         {
+            var sw = Stopwatch.StartNew();
+            _log.Info("Import started");
+
             var result = new ImportResult();
 
             List<PlayerXML> players;
@@ -39,11 +46,11 @@ namespace Arma3BE.Client.Modules.ToolsModule
                     .ToDictionary(x => x.GUID);
 
             var toadd = new List<PlayerDto>();
+            var toUpdate = new List<PlayerDto>();
 
             foreach (var p in players)
                 if (!db.ContainsKey(p.Guid))
                 {
-                    result.Added++;
                     toadd.Add(new PlayerDto
                     {
                         Comment = p.Comment,
@@ -72,15 +79,17 @@ namespace Arma3BE.Client.Modules.ToolsModule
                     }
                     if (updated)
                     {
-                        toadd.Add(lp);
-                        result.Updated++;
+                        toUpdate.Add(lp);
                     }
                 }
 
+            result.Added = toadd.Count;
+            result.Updated = toUpdate.Count;
 
-            _playerRepository.AddOrUpdatePlayers(toadd);
+            _playerRepository.ImportPlayers(toadd, toUpdate);
 
-
+            sw.Stop();
+            _log.Info($"Import takes {sw.ElapsedMilliseconds} ms. Added {result.Added}, updated {result.Updated}");
             return result;
         }
 
