@@ -8,7 +8,7 @@ namespace Arma3BE.Server.Recognizers
     {
         public ServerMessageType GetMessageType(ServerMessage message)
         {
-            return  ServerMessageType.PlayerLog;
+            return ServerMessageType.PlayerLog;
         }
 
         public bool CanRecognize(ServerMessage serverMessage)
@@ -19,6 +19,8 @@ namespace Arma3BE.Server.Recognizers
                 serverMessage.Message.EndsWith("disconnected")
                 ||
                 serverMessage.Message.EndsWith("connected")
+                ||
+                (serverMessage.Message.Contains("kicked") && !serverMessage.Message.Contains("BattlEye: Admin Ban"))
                 ||
                 serverMessage.Message.Contains("(unverified)")
                 ||

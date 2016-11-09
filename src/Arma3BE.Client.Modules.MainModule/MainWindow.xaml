@@ -13,9 +13,10 @@
         </Grid.RowDefinitions>
         <!-- Toolbar -->
         <Menu>
-            <MenuItem Header="File">
-                <MenuItem Header="Export players" Click="ExportClick" />
-                <MenuItem Header="Import players" Click="ImportClick" />
+            <MenuItem Header="File" >
+                <MenuItem Header="Tools" regions:RegionManager.RegionName="{x:Static inf:RegionNames.MenuFileToolsRegion}">
+                </MenuItem>
+
                 <Separator />
                 <MenuItem Header="Exit" Click="ExitClick" />
             </MenuItem>

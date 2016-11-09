@@ -8,14 +8,13 @@ using Arma3BEClient.Libs.ModelCompact;
 using Microsoft.Practices.Unity;
 using Prism.Events;
 using System;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Arma3BE.Client.Modules.BEServerModule
 {
-    public class BEService
+    public class BEService : IBEService
     {
         private readonly IUnityContainer _container;
         private readonly ILog _log;

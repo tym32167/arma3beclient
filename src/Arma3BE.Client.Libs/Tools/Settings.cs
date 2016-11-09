@@ -1,13 +1,13 @@
-﻿using System;
-using System.Data.Entity.Migrations;
-using System.Linq;
-using Arma3BEClient.Common.Extensions;
+﻿using Arma3BEClient.Common.Extensions;
 using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
+using System;
+using System.Data.Entity.Migrations;
+using System.Linq;
 
 namespace Arma3BEClient.Libs.Tools
 {
-    public class SettingsStore
+    internal class SettingsStore : ISettingsStore
     {
         private const int AdminNameKey = 1;
         private const int TimeZoneKey = 2;
@@ -27,8 +27,8 @@ namespace Arma3BEClient.Libs.Tools
             using (var context = new Arma3BeClientContext())
             {
                 context.Settings.AddOrUpdate(
-                    new Settings {Id = AdminNameKey, Value = AdminName}, 
-                    new Settings {Id = TimeZoneKey, Value = TimeZoneInfo?.Id},
+                    new Settings { Id = AdminNameKey, Value = AdminName },
+                    new Settings { Id = TimeZoneKey, Value = TimeZoneInfo?.Id },
                     new Settings { Id = PlayersUpdateKey, Value = PlayersUpdateSeconds.ToString() },
                     new Settings { Id = BansUpdateKey, Value = BansUpdateSeconds.ToString() }
                     );
@@ -49,7 +49,7 @@ namespace Arma3BEClient.Libs.Tools
 
                 ss.PlayersUpdateSeconds = (settings.FirstOrDefault(x => x.Id == PlayersUpdateKey)?.Value).FromString(5);
                 ss.BansUpdateSeconds = (settings.FirstOrDefault(x => x.Id == BansUpdateKey)?.Value).FromString(5);
-                
+
                 try
                 {
                     var zone = settings.FirstOrDefault(x => x.Id == TimeZoneKey)?.Value;
@@ -62,6 +62,17 @@ namespace Arma3BEClient.Libs.Tools
 
                 return ss;
             }
+        }
+
+        public object Clone()
+        {
+            return new SettingsStore
+            {
+                TimeZoneInfo = TimeZoneInfo,
+                AdminName = AdminName,
+                BansUpdateSeconds = BansUpdateSeconds,
+                PlayersUpdateSeconds = PlayersUpdateSeconds,
+            };
         }
     }
 }

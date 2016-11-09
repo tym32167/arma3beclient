@@ -24,6 +24,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
     public class ServerMonitorChatViewModel : ViewModelBase
     {
         private readonly IEventAggregator _eventAggregator;
+        private readonly ISettingsStoreSource _settingsStoreSource;
         private readonly ChatHelper _chatHelper;
         private readonly ILog _log;
         private readonly Guid _serverId;
@@ -32,11 +33,12 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
         private string _inputMessage;
         private List<Player> _players = new List<Player>();
 
-        public ServerMonitorChatViewModel(ILog log, ServerInfo serverInfo, IEventAggregator eventAggregator)
+        public ServerMonitorChatViewModel(ILog log, ServerInfo serverInfo, IEventAggregator eventAggregator, ISettingsStoreSource settingsStoreSource)
         {
             _log = log;
             _serverId = serverInfo.Id;
             _eventAggregator = eventAggregator;
+            _settingsStoreSource = settingsStoreSource;
 
             AutoScroll = true;
             EnableChat = true;
@@ -214,7 +216,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
         {
             if (!string.IsNullOrEmpty(rawmessage))
             {
-                var adminName = SettingsStore.Instance.AdminName;
+                var adminName = _settingsStoreSource.GetSettingsStore().AdminName;
 
                 var selectedPlayer = SelectedPlayer;
                 var destinationNum = -1;
