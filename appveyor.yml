@@ -64,19 +64,15 @@ after_build:
   - del src\Arma3BE.Client\bin\Release\control.ps1   
   - rd src\Arma3BE.Client\bin\Release\app.publish /s /q 
   - rd src\Arma3BE.Client\bin\Release\de /s /q 
-  - rd src\Arma3BE.Client\bin\Release\en /s /q 
   - rd src\Arma3BE.Client\bin\Release\es /s /q 
   - rd src\Arma3BE.Client\bin\Release\fr /s /q 
   - rd src\Arma3BE.Client\bin\Release\hu /s /q   
   - rd src\Arma3BE.Client\bin\Release\it /s /q 
-  - rd src\Arma3BE.Client\bin\Release\ja /s /q 
-  - rd src\Arma3BE.Client\bin\Release\ko /s /q 
   - rd src\Arma3BE.Client\bin\Release\pt-BR /s /q 
   - rd src\Arma3BE.Client\bin\Release\ro /s /q 
   - rd src\Arma3BE.Client\bin\Release\ru /s /q 
   - rd src\Arma3BE.Client\bin\Release\sv /s /q   
-  - rd src\Arma3BE.Client\bin\Release\zh-Hans /s /q 
-  - rd src\Arma3BE.Client\bin\Release\zh-Hant /s /q 
+
 
 #---------------------------------#
 #      artifacts configuration    #
