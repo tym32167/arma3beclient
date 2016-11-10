@@ -13,8 +13,10 @@ using Arma3BE.Client.Modules.OptionsModule;
 using Arma3BE.Client.Modules.PlayersModule;
 using Arma3BE.Client.Modules.SteamModule;
 using Arma3BE.Client.Modules.ToolsModule;
+using Arma3BEClient.Common.Logging;
 using log4net.Config;
 using Microsoft.Practices.Unity;
+using Prism.Logging;
 using Prism.Modularity;
 using Prism.Regions;
 using Prism.Unity;
@@ -91,6 +93,42 @@ namespace Arma3BEClient
 
             // Set return value
             return mappings;
+        }
+
+        protected override ILoggerFacade CreateLogger()
+        {
+            return new CustomLogger(new Log());
+        }
+
+        private class CustomLogger : ILoggerFacade
+        {
+            private readonly ILog _log;
+
+            public CustomLogger(ILog log)
+            {
+                _log = log;
+            }
+
+            public void Log(string message, Category category, Priority priority)
+            {
+                switch (category)
+                {
+                    case Category.Debug:
+                        _log.Debug($"({priority}) - {message}");
+                        break;
+                    case Category.Exception:
+                        _log.Error($"({priority}) - {message}");
+                        break;
+                    case Category.Info:
+                        _log.Info($"({priority}) - {message}");
+                        break;
+                    case Category.Warn:
+                        _log.Info($"({priority}) - {message}");
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(category), category, null);
+                }
+            }
         }
     }
 }
