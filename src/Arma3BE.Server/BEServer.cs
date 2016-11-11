@@ -339,7 +339,7 @@ namespace Arma3BE.Server
 
         private void RegisterMessage(ServerMessage message)
         {
-            _log.Info($"message [\nserver ip: {_host}\nmessageId:{message.MessageId}\n{message.Message}\n]");
+           // _log.Info($"message [\nserver ip: {_host}\nmessageId:{message.MessageId}\n{message.Message}\n]");
         }
 
         private void InitClients()
