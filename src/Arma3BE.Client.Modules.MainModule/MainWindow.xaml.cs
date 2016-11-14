@@ -4,6 +4,7 @@ using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using Microsoft.Practices.Unity;
 using Prism.Regions;
+using System.Linq;
 using System.Windows;
 using Xceed.Wpf.AvalonDock.Controls;
 
@@ -32,13 +33,23 @@ namespace Arma3BE.Client.Modules.MainModule
 
         private void OpenServerInfo(ServerInfo serverInfo)
         {
+            var region = _regionManager.Regions[RegionNames.ServerTabRegion];
+
+            if (region.Views.OfType<ServerInfoControl>()
+                .Select(x => x.DataContext as ServerMonitorModel)
+                .Any(x => x?.CurrentServer.Id == serverInfo.Id))
+                return;
+
+
             var control =
                 _container.Resolve<ServerInfoControl>(
                     new ParameterOverride("currentServer", serverInfo).OnType<ServerMonitorModel>(),
                     new ParameterOverride("console", false).OnType<ServerMonitorModel>());
 
             _model.Reload();
-            _regionManager.Regions[RegionNames.ServerTabRegion].Add(control, null, true);
+
+            region.Add(control, null, true);
+            region.Activate(control);
         }
 
         private void ServerClick(object sender, RoutedEventArgs e)
@@ -63,7 +74,9 @@ namespace Arma3BE.Client.Modules.MainModule
             {
                 var servers = r.GetActiveServerInfo();
                 foreach (var server in servers)
+                {
                     OpenServerInfo(server);
+                }
             }
         }
 
