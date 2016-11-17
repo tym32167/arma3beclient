@@ -3,7 +3,6 @@ using Arma3BE.Client.Modules.BanModule;
 using Arma3BE.Client.Modules.BEServerModule;
 using Arma3BE.Client.Modules.ChatModule;
 using Arma3BE.Client.Modules.CoreModule;
-using Arma3BE.Client.Modules.DevTools;
 using Arma3BE.Client.Modules.IndicatorsModule;
 using Arma3BE.Client.Modules.MainModule;
 using Arma3BE.Client.Modules.ManageServerModule;
@@ -21,6 +20,7 @@ using Prism.Modularity;
 using Prism.Regions;
 using Prism.Unity;
 using System;
+using System.Diagnostics;
 using System.Windows;
 
 namespace Arma3BEClient
@@ -49,7 +49,6 @@ namespace Arma3BEClient
             AddModule(typeof(CoreModuleInit));
             AddModule(typeof(NetModuleInit));
             AddModule(typeof(OptionsModuleInit));
-            AddModule(typeof(DevToolsModuleInit));
             AddModule(typeof(ToolsModuleInit));
             AddModule(typeof(BEServerModuleInit));
             AddModule(typeof(PlayersModuleInit));
@@ -73,12 +72,6 @@ namespace Arma3BEClient
               });
         }
 
-        protected override void ConfigureContainer()
-        {
-            base.ConfigureContainer();
-            //Container.RegisterType<ILog, Log>();
-        }
-
         protected override RegionAdapterMappings ConfigureRegionAdapterMappings()
         {
             // Call base method
@@ -97,17 +90,13 @@ namespace Arma3BEClient
 
         protected override ILoggerFacade CreateLogger()
         {
-            return new CustomLogger(new Log());
+            return new CustomLogger();
         }
 
         private class CustomLogger : ILoggerFacade
         {
-            private readonly ILog _log;
+            private readonly ILog _log = LogFactory.Create(new StackTrace().GetFrame(0).GetMethod().DeclaringType);
 
-            public CustomLogger(ILog log)
-            {
-                _log = log;
-            }
 
             public void Log(string message, Category category, Priority priority)
             {

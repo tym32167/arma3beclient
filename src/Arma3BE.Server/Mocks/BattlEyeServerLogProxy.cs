@@ -1,18 +1,18 @@
 ﻿using Arma3BE.Server.Abstract;
 using Arma3BEClient.Common.Logging;
 using BattleNET;
+using System.Diagnostics;
 
 namespace Arma3BE.Server.Mocks
 {
     public class BattlEyeServerLogProxy : IBattlEyeServer
     {
         private IBattlEyeServer _server;
-        private readonly ILog _log;
+        private readonly ILog _log = LogFactory.Create(new StackTrace().GetFrame(0).GetMethod().DeclaringType);
 
-        public BattlEyeServerLogProxy(IBattlEyeServer server, ILog log)
+        public BattlEyeServerLogProxy(IBattlEyeServer server)
         {
             _server = server;
-            _log = log;
 
             _server.BattlEyeConnected += OnBattlEyeConnected;
             _server.BattlEyeDisconnected += OnBattlEyeDisconnected;

@@ -19,7 +19,7 @@ namespace Arma3BE.Client.Modules.CoreModule
 
         public void Initialize()
         {
-            _container.RegisterType<ILog>(new InjectionFactory(LogWrapper.CreateDecorator));
+            _container.RegisterType<ILog, Log>();
 
 
             _container.RegisterType<ISettingsStoreSource, SettingsStoreSource>();
@@ -29,7 +29,7 @@ namespace Arma3BE.Client.Modules.CoreModule
                 new InjectionFactory(
                     c =>
                         new PlayerRepositoryCache(
-                            c.Resolve<PlayerRepository>(), c.Resolve<ILog>())));
+                            c.Resolve<PlayerRepository>())));
 
             _container.RegisterType<IBanHelper, BanHelper>();
         }

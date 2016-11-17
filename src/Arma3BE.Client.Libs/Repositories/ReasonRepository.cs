@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Arma3BEClient.Libs.Context;
+﻿using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
+using System;
+using System.Linq;
 
 namespace Arma3BEClient.Libs.Repositories
 {

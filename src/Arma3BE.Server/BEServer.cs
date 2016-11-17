@@ -6,6 +6,7 @@ using Arma3BEClient.Common.Logging;
 using BattleNET;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 
 namespace Arma3BE.Server
@@ -16,18 +17,17 @@ namespace Arma3BE.Server
         private readonly string _host;
 
         private readonly object _lock = new object();
-        private readonly ILog _log;
+        private readonly ILog _log = LogFactory.Create(new StackTrace().GetFrame(0).GetMethod().DeclaringType);
         private readonly string _password;
         private readonly int _port;
         private IBattlEyeServer _battlEyeServer;
 
 
-        public BEServer(string host, int port, string password, ILog log, IBattlEyeServerFactory battlEyeServerFactory)
+        public BEServer(string host, int port, string password, IBattlEyeServerFactory battlEyeServerFactory)
         {
             _host = host;
             _port = port;
             _password = password;
-            _log = log;
             _battlEyeServerFactory = battlEyeServerFactory;
 
             InitClients();
@@ -339,7 +339,7 @@ namespace Arma3BE.Server
 
         private void RegisterMessage(ServerMessage message)
         {
-           // _log.Info($"message [\nserver ip: {_host}\nmessageId:{message.MessageId}\n{message.Message}\n]");
+            // _log.Info($"message [\nserver ip: {_host}\nmessageId:{message.MessageId}\n{message.Message}\n]");
         }
 
         private void InitClients()

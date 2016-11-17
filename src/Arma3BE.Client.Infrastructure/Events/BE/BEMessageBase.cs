@@ -4,14 +4,14 @@ namespace Arma3BE.Client.Infrastructure.Events.BE
 {
     public abstract class BEMessageBase<T> : BEMessageBase
     {
-        public BEMessageBase(Guid serverId) : base(serverId)
+        protected BEMessageBase(Guid serverId) : base(serverId)
         {
         }
     }
 
     public abstract class BEMessageBase
     {
-        public BEMessageBase(Guid serverId)
+        protected BEMessageBase(Guid serverId)
         {
             ServerId = serverId;
         }

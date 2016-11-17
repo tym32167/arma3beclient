@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ namespace Arma3BEClient.Libs.Repositories
         IEnumerable<PlayerDto> GetPlayers(IEnumerable<string> guids);
         PlayerDto GetPlayer(string guid);
         Player GetPlayerInfo(string guid);
-        
+
         void UpdatePlayerComment(string guid, string comment);
         void UpdateComment(Dictionary<Guid, string> playersToUpdateComments);
         void AddOrUpdate(IEnumerable<PlayerDto> players);
@@ -39,7 +40,7 @@ namespace Arma3BEClient.Libs.Repositories
     {
         private static readonly object Lock = new object();
         private readonly IPlayerRepository _playerRepository;
-        private readonly ILog _log;
+        private readonly ILog _log = LogFactory.Create(new StackTrace().GetFrame(0).GetMethod().DeclaringType);
         private static volatile bool _validCache;
         private static volatile ConcurrentDictionary<string, PlayerDto> _playersByGuidsCache;
 
@@ -49,6 +50,7 @@ namespace Arma3BEClient.Libs.Repositories
             lock (Lock)
             {
                 if (_validCache) return;
+                _log.Info("Refresh Players cache.");
                 var playersByGuidsCache = new ConcurrentDictionary<string, PlayerDto>();
                 var players = _playerRepository.GetAllPlayers().GroupBy(x => x.GUID).Select(x => x.First());
                 foreach (var playerDto in players)
@@ -61,10 +63,9 @@ namespace Arma3BEClient.Libs.Repositories
             }
         }
 
-        public PlayerRepositoryCache(IPlayerRepository playerRepository, ILog log)
+        public PlayerRepositoryCache(IPlayerRepository playerRepository)
         {
             _playerRepository = playerRepository;
-            _log = log;
             Task.Run(() => ResetCache());
         }
 
@@ -356,7 +357,7 @@ namespace Arma3BEClient.Libs.Repositories
             using (var dc = new Arma3BeClientContext())
             {
                 var players = dc.Player
-                    .Where(x => string.IsNullOrEmpty(x.GUID) == false && string.IsNullOrEmpty(x.SteamId) == true)
+                    .Where(x => string.IsNullOrEmpty(x.GUID) == false && string.IsNullOrEmpty(x.SteamId))
                     .Where(x => guids.Contains(x.Id)).ToArray();
 
                 foreach (var player in players)

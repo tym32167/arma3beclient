@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 
-namespace Arma3BE.Client.Modules.MainModule.Models.Export
+namespace Arma3BE.Client.Modules.ToolsModule
 {
     public class PlayerXML
     {
