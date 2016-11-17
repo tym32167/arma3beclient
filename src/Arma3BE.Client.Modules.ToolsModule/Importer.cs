@@ -16,12 +16,11 @@ namespace Arma3BE.Client.Modules.ToolsModule
     public class Importer
     {
         private readonly IPlayerRepository _playerRepository;
-        private readonly ILog _log;
+        private readonly ILog _log = LogFactory.Create(new StackTrace().GetFrame(0).GetMethod().DeclaringType);
 
-        public Importer(IPlayerRepository playerRepository, ILog log)
+        public Importer(IPlayerRepository playerRepository)
         {
             _playerRepository = playerRepository;
-            _log = log;
         }
 
         private ImportResult Import(string fname)

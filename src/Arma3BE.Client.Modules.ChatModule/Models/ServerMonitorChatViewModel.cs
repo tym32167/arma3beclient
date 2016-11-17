@@ -8,7 +8,6 @@ using Arma3BE.Client.Modules.ChatModule.Boxes;
 using Arma3BE.Client.Modules.ChatModule.Helpers;
 using Arma3BE.Server;
 using Arma3BE.Server.Models;
-using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Tools;
 using Prism.Events;
@@ -26,16 +25,14 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
         private readonly IEventAggregator _eventAggregator;
         private readonly ISettingsStoreSource _settingsStoreSource;
         private readonly ChatHelper _chatHelper;
-        private readonly ILog _log;
         private readonly Guid _serverId;
         private bool _autoScroll;
         private bool _enableChat;
         private string _inputMessage;
         private List<Player> _players = new List<Player>();
 
-        public ServerMonitorChatViewModel(ILog log, ServerInfo serverInfo, IEventAggregator eventAggregator, ISettingsStoreSource settingsStoreSource)
+        public ServerMonitorChatViewModel(ServerInfo serverInfo, IEventAggregator eventAggregator, ISettingsStoreSource settingsStoreSource)
         {
-            _log = log;
             _serverId = serverInfo.Id;
             _eventAggregator = eventAggregator;
             _settingsStoreSource = settingsStoreSource;
@@ -43,7 +40,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             AutoScroll = true;
             EnableChat = true;
 
-            _chatHelper = new ChatHelper(_log, _serverId);
+            _chatHelper = new ChatHelper(_serverId);
 
             _eventAggregator.GetEvent<BEMessageEvent<BEChatMessage>>()
                 .Subscribe(BeServerChatMessageHandler, ThreadOption.UIThread);

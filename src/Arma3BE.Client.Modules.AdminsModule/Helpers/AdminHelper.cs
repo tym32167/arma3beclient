@@ -1,5 +1,4 @@
 ﻿using Arma3BE.Client.Infrastructure.Helpers;
-using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.Repositories;
 using System;
 using System.Collections.Generic;
@@ -11,7 +10,7 @@ namespace Arma3BE.Client.Modules.AdminsModule.Helpers
     {
         private readonly Guid _serverInfoId;
 
-        public AdminHelper(ILog log, Guid serverInfoId)
+        public AdminHelper(Guid serverInfoId)
         {
             _serverInfoId = serverInfoId;
         }

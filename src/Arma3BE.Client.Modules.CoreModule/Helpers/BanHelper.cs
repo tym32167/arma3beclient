@@ -3,7 +3,6 @@ using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Infrastructure.Helpers.Views;
 using Arma3BE.Server;
 using Arma3BE.Server.Models;
-using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.Repositories;
 using Arma3BEClient.Libs.Tools;
 using Prism.Events;
@@ -17,15 +16,13 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
 {
     public class BanHelper : StateHelper<Ban>, IBanHelper
     {
-        private readonly ILog _log;
         private readonly IEventAggregator _eventAggregator;
         private readonly IPlayerRepository _playerRepository;
         private readonly ISettingsStoreSource _settingsStoreSource;
         private readonly Regex replace = new Regex(@"\[[^\]^\[]*\]", RegexOptions.Compiled | RegexOptions.Multiline);
 
-        public BanHelper(ILog log, IEventAggregator eventAggregator, IPlayerRepository playerRepository, ISettingsStoreSource settingsStoreSource)
+        public BanHelper(IEventAggregator eventAggregator, IPlayerRepository playerRepository, ISettingsStoreSource settingsStoreSource)
         {
-            _log = log;
             _eventAggregator = eventAggregator;
             _playerRepository = playerRepository;
             _settingsStoreSource = settingsStoreSource;

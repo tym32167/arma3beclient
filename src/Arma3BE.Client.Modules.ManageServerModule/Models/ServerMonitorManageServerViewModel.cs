@@ -3,7 +3,6 @@ using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Server;
 using Arma3BE.Server.Models;
-using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.ModelCompact;
 using Prism.Events;
 using System;
@@ -15,14 +14,12 @@ namespace Arma3BE.Client.Modules.ManageServerModule.Models
     public class ServerMonitorManageServerViewModel : ViewModelBase
     {
         private readonly IEventAggregator _eventAggregator;
-        private readonly ILog _log;
         private readonly Guid _serverId;
         private IEnumerable<Mission> _missions;
         private Mission _selectedMission;
 
-        public ServerMonitorManageServerViewModel(ILog log, ServerInfo serverInfo, IEventAggregator eventAggregator)
+        public ServerMonitorManageServerViewModel(ServerInfo serverInfo, IEventAggregator eventAggregator)
         {
-            _log = log;
             _serverId = serverInfo.Id;
             _eventAggregator = eventAggregator;
 

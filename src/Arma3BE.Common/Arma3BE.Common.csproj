@@ -65,6 +65,7 @@
     <Compile Include="Extensions\IntExtensions.cs" />
     <Compile Include="Logging\ILog.cs" />
     <Compile Include="Logging\Log.cs" />
+    <Compile Include="Logging\LogFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

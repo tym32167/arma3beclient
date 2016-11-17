@@ -1,6 +1,7 @@
-﻿using Arma3BE.Client.Infrastructure.Commands;
+﻿using Arma3BE.Client.Infrastructure;
+using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Client.Infrastructure.Models;
-using Arma3BEClient.Common.Logging;
+using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Steam;
 using System;
 using System.Collections.Generic;
@@ -8,21 +9,17 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Arma3BE.Client.Infrastructure;
-using Arma3BEClient.Libs.ModelCompact;
 
 namespace Arma3BE.Client.Modules.SteamModule.Models
 {
     public class ServerMonitorSteamQueryViewModel : ViewModelBase
     {
-        private readonly ILog _log;
         private readonly IIpService _ipService;
         private bool _isBisy;
 
 
-        public ServerMonitorSteamQueryViewModel(ServerInfo serverInfo, ILog log, IIpService ipService)
+        public ServerMonitorSteamQueryViewModel(ServerInfo serverInfo, IIpService ipService)
         {
-            _log = log;
             _ipService = ipService;
             Host = serverInfo.Host;
             Port = serverInfo.SteamPort;

@@ -93,7 +93,6 @@
     </Compile>
     <Compile Include="CoreModuleInit.cs" />
     <Compile Include="Helpers\BanHelper.cs" />
-    <Compile Include="LogWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />

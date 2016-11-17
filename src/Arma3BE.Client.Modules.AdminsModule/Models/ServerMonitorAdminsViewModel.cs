@@ -3,7 +3,6 @@ using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.AdminsModule.Helpers;
 using Arma3BE.Server;
-using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.ModelCompact;
 using Prism.Events;
 using System;
@@ -16,13 +15,11 @@ namespace Arma3BE.Client.Modules.AdminsModule.Models
     public class ServerMonitorAdminsViewModel : ServerMonitorBaseViewModel<Admin, Admin>
     {
         private readonly AdminHelper _helper;
-        private readonly ILog _log;
 
-        public ServerMonitorAdminsViewModel(ILog log, ServerInfo serverInfo, IEventAggregator eventAggregator)
+        public ServerMonitorAdminsViewModel(ServerInfo serverInfo, IEventAggregator eventAggregator)
             : base(new ActionCommand(() => SendCommand(eventAggregator, serverInfo.Id, CommandType.Admins)), new AdminComparer())
         {
-            _log = log;
-            _helper = new AdminHelper(_log, serverInfo.Id);
+            _helper = new AdminHelper(serverInfo.Id);
 
             eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Admin>>>().Subscribe(e =>
             {

@@ -8,6 +8,7 @@ using Prism.Events;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
@@ -23,15 +24,15 @@ namespace Arma3BE.Client.Modules.BEServerModule
         private readonly TimedAction _playersUpdater;
         private readonly TimedAction _bansUpdater;
 
-        public BEServiceLogic(IEventAggregator aggregator, IBEService beService, ILog log, ISettingsStoreSource settingsStoreSource, IBELogic beLogic)
+        public BEServiceLogic(IEventAggregator aggregator, IBEService beService, ISettingsStoreSource settingsStoreSource, IBELogic beLogic)
         {
             _aggregator = aggregator;
             _beService = beService;
             _settingsStoreSource = settingsStoreSource;
             _beLogic = beLogic;
 
-            _playersUpdater = new TimedAction(_settingsStoreSource.GetSettingsStore().PlayersUpdateSeconds, UpdatePlayers, log);
-            _bansUpdater = new TimedAction(_settingsStoreSource.GetSettingsStore().BansUpdateSeconds, UpdateBans, log);
+            _playersUpdater = new TimedAction(_settingsStoreSource.GetSettingsStore().PlayersUpdateSeconds, UpdatePlayers);
+            _bansUpdater = new TimedAction(_settingsStoreSource.GetSettingsStore().BansUpdateSeconds, UpdateBans);
 
             _aggregator.GetEvent<SettingsChangedEvent>()
                 .Subscribe(SettingsChanged);
@@ -101,17 +102,16 @@ namespace Arma3BE.Client.Modules.BEServerModule
     {
         private int _interval;
         private readonly Action<HashSet<Guid>> _action;
-        private readonly ILog _log;
+        private readonly ILog _log = LogFactory.Create(new StackTrace().GetFrame(0).GetMethod().DeclaringType);
 
         private Timer _timer;
 
         private ConcurrentDictionary<Guid, byte> _servers = new ConcurrentDictionary<Guid, byte>();
 
-        public TimedAction(int interval, Action<HashSet<Guid>> action, ILog log)
+        public TimedAction(int interval, Action<HashSet<Guid>> action)
         {
             _interval = interval;
             _action = action;
-            _log = log;
 
             _timer = new Timer(Tick, null, Interval(), Timeout.Infinite);
         }

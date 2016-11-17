@@ -1,9 +1,10 @@
-using System;
-using System.Threading;
 using Arma3BE.Server.Abstract;
 using Arma3BEClient.Common.Core;
 using Arma3BEClient.Common.Logging;
 using BattleNET;
+using System;
+using System.Diagnostics;
+using System.Threading;
 
 namespace Arma3BE.Server.ServerDecorators
 {
@@ -13,7 +14,7 @@ namespace Arma3BE.Server.ServerDecorators
         private readonly BattlEyeLoginCredentials _credentials;
 
         private readonly object _lock = new object();
-        private readonly ILog _log;
+        private readonly ILog _log = LogFactory.Create(new StackTrace().GetFrame(0).GetMethod().DeclaringType);
 
         private readonly Timer _timer;
         private IBattlEyeServer _battlEyeServer;
@@ -22,11 +23,10 @@ namespace Arma3BE.Server.ServerDecorators
 
         public bool Connected => _battlEyeServer != null && _battlEyeServer.Connected;
 
-        public BEConnectedWatcher(IBattlEyeServerFactory battlEyeServerFactory, ILog log,
+        public BEConnectedWatcher(IBattlEyeServerFactory battlEyeServerFactory,
             BattlEyeLoginCredentials credentials)
         {
             _battlEyeServerFactory = battlEyeServerFactory;
-            _log = log;
             _credentials = credentials;
 
             _timer = new Timer(_timer_Elapsed, null, 5000, 10000);

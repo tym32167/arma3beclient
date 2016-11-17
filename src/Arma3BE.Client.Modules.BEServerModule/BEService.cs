@@ -10,6 +10,7 @@ using Prism.Events;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Arma3BE.Client.Modules.BEServerModule
@@ -17,15 +18,14 @@ namespace Arma3BE.Client.Modules.BEServerModule
     public class BEService : IBEService
     {
         private readonly IUnityContainer _container;
-        private readonly ILog _log;
+        private readonly ILog _log = LogFactory.Create(new StackTrace().GetFrame(0).GetMethod().DeclaringType);
         private readonly IIpService _ipService;
         private readonly IEventAggregator _eventAggregator;
         private ConcurrentDictionary<Guid, ServerItem> _serverPool = new ConcurrentDictionary<Guid, ServerItem>();
 
-        public BEService(IUnityContainer container, ILog log, IIpService ipService, IEventAggregator eventAggregator)
+        public BEService(IUnityContainer container, IIpService ipService, IEventAggregator eventAggregator)
         {
             _container = container;
-            _log = log;
             _ipService = ipService;
             _eventAggregator = eventAggregator;
 
