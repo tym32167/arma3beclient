@@ -72,6 +72,7 @@ after_build:
   - rd src\Arma3BE.Client\bin\Release\ro /s /q 
   - rd src\Arma3BE.Client\bin\Release\ru /s /q 
   - rd src\Arma3BE.Client\bin\Release\sv /s /q   
+  - rd src\Arma3BE.Client\bin\Release\zh-Hans /s /q   
 
 
 #---------------------------------#
