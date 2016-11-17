@@ -94,10 +94,10 @@
     <Compile Include="NetModuleInit.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="IPDatabase\GeoLite2-City.mmdb">
+    <None Include="app.config" />
+    <Content Include="IPDatabase\GeoLite2-Country.mmdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -110,6 +110,7 @@
       <Name>Arma3BE.Common</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
