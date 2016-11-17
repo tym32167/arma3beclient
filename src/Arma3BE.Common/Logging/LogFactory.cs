@@ -2,7 +2,7 @@
 
 namespace Arma3BEClient.Common.Logging
 {
-    public class LogFactory
+    public static class LogFactory
     {
         public static ILog Create(Type owner)
         {
