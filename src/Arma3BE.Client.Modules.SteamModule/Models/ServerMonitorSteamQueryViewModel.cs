@@ -24,8 +24,8 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
             Host = serverInfo.Host;
             Port = serverInfo.SteamPort;
 
-            OnPropertyChanged("Host");
-            OnPropertyChanged("Port");
+            OnPropertyChanged(nameof(Host));
+            OnPropertyChanged(nameof(Port));
 
             ExcecuteCommand = new ActionCommand(() => Task.Run(() =>
             {
@@ -80,9 +80,9 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
                 server.GetServerChallengeSync(settings);
 
 
-            OnPropertyChanged("ServerRules");
-            OnPropertyChanged("ServerInfo");
-            OnPropertyChanged("ServerPlayers");
+            OnPropertyChanged(nameof(ServerRules));
+            OnPropertyChanged(nameof(ServerInfo));
+            OnPropertyChanged(nameof(ServerPlayers));
         }
 
         public string Title { get { return "Steam Query"; } }

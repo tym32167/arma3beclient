@@ -1,12 +1,11 @@
-﻿using System;
-using System.Runtime.Serialization;
-using Arma3BEClient.Common.Attributes;
+﻿using Arma3BEClient.Common.Attributes;
+using System;
 
 namespace Arma3BE.Client.Infrastructure.Events.Models
 {
     public class LoggerMessage
     {
-        public enum LogLevel { Debug, Info, Error, Fatal}
+        public enum LogLevel { Debug, Info, Error, Fatal }
 
         [ShowInUi]
         public LogLevel Level { get; }

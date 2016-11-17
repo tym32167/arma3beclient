@@ -72,12 +72,6 @@ namespace Arma3BEClient
               });
         }
 
-        protected override void ConfigureContainer()
-        {
-            base.ConfigureContainer();
-            //Container.RegisterType<ILog, Log>();
-        }
-
         protected override RegionAdapterMappings ConfigureRegionAdapterMappings()
         {
             // Call base method

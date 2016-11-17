@@ -1,5 +1,4 @@
-﻿using Arma3BE.Client.Modules.MainModule.Models.Export;
-using Arma3BEClient.Libs.Repositories;
+﻿using Arma3BEClient.Libs.Repositories;
 using Microsoft.Win32;
 using System.Collections.Generic;
 using System.IO;

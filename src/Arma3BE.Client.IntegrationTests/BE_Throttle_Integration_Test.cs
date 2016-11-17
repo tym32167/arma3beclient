@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Arma3BE.Client.Modules.BEServerModule.Tests
+namespace Arma3BE.Client.IntegrationTests
 {
     [TestClass]
     public class BE_Throttle_Integration_Test

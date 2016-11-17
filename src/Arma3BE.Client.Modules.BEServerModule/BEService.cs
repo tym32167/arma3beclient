@@ -185,30 +185,30 @@ namespace Arma3BE.Client.Modules.BEServerModule
 
             private void Command(BECommand command)
             {
-                var server = this.BEServer;
+                var server = BEServer;
 
-                if (this.Info.Id == command.ServerId && server != null && server.Connected)
+                if (Info.Id == command.ServerId && server != null && server.Connected)
                 {
                     server.SendCommand(command.CommandType, command.Parameters);
                 }
             }
 
-            private void BEServer_MissionHandler(object sender, BEClientEventArgs<System.Collections.Generic.IEnumerable<Server.Models.Mission>> e)
+            private void BEServer_MissionHandler(object sender, BEClientEventArgs<IEnumerable<Server.Models.Mission>> e)
             {
                 _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Server.Models.Mission>>>().Publish(new BEItemsMessage<Server.Models.Mission>(e.Data, Info.Id));
             }
 
-            private void BEServer_BanHandler(object sender, BEClientEventArgs<System.Collections.Generic.IEnumerable<Server.Models.Ban>> e)
+            private void BEServer_BanHandler(object sender, BEClientEventArgs<IEnumerable<Server.Models.Ban>> e)
             {
                 _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Server.Models.Ban>>>().Publish(new BEItemsMessage<Server.Models.Ban>(e.Data, Info.Id));
             }
 
-            private void BEServer_AdminHandler(object sender, BEClientEventArgs<System.Collections.Generic.IEnumerable<Server.Models.Admin>> e)
+            private void BEServer_AdminHandler(object sender, BEClientEventArgs<IEnumerable<Server.Models.Admin>> e)
             {
                 _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Server.Models.Admin>>>().Publish(new BEItemsMessage<Server.Models.Admin>(e.Data, Info.Id));
             }
 
-            private void BEServer_PlayerHandler(object sender, Server.BEClientEventArgs<System.Collections.Generic.IEnumerable<Server.Models.Player>> e)
+            private void BEServer_PlayerHandler(object sender, BEClientEventArgs<IEnumerable<Server.Models.Player>> e)
             {
                 _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Server.Models.Player>>>().Publish(new BEItemsMessage<Server.Models.Player>(e.Data, Info.Id));
             }

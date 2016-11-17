@@ -357,7 +357,7 @@ namespace Arma3BEClient.Libs.Repositories
             using (var dc = new Arma3BeClientContext())
             {
                 var players = dc.Player
-                    .Where(x => string.IsNullOrEmpty(x.GUID) == false && string.IsNullOrEmpty(x.SteamId) == true)
+                    .Where(x => string.IsNullOrEmpty(x.GUID) == false && string.IsNullOrEmpty(x.SteamId))
                     .Where(x => guids.Contains(x.Id)).ToArray();
 
                 foreach (var player in players)
