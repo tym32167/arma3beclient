@@ -16,8 +16,6 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
     /// </summary>
     public partial class ChatControl : UserControl
     {
-        private Paragraph _paragraph;
-
         public ChatControl()
         {
             InitializeComponent();
@@ -31,7 +29,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
             if (!Model.EnableChat) return;
             var type = e.Message.Type;
             if (type != ChatMessage.MessageType.Unknown)
-                AppendText(_paragraph, ChatScrollViewer, e.Message);
+                textControl.AppendText(e.Message);
             else
                 AppendText(msgConsole, ConsoleScrollViewer, e.Message);
         }
@@ -52,14 +50,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
 
         private void InitBox()
         {
-            msgBox.Document.Blocks.Clear();
             histBox.Document.Blocks.Clear();
-
-            _paragraph = new Paragraph();
-
-            msgBox.Document.Blocks.Add(_paragraph);
-
-
             histBox.IsDocumentEnabled = true;
         }
 
@@ -171,15 +162,9 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
 
         private void ClearAll_Click(object sender, RoutedEventArgs e)
         {
-            msgBox.Document.Blocks.Clear();
             histBox.Document.Blocks.Clear();
-
-
             msgConsole.Text = string.Empty;
-
-            InitBox();
-
-            msgBox.AppendText(Environment.NewLine);
+            textControl.ClearAll();
         }
     }
 }
