@@ -91,30 +91,15 @@
 
             </TabItem>
             <TabItem Header="Console">
-
-                <ScrollViewer Grid.ColumnSpan="2" Name="ConsoleScrollViewer">
-
+                <ScrollViewer  Name="ConsoleScrollViewer">
                     <TextBox Name="msgConsole" FontSize="12" IsReadOnly="True" />
-
                 </ScrollViewer>
             </TabItem>
 
 
             <TabItem Header="Players Log">
-
-                <ScrollViewer Grid.ColumnSpan="2" Name="HistoryScrollViewer">
-
-                    <RichTextBox Name="histBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                                     IsReadOnly="True" IsReadOnlyCaretVisible="False"
-                                     FontSize="14" FontWeight="Medium" FontStyle="Normal" Background="#F0F0F0">
-                        <RichTextBox.Resources>
-                            <Style TargetType="{x:Type Paragraph}">
-                                <Setter Property="Margin" Value="0" />
-                            </Style>
-                        </RichTextBox.Resources>
-                    </RichTextBox>
-
-                </ScrollViewer>
+                <boxes:ColoredTextControl x:Name="textPlayerControl" IsAutoScroll="{Binding AutoScroll}" >
+                </boxes:ColoredTextControl>
             </TabItem>
 
         </TabControl>
