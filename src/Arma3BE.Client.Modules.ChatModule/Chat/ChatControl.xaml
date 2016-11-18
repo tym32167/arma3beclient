@@ -65,7 +65,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <boxes:ColoredTextControl x:Name="textControl" Grid.ColumnSpan="3">
+                    <boxes:ColoredTextControl x:Name="textControl" IsAutoScroll="{Binding AutoScroll}" Grid.ColumnSpan="3">
                     </boxes:ColoredTextControl>
 
                     <ComboBox Grid.Row="1" Grid.Column="0" Margin="2" ItemsSource="{Binding Players, Mode=OneWay}" 

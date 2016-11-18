@@ -14,8 +14,20 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
     /// </summary>
     public partial class ColoredTextControl : UserControl
     {
-        private ServerMonitorChatViewModel Model => DataContext as ServerMonitorChatViewModel;
         private Paragraph _paragraph;
+
+
+
+        public static readonly DependencyProperty IsAutoScrollProperty =
+            DependencyProperty.Register("IsAutoScroll", typeof(Boolean), typeof(ColoredTextControl),
+                new FrameworkPropertyMetadata(false));
+
+
+        public bool IsAutoScroll
+        {
+            get { return (bool)GetValue(IsAutoScrollProperty); }
+            set { SetValue(IsAutoScrollProperty, value); }
+        }
 
         public ColoredTextControl()
         {
@@ -23,14 +35,12 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
             InitBox();
         }
 
-
         private void InitBox()
         {
             msgBox.Document.Blocks.Clear();
             _paragraph = new Paragraph();
             msgBox.Document.Blocks.Add(_paragraph);
         }
-
 
         public void AppendText(ChatMessage message)
         {
@@ -51,7 +61,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
 
             p.Inlines.Add(span);
 
-            if (Model.AutoScroll)
+            if (IsAutoScroll)
                 scroll.ScrollToEnd();
         }
 
