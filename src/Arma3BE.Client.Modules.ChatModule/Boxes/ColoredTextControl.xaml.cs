@@ -17,11 +17,9 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
     /// <summary>
     /// Interaction logic for ColoredTextControl.xaml
     /// </summary>
-    public partial class ColoredTextControl : UserControl
+    public partial class ColoredTextControl
     {
         private Paragraph _paragraph;
-
-
 
         public static readonly DependencyProperty IsAutoScrollProperty =
             DependencyProperty.Register("IsAutoScroll", typeof(Boolean), typeof(ColoredTextControl),
@@ -83,29 +81,6 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
             if (IsAutoScroll)
                 scroll.ScrollToEnd();
         }
-
-        //public void AppendText(ChatMessage message, string servername)
-        //{
-        //    AppendText(_paragraph, message, servername);
-        //}
-
-        //private void AppendText(Paragraph p, ChatMessage message, string servername)
-        //{
-        //    var text = string.Format("[{0}] [ {1:yyyy-MM-dd HH:mm:ss} ]  {2}\n", servername, message.Date.UtcToLocalFromSettings(),
-        //        message.Message);
-        //    var color = ServerMonitorChatViewModel.GetMessageColor(message);
-        //    var brush = new SolidColorBrush(color);
-        //    var span = new Span { Foreground = brush };
-
-        //    if (message.Type != ChatMessage.MessageType.RCon && message.IsImportantMessage)
-        //    {
-        //        span.FontWeight = FontWeights.Heavy;
-        //    }
-
-        //    span.Inlines.Add(text);
-        //    p.Inlines.Add(span);
-        //}
-
 
         public void AppendPlayerText(KeyValuePair<string, string> player, bool isIn)
         {
