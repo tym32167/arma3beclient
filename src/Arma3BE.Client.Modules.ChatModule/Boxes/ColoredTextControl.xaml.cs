@@ -50,14 +50,25 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
             msgBox.IsDocumentEnabled = true;
         }
 
-        public void AppendText(ChatMessage message)
+        public void AppendText(ChatMessage message, string servername = null)
         {
             AppendText(_paragraph, ChatScrollViewer, message);
         }
 
-        private void AppendText(Paragraph p, ScrollViewer scroll, ChatMessage message)
+        private void AppendText(Paragraph p, ScrollViewer scroll, ChatMessage message, string servername = null)
         {
-            var text = $"[ {message.Date.UtcToLocalFromSettings():HH:mm:ss} ]  {message.Message}\n";
+            string text;
+
+            if (string.IsNullOrEmpty(servername))
+            {
+                text = $"[ {message.Date.UtcToLocalFromSettings():HH:mm:ss} ]  {message.Message}\n";
+            }
+            else
+            {
+                text =
+                    $"[{servername}] [ {message.Date.UtcToLocalFromSettings():yyyy-MM-dd HH:mm:ss} ]  {message.Message}\n";
+            }
+
             var color = ServerMonitorChatViewModel.GetMessageColor(message);
 
             var brush = new SolidColorBrush(color);
@@ -73,27 +84,27 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
                 scroll.ScrollToEnd();
         }
 
-        public void AppendText(ChatMessage message, string servername)
-        {
-            AppendText(_paragraph, message, servername);
-        }
+        //public void AppendText(ChatMessage message, string servername)
+        //{
+        //    AppendText(_paragraph, message, servername);
+        //}
 
-        private void AppendText(Paragraph p, ChatMessage message, string servername)
-        {
-            var text = string.Format("[{0}] [ {1:yyyy-MM-dd HH:mm:ss} ]  {2}\n", servername, message.Date.UtcToLocalFromSettings(),
-                message.Message);
-            var color = ServerMonitorChatViewModel.GetMessageColor(message);
-            var brush = new SolidColorBrush(color);
-            var span = new Span { Foreground = brush };
+        //private void AppendText(Paragraph p, ChatMessage message, string servername)
+        //{
+        //    var text = string.Format("[{0}] [ {1:yyyy-MM-dd HH:mm:ss} ]  {2}\n", servername, message.Date.UtcToLocalFromSettings(),
+        //        message.Message);
+        //    var color = ServerMonitorChatViewModel.GetMessageColor(message);
+        //    var brush = new SolidColorBrush(color);
+        //    var span = new Span { Foreground = brush };
 
-            if (message.Type != ChatMessage.MessageType.RCon && message.IsImportantMessage)
-            {
-                span.FontWeight = FontWeights.Heavy;
-            }
+        //    if (message.Type != ChatMessage.MessageType.RCon && message.IsImportantMessage)
+        //    {
+        //        span.FontWeight = FontWeights.Heavy;
+        //    }
 
-            span.Inlines.Add(text);
-            p.Inlines.Add(span);
-        }
+        //    span.Inlines.Add(text);
+        //    p.Inlines.Add(span);
+        //}
 
 
         public void AppendPlayerText(KeyValuePair<string, string> player, bool isIn)
