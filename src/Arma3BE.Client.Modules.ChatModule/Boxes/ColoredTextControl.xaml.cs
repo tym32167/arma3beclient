@@ -27,6 +27,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
         private void InitBox()
         {
             msgBox.Document.Blocks.Clear();
+            _paragraph = new Paragraph();
             msgBox.Document.Blocks.Add(_paragraph);
         }
 
