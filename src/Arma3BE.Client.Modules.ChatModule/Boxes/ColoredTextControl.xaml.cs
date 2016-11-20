@@ -19,8 +19,6 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
     /// </summary>
     public partial class ColoredTextControl : IColoredTextControl
     {
-        private Paragraph _paragraph;
-
         public static readonly DependencyProperty IsAutoScrollProperty =
             DependencyProperty.Register("IsAutoScroll", typeof(Boolean), typeof(ColoredTextControl),
                 new FrameworkPropertyMetadata(false));
@@ -41,42 +39,43 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
         private void InitBox()
         {
             msgBox.Document.Blocks.Clear();
-            _paragraph = new Paragraph();
-            msgBox.Document.Blocks.Add(_paragraph);
-
-
             msgBox.IsDocumentEnabled = true;
         }
 
         public void AppendText(ChatMessage message, string servername = null)
         {
-            AppendText(_paragraph, ChatScrollViewer, message);
+            AppendText(ChatScrollViewer, message);
         }
 
-        private void AppendText(Paragraph p, ScrollViewer scroll, ChatMessage message, string servername = null)
+        private void AppendText(ScrollViewer scroll, ChatMessage message, string servername = null)
         {
             string text;
 
             if (string.IsNullOrEmpty(servername))
             {
-                text = $"[ {message.Date.UtcToLocalFromSettings():HH:mm:ss} ]  {message.Message}\n";
+                text = $"[ {message.Date.UtcToLocalFromSettings():HH:mm:ss} ]  {message.Message}";
             }
             else
             {
                 text =
-                    $"[{servername}] [ {message.Date.UtcToLocalFromSettings():yyyy-MM-dd HH:mm:ss} ]  {message.Message}\n";
+                    $"[{servername}] [ {message.Date.UtcToLocalFromSettings():yyyy-MM-dd HH:mm:ss} ]  {message.Message}";
             }
 
             var color = ServerMonitorChatViewModel.GetMessageColor(message);
 
-            var brush = new SolidColorBrush(color);
-            var span = new Span { Foreground = brush };
-            span.Inlines.Add(text);
+            var p = new Paragraph
+            {
+                Foreground = new SolidColorBrush(color),
+                FontSize = 13
+            };
+
+
+            p.Inlines.Add(text);
 
             if (message.Type != ChatMessage.MessageType.RCon && message.IsImportantMessage)
-                span.FontWeight = FontWeights.Heavy;
+                p.FontWeight = FontWeights.Heavy;
 
-            p.Inlines.Add(span);
+            msgBox.Document.Blocks.Add(p);
 
             if (IsAutoScroll)
                 scroll.ScrollToEnd();
@@ -122,7 +121,6 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
         {
             msgBox.Document.Blocks.Clear();
             InitBox();
-            msgBox.AppendText(Environment.NewLine);
         }
     }
 }

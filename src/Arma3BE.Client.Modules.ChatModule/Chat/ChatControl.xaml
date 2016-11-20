@@ -104,6 +104,9 @@
             <TabItem Header="Players Log">
                 <boxes:ColoredTextControl x:Name="textPlayerControl" IsAutoScroll="{Binding AutoScroll}" >
                 </boxes:ColoredTextControl>
+
+                <!--<boxes:RTBControl x:Name="textPlayerControl" IsAutoScroll="{Binding AutoScroll}" >
+                </boxes:RTBControl>-->
             </TabItem>
 
         </TabControl>
