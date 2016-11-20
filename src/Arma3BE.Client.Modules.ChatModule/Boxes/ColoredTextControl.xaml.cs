@@ -17,7 +17,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
     /// <summary>
     /// Interaction logic for ColoredTextControl.xaml
     /// </summary>
-    public partial class ColoredTextControl
+    public partial class ColoredTextControl : IColoredTextControl
     {
         private Paragraph _paragraph;
 

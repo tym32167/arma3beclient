@@ -1,6 +1,7 @@
 ﻿using Arma3BE.Client.Modules.ChatModule.Models;
 using Arma3BE.Server.Models;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 
 namespace Arma3BE.Client.Modules.ChatModule.Boxes
@@ -33,6 +34,12 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
         private void Refresh()
         {
             textControl.ClearAll();
+
+            if (_model.Log.Count() > 10000)
+            {
+                MessageBox.Show(Window.GetWindow(this), "Too many results.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
 
             foreach (var chatLog in _model.Log)
             {

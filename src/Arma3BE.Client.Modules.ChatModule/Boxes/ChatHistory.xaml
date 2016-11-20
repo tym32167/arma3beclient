@@ -29,8 +29,11 @@
                 <Button Content="Search" Command="{Binding FilterCommand}" />
             </ToolBar>
 
-            <boxes:ColoredTextControl x:Name="textControl" IsAutoScroll="True" Grid.Row="1">
-            </boxes:ColoredTextControl>
+            <!--<boxes:ColoredTextControl x:Name="textControl" IsAutoScroll="True" Grid.Row="1">
+            </boxes:ColoredTextControl>-->
+
+            <boxes:RTBControl x:Name="textControl" IsAutoScroll="True" Grid.Row="1">
+            </boxes:RTBControl>
 
         </Grid>
     </xctk:BusyIndicator>
