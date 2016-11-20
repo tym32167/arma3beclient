@@ -3,6 +3,7 @@ using Arma3BEClient.Common.Core;
 using Arma3BEClient.Common.Logging;
 using BattleNET;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,14 +15,13 @@ namespace Arma3BE.Server.ServerDecorators
         private readonly ConcurrentQueue<BattlEyeMessageEventArgs> _messages = new ConcurrentQueue<BattlEyeMessageEventArgs>();
 
         private readonly object _lock = new object();
-        private readonly ILog _log;
+        private readonly ILog _log = LogFactory.Create(new StackTrace().GetFrame(0).GetMethod().DeclaringType);
         private readonly Timer _timer;
         private IBattlEyeServer _battlEyeServer;
 
-        public ThreadSafeBattleEyeServer(IBattlEyeServer battlEyeServer, ILog log)
+        public ThreadSafeBattleEyeServer(IBattlEyeServer battlEyeServer)
         {
             _battlEyeServer = battlEyeServer;
-            _log = log;
             _battlEyeServer.BattlEyeConnected += OnBattlEyeConnected;
             _battlEyeServer.BattlEyeMessageReceived += OnBattlEyeMessageReceived;
             _battlEyeServer.BattlEyeDisconnected += OnBattlEyeDisconnected;
@@ -54,6 +54,7 @@ namespace Arma3BE.Server.ServerDecorators
         {
             lock (_lock)
             {
+                _log.Info($"TRY TO CONNECT TO");
                 return _battlEyeServer.Connect();
             }
         }

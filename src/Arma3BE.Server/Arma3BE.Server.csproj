@@ -76,14 +76,17 @@
       <Project>{D507E532-7DE6-4028-9DBE-AA76C54CC92A}</Project>
       <Name>Arma3BE.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BattleNET\BattleNET.csproj">
-      <Project>{4FBB3734-215B-45B1-BDBC-0EFA156A6900}</Project>
-      <Name>BattleNET</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="BattleNET, Version=1.3.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\BattleNET.1.3.2.0\lib\net40\BattleNET.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

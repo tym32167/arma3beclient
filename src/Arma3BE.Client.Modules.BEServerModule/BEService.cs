@@ -8,25 +8,24 @@ using Arma3BEClient.Libs.ModelCompact;
 using Microsoft.Practices.Unity;
 using Prism.Events;
 using System;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Arma3BE.Client.Modules.BEServerModule
 {
-    public class BEService
+    public class BEService : IBEService
     {
         private readonly IUnityContainer _container;
-        private readonly ILog _log;
+        private readonly ILog _log = LogFactory.Create(new StackTrace().GetFrame(0).GetMethod().DeclaringType);
         private readonly IIpService _ipService;
         private readonly IEventAggregator _eventAggregator;
         private ConcurrentDictionary<Guid, ServerItem> _serverPool = new ConcurrentDictionary<Guid, ServerItem>();
 
-        public BEService(IUnityContainer container, ILog log, IIpService ipService, IEventAggregator eventAggregator)
+        public BEService(IUnityContainer container, IIpService ipService, IEventAggregator eventAggregator)
         {
             _container = container;
-            _log = log;
             _ipService = ipService;
             _eventAggregator = eventAggregator;
 
@@ -186,30 +185,30 @@ namespace Arma3BE.Client.Modules.BEServerModule
 
             private void Command(BECommand command)
             {
-                var server = this.BEServer;
+                var server = BEServer;
 
-                if (this.Info.Id == command.ServerId && server != null && server.Connected)
+                if (Info.Id == command.ServerId && server != null && server.Connected)
                 {
                     server.SendCommand(command.CommandType, command.Parameters);
                 }
             }
 
-            private void BEServer_MissionHandler(object sender, BEClientEventArgs<System.Collections.Generic.IEnumerable<Server.Models.Mission>> e)
+            private void BEServer_MissionHandler(object sender, BEClientEventArgs<IEnumerable<Server.Models.Mission>> e)
             {
                 _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Server.Models.Mission>>>().Publish(new BEItemsMessage<Server.Models.Mission>(e.Data, Info.Id));
             }
 
-            private void BEServer_BanHandler(object sender, BEClientEventArgs<System.Collections.Generic.IEnumerable<Server.Models.Ban>> e)
+            private void BEServer_BanHandler(object sender, BEClientEventArgs<IEnumerable<Server.Models.Ban>> e)
             {
                 _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Server.Models.Ban>>>().Publish(new BEItemsMessage<Server.Models.Ban>(e.Data, Info.Id));
             }
 
-            private void BEServer_AdminHandler(object sender, BEClientEventArgs<System.Collections.Generic.IEnumerable<Server.Models.Admin>> e)
+            private void BEServer_AdminHandler(object sender, BEClientEventArgs<IEnumerable<Server.Models.Admin>> e)
             {
                 _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Server.Models.Admin>>>().Publish(new BEItemsMessage<Server.Models.Admin>(e.Data, Info.Id));
             }
 
-            private void BEServer_PlayerHandler(object sender, Server.BEClientEventArgs<System.Collections.Generic.IEnumerable<Server.Models.Player>> e)
+            private void BEServer_PlayerHandler(object sender, BEClientEventArgs<IEnumerable<Server.Models.Player>> e)
             {
                 _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Server.Models.Player>>>().Publish(new BEItemsMessage<Server.Models.Player>(e.Data, Info.Id));
             }

@@ -1,14 +1,13 @@
-﻿using System;
+﻿using Arma3BE.Client.Infrastructure.Helpers;
+using Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views;
+using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Arma3BE.Client.Infrastructure.Helpers;
-using Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views;
-using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Libs.ModelCompact;
-using Arma3BEClient.Libs.Repositories;
 using Player = Arma3BE.Server.Models.Player;
 
 namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
@@ -16,16 +15,14 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
     public class PlayerHelper : StateHelper<Player>
     {
         private readonly IBanHelper _banHelper;
-        private readonly ILog _log;
         private readonly IPlayerRepository _playerRepository;
         private readonly Guid _serverId;
 
         private readonly Regex NameRegex = new Regex("[A-Za-zА-Яа-я0-9]+",
             RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
-        public PlayerHelper(ILog log, Guid serverId, IBanHelper banHelper, IPlayerRepository playerRepository)
+        public PlayerHelper(Guid serverId, IBanHelper banHelper, IPlayerRepository playerRepository)
         {
-            _log = log;
             _serverId = serverId;
             _banHelper = banHelper;
             _playerRepository = playerRepository;

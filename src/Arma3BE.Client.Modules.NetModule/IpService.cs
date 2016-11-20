@@ -44,10 +44,10 @@ namespace Arma3BE.Client.Modules.NetModule
 
             try
             {
-                using (var reader = new DatabaseReader(@"IPDatabase\GeoLite2-City.mmdb"))
+                using (var reader = new DatabaseReader(@"IPDatabase\GeoLite2-Country.mmdb"))
                 {
-                    var city = reader.City(ip);
-                    return city.Country.Name;
+                    var country = reader.Country(ip);
+                    return country.Country.Name;
                 }
             }
             catch (Exception)

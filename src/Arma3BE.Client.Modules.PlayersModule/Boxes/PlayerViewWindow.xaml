@@ -31,6 +31,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -42,9 +43,18 @@
                     <TextBlock Text="Steam Id" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" />
                     <TextBlock Text="Name" Grid.Row="2" Grid.Column="0" />
                     <TextBlock Text="Last IP" Grid.Row="3" Grid.Column="0" />
-                    <TextBlock Text="IP Info" Grid.Row="4" Grid.Column="0" />
-                    <TextBlock Text="Last seen" Grid.Row="5" Grid.Column="0" />
-                    <TextBlock Text="Comment" Grid.Row="6" Grid.Column="0" />
+
+
+
+                    <TextBlock Text="Actions" Grid.Row="4" Grid.Column="0" />
+                    <Button CommandParameter="{Binding Path=Player.GUID}" Content="Ban" Command="{Binding BanCommand}" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left"></Button>
+                    
+
+
+
+                    <TextBlock Text="IP Info" Grid.Row="5" Grid.Column="0" />
+                    <TextBlock Text="Last seen" Grid.Row="6" Grid.Column="0" />
+                    <TextBlock Text="Comment" Grid.Row="7" Grid.Column="0" />
 
                     <TextBlock Text="{Binding Path=Player.GUID}" Grid.Row="0" Grid.Column="1" />
 
@@ -61,11 +71,11 @@
                     
                     <TextBlock Text="{Binding Path=Player.Name}" Grid.Row="2" Grid.Column="1" />
                     <TextBlock Text="{Binding Path=Player.LastIp}" Grid.Row="3" Grid.Column="1" />
-                    <TextBlock Text="{Binding Path=PlayerIPInfo}" Grid.Row="4" Grid.Column="1" />
-                    <TextBlock Text="{Binding Path=Player.LastSeen, Converter={StaticResource utcToLocalDateTimeConverter}, StringFormat=\{0:dd.MM.yy HH:mm:ss\}}" Grid.Row="5"
+                    <TextBlock Text="{Binding Path=PlayerIPInfo}" Grid.Row="5" Grid.Column="1" />
+                    <TextBlock Text="{Binding Path=Player.LastSeen, Converter={StaticResource utcToLocalDateTimeConverter}, StringFormat=\{0:dd.MM.yy HH:mm:ss\}}" Grid.Row="6"
                                Grid.Column="1" />
 
-                    <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="1">
+                    <StackPanel Orientation="Horizontal" Grid.Row="7" Grid.Column="1">
                         <TextBox Text="{Binding Path=Player.Comment, Mode=TwoWay}" MinLines="3" Width="300"
                                  TextWrapping="Wrap" AcceptsReturn="True" />
                         <Button Content="Save" Command="{Binding SaveComment}" />

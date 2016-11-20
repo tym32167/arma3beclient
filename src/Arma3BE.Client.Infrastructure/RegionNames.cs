@@ -10,5 +10,6 @@
 
 
         public static string MenuToolsRegion = "MenuToolsRegion";
+        public static string MenuFileToolsRegion = "MenuFileToolsRegion";
     }
 }

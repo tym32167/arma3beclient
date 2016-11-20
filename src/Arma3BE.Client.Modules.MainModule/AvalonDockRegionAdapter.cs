@@ -1,4 +1,5 @@
-﻿using Arma3BE.Client.Modules.MainModule.ViewModel;
+﻿using Arma3BE.Client.Infrastructure.Models;
+using Arma3BE.Client.Modules.MainModule.ViewModel;
 using Prism.Regions;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Arma3BE.Client.Infrastructure.Models;
 using Xceed.Wpf.AvalonDock;
 using Xceed.Wpf.AvalonDock.Layout;
 
@@ -35,15 +35,15 @@ namespace Arma3BE.Client.Modules.MainModule
         protected override void Adapt(IRegion region, DockingManager regionTarget)
         {
             region.Views.CollectionChanged += delegate (
-                Object sender, NotifyCollectionChangedEventArgs e)
+                object sender, NotifyCollectionChangedEventArgs e)
             {
-                this.OnViewsCollectionChanged(sender, e, region, regionTarget);
+                OnViewsCollectionChanged(sender, e, region, regionTarget);
             };
 
             regionTarget.DocumentClosed += delegate (
-                            Object sender, DocumentClosedEventArgs e)
+                            object sender, DocumentClosedEventArgs e)
             {
-                this.OnDocumentClosedEventArgs(sender, e, region);
+                OnDocumentClosedEventArgs(sender, e, region);
             };
         }
 
@@ -75,7 +75,7 @@ namespace Arma3BE.Client.Modules.MainModule
 
                     foreach (var disposable in disposables)
                     {
-                        if (disposable!=null) disposable.Dispose();
+                        disposable?.Dispose();
                     }
                 }
             }
@@ -84,7 +84,7 @@ namespace Arma3BE.Client.Modules.MainModule
             {
                 foreach (FrameworkElement item in e.NewItems)
                 {
-                    UIElement view = item as UIElement;
+                    UIElement view = item;
 
                     if (view != null)
                     {

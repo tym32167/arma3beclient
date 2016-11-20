@@ -2,6 +2,7 @@
 using Arma3BE.Client.Modules.BanModule;
 using Arma3BE.Client.Modules.BEServerModule;
 using Arma3BE.Client.Modules.ChatModule;
+using Arma3BE.Client.Modules.CoreModule;
 using Arma3BE.Client.Modules.IndicatorsModule;
 using Arma3BE.Client.Modules.MainModule;
 using Arma3BE.Client.Modules.ManageServerModule;
@@ -10,16 +11,17 @@ using Arma3BE.Client.Modules.OnlinePlayersModule;
 using Arma3BE.Client.Modules.OptionsModule;
 using Arma3BE.Client.Modules.PlayersModule;
 using Arma3BE.Client.Modules.SteamModule;
+using Arma3BE.Client.Modules.ToolsModule;
 using Arma3BEClient.Common.Logging;
 using log4net.Config;
 using Microsoft.Practices.Unity;
+using Prism.Logging;
 using Prism.Modularity;
 using Prism.Regions;
 using Prism.Unity;
 using System;
+using System.Diagnostics;
 using System.Windows;
-using Arma3BE.Client.Modules.CoreModule;
-using Arma3BE.Client.Modules.DevTools;
 
 namespace Arma3BEClient
 {
@@ -47,7 +49,7 @@ namespace Arma3BEClient
             AddModule(typeof(CoreModuleInit));
             AddModule(typeof(NetModuleInit));
             AddModule(typeof(OptionsModuleInit));
-            AddModule(typeof(DevToolsModuleInit));
+            AddModule(typeof(ToolsModuleInit));
             AddModule(typeof(BEServerModuleInit));
             AddModule(typeof(PlayersModuleInit));
             AddModule(typeof(BanModuleInit));
@@ -70,12 +72,6 @@ namespace Arma3BEClient
               });
         }
 
-        protected override void ConfigureContainer()
-        {
-            base.ConfigureContainer();
-            //Container.RegisterType<ILog, Log>();
-        }
-
         protected override RegionAdapterMappings ConfigureRegionAdapterMappings()
         {
             // Call base method
@@ -90,6 +86,38 @@ namespace Arma3BEClient
 
             // Set return value
             return mappings;
+        }
+
+        protected override ILoggerFacade CreateLogger()
+        {
+            return new CustomLogger();
+        }
+
+        private class CustomLogger : ILoggerFacade
+        {
+            private readonly ILog _log = LogFactory.Create(new StackTrace().GetFrame(0).GetMethod().DeclaringType);
+
+
+            public void Log(string message, Category category, Priority priority)
+            {
+                switch (category)
+                {
+                    case Category.Debug:
+                        _log.Debug($"({priority}) - {message}");
+                        break;
+                    case Category.Exception:
+                        _log.Error($"({priority}) - {message}");
+                        break;
+                    case Category.Info:
+                        _log.Info($"({priority}) - {message}");
+                        break;
+                    case Category.Warn:
+                        _log.Info($"({priority}) - {message}");
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(category), category, null);
+                }
+            }
         }
     }
 }

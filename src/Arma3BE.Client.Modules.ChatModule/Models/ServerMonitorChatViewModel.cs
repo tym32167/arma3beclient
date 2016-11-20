@@ -1,11 +1,13 @@
 ﻿using Arma3BE.Client.Infrastructure.Commands;
+using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Events.BE;
+using Arma3BE.Client.Infrastructure.Events.Models;
+using Arma3BE.Client.Infrastructure.Extensions;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.ChatModule.Boxes;
 using Arma3BE.Client.Modules.ChatModule.Helpers;
 using Arma3BE.Server;
 using Arma3BE.Server.Models;
-using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Tools;
 using Prism.Events;
@@ -14,7 +16,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
-using Arma3BE.Client.Infrastructure.Extensions;
 using Player = Arma3BE.Server.Models.Player;
 
 namespace Arma3BE.Client.Modules.ChatModule.Models
@@ -22,24 +23,24 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
     public class ServerMonitorChatViewModel : ViewModelBase
     {
         private readonly IEventAggregator _eventAggregator;
+        private readonly ISettingsStoreSource _settingsStoreSource;
         private readonly ChatHelper _chatHelper;
-        private readonly ILog _log;
         private readonly Guid _serverId;
         private bool _autoScroll;
         private bool _enableChat;
         private string _inputMessage;
         private List<Player> _players = new List<Player>();
 
-        public ServerMonitorChatViewModel(ILog log, ServerInfo serverInfo, IEventAggregator eventAggregator)
+        public ServerMonitorChatViewModel(ServerInfo serverInfo, IEventAggregator eventAggregator, ISettingsStoreSource settingsStoreSource)
         {
-            _log = log;
             _serverId = serverInfo.Id;
             _eventAggregator = eventAggregator;
+            _settingsStoreSource = settingsStoreSource;
 
             AutoScroll = true;
             EnableChat = true;
 
-            _chatHelper = new ChatHelper(_log, _serverId);
+            _chatHelper = new ChatHelper(_serverId);
 
             _eventAggregator.GetEvent<BEMessageEvent<BEChatMessage>>()
                 .Subscribe(BeServerChatMessageHandler, ThreadOption.UIThread);
@@ -52,7 +53,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
                 .Subscribe(_beServer_PlayerLog, ThreadOption.UIThread);
 
             _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Player>>>()
-                .Subscribe(_beServer_PlayerHandler);
+                .Subscribe(_beServer_PlayerHandler, ThreadOption.UIThread);
 
             var global = new Player(-1, null, 0, 0, null, "GLOBAL", Player.PlayerState.Ingame);
             Players = new List<Player> { global };
@@ -67,6 +68,9 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
                 wnd.Activate();
             });
         }
+
+
+
 
         private void _beServer_PlayerHandler(BEItemsMessage<Player> e)
         {
@@ -90,6 +94,30 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             {
                 SelectedPlayer = global;
             }
+
+            ProcessPlayers(e);
+        }
+
+
+
+        Dictionary<string, string> _prev = new Dictionary<string, string>();
+        private void ProcessPlayers(BEItemsMessage<Player> newPlayers)
+        {
+            if (newPlayers.ServerId != _serverId) return;
+
+            var prev = _prev;
+            var next = newPlayers.Items.GroupBy(x => x.Guid).ToDictionary(x => x.Key, x => x.First().Name);
+
+            _prev = next;
+
+            var addedItems = next.Where(x => prev.ContainsKey(x.Key) == false).ToArray();
+            var removedItems = prev.Where(x => next.ContainsKey(x.Key) == false).ToArray();
+
+            if (addedItems.Any())
+                OnPlayersInHandler(addedItems);
+
+            if (removedItems.Any())
+                OnPlayersOutHandler(removedItems);
         }
 
 
@@ -166,10 +194,12 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
         public event EventHandler<ServerMonitorChatViewModelEventArgs> ChatMessageEventHandler;
         public event EventHandler<ServerMonitorLogViewModelEventArgs> LogMessageEventHandler;
 
+        public event EventHandler<IEnumerable<KeyValuePair<string, string>>> PlayersInHandler;
+        public event EventHandler<IEnumerable<KeyValuePair<string, string>>> PlayersOutHandler;
+
         protected virtual void OnChatMessageEventHandler(ChatMessage e)
         {
-            var handler = ChatMessageEventHandler;
-            if (handler != null) handler(this, new ServerMonitorChatViewModelEventArgs(e));
+            ChatMessageEventHandler?.Invoke(this, new ServerMonitorChatViewModelEventArgs(e));
         }
 
         private void BeServerChatMessageHandler(BEChatMessage e)
@@ -183,7 +213,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
         {
             if (!string.IsNullOrEmpty(rawmessage))
             {
-                var adminName = SettingsStore.Instance.AdminName;
+                var adminName = _settingsStoreSource.GetSettingsStore().AdminName;
 
                 var selectedPlayer = SelectedPlayer;
                 var destinationNum = -1;
@@ -251,6 +281,22 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             }
 
             return color;
+        }
+
+        protected virtual void OnPlayersInHandler(IEnumerable<KeyValuePair<string, string>> e)
+        {
+            PlayersInHandler?.Invoke(this, e);
+        }
+
+        protected virtual void OnPlayersOutHandler(IEnumerable<KeyValuePair<string, string>> e)
+        {
+            PlayersOutHandler?.Invoke(this, e);
+        }
+
+        public void ShowPlayer(string guidIp)
+        {
+            if (string.IsNullOrEmpty(guidIp) == false)
+                _eventAggregator.GetEvent<ShowUserInfoEvent>().Publish(new ShowUserModel(guidIp));
         }
     }
 

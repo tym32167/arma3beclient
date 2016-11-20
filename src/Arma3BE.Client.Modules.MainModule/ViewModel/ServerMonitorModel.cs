@@ -1,28 +1,26 @@
 ﻿using Arma3BE.Client.Infrastructure.Contracts;
 using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Events.BE;
-using Arma3BE.Server;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using Prism.Events;
 using System;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Arma3BE.Client.Modules.MainModule.ViewModel
 {
     public class ServerMonitorModel : DisposableViewModelBase
     {
         private readonly IEventAggregator _eventAggregator;
-        private readonly ILog _log;
+        private readonly ILog _log = LogFactory.Create(new StackTrace().GetFrame(0).GetMethod().DeclaringType);
         private bool _connected;
         private bool _isBusy;
 
-        public ServerMonitorModel(ServerInfo currentServer, ILog log,
+        public ServerMonitorModel(ServerInfo currentServer,
             IEventAggregator eventAggregator)
         {
             CurrentServer = currentServer;
-            _log = log;
             _eventAggregator = eventAggregator;
 
             _eventAggregator.GetEvent<ConnectServerEvent>().Subscribe(BeServerConnectHandler, ThreadOption.UIThread);

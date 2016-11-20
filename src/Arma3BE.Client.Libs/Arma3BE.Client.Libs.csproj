@@ -72,6 +72,7 @@
     <Compile Include="ModelCompact\Sessions.cs" />
     <Compile Include="ModelCompact\Settings.cs" />
     <Compile Include="Tools\ConnectionFactory.cs" />
+    <Compile Include="Tools\ISettingsStore.cs" />
     <Compile Include="Tools\Settings.cs" />
   </ItemGroup>
   <ItemGroup>

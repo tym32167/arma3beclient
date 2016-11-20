@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Arma3BE.Client.Infrastructure.Commands;
+﻿using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Client.Infrastructure.Events.Models;
@@ -12,10 +7,14 @@ using Arma3BE.Client.Infrastructure.Helpers.Views;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.BanModule.Boxes;
 using Arma3BE.Server;
-using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using Prism.Events;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using Ban = Arma3BE.Server.Models.Ban;
 
 namespace Arma3BE.Client.Modules.BanModule.Models
@@ -24,16 +23,14 @@ namespace Arma3BE.Client.Modules.BanModule.Models
     {
         private readonly IEventAggregator _eventAggregator;
         private readonly IBanHelper _helper;
-        private readonly ILog _log;
         private readonly Guid _serverInfoId;
 
-        public ServerMonitorBansViewModel(ILog log, ServerInfo serverInfo, IEventAggregator eventAggregator,
+        public ServerMonitorBansViewModel(ServerInfo serverInfo, IEventAggregator eventAggregator,
             IBanHelper banHelper)
             : base(
                 new ActionCommand(() => SendCommand(eventAggregator, serverInfo.Id, CommandType.Bans)),
                 new BanViewComparer())
         {
-            _log = log;
             _serverInfoId = serverInfo.Id;
             _eventAggregator = eventAggregator;
             _helper = banHelper;

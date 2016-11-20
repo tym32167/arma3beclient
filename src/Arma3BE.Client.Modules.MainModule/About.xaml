@@ -27,6 +27,8 @@
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
+
+                <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
 
             <Label Grid.Column="0" Grid.Row="0" VerticalAlignment="Center">Company</Label>
@@ -36,8 +38,9 @@
             <Label Grid.Column="0" Grid.Row="4" VerticalAlignment="Center">Sources</Label>
             <Label Grid.Column="0" Grid.Row="5" VerticalAlignment="Center">Latest version</Label>
             <Label Grid.Column="0" Grid.Row="6" VerticalAlignment="Center">Author</Label>
-            <Label Grid.Column="0" Grid.Row="7" VerticalAlignment="Center">Copyright</Label>
 
+            <Label Grid.Column="0" Grid.Row="7" VerticalAlignment="Center">Powered by</Label>
+            <Label Grid.Column="0" Grid.Row="8" VerticalAlignment="Center">Copyright</Label>
 
             <Label Grid.Column="1" Grid.Row="0" Name="lbCompany" FontSize="20">Company</Label>
             <Label Grid.Column="1" Grid.Row="1" Name="lbTitle" FontSize="20">Title</Label>
@@ -45,8 +48,13 @@
             <Label Grid.Column="1" Grid.Row="3" MaxWidth="300">
                 <TextBlock Name="lbDescription" TextWrapping="WrapWithOverflow"></TextBlock>
             </Label>
-            <Label Grid.Column="1" Grid.Row="7" Name="lbCopyright">Copyright</Label>
 
+
+            <Label Grid.Column="1" Grid.Row="7">
+                <Hyperlink NavigateUri="https://github.com/marceldev89/BattleNET" RequestNavigate="Hyperlink_RequestNavigate">BattleNET</Hyperlink>
+            </Label>
+
+            <Label Grid.Column="1" Grid.Row="8" Name="lbCopyright">Copyright</Label>
 
             <Label Grid.Column="1" Grid.Row="4">
                 <Hyperlink NavigateUri="https://github.com/tym32167/arma3beclient" RequestNavigate="Hyperlink_RequestNavigate">github</Hyperlink>

@@ -1,12 +1,10 @@
-﻿using Arma3BE.Client.Modules.ChatModule.Models;
+﻿using Arma3BE.Client.Infrastructure.Extensions;
+using Arma3BE.Client.Modules.ChatModule.Models;
 using Arma3BE.Server.Models;
-using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using Arma3BE.Client.Infrastructure.Extensions;
 
 namespace Arma3BE.Client.Modules.ChatModule.Chat
 {
@@ -15,12 +13,9 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
     /// </summary>
     public partial class ChatControl : UserControl
     {
-        private Paragraph _paragraph;
-
         public ChatControl()
         {
             InitializeComponent();
-            InitBox();
         }
 
         private ServerMonitorChatViewModel Model => DataContext as ServerMonitorChatViewModel;
@@ -30,7 +25,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
             if (!Model.EnableChat) return;
             var type = e.Message.Type;
             if (type != ChatMessage.MessageType.Unknown)
-                AppendText(_paragraph, ChatScrollViewer, e.Message);
+                textControl.AppendText(e.Message);
             else
                 AppendText(msgConsole, ConsoleScrollViewer, e.Message);
         }
@@ -49,32 +44,6 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
             }
         }
 
-        private void InitBox()
-        {
-            msgBox.Document.Blocks.Clear();
-            _paragraph = new Paragraph();
-
-            msgBox.Document.Blocks.Add(_paragraph);
-        }
-
-        public void AppendText(Paragraph p, ScrollViewer scroll, ChatMessage message)
-        {
-            var text = $"[ {message.Date.UtcToLocalFromSettings():HH:mm:ss} ]  {message.Message}\n";
-            var color = ServerMonitorChatViewModel.GetMessageColor(message);
-
-            var brush = new SolidColorBrush(color);
-            var span = new Span { Foreground = brush };
-            span.Inlines.Add(text);
-
-            if (message.Type != ChatMessage.MessageType.RCon && message.IsImportantMessage)
-                span.FontWeight = FontWeights.Heavy;
-
-            _paragraph.Inlines.Add(span);
-
-            if (Model.AutoScroll)
-                scroll.ScrollToEnd();
-        }
-
         public void AppendText(TextBox block, ScrollViewer scroll, MessageBase message)
         {
             var text = $"[ {message.Date.UtcToLocalFromSettings():HH:mm:ss} ]  {message.Message}\n";
@@ -91,6 +60,28 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
             {
                 model.ChatMessageEventHandler += _model_ChatMessageEventHandler;
                 model.LogMessageEventHandler += Model_LogMessageEventHandler;
+
+                model.PlayersInHandler += ModelOnPlayersInHandler;
+                model.PlayersOutHandler += ModelOnPlayersOutHandler;
+            }
+        }
+
+        private void ModelOnPlayersOutHandler(object sender, IEnumerable<KeyValuePair<string, string>> keyValuePairs)
+        {
+            if (!Model.EnableChat) return;
+            foreach (var pair in keyValuePairs)
+            {
+                textPlayerControl.AppendPlayerText(pair, false);
+            }
+
+        }
+
+        private void ModelOnPlayersInHandler(object sender, IEnumerable<KeyValuePair<string, string>> keyValuePairs)
+        {
+            if (!Model.EnableChat) return;
+            foreach (var pair in keyValuePairs)
+            {
+                textPlayerControl.AppendPlayerText(pair, true);
             }
         }
 
@@ -105,12 +96,9 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
 
         private void ClearAll_Click(object sender, RoutedEventArgs e)
         {
-            msgBox.Document.Blocks.Clear();
+            textPlayerControl.ClearAll();
             msgConsole.Text = string.Empty;
-
-            InitBox();
-
-            msgBox.AppendText(Environment.NewLine);
+            textControl.ClearAll();
         }
     }
 }

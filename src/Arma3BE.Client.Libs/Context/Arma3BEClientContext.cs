@@ -1,8 +1,7 @@
-﻿using System.Data.Entity;
-using System.Diagnostics;
-using Arma3BEClient.Libs.Migrations;
+﻿using Arma3BEClient.Libs.Migrations;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Tools;
+using System.Data.Entity;
 
 namespace Arma3BEClient.Libs.Context
 {
@@ -20,9 +19,12 @@ namespace Arma3BEClient.Libs.Context
 
         public Arma3BeClientContext() : base(new ConnectionFactory().Create(), true)
         {
+            //var log = new Log();
+
             //this.Database.Log = s =>
             //{
-            //    Debug.WriteLine(s);
+            //    //Debug.WriteLine(s);
+            //    log.Info(s);
             //};
         }
 

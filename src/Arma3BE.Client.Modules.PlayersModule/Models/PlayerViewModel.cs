@@ -1,13 +1,15 @@
-﻿using System;
-using System.Diagnostics;
-using System.Windows.Input;
-using Arma3BE.Client.Infrastructure;
+﻿using Arma3BE.Client.Infrastructure;
 using Arma3BE.Client.Infrastructure.Commands;
-using Arma3BE.Client.Infrastructure.Extensions;
+using Arma3BE.Client.Infrastructure.Events;
+using Arma3BE.Client.Infrastructure.Events.Models;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using Prism.Commands;
+using Prism.Events;
+using System;
+using System.Diagnostics;
+using System.Windows.Input;
 
 namespace Arma3BE.Client.Modules.PlayersModule.Models
 {
@@ -16,17 +18,26 @@ namespace Arma3BE.Client.Modules.PlayersModule.Models
         private readonly string _userGuid;
         private readonly IIpService _ipService;
         private readonly IPlayerRepository _playerRepository;
+        private readonly IEventAggregator _eventAggregator;
         private Player _player;
         private string _playerIPInfo;
 
-        public PlayerViewModel(string userGuid, IIpService ipService, IPlayerRepository playerRepository)
+        public PlayerViewModel(string userGuid, IIpService ipService, IPlayerRepository playerRepository, IEventAggregator eventAggregator)
         {
             _userGuid = userGuid;
             _ipService = ipService;
             _playerRepository = playerRepository;
+            _eventAggregator = eventAggregator;
 
             SaveComment = new ActionCommand(SaveUserComment);
             GoToSteamCommand = new ActionCommand(GoToSteam);
+            BanCommand = new DelegateCommand<string>(BanPlayerView);
+        }
+
+        private void BanPlayerView(string obj)
+        {
+            _eventAggregator.GetEvent<BanUserEvent>()
+                .Publish(new BanUserModel(null, obj, false, null, null));
         }
 
         private void GoToSteam()
@@ -73,6 +84,8 @@ namespace Arma3BE.Client.Modules.PlayersModule.Models
 
         public ICommand SaveComment { get; set; }
         public ICommand GoToSteamCommand { get; set; }
+
+        public ICommand BanCommand { get; set; }
 
         private void SaveUserComment()
         {
