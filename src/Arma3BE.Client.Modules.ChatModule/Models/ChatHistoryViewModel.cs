@@ -1,4 +1,5 @@
 ﻿using Arma3BE.Client.Infrastructure.Commands;
+using Arma3BE.Client.Infrastructure.Extensions;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
@@ -7,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Arma3BE.Client.Infrastructure.Extensions;
 
 namespace Arma3BE.Client.Modules.ChatModule.Models
 {
@@ -22,17 +22,23 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
                 return repo.GetServerInfo().OrderBy(x => x.Name).ToList();
             }
         });
-        
+
         public ChatHistoryViewModel(Guid serverId)
         {
             _serverId = serverId;
 
             FilterCommand = new ActionCommand(async () =>
             {
-                IsBusy = true;
-                await Task.Factory.StartNew(UpdateLog, TaskCreationOptions.LongRunning).ConfigureAwait(true);
-                OnPropertyChanged(nameof(Log));
-                IsBusy = false;
+                try
+                {
+                    IsBusy = true;
+                    await Task.Factory.StartNew(UpdateLog, TaskCreationOptions.LongRunning).ConfigureAwait(true);
+                    OnPropertyChanged(nameof(Log));
+                }
+                finally
+                {
+                    IsBusy = false;
+                }
             });
 
             SelectedServers = serverId.ToString();

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:Arma3BE.Client.Infrastructure.Converters;assembly=Arma3BE.Client.Infrastructure"
+             xmlns:boxes="clr-namespace:Arma3BE.Client.Modules.ChatModule.Boxes"
              mc:Ignorable="d" DataContextChanged="ToolBar_DataContextChanged" HorizontalAlignment="Stretch"
              VerticalAlignment="Stretch">
 
@@ -64,19 +65,12 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <ScrollViewer Grid.ColumnSpan="3" Name="ChatScrollViewer">
+                    <!--<boxes:ColoredTextControl x:Name="textControl" IsAutoScroll="{Binding AutoScroll}" Grid.ColumnSpan="3">
+                    </boxes:ColoredTextControl>-->
 
-                        <RichTextBox Name="msgBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                                     IsReadOnly="True" IsReadOnlyCaretVisible="False"
-                                     FontSize="14" FontWeight="Medium" FontStyle="Normal" Background="#F0F0F0">
-                            <RichTextBox.Resources>
-                                <Style TargetType="{x:Type Paragraph}">
-                                    <Setter Property="Margin" Value="0" />
-                                </Style>
-                            </RichTextBox.Resources>
-                        </RichTextBox>
+                    <boxes:RTBControl x:Name="textControl" IsAutoScroll="{Binding AutoScroll}" Grid.ColumnSpan="3">
+                    </boxes:RTBControl>
 
-                    </ScrollViewer>
 
                     <ComboBox Grid.Row="1" Grid.Column="0" Margin="2" ItemsSource="{Binding Players, Mode=OneWay}" 
                               SelectedValue="{Binding SelectedPlayer, Mode=TwoWay}">
@@ -101,30 +95,18 @@
 
             </TabItem>
             <TabItem Header="Console">
-
-                <ScrollViewer Grid.ColumnSpan="2" Name="ConsoleScrollViewer">
-
+                <ScrollViewer  Name="ConsoleScrollViewer">
                     <TextBox Name="msgConsole" FontSize="12" IsReadOnly="True" />
-
                 </ScrollViewer>
             </TabItem>
 
 
             <TabItem Header="Players Log">
+                <boxes:ColoredTextControl x:Name="textPlayerControl" IsAutoScroll="{Binding AutoScroll}" >
+                </boxes:ColoredTextControl>
 
-                <ScrollViewer Grid.ColumnSpan="2" Name="HistoryScrollViewer">
-
-                    <RichTextBox Name="histBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                                     IsReadOnly="True" IsReadOnlyCaretVisible="False"
-                                     FontSize="14" FontWeight="Medium" FontStyle="Normal" Background="#F0F0F0">
-                        <RichTextBox.Resources>
-                            <Style TargetType="{x:Type Paragraph}">
-                                <Setter Property="Margin" Value="0" />
-                            </Style>
-                        </RichTextBox.Resources>
-                    </RichTextBox>
-
-                </ScrollViewer>
+                <!--<boxes:RTBControl x:Name="textPlayerControl" IsAutoScroll="{Binding AutoScroll}" >
+                </boxes:RTBControl>-->
             </TabItem>
 
         </TabControl>
