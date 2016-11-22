@@ -65,11 +65,11 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <!--<boxes:ColoredTextControl x:Name="textControl" IsAutoScroll="{Binding AutoScroll}" Grid.ColumnSpan="3">
-                    </boxes:ColoredTextControl>-->
+                    <boxes:ColoredTextControl x:Name="textControl" IsAutoScroll="{Binding AutoScroll}" Grid.ColumnSpan="3">
+                    </boxes:ColoredTextControl>
 
-                    <boxes:RTBControl x:Name="textControl" IsAutoScroll="{Binding AutoScroll}" Grid.ColumnSpan="3">
-                    </boxes:RTBControl>
+                    <!--<boxes:RTBControl x:Name="textControl" IsAutoScroll="{Binding AutoScroll}" Grid.ColumnSpan="3">
+                    </boxes:RTBControl>-->
 
 
                     <ComboBox Grid.Row="1" Grid.Column="0" Margin="2" ItemsSource="{Binding Players, Mode=OneWay}" 
