@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Input;
-using Arma3BE.Client.Infrastructure.Commands;
+﻿using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Events.Models;
 using Arma3BE.Client.Infrastructure.Extensions;
@@ -10,6 +7,9 @@ using Arma3BE.Client.Modules.PlayersModule.Models;
 using Arma3BEClient.Libs.Repositories;
 using Prism.Commands;
 using Prism.Events;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Input;
 
 namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
 {
@@ -68,7 +68,8 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
                     "IP",
                     "Guid",
                     "Notes",
-                    "Comment"
+                    "Comment",
+                    nameof(PlayerView.SteamId)
                 };
             }
         }
@@ -98,53 +99,57 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
 
         public void Refresh()
         {
-            
-                var opts = SelectedOptions.Split(',');
 
-                var searchName = opts.Contains("Name");
-                var searchLastNames = opts.Contains("Last Names");
-                var searchIP = opts.Contains("IP");
-                var searchGuid = opts.Contains("Guid");
-                var searchNotes = opts.Contains("Notes");
-                var searchComment = opts.Contains("Comment");
+            var opts = SelectedOptions.Split(',');
 
-                IEnumerable<PlayerDto> result;
+            var searchName = opts.Contains(nameof(PlayerView.Name));
+            var searchLastNames = opts.Contains("Last Names");
+            var searchIP = opts.Contains("IP");
+            var searchGuid = opts.Contains("Guid");
+            var searchNotes = opts.Contains("Notes");
+            var searchComment = opts.Contains(nameof(PlayerView.Comment));
+            var searchSteamId = opts.Contains(nameof(PlayerView.SteamId));
 
-                if (!string.IsNullOrEmpty(Filter))
-                    result = _playerRepository.GetPlayers(x =>
-                        (searchGuid && (x.GUID == Filter))
-                        ||
-                        (searchComment && x.Comment.Contains(Filter))
-                        ||
-                        (searchName && x.Name.Contains(Filter))
-                        ||
-                        (searchNotes && x.Notes.Any(y => y.Text.Contains(Filter)))
-                        ||
-                        (searchIP && x.LastIp.Contains(Filter))
-                        ||
-                        (searchLastNames && x.PlayerHistory.Any(y => y.Name.Contains(Filter))));
-                else
-                    result = _playerRepository.GetAllPlayers();
+            IEnumerable<PlayerDto> result;
 
-                var r = result.Select(x => new PlayerView
-                {
-                    Id = x.Id,
-                    Comment = x.Comment,
-                    Guid = x.GUID,
-                    Name = x.Name,
-                    LastIp = x.LastIp,
-                    LastSeen = x.LastSeen
-                }).OrderBy(x => x.Name).ToList();
+            if (!string.IsNullOrEmpty(Filter))
+                result = _playerRepository.GetPlayers(x =>
+                    (searchGuid && (x.GUID == Filter))
+                    ||
+                    (searchComment && x.Comment.Contains(Filter))
+                    ||
+                    (searchName && x.Name.Contains(Filter))
+                    ||
+                    (searchNotes && x.Notes.Any(y => y.Text.Contains(Filter)))
+                    ||
+                    (searchIP && x.LastIp.Contains(Filter))
+                    ||
+                    (searchSteamId && x.SteamId.Contains(Filter))
+                    ||
+                    (searchLastNames && x.PlayerHistory.Any(y => y.Name.Contains(Filter))));
+            else
+                result = _playerRepository.GetAllPlayers();
 
-                foreach (var playerView in r)
-                {
-                    playerView.LastSeen = playerView.LastSeen.UtcToLocalFromSettings();
-                }
+            var r = result.Select(x => new PlayerView
+            {
+                Id = x.Id,
+                Comment = x.Comment,
+                Guid = x.GUID,
+                Name = x.Name,
+                LastIp = x.LastIp,
+                LastSeen = x.LastSeen,
+                SteamId = x.SteamId
+            }).OrderBy(x => x.Name).ToList();
 
-                PlayerCount = r.Count;
+            foreach (var playerView in r)
+            {
+                playerView.LastSeen = playerView.LastSeen.UtcToLocalFromSettings();
+            }
 
-                Players = r;
-         
+            PlayerCount = r.Count;
+
+            Players = r;
+
 
             OnPropertyChanged(nameof(Players));
         }

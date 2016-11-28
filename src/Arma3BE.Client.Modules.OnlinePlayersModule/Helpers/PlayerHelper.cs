@@ -137,6 +137,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
                 {
                     x.Id = p.Id;
                     x.Comment = p.Comment;
+                    x.SteamId = p.SteamId;
                 }
             });
 

@@ -14,6 +14,10 @@ namespace Arma3BE.Client.Infrastructure.Helpers.Views
 
         [ShowInUi]
         [EnableCopy]
+        public string SteamId { get; set; }
+
+        [ShowInUi]
+        [EnableCopy]
         public int Minutesleft { get; set; }
 
         [ShowInUi]

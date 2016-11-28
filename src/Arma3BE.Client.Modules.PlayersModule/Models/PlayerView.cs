@@ -1,5 +1,5 @@
-﻿using System;
-using Arma3BEClient.Common.Attributes;
+﻿using Arma3BEClient.Common.Attributes;
+using System;
 
 namespace Arma3BE.Client.Modules.PlayersModule.Models
 {
@@ -26,5 +26,9 @@ namespace Arma3BE.Client.Modules.PlayersModule.Models
         [ShowInUi]
         [EnableCopy]
         public string LastIp { get; set; }
+
+        [ShowInUi]
+        [EnableCopy]
+        public string SteamId { get; set; }
     }
 }
