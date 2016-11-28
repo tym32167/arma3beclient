@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Reflection;
+using System.Windows;
 
 namespace Arma3BEClient
 {
@@ -10,6 +11,10 @@ namespace Arma3BEClient
         public Shell()
         {
             InitializeComponent();
+
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            var title = $"TEHGAM.COM - Arma 3 BattlEye Tool v.{version.Major}.{version.Minor}.{version.Build}";
+            Title = title;
         }
     }
 }

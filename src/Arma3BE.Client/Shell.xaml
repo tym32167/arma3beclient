@@ -7,7 +7,6 @@
         xmlns:regions="http://prismlibrary.com/"
         xmlns:inf="clr-namespace:Arma3BE.Client.Infrastructure;assembly=Arma3BE.Client.Infrastructure"
         mc:Ignorable="d"
-        Title="TEHGAM.COM - Arma 3 BattlEye Tool"
         Height="600"
         Width="800"
         Icon="{StaticResource main_icon}"
