@@ -60,7 +60,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
 
         private void ServerMonitorPlayerViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(SelectedItem))
+            if (e.PropertyName == nameof(SelectedItem) || e.PropertyName == nameof(Data))
             {
                 KickUserCommand?.RaiseCanExecuteChanged();
                 BanUserCommand?.RaiseCanExecuteChanged();
