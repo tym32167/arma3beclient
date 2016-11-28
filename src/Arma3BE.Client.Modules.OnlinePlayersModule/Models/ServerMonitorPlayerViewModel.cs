@@ -13,9 +13,9 @@ using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Input;
 using Admin = Arma3BE.Server.Models.Admin;
 using Player = Arma3BE.Server.Models.Player;
+// ReSharper disable RedundantNameQualifier
 
 namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
 {
@@ -37,11 +37,14 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
             BanUserCommand = new DelegateCommand(ShowBanDialog, CanShowDialog);
             PlayerInfoCommand = new DelegateCommand(PlayerInfoDialog, CanShowDialog);
 
+
+            PropertyChanged += ServerMonitorPlayerViewModel_PropertyChanged;
+
             _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Player>>>().Subscribe(e =>
             {
                 if (e.ServerId == serverInfo.Id)
                 {
-                    base.SetData(e.Items);
+                    SetData(e.Items);
                     WaitingForEvent = false;
                 }
             });
@@ -55,7 +58,17 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
             });
         }
 
-        public string Title { get { return "Session"; } }
+        private void ServerMonitorPlayerViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(SelectedItem))
+            {
+                KickUserCommand?.RaiseCanExecuteChanged();
+                BanUserCommand?.RaiseCanExecuteChanged();
+                PlayerInfoCommand?.RaiseCanExecuteChanged();
+            }
+        }
+
+        public string Title => "Session";
 
         private static void SendCommand(IEventAggregator eventAggregator, Guid serverId, CommandType commandType,
             string parameters = null)
@@ -98,9 +111,9 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
 
         private IEnumerable<Arma3BE.Server.Models.Admin> _admins = new List<Arma3BE.Server.Models.Admin>();
 
-        public ICommand KickUserCommand { get; set; }
-        public ICommand BanUserCommand { get; set; }
-        public ICommand PlayerInfoCommand { get; set; }
+        public DelegateCommand KickUserCommand { get; }
+        public DelegateCommand BanUserCommand { get; }
+        public DelegateCommand PlayerInfoCommand { get; }
 
         protected override IEnumerable<Helpers.Views.PlayerView> RegisterData(IEnumerable<Player> initialData)
         {

@@ -25,7 +25,6 @@ namespace Arma3BE.Client.Infrastructure.Extensions
                 {
                     var item = new MenuItem { Header = propertyInfo.Name };
 
-
                     var info = propertyInfo;
                     item.Click += (s, e) =>
                     {
