@@ -170,13 +170,14 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
                     Num = x.Num,
                     GuidIp = x.GuidIp,
                     Reason = x.Reason,
-                    Minutesleft = x.Minutesleft
+                    Minutesleft = x.Minutesleft,
                 };
 
                 if (p != null)
                 {
                     ban.PlayerComment = p.Comment;
                     ban.PlayerName = p.Name;
+                    ban.SteamId = p.SteamId;
                 }
                 return ban;
             }).ToList();
