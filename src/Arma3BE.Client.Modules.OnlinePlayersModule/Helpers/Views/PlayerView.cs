@@ -1,9 +1,9 @@
-﻿using System;
-using Arma3BE.Client.Infrastructure;
+﻿using Arma3BE.Client.Infrastructure;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Attributes;
 using Microsoft.Practices.Unity;
+using System;
 
 namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views
 {
@@ -55,6 +55,10 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views
         [ShowInUi]
         [EnableCopy]
         public int Ping { get; set; }
+
+        [ShowInUi]
+        [EnableCopy]
+        public string SteamId { get; set; }
 
         [ShowInUi]
         [EnableCopy]
