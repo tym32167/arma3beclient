@@ -33,7 +33,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
             Task.Run(() => RegisterPlayersInternal(list));
         }
 
-        public bool RegisterPlayersInternal(IEnumerable<Player> list)
+        private bool RegisterPlayersInternal(IEnumerable<Player> list)
         {
             var players = list.ToList();
 
@@ -59,8 +59,8 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
                     {
                         historyToAdd.Add(new PlayerHistory
                         {
-                            IP = player.LastIp,
-                            Name = player.Name,
+                            IP = p.IP,
+                            Name = p.Name,
                             PlayerId = player.Id,
                             ServerId = _serverId
                         });
