@@ -13,7 +13,7 @@ version: 0.7.{build}
 
 assembly_info:
   patch: true
-  file: "src\GlobalAssemblyInfo.cs"
+  file: src\GlobalAssemblyInfo.cs
   assembly_version: '{version}'
   assembly_file_version: '{version}'
 
