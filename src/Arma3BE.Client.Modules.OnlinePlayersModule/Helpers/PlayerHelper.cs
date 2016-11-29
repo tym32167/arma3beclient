@@ -33,6 +33,9 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
             Task.Run(() => RegisterPlayersInternal(list));
         }
 
+
+        private IEnumerable<Player> previous_state = new Player[0];
+
         private bool RegisterPlayersInternal(IEnumerable<Player> list)
         {
             var players = list.ToList();
@@ -40,6 +43,8 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
             if (!HaveChanges(players, x => x.Num))
                 return false;
 
+            var prevoius = new HashSet<string>(previous_state.Select(x => x.Guid).Distinct());
+            previous_state = players;
 
             var guids = players.Select(x => x.Guid).ToList();
 
@@ -70,7 +75,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
 
                         needUpdate = true;
                     }
-                    if ((DateTime.UtcNow - player.LastSeen).TotalHours > 2)
+                    if (prevoius.Contains(player.GUID) == false)
                     {
                         player.LastSeen = DateTime.UtcNow;
                         needUpdate = true;
