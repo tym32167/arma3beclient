@@ -6,6 +6,7 @@ namespace Arma3BE.Client.Modules.BEServerModule
     public interface IBELogic
     {
         event EventHandler<ServerCommandEventArgs> ServerUpdateHandler;
+        event EventHandler<ServerCommandEventArgs> ServerImmediateUpdateHandler;
     }
 
     public class ServerCommandEventArgs : EventArgs
