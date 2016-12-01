@@ -1,0 +1,45 @@
+﻿<Window x:Class="Arma3BE.Client.Modules.ToolsModule.VirtualServerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Arma3BE.Client.Modules.ToolsModule"
+        mc:Ignorable="d"
+        Title="VirtualServerWindow" Height="600" Width="600">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+
+        <StackPanel Orientation="Horizontal"  Grid.Row="0" Grid.Column="0">
+
+            <Button Content="Connect" Click="Connect_OnClick" ></Button>
+            <Button Content="Disconnect" Click="Disconnect_OnClick" ></Button>
+
+
+            <Button Content="Clear" Click="Clear_OnClick" ></Button>
+
+        </StackPanel>
+
+
+        <TextBox AcceptsTab="True" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" 
+                 VerticalContentAlignment="Stretch" Name="tbCmd"
+                 Grid.Row="1" Grid.Column="0"></TextBox>
+
+        <ScrollViewer Grid.Row="1" Grid.Column="2">
+            <TextBlock Name="tbCommand"   ></TextBlock>
+        </ScrollViewer>
+        
+        <GridSplitter Grid.Column="1" Grid.RowSpan="3" VerticalContentAlignment="Stretch" Width="3" HorizontalAlignment="Center"></GridSplitter>
+
+        <Button Content="Send" Click="Send_Click"  Grid.Row="2" Grid.Column="0"></Button>
+    </Grid>
+</Window>
