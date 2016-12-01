@@ -133,7 +133,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
         {
             public bool Equals(Helpers.Views.PlayerView x, Helpers.Views.PlayerView y)
             {
-                return x.Id == y.Id && x.Guid == y.Guid && x.State == y.State && x.CanBeAdmin == y.CanBeAdmin && x.Comment == y.Comment;
+                return x.Id == y.Id && x.Guid == y.Guid && x.State == y.State && x.CanBeAdmin == y.CanBeAdmin && x.Comment == y.Comment && x.Ping == y.Ping;
             }
 
             public int GetHashCode(Helpers.Views.PlayerView obj)
