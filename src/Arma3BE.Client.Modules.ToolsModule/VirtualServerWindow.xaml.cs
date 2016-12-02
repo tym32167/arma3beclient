@@ -19,6 +19,15 @@ namespace Arma3BE.Client.Modules.ToolsModule
 
             _server = factory.Create(new BattlEyeLoginCredentials()) as VirtualServer;
             _server.CommandRecieved += _server_CommandRecieved;
+            _server.PureCommandRecieved += _server_PureCommandRecieved;
+        }
+
+        private void _server_PureCommandRecieved(object sender, VirtualServer.PureCommandArgs e)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                tbCommand.Text += $"{e.Command}" + Environment.NewLine;
+            });
         }
 
         private void _server_CommandRecieved(object sender, VirtualServer.CommandArgs e)

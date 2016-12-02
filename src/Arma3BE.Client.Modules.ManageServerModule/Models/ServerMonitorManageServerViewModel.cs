@@ -30,68 +30,82 @@ namespace Arma3BE.Client.Modules.ManageServerModule.Models
             });
 
             SetMissionCommand = new ActionCommand(() =>
-            {
-                var m = SelectedMission;
-                if (m != null)
                 {
-                    var mn = m.Name;
-                    SendCommand(CommandType.Mission, mn);
-                }
-            },
+                    var m = SelectedMission;
+                    if (m != null)
+                    {
+                        var mn = m.Name;
+                        SendCommand(CommandType.Mission, mn);
+                    }
+                },
                 () => SelectedMission != null);
 
             RefreshCommand = new ActionCommand(() => SendCommand(CommandType.Missions));
 
             InitCommand = new ActionCommand(() =>
-           {
-               SendCommand(CommandType.Init);
-               MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
-           });
+            {
+                SendCommand(CommandType.Init);
+                MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
+            });
             ShutdownCommand = new ActionCommand(() =>
-           {
-               SendCommand(CommandType.Shutdown);
-               MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
-           });
+            {
+                SendCommand(CommandType.Shutdown);
+                MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
+            });
             ReassignCommand = new ActionCommand(() =>
-           {
-               SendCommand(CommandType.Reassign);
-               MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
-           });
+            {
+                SendCommand(CommandType.Reassign);
+                MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
+            });
             RestartCommand = new ActionCommand(() =>
-           {
-               SendCommand(CommandType.Restart);
-               MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
-           });
+            {
+                SendCommand(CommandType.Restart);
+                MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
+            });
+
+            RestartServerCommand = new ActionCommand(() =>
+            {
+                if (MessageBox.Show(Application.Current.MainWindow, "Are you sure?", "Restart Server",
+                        MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    SendCommand(CommandType.RestartServer);
+                    MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
+                }
+            });
+
             LockCommand = new ActionCommand(() =>
-           {
-               SendCommand(CommandType.Lock);
-               MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
-           });
+            {
+                SendCommand(CommandType.Lock);
+                MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
+            });
             UnlockCommand = new ActionCommand(() =>
-           {
-               SendCommand(CommandType.Unlock);
-               MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
-           });
+            {
+                SendCommand(CommandType.Unlock);
+                MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
+            });
 
 
             LoadBansCommand = new ActionCommand(() =>
-           {
-               SendCommand(CommandType.LoadBans);
-               MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
-           });
+            {
+                SendCommand(CommandType.LoadBans);
+                MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
+            });
             LoadScriptsCommand = new ActionCommand(() =>
-           {
-               SendCommand(CommandType.LoadScripts);
-               MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
-           });
+            {
+                SendCommand(CommandType.LoadScripts);
+                MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
+            });
             LoadEventsCommand = new ActionCommand(() =>
-           {
-               SendCommand(CommandType.LoadEvents);
-               MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
-           });
+            {
+                SendCommand(CommandType.LoadEvents);
+                MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
+            });
         }
 
-        public string Title { get { return "Manage Server"; } }
+        public string Title
+        {
+            get { return "Manage Server"; }
+        }
 
         public Mission SelectedMission
         {
@@ -120,6 +134,7 @@ namespace Arma3BE.Client.Modules.ManageServerModule.Models
         public ActionCommand ShutdownCommand { get; set; }
         public ActionCommand ReassignCommand { get; set; }
         public ActionCommand RestartCommand { get; set; }
+        public ActionCommand RestartServerCommand { get; set; }
         public ActionCommand LockCommand { get; set; }
         public ActionCommand UnlockCommand { get; set; }
         public ActionCommand LoadBansCommand { get; set; }

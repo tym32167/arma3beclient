@@ -21,6 +21,7 @@
             <Button Content="Shutdown" Command="{Binding ShutdownCommand}" Height="40" Width="120" />
             <!--<Button Content="Reassgn" Command="{Binding ReassignCommand}" Height="40" Width="120"></Button>-->
             <Button Content="Restart" Command="{Binding RestartCommand}" Height="40" Width="120" />
+            <Button Content="Restart Server" Command="{Binding RestartServerCommand}" Height="40" Width="120" />
             <Button Content="Lock" Command="{Binding LockCommand}" Height="40" Width="120" />
             <Button Content="Unlock" Command="{Binding UnlockCommand}" Height="40" Width="120" />
         </StackPanel>

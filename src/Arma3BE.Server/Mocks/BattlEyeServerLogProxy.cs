@@ -39,6 +39,11 @@ namespace Arma3BE.Server.Mocks
             return _server?.SendCommand(command, parameters) ?? 0;
         }
 
+        public int SendCommand(string command)
+        {
+            return _server?.SendCommand(command) ?? 0;
+        }
+
         public void Disconnect()
         {
             _server?.Disconnect();

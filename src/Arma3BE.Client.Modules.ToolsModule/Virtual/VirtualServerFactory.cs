@@ -32,6 +32,13 @@ namespace Arma3BE.Client.Modules.ToolsModule.Virtual
             return 1;
         }
 
+        public int SendCommand(string command)
+        {
+            OnPureCommandRecieved(new PureCommandArgs(command));
+
+            return 1;
+        }
+
         public void Disconnect()
         {
             Connected = false;
@@ -42,6 +49,7 @@ namespace Arma3BE.Client.Modules.ToolsModule.Virtual
         public event BattlEyeDisconnectEventHandler BattlEyeDisconnected;
 
         public event EventHandler<CommandArgs> CommandRecieved;
+        public event EventHandler<PureCommandArgs> PureCommandRecieved;
 
 
         public BattlEyeConnectionResult Connect()
@@ -79,10 +87,26 @@ namespace Arma3BE.Client.Modules.ToolsModule.Virtual
 
         }
 
+        public class PureCommandArgs : EventArgs
+        {
+            public string Command { get; }
+
+            public PureCommandArgs(string command)
+            {
+                Command = command;
+            }
+
+        }
+
         protected virtual void OnCommandRecieved(CommandArgs e)
         {
             CommandRecieved?.Invoke(this, e);
 
+        }
+
+        protected virtual void OnPureCommandRecieved(PureCommandArgs e)
+        {
+            PureCommandRecieved?.Invoke(this, e);
         }
     }
 }

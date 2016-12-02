@@ -39,6 +39,12 @@ namespace Arma3BE.Server.ServerDecorators
             return 0;
         }
 
+        public int SendCommand(string command)
+        {
+            _battlEyeServer?.SendCommand(command);
+            return 0;
+        }
+
         public BattlEyeConnectionResult Connect()
         {
             var result = _battlEyeServer?.Connect();

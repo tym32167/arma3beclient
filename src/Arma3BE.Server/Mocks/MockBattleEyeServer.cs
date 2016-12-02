@@ -90,6 +90,16 @@ namespace Arma3BE.Server.Mocks
             return 0;
         }
 
+        public int SendCommand(string command)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                MockMessage($"(Global) bot: Sended command {command}");
+            });
+
+            return 0;
+        }
+
         public void Disconnect()
         {
             Task.Delay(TimeSpan.FromSeconds(2)).ContinueWith(t =>
