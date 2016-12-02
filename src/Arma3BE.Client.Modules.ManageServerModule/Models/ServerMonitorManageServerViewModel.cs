@@ -44,62 +44,58 @@ namespace Arma3BE.Client.Modules.ManageServerModule.Models
 
             InitCommand = new ActionCommand(() =>
             {
-                SendCommand(CommandType.Init);
-                MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
+                SendCommandWithConfirmation(CommandType.Init);
             });
             ShutdownCommand = new ActionCommand(() =>
             {
-                SendCommand(CommandType.Shutdown);
-                MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
+                SendCommandWithConfirmation(CommandType.Shutdown);
             });
             ReassignCommand = new ActionCommand(() =>
             {
-                SendCommand(CommandType.Reassign);
-                MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
+                SendCommandWithConfirmation(CommandType.Reassign);
             });
             RestartCommand = new ActionCommand(() =>
             {
-                SendCommand(CommandType.Restart);
-                MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
+                SendCommandWithConfirmation(CommandType.Restart);
             });
 
             RestartServerCommand = new ActionCommand(() =>
             {
-                if (MessageBox.Show(Application.Current.MainWindow, "Are you sure?", "Restart Server",
-                        MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                {
-                    SendCommand(CommandType.RestartServer);
-                    MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
-                }
+                SendCommandWithConfirmation(CommandType.RestartServer);
             });
 
             LockCommand = new ActionCommand(() =>
             {
-                SendCommand(CommandType.Lock);
-                MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
+                SendCommandWithConfirmation(CommandType.Lock);
             });
             UnlockCommand = new ActionCommand(() =>
             {
-                SendCommand(CommandType.Unlock);
-                MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
+                SendCommandWithConfirmation(CommandType.Unlock);
             });
-
 
             LoadBansCommand = new ActionCommand(() =>
             {
-                SendCommand(CommandType.LoadBans);
-                MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
+                SendCommandWithConfirmation(CommandType.LoadBans);
             });
             LoadScriptsCommand = new ActionCommand(() =>
             {
-                SendCommand(CommandType.LoadScripts);
-                MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
+                SendCommandWithConfirmation(CommandType.LoadScripts);
             });
             LoadEventsCommand = new ActionCommand(() =>
             {
-                SendCommand(CommandType.LoadEvents);
-                MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
+                SendCommandWithConfirmation(CommandType.LoadEvents);
             });
+        }
+
+
+        private void SendCommandWithConfirmation(CommandType command)
+        {
+            if (MessageBox.Show(Application.Current.MainWindow, "Are you sure?", command.ToString(),
+                       MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                SendCommand(command);
+                MessageBox.Show("Executed " + command, "Server command", MessageBoxButton.OK);
+            }
         }
 
         public string Title
