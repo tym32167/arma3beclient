@@ -83,6 +83,8 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             {
                 _eventAggregator.GetEvent<BEMessageEvent<BECustomCommand>>()
                     .Publish(new BECustomCommand(_serverId, local));
+                OnLogMessageEventHandler(new LogMessage() { Date = DateTime.UtcNow.UtcToLocalFromSettings(), Message = $"Message {local} was sended to server." });
+                CommandMessage = string.Empty;
             }
         }
 
