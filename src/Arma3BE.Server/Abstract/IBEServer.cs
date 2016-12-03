@@ -23,6 +23,7 @@ namespace Arma3BE.Server.Abstract
 
         //Task SendCommandAsync(CommandType type, string parameters = null);
         void SendCommand(CommandType type, string parameters = null);
+        void SendCommand(string command);
 
         void Connect();
         void Disconnect();

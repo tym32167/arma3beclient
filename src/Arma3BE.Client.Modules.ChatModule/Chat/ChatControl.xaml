@@ -95,9 +95,28 @@
 
             </TabItem>
             <TabItem Header="Console">
-                <ScrollViewer  Name="ConsoleScrollViewer">
-                    <TextBox Name="msgConsole" FontSize="12" IsReadOnly="True" />
-                </ScrollViewer>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+
+                    <ScrollViewer  Name="ConsoleScrollViewer"  Grid.ColumnSpan="2">
+                        <TextBox Name="msgConsole" FontSize="12" IsReadOnly="True" />
+                    </ScrollViewer>
+
+                    <TextBox Grid.Row="1" Grid.Column="0" Margin="2"
+                             Text="{Binding CommandMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="20" />
+                    
+                    <Button Grid.Row="1" Grid.Column="1" Content="Send" Margin="2" Command="{Binding SendCommandMessage}" />
+
+                </Grid>
             </TabItem>
 
 

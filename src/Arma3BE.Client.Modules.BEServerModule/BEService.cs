@@ -106,6 +106,7 @@ namespace Arma3BE.Client.Modules.BEServerModule
                 BEServer.MessageHandler += BEServer_MessageHandler;
 
                 _eventAggregator.GetEvent<BEMessageEvent<BECommand>>().Subscribe(Command);
+                _eventAggregator.GetEvent<BEMessageEvent<BECustomCommand>>().Subscribe(CustomCommand);
             }
 
             private void BEServer_MessageHandler(object sender, EventArgs e)
@@ -154,6 +155,7 @@ namespace Arma3BE.Client.Modules.BEServerModule
                 BEServer.MessageHandler -= BEServer_MessageHandler;
 
                 _eventAggregator.GetEvent<BEMessageEvent<BECommand>>().Unsubscribe(Command);
+                _eventAggregator.GetEvent<BEMessageEvent<BECustomCommand>>().Unsubscribe(CustomCommand);
 
                 BEServer.Disconnect();
                 BEServer.Dispose();
@@ -190,6 +192,16 @@ namespace Arma3BE.Client.Modules.BEServerModule
                 if (Info.Id == command.ServerId && server != null && server.Connected)
                 {
                     server.SendCommand(command.CommandType, command.Parameters);
+                }
+            }
+
+            private void CustomCommand(BECustomCommand command)
+            {
+                var server = BEServer;
+
+                if (Info.Id == command.ServerId && server != null && server.Connected)
+                {
+                    server.SendCommand(command.Command);
                 }
             }
 

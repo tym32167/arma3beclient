@@ -57,6 +57,13 @@ namespace Arma3BE.Server
         public event EventHandler DisconnectHandler;
         public event EventHandler MessageHandler;
 
+
+        public void SendCommand(string command)
+        {
+            _log.Info($"SERVER: {_host}:{_port} - TRY TO RCON CUSTOM COMMAND {command}");
+            _battlEyeServer.SendCommand(command);
+        }
+
         public void SendCommand(CommandType type, string parameters = null)
         {
             _log.Info($"SERVER: {_host}:{_port} - TRY TO RCON COMMAND {type} WITH PARAMS {parameters}");

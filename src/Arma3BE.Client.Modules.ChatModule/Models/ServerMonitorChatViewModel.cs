@@ -10,6 +10,7 @@ using Arma3BE.Server;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Tools;
+using Prism.Commands;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,10 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
         private bool _autoScroll;
         private bool _enableChat;
         private string _inputMessage;
+        private string _commandMessage;
         private List<Player> _players = new List<Player>();
+
+        public DelegateCommand SendCommandMessage { get; set; }
 
         public ServerMonitorChatViewModel(ServerInfo serverInfo, IEventAggregator eventAggregator, ISettingsStoreSource settingsStoreSource)
         {
@@ -67,10 +71,20 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
                 wnd.Show();
                 wnd.Activate();
             });
+
+            SendCommandMessage = new DelegateCommand(() => SendCommand(), () => string.IsNullOrEmpty(CommandMessage) == false);
         }
 
 
-
+        private void SendCommand()
+        {
+            var local = CommandMessage;
+            if (!string.IsNullOrEmpty(local))
+            {
+                _eventAggregator.GetEvent<BEMessageEvent<BECustomCommand>>()
+                    .Publish(new BECustomCommand(_serverId, local));
+            }
+        }
 
         private void _beServer_PlayerHandler(BEItemsMessage<Player> e)
         {
@@ -187,6 +201,17 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             {
                 _inputMessage = value;
                 OnPropertyChanged("InputMessage");
+            }
+        }
+
+        public string CommandMessage
+        {
+            get { return _commandMessage; }
+            set
+            {
+                _commandMessage = value;
+                OnPropertyChanged(nameof(CommandMessage));
+                SendCommandMessage.RaiseCanExecuteChanged();
             }
         }
 
