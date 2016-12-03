@@ -27,7 +27,7 @@
 
         <StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" Margin="5">
             <Button Content="Init" Command="{Binding InitCommand}" Height="40" Width="120"></Button>
-            <Button Content="Reassgn" Command="{Binding ReassignCommand}" Height="40" Width="120"></Button>
+            <Button Content="Reassign" Command="{Binding ReassignCommand}" Height="40" Width="120"></Button>
             <Button Content="Load bans" Command="{Binding LoadBansCommand}" Height="40" Width="120"></Button>
             <Button Content="Load scripts" Command="{Binding LoadScriptsCommand}" Height="40" Width="120"></Button>
             <Button Content="Load events" Command="{Binding LoadEventsCommand}" Height="40" Width="120"></Button>
