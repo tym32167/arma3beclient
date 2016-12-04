@@ -37,7 +37,6 @@ namespace Arma3BE.Client.Infrastructure.Extensions
                         var si = dgcGridControl.SelectedItem as T;
 
                         if (si != null)
-                        {
                             try
                             {
                                 var val = info.GetValue(si);
@@ -53,7 +52,6 @@ namespace Arma3BE.Client.Infrastructure.Extensions
                                 var log = LogFactory.Create(typeof(GridHelper));
                                 log.Error(ex);
                             }
-                        }
                     };
 
                     root.Items.Add(item);
@@ -63,7 +61,18 @@ namespace Arma3BE.Client.Infrastructure.Extensions
             return menu;
         }
 
-        public static IEnumerable<Column> GenerateColumns<T>()
+        public static void LoadState<T>(this DataGridControl source, string key)
+        {
+            foreach (var generateColumn in GenerateColumns<T>())
+                source.Columns.Add(generateColumn);
+
+            source.Load(key);
+
+            foreach (var dgColumn in source.Columns)
+                dgColumn.Changed += (s, e) => { source.Save(key); };
+        }
+
+        private static IEnumerable<Column> GenerateColumns<T>()
         {
             var list = new List<Column>();
             var type = typeof(T);
@@ -79,8 +88,8 @@ namespace Arma3BE.Client.Infrastructure.Extensions
                     c.Title = propertyInfo.Name;
 
 
-                    if (propertyInfo.PropertyType == typeof(DateTime) ||
-                        propertyInfo.PropertyType == typeof(DateTime?))
+                    if ((propertyInfo.PropertyType == typeof(DateTime)) ||
+                        (propertyInfo.PropertyType == typeof(DateTime?)))
                     {
                         var newTextBlock = new FrameworkElementFactory(typeof(TextBlock));
                         newTextBlock.SetBinding(TextBlock.TextProperty,
@@ -97,8 +106,24 @@ namespace Arma3BE.Client.Infrastructure.Extensions
         }
 
 
+        private static void Load(this DataGridControl dgcGridControl, string key)
+        {
+            var cols = GetColumns(key)?.ToArray();
+            if (cols == null) return;
+            var colums = dgcGridControl.Columns.ToDictionary(x => x.FieldName);
 
-        public static IEnumerable<ColumnInfo> GetColumns(string key)
+            foreach (var source in cols.OrderBy(x => x.Order))
+                if (colums.ContainsKey(source.OriginalName))
+                {
+                    var column = colums[source.OriginalName];
+
+                    column.VisiblePosition = source.Order;
+                    column.Width = source.Width;
+                    column.Visible = source.Visible;
+                }
+        }
+
+        private static IEnumerable<ColumnInfo> GetColumns(string key)
         {
             try
             {
@@ -107,8 +132,9 @@ namespace Arma3BE.Client.Infrastructure.Extensions
                 if (string.IsNullOrEmpty(data)) return null;
                 var ser = new XmlSerializer(typeof(ColumnInfo[]));
                 using (var sr = new StringReader(data))
+                {
                     return ser.Deserialize(sr) as ColumnInfo[];
-
+                }
             }
             catch (Exception e)
             {
@@ -118,7 +144,23 @@ namespace Arma3BE.Client.Infrastructure.Extensions
             }
         }
 
-        public static void SaveColumns(string key, IEnumerable<ColumnInfo> infos)
+
+        private static void Save(this DataGridControl dgcGridControl, string key)
+        {
+            var cols =
+                dgcGridControl.Columns.Select(
+                    (c, i) =>
+                        new ColumnInfo
+                        {
+                            Width = c.ActualWidth,
+                            Order = c.VisiblePosition,
+                            OriginalName = c.FieldName,
+                            Visible = c.Visible
+                        }).ToArray();
+            SaveColumns(key, cols);
+        }
+
+        private static void SaveColumns(string key, IEnumerable<ColumnInfo> infos)
         {
             try
             {
@@ -134,7 +176,6 @@ namespace Arma3BE.Client.Infrastructure.Extensions
                 }
 
                 store.Save(key, sb.ToString());
-
             }
             catch (Exception e)
             {

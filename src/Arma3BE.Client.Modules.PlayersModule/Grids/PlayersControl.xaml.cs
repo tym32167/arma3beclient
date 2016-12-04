@@ -1,8 +1,8 @@
-﻿using System.Linq;
-using System.Windows.Controls;
-using Arma3BE.Client.Infrastructure.Extensions;
+﻿using Arma3BE.Client.Infrastructure.Extensions;
 using Arma3BE.Client.Modules.PlayersModule.Models;
 using Prism.Regions;
+using System.Linq;
+using System.Windows.Controls;
 
 namespace Arma3BE.Client.Modules.PlayersModule.Grids
 {
@@ -24,10 +24,7 @@ namespace Arma3BE.Client.Modules.PlayersModule.Grids
                 dg.ContextMenu.Items.Add(menuItem);
             }
 
-            foreach (var generateColumn in GridHelper.GenerateColumns<PlayerView>())
-            {
-                dg.Columns.Add(generateColumn);
-            }
+            dg.LoadState<PlayerView>(this.GetType().FullName);
         }
     }
 }
