@@ -22,6 +22,24 @@ namespace Arma3BEClient.Libs.Tools
         private static SettingsStore _instance;
         public static SettingsStore Instance => _instance ?? (_instance = Load());
 
+
+        public void Save(string key, string value)
+        {
+            using (var context = new Arma3BeClientContext())
+            {
+                context.CustomSettings.AddOrUpdate(new CustomSettings() { Id = key, Value = value });
+                context.SaveChanges();
+            }
+        }
+
+        public string Load(string key)
+        {
+            using (var context = new Arma3BeClientContext())
+            {
+                return context.CustomSettings.FirstOrDefault(x => x.Id == key)?.Value;
+            }
+        }
+
         public void Save()
         {
             using (var context = new Arma3BeClientContext())

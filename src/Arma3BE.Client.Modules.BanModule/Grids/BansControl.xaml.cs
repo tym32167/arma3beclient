@@ -1,10 +1,10 @@
 ﻿using Arma3BE.Client.Infrastructure.Extensions;
 using Arma3BE.Client.Infrastructure.Helpers.Views;
 using Arma3BE.Client.Modules.BanModule.Models;
+using Prism.Regions;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using Prism.Regions;
 using Xceed.Wpf.DataGrid;
 
 namespace Arma3BE.Client.Modules.BanModule.Grids
@@ -27,11 +27,9 @@ namespace Arma3BE.Client.Modules.BanModule.Grids
                 dg.ContextMenu.Items.Add(menuItem);
             }
 
-            foreach (var generateColumn in GridHelper.GenerateColumns<BanView>())
-            {
-                dg.Columns.Add(generateColumn);
-            }
 
+
+            dg.LoadState<BanView>($"{GetType().FullName}_{typeof(BanView).FullName}");
 
             var menu2 = dg2.Generate<BanView>();
 
@@ -41,10 +39,7 @@ namespace Arma3BE.Client.Modules.BanModule.Grids
                 dg2.ContextMenu.Items.Add(menuItem);
             }
 
-            foreach (var generateColumn in GridHelper.GenerateColumns<BanView>())
-            {
-                dg2.Columns.Add(generateColumn);
-            }
+            dg2.LoadState<BanView>($"{GetType().FullName}_{typeof(BanView).FullName}_2");
 
             //_playerViewService = MainModuleInit.Current.Resolve<IPlayerViewService>();
         }
@@ -88,6 +83,6 @@ namespace Arma3BE.Client.Modules.BanModule.Grids
                 //_playerViewService.ShowDialog(si.GuidIp);
             }
         }
-       
+
     }
 }

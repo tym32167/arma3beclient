@@ -10,6 +10,10 @@ namespace Arma3BEClient.Libs.Tools
         TimeZoneInfo TimeZoneInfo { get; set; }
 
         void Save();
+
+
+        void Save(string key, string value);
+        string Load(string key);
     }
 
     public interface ISettingsStoreSource

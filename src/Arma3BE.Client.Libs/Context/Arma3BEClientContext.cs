@@ -33,6 +33,7 @@ namespace Arma3BEClient.Libs.Context
         public DbSet<Player> Player { get; set; }
         public DbSet<ServerInfo> ServerInfo { get; set; }
         public DbSet<Settings> Settings { get; set; }
+        public DbSet<CustomSettings> CustomSettings { get; set; }
         public DbSet<Ban> Bans { get; set; }
         public DbSet<Admin> Admins { get; set; }
         public DbSet<PlayerHistory> PlayerHistory { get; set; }

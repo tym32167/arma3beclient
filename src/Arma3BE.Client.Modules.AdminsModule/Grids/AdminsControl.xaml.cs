@@ -1,7 +1,7 @@
 ﻿using Arma3BE.Client.Infrastructure.Extensions;
 using Arma3BE.Server.Models;
-using System.Windows.Controls;
 using Prism.Regions;
+using System.Windows.Controls;
 
 namespace Arma3BE.Client.Modules.AdminsModule.Grids
 {
@@ -14,14 +14,8 @@ namespace Arma3BE.Client.Modules.AdminsModule.Grids
         public AdminsControl()
         {
             InitializeComponent();
-
-
             dg.ContextMenu = dg.Generate<Admin>();
-
-            foreach (var generateColumn in GridHelper.GenerateColumns<Admin>())
-            {
-                dg.Columns.Add(generateColumn);
-            }
+            dg.LoadState<Admin>(this.GetType().FullName);
         }
     }
 }
