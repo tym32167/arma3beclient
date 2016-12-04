@@ -1,9 +1,15 @@
 ﻿using Arma3BEClient.Common.Attributes;
+using Arma3BEClient.Common.Logging;
+using Arma3BEClient.Libs.Tools;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Xml.Serialization;
 using Xceed.Wpf.DataGrid;
 
 namespace Arma3BE.Client.Infrastructure.Extensions
@@ -42,9 +48,10 @@ namespace Arma3BE.Client.Infrastructure.Extensions
                                     Clipboard.SetText(val.ToString());
                                 }
                             }
-                            catch (Exception)
+                            catch (Exception ex)
                             {
-                                // ignored
+                                var log = LogFactory.Create(typeof(GridHelper));
+                                log.Error(ex);
                             }
                         }
                     };
@@ -88,5 +95,60 @@ namespace Arma3BE.Client.Infrastructure.Extensions
             }
             return list;
         }
+
+
+
+        public static IEnumerable<ColumnInfo> GetColumns(string key)
+        {
+            try
+            {
+                var store = new SettingsStoreSource().GetSettingsStore();
+                var data = store.Load(key);
+                if (string.IsNullOrEmpty(data)) return null;
+                var ser = new XmlSerializer(typeof(ColumnInfo[]));
+                using (var sr = new StringReader(data))
+                    return ser.Deserialize(sr) as ColumnInfo[];
+
+            }
+            catch (Exception e)
+            {
+                var log = LogFactory.Create(typeof(GridHelper));
+                log.Error(e);
+                return null;
+            }
+        }
+
+        public static void SaveColumns(string key, IEnumerable<ColumnInfo> infos)
+        {
+            try
+            {
+                var array = infos.ToArray();
+                var store = new SettingsStoreSource().GetSettingsStore();
+                var ser = new XmlSerializer(typeof(ColumnInfo[]));
+
+                var sb = new StringBuilder();
+
+                using (var sw = new StringWriter(sb))
+                {
+                    ser.Serialize(sw, array);
+                }
+
+                store.Save(key, sb.ToString());
+
+            }
+            catch (Exception e)
+            {
+                var log = LogFactory.Create(typeof(GridHelper));
+                log.Error(e);
+            }
+        }
+    }
+
+    public class ColumnInfo
+    {
+        public string OriginalName { get; set; }
+        public int Order { get; set; }
+        public double Width { get; set; }
+        public bool Visible { get; set; }
     }
 }
