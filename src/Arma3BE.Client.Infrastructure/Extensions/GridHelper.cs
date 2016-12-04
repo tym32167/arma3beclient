@@ -68,8 +68,21 @@ namespace Arma3BE.Client.Infrastructure.Extensions
 
             source.Load(key);
 
-            foreach (var dgColumn in source.Columns)
-                dgColumn.Changed += (s, e) => { source.Save(key); };
+
+            source.Unloaded += (s, e) =>
+            {
+                var columns = source.Columns.OfType<CustomColumn>().ToArray();
+
+                if (columns.Any(c => c.HasChanges))
+                {
+                    source.Save(key);
+
+                    foreach (var customColumn in columns)
+                    {
+                        customColumn.Reset();
+                    }
+                }
+            };
         }
 
         private static IEnumerable<Column> GenerateColumns<T>()
@@ -82,7 +95,7 @@ namespace Arma3BE.Client.Infrastructure.Extensions
                 var attr = Attribute.GetCustomAttribute(propertyInfo, typeof(ShowInUiAttribute));
                 if (attr != null)
                 {
-                    var c = new Column();
+                    var c = new CustomColumn();
                     c.FieldName = propertyInfo.Name;
                     c.AllowGroup = false;
                     c.Title = propertyInfo.Name;
@@ -120,6 +133,8 @@ namespace Arma3BE.Client.Infrastructure.Extensions
                     column.VisiblePosition = source.Order;
                     column.Width = source.Width;
                     column.Visible = source.Visible;
+
+                    (column as CustomColumn)?.Reset();
                 }
         }
 
@@ -182,6 +197,22 @@ namespace Arma3BE.Client.Infrastructure.Extensions
                 var log = LogFactory.Create(typeof(GridHelper));
                 log.Error(e);
             }
+        }
+
+        private class CustomColumn : Column
+        {
+            public CustomColumn()
+            {
+                HasChanges = false;
+                this.Changed += (s, e) => { HasChanges = true; };
+            }
+
+            public void Reset()
+            {
+                HasChanges = false;
+            }
+
+            public bool HasChanges { get; private set; }
         }
     }
 
