@@ -4,19 +4,27 @@ using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Attributes;
 using Microsoft.Practices.Unity;
 using System;
+using System.Threading.Tasks;
 
 namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views
 {
     public class PlayerView : ViewModelBase
     {
+        private bool _canBeAdmin;
+        private string _comment;
+
+        private string _country;
+        private string _ip;
+
+        private readonly IIpService _ipService;
+        private int _ping;
+        private int _port;
+        private Player.PlayerState _state;
+
         public PlayerView()
         {
             _ipService = OnlinePlayersModuleInit.Current.Resolve<IIpService>();
         }
-
-        private IIpService _ipService;
-
-        private string _country;
 
         [ShowInUi]
         [EnableCopy]
@@ -28,10 +36,18 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views
 
         [ShowInUi]
         [EnableCopy]
-        public string Comment { get; set; }
+        public string Comment
+        {
+            get { return _comment; }
+            set { SetProperty(ref _comment, value); }
+        }
 
         [ShowInUi]
-        public bool CanBeAdmin { get; set; }
+        public bool CanBeAdmin
+        {
+            get { return _canBeAdmin; }
+            set { SetProperty(ref _canBeAdmin, value); }
+        }
 
         [ShowInUi]
         [EnableCopy]
@@ -41,7 +57,12 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views
             {
                 if (string.IsNullOrEmpty(_country))
                 {
-                    _country = _ipService.GetCountryLocal(IP);
+                    Task.Run(() =>
+                    {
+                        var country = _ipService.GetCountryLocal(IP);
+                        SetProperty(ref _country, country, nameof(Country));
+                    });
+                    return null;
                 }
 
                 return _country;
@@ -50,11 +71,19 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views
 
         [ShowInUi]
         [EnableCopy]
-        public Player.PlayerState State { get; set; }
+        public Player.PlayerState State
+        {
+            get { return _state; }
+            set { SetProperty(ref _state, value); }
+        }
 
         [ShowInUi]
         [EnableCopy]
-        public int Ping { get; set; }
+        public int Ping
+        {
+            get { return _ping; }
+            set { SetProperty(ref _ping, value); }
+        }
 
         [ShowInUi]
         [EnableCopy]
@@ -62,7 +91,11 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views
 
         [ShowInUi]
         [EnableCopy]
-        public string IP { get; set; }
+        public string IP
+        {
+            get { return _ip; }
+            set { SetProperty(ref _ip, value); }
+        }
 
         [ShowInUi]
         [EnableCopy]
@@ -70,7 +103,11 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views
 
         [ShowInUi]
         [EnableCopy]
-        public int Port { get; set; }
+        public int Port
+        {
+            get { return _port; }
+            set { SetProperty(ref _port, value); }
+        }
 
         public Guid Id { get; set; }
     }

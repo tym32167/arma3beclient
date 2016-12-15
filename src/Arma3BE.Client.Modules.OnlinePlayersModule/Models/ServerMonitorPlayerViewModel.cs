@@ -27,7 +27,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
 
         public ServerMonitorPlayerViewModel(ServerInfo serverInfo,
             IBanHelper banHelper, IEventAggregator eventAggregator, IPlayerRepository playerRepository)
-            : base(new ActionCommand(() => SendCommand(eventAggregator, serverInfo.Id, CommandType.Players)), new PlayerViewComperer())
+            : base(new ActionCommand(() => SendCommand(eventAggregator, serverInfo.Id, CommandType.Players)), new PlayerViewComparer())
         {
             _serverInfo = serverInfo;
             _eventAggregator = eventAggregator;
@@ -129,11 +129,12 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
             return view;
         }
 
-        private class PlayerViewComperer : IEqualityComparer<Helpers.Views.PlayerView>
+
+        private class PlayerViewComparer : IEqualityComparer<Helpers.Views.PlayerView>
         {
             public bool Equals(Helpers.Views.PlayerView x, Helpers.Views.PlayerView y)
             {
-                return x.Id == y.Id && x.Guid == y.Guid && x.State == y.State && x.CanBeAdmin == y.CanBeAdmin && x.Comment == y.Comment && x.Ping == y.Ping;
+                return x.Id == y.Id && x.Guid == y.Guid;
             }
 
             public int GetHashCode(Helpers.Views.PlayerView obj)

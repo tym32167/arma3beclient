@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Arma3BE.Client.Infrastructure.Commands;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using Arma3BE.Client.Infrastructure.Commands;
 
 namespace Arma3BE.Client.Infrastructure.Models
 {
@@ -76,6 +76,17 @@ namespace Arma3BE.Client.Infrastructure.Models
             OnPropertyChanged(nameof(DataCount));
         }
 
+
+        protected virtual void UpdateExisting(TK old, TK @new)
+        {
+            var props = typeof(TK).GetProperties().Where(x => x.SetMethod != null && x.GetMethod != null);
+            foreach (var prop in props)
+            {
+                var value = prop.GetValue(@new);
+                prop.SetValue(old, value);
+            }
+        }
+
         private void UpdateFilteredData(TK[] newData)
         {
             if (Application.Current.Dispatcher.CheckAccess())
@@ -90,6 +101,15 @@ namespace Arma3BE.Client.Infrastructure.Models
 
                 var todelete = exists.Where(x => newData.All(n => _comparer.Equals(n, x) == false)).ToArray();
                 var toAdd = newData.Where(x => exists.All(n => _comparer.Equals(n, x) == false)).ToArray();
+
+                foreach (var dataItem in exists)
+                {
+                    var newItem = newData.FirstOrDefault(x => _comparer.Equals(dataItem, x));
+                    if (newItem != null)
+                    {
+                        UpdateExisting(dataItem, newItem);
+                    }
+                }
 
                 foreach (var d in todelete)
                 {
