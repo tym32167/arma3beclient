@@ -148,7 +148,7 @@ namespace Arma3BE.Client.Modules.BanModule.Models
         {
             public bool Equals(BanView x, BanView y)
             {
-                return x.GuidIp == y.GuidIp;
+                return x.GuidIp == y.GuidIp && x.Num == y.Num && x.Reason == y.Reason;
             }
 
             public int GetHashCode(BanView obj)
