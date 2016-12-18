@@ -1,5 +1,6 @@
 ﻿using Arma3BE.Client.Infrastructure.Models;
 using Arma3BEClient.Common.Attributes;
+using System;
 
 namespace Arma3BE.Client.Infrastructure.Helpers.Views
 {
@@ -53,7 +54,20 @@ namespace Arma3BE.Client.Infrastructure.Helpers.Views
             get { return _minutesleft; }
             set
             {
-                SetProperty(ref _minutesleft, value);
+                if (SetProperty(ref _minutesleft, value))
+                {
+                    OnPropertyChanged(nameof(TimeLeft));
+                }
+            }
+        }
+
+        [ShowInUi]
+        [EnableCopy]
+        public TimeSpan TimeLeft
+        {
+            get
+            {
+                return TimeSpan.FromMinutes(Minutesleft);
             }
         }
 
