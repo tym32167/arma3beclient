@@ -20,12 +20,14 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
         private readonly IPlayerRepository _playerRepository;
         private readonly ISettingsStoreSource _settingsStoreSource;
         private readonly Regex replace = new Regex(@"\[[^\]^\[]*\]", RegexOptions.Compiled | RegexOptions.Multiline);
+        private readonly MessageHelper _messageHelper;
 
         public BanHelper(IEventAggregator eventAggregator, IPlayerRepository playerRepository, ISettingsStoreSource settingsStoreSource)
         {
             _eventAggregator = eventAggregator;
             _playerRepository = playerRepository;
             _settingsStoreSource = settingsStoreSource;
+            _messageHelper = new MessageHelper();
         }
 
         public void RegisterBans(IEnumerable<Ban> list, Guid currentServerId)
@@ -190,10 +192,10 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
                 .Publish(new BECommand(serverId, commandType, parameters));
         }
 
+
         public void Kick(Guid serverId, int playerNum, string playerGuid, string reason, bool isAuto = false)
         {
-            var totalreason =
-                $"[{_settingsStoreSource.GetSettingsStore().AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
+            var totalreason = _messageHelper.GetKickMessage(_settingsStoreSource.GetSettingsStore(), reason);
 
             SendCommand(serverId, CommandType.Kick,
                 $"{playerNum} {totalreason}");
@@ -216,14 +218,10 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
         {
             if (!syncMode)
             {
-                var totalreason =
-                    $"[{_settingsStoreSource.GetSettingsStore().AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
-
+                var totalreason = _messageHelper.GetBanMessage(_settingsStoreSource.GetSettingsStore(), reason, minutes);
 
                 SendCommand(serverId, CommandType.AddBan,
                     $"{guid} {minutes} {totalreason}");
-
-
 
                 var user = _playerRepository.GetPlayer(guid);
                 if (user != null)
@@ -255,8 +253,7 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
 
         public async void BanGuidOnline(Guid serverId, string num, string guid, string reason, long minutes)
         {
-            var totalreason =
-                $"[{_settingsStoreSource.GetSettingsStore().AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
+            var totalreason = _messageHelper.GetBanMessage(_settingsStoreSource.GetSettingsStore(), reason, minutes);
 
 
             SendCommand(serverId, CommandType.Ban,

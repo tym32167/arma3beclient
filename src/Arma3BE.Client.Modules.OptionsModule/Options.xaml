@@ -81,22 +81,46 @@
                                     <ColumnDefinition></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
 
-                                <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="0">
+                                <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="0" Margin="3">
                                     <TextBlock>Ban reasons</TextBlock>
                                     <DataGrid ItemsSource="{Binding BanReasons}" IsReadOnly="False"></DataGrid>
 
                                 </StackPanel>
-                                <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1">
+                                <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1" Margin="3">
 
                                     <TextBlock>Ban times</TextBlock>
                                     <DataGrid ItemsSource="{Binding BanTimes}" IsReadOnly="False"></DataGrid>
 
                                 </StackPanel>
-                                <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
+                                <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0" Margin="3">
 
                                     <TextBlock>Kick reasons</TextBlock>
                                     <DataGrid ItemsSource="{Binding KickReasons}" IsReadOnly="False"></DataGrid>
                                 </StackPanel>
+
+
+                                <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" Margin="3">
+
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock>Kick reason template</TextBlock>
+                                        <TextBlock FontSize="10" FontWeight="Bold">[{AdminName}][{Date}:{Time}] {Reason}</TextBlock>
+                                    </StackPanel>
+                                    <TextBox Text="{Binding KickMessageTemplate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                                    <TextBlock  FontSize="10" FontWeight="Bold" Text="{Binding KickMessageTemplateExample}"></TextBlock>
+
+                                    <Separator></Separator>
+
+                                    <StackPanel Orientation="Horizontal">
+                                    <TextBlock>Ban reason template</TextBlock>
+                                        <TextBlock FontSize="10" FontWeight="Bold">[{AdminName}][{Date} {Time}] {Reason} {Minutes}</TextBlock>
+                                    </StackPanel>
+
+
+                                    <TextBox Text="{Binding BanMessageTemplate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                                    <TextBlock  FontSize="10" FontWeight="Bold" Text="{Binding BanMessageTemplateExample}"></TextBlock>
+
+                                </StackPanel>
+
                             </Grid>
                         </ScrollViewer>
                     </Border>

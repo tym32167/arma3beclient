@@ -128,6 +128,10 @@
       <Project>{e5240a50-e944-4f50-a353-2e3c9e547447}</Project>
       <Name>Arma3BE.Client.Libs</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Modules.CoreModule\Arma3BE.Client.Modules.CoreModule.csproj">
+      <Project>{308eef0c-5de3-435e-8249-7a658bfafd08}</Project>
+      <Name>Arma3BE.Client.Modules.CoreModule</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Arma3BE.Common\Arma3BE.Common.csproj">
       <Project>{d507e532-7de6-4028-9dbe-aa76c54cc92a}</Project>
       <Name>Arma3BE.Common</Name>

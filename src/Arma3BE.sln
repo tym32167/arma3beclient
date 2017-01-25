@@ -85,6 +85,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BE.Client.Modules.BESe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BE.Client.IntegrationTests", "Arma3BE.Client.IntegrationTests\Arma3BE.Client.IntegrationTests.csproj", "{0E52929B-A5AA-4B2C-9532-C50AFFE76228}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BE.Client.Modules.CoreModule.Tests", "Arma3BE.Client.Modules.CoreModule.Tests\Arma3BE.Client.Modules.CoreModule.Tests.csproj", "{969269FC-6C5F-49E9-BC60-96F1AE571B8F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -187,6 +189,10 @@ Global
 		{0E52929B-A5AA-4B2C-9532-C50AFFE76228}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E52929B-A5AA-4B2C-9532-C50AFFE76228}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E52929B-A5AA-4B2C-9532-C50AFFE76228}.Release|Any CPU.Build.0 = Release|Any CPU
+		{969269FC-6C5F-49E9-BC60-96F1AE571B8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{969269FC-6C5F-49E9-BC60-96F1AE571B8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{969269FC-6C5F-49E9-BC60-96F1AE571B8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{969269FC-6C5F-49E9-BC60-96F1AE571B8F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -218,5 +224,6 @@ Global
 		{561F7217-8BEF-4812-91ED-3DE5483DFD07} = {DC5AD4D6-F483-4533-B6B4-4B514EAEED64}
 		{FA11FEA6-31FA-4A53-AFB0-DCB23CE48ECF} = {561F7217-8BEF-4812-91ED-3DE5483DFD07}
 		{0E52929B-A5AA-4B2C-9532-C50AFFE76228} = {22A6CC46-99D2-45AF-B379-3320ECE99124}
+		{969269FC-6C5F-49E9-BC60-96F1AE571B8F} = {561F7217-8BEF-4812-91ED-3DE5483DFD07}
 	EndGlobalSection
 EndGlobal

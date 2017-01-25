@@ -5,6 +5,10 @@ namespace Arma3BEClient.Libs.Tools
     public interface ISettingsStore : ICloneable
     {
         string AdminName { get; set; }
+
+        string BanMessageTemplate { get; set; }
+        string KickMessageTemplate { get; set; }
+
         int BansUpdateSeconds { get; set; }
         int PlayersUpdateSeconds { get; set; }
         TimeZoneInfo TimeZoneInfo { get; set; }

@@ -1,5 +1,6 @@
 ﻿using Arma3BE.Client.Infrastructure.Contracts;
 using Arma3BE.Client.Infrastructure.Events;
+using Arma3BE.Client.Modules.CoreModule.Helpers;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
@@ -80,6 +81,57 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
             get { return new List<Type> { typeof(ServerInfoModel) }; }
         }
 
+
+
+
+        public string BanMessageTemplateExample
+        {
+            get
+            {
+                var t = new MessageHelper();
+
+                return t.GetBanMessage(Settings, "Sample reason", 0)
+                    + "\n"
+                    + t.GetBanMessage(Settings, "Sample reason", 10)
+                    ;
+            }
+        }
+
+
+        public string BanMessageTemplate
+        {
+            get { return Settings.BanMessageTemplate; }
+            set
+            {
+                Settings.BanMessageTemplate = value;
+                OnPropertyChanged(nameof(BanMessageTemplate));
+                OnPropertyChanged(nameof(BanMessageTemplateExample));
+            }
+        }
+
+
+        public string KickMessageTemplateExample
+        {
+            get
+            {
+                var t = new MessageHelper();
+                return t.GetKickMessage(Settings, "Sample reason");
+            }
+        }
+
+
+        public string KickMessageTemplate
+        {
+            get { return Settings.KickMessageTemplate; }
+            set
+            {
+                Settings.KickMessageTemplate = value;
+                OnPropertyChanged(nameof(KickMessageTemplate));
+                OnPropertyChanged(nameof(KickMessageTemplateExample));
+            }
+        }
+
+
         public IEnumerable<TimeZoneInfo> TimeZones { get; }
 
         public void Save()
@@ -88,7 +140,13 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
             {
                 var settings = _settingsStoreSource.GetSettingsStore();
                 settings.TimeZoneInfo = Settings.TimeZoneInfo;
+
                 settings.AdminName = Settings.AdminName.Replace(" ", string.Empty);
+
+                settings.BanMessageTemplate = Settings.BanMessageTemplate;
+                settings.KickMessageTemplate = Settings.KickMessageTemplate;
+
+
                 settings.BansUpdateSeconds = Settings.BansUpdateSeconds;
                 settings.PlayersUpdateSeconds = Settings.PlayersUpdateSeconds;
                 settings.Save();
