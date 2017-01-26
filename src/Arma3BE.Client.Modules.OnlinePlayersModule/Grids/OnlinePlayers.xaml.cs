@@ -1,8 +1,12 @@
-﻿using Arma3BE.Client.Infrastructure.Extensions;
+﻿using Arma3BE.Client.Infrastructure.Events;
+using Arma3BE.Client.Infrastructure.Events.Models;
+using Arma3BE.Client.Infrastructure.Extensions;
 using Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views;
+using Prism.Events;
 using Prism.Regions;
 using System.Linq;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Arma3BE.Client.Modules.OnlinePlayersModule.Grids
 {
@@ -12,8 +16,11 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Grids
     [ViewSortHint("0100")]
     public partial class OnlinePlayers : UserControl
     {
-        public OnlinePlayers()
+        private readonly IEventAggregator _eventAggregator;
+
+        public OnlinePlayers(IEventAggregator eventAggregator)
         {
+            _eventAggregator = eventAggregator;
             InitializeComponent();
 
             var menu = dg.Generate<PlayerView>();
@@ -25,6 +32,15 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Grids
             }
 
             dg.LoadState<PlayerView>(this.GetType().FullName);
+        }
+
+        private void Dg_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var player = dg.SelectedItem as PlayerView;
+            if (player != null)
+            {
+                _eventAggregator.GetEvent<ShowUserInfoEvent>().Publish(new ShowUserModel(player.Guid));
+            }
         }
     }
 }

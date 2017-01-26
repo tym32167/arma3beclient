@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Admin = Arma3BE.Server.Models.Admin;
 using Player = Arma3BE.Server.Models.Player;
+
 // ReSharper disable RedundantNameQualifier
 
 namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
@@ -27,7 +28,9 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
 
         public ServerMonitorPlayerViewModel(ServerInfo serverInfo,
             IBanHelper banHelper, IEventAggregator eventAggregator, IPlayerRepository playerRepository)
-            : base(new ActionCommand(() => SendCommand(eventAggregator, serverInfo.Id, CommandType.Players)), new PlayerViewComparer())
+            : base(
+                new ActionCommand(() => SendCommand(eventAggregator, serverInfo.Id, CommandType.Players)),
+                new PlayerViewComparer())
         {
             _serverInfo = serverInfo;
             _eventAggregator = eventAggregator;
@@ -53,12 +56,13 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
             {
                 if (e.ServerId == serverInfo.Id)
                 {
-                    _admins = e.Items ?? new Arma3BE.Server.Models.Admin[0];
+                    _admins = e.Items ?? new Admin[0];
                 }
             });
         }
 
-        private void ServerMonitorPlayerViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void ServerMonitorPlayerViewModel_PropertyChanged(object sender,
+            System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(SelectedItem) || e.PropertyName == nameof(Data))
             {
@@ -82,7 +86,8 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
             var local = SelectedItem;
             if (local != null)
             {
-                _eventAggregator.GetEvent<KickUserEvent>().Publish(new KickUserModel(_serverInfo.Id, local.Guid, local.Name, local.Num));
+                _eventAggregator.GetEvent<KickUserEvent>()
+                    .Publish(new KickUserModel(_serverInfo.Id, local.Guid, local.Name, local.Num));
             }
         }
 
@@ -91,7 +96,8 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
             var local = SelectedItem;
             if (local != null)
             {
-                _eventAggregator.GetEvent<BanUserEvent>().Publish(new BanUserModel(_serverInfo.Id, local.Guid, true, local.Name, local.Num.ToString()));
+                _eventAggregator.GetEvent<BanUserEvent>()
+                    .Publish(new BanUserModel(_serverInfo.Id, local.Guid, true, local.Name, local.Num.ToString()));
             }
         }
 
@@ -109,7 +115,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
             return SelectedItem != null;
         }
 
-        private IEnumerable<Arma3BE.Server.Models.Admin> _admins = new List<Arma3BE.Server.Models.Admin>();
+        private IEnumerable<Admin> _admins = new List<Admin>();
 
         public DelegateCommand KickUserCommand { get; }
         public DelegateCommand BanUserCommand { get; }

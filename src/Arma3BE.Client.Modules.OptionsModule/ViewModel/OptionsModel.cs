@@ -17,13 +17,15 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
     {
         private readonly IEventAggregator _eventAggregator;
         private readonly ISettingsStoreSource _settingsStoreSource;
+        private readonly MessageHelper _messageHelper;
         private readonly ILog _log = new Log();
         private ISettingsStore _settingsStore;
 
-        public OptionsModel(IEventAggregator eventAggregator, ISettingsStoreSource settingsStoreSource)
+        public OptionsModel(IEventAggregator eventAggregator, ISettingsStoreSource settingsStoreSource, MessageHelper messageHelper)
         {
             _eventAggregator = eventAggregator;
             _settingsStoreSource = settingsStoreSource;
+            _messageHelper = messageHelper;
             using (var servierInfoRepository = new ServerInfoRepository())
             {
                 Servers = servierInfoRepository.GetServerInfo().Select(x => new ServerInfoModel(x)).ToList();
@@ -31,10 +33,10 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
 
             using (var dc = new ReasonRepository())
             {
-                BanReasons = dc.GetBanReasons().Select(x => new ReasonEdit() { Text = x }).ToList();
-                KickReasons = dc.GetKickReasons().Select(x => new ReasonEdit() { Text = x }).ToList();
+                BanReasons = dc.GetBanReasons().Select(x => new ReasonEdit { Text = x }).ToList();
+                KickReasons = dc.GetKickReasons().Select(x => new ReasonEdit { Text = x }).ToList();
                 BanTimes =
-                    dc.GetBanTimes().Select(x => new BanTimeEdit() { Text = x.Title, Minutes = x.TimeInMinutes }).ToList();
+                    dc.GetBanTimes().Select(x => new BanTimeEdit { Text = x.Title, Minutes = x.TimeInMinutes }).ToList();
             }
 
             var zones = TimeZoneInfo.GetSystemTimeZones().ToArray();
@@ -76,26 +78,10 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
             set { _settingsStore = value; }
         }
 
-        public IList<Type> NewListItemTypes
-        {
-            get { return new List<Type> { typeof(ServerInfoModel) }; }
-        }
+        public IList<Type> NewListItemTypes => new List<Type> { typeof(ServerInfoModel) };
 
 
-
-
-        public string BanMessageTemplateExample
-        {
-            get
-            {
-                var t = new MessageHelper();
-
-                return t.GetBanMessage(Settings, "Sample reason", 0)
-                    + "\n"
-                    + t.GetBanMessage(Settings, "Sample reason", 10)
-                    ;
-            }
-        }
+        public string BanMessageTemplateExample => $"{_messageHelper.GetBanMessage(Settings, "Sample reason", 0)}\n{_messageHelper.GetBanMessage(Settings, "Sample reason", 10)}";
 
 
         public string BanMessageTemplate
@@ -110,14 +96,7 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
         }
 
 
-        public string KickMessageTemplateExample
-        {
-            get
-            {
-                var t = new MessageHelper();
-                return t.GetKickMessage(Settings, "Sample reason");
-            }
-        }
+        public string KickMessageTemplateExample => _messageHelper.GetKickMessage(Settings, "Sample reason");
 
 
         public string KickMessageTemplate
@@ -176,7 +155,7 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
                 using (var dc = new ReasonRepository())
                 {
                     dc.UpdateBanReasons(BanReasons.Select(x => x.Text).Where(x => string.IsNullOrEmpty(x) == false).Distinct().ToArray());
-                    dc.UpdateBanTimes(BanTimes.Where(x => string.IsNullOrEmpty(x.Text) == false).Select(x => new BanTime() { TimeInMinutes = x.Minutes, Title = x.Text }).ToArray());
+                    dc.UpdateBanTimes(BanTimes.Where(x => string.IsNullOrEmpty(x.Text) == false).Select(x => new BanTime { TimeInMinutes = x.Minutes, Title = x.Text }).ToArray());
                     dc.UpdateKickReasons(KickReasons.Select(x => x.Text).Where(x => string.IsNullOrEmpty(x) == false).Distinct().ToArray());
                 }
 

@@ -4,7 +4,7 @@
         xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
         xmlns:converters="clr-namespace:Arma3BE.Client.Infrastructure.Converters;assembly=Arma3BE.Client.Infrastructure"
         Title="{Binding Path=Player.Name, StringFormat=Player info: {0}}"
-        WindowStyle="ToolWindow" Width="700" Height="500"
+        WindowStyle="ToolWindow" Width="700" SizeToContent="Height" MinHeight="500" MaxHeight="550"
         WindowStartupLocation="CenterScreen">
     
     <Window.Resources>
@@ -12,7 +12,7 @@
                                               x:Key="utcToLocalDateTimeConverter" />
     </Window.Resources>
     <Grid>
-        <TabControl>
+        <TabControl Margin="5">
             <TabItem Header="Common">
 
                 <Grid>
