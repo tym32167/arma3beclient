@@ -3,6 +3,7 @@ using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Modules.ChatModule.Chat;
 using Arma3BE.Client.Modules.ChatModule.Models;
 using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Repositories;
 using Microsoft.Practices.Unity;
 using Prism.Modularity;
 using Prism.Regions;
@@ -27,7 +28,7 @@ namespace Arma3BE.Client.Modules.ChatModule
 
         private object CreateView()
         {
-            return ServerTabViewHelper.RegisterView<ChatControl, ServerInfo, ServerMonitorChatViewModel>(_container,
+            return ServerTabViewHelper.RegisterView<ChatControl, ServerInfoDto, ServerMonitorChatViewModel>(_container,
                 "serverInfo");
         }
     }

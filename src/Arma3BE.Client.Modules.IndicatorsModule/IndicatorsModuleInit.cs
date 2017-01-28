@@ -1,6 +1,7 @@
 ﻿using Arma3BE.Client.Infrastructure;
 using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Repositories;
 using Microsoft.Practices.Unity;
 using Prism.Modularity;
 using Prism.Regions;
@@ -25,7 +26,7 @@ namespace Arma3BE.Client.Modules.IndicatorsModule
 
         private object CreateView()
         {
-            return ServerTabViewHelper.RegisterView<LastUpdateIndicator, ServerInfo, LastUpdateIndicatorViewModel>(_container,
+            return ServerTabViewHelper.RegisterView<LastUpdateIndicator, ServerInfoDto, LastUpdateIndicatorViewModel>(_container,
                 "serverInfo");
         }
     }

@@ -8,7 +8,7 @@ using Arma3BE.Client.Modules.ChatModule.Boxes;
 using Arma3BE.Client.Modules.ChatModule.Helpers;
 using Arma3BE.Server;
 using Arma3BE.Server.Models;
-using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Repositories;
 using Arma3BEClient.Libs.Tools;
 using Prism.Commands;
 using Prism.Events;
@@ -38,7 +38,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
 
         public DelegateCommand SendCommandMessage { get; }
 
-        public ServerMonitorChatViewModel(ServerInfo serverInfo, IEventAggregator eventAggregator, ISettingsStoreSource settingsStoreSource)
+        public ServerMonitorChatViewModel(ServerInfoDto serverInfo, IEventAggregator eventAggregator, ISettingsStoreSource settingsStoreSource, IServerInfoRepository infoRepository)
         {
             _serverId = serverInfo.Id;
             _eventAggregator = eventAggregator;
@@ -68,7 +68,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
 
             ShowHistoryCommand = new ActionCommand(() =>
             {
-                var model = new ChatHistoryViewModel(_serverId);
+                var model = new ChatHistoryViewModel(_serverId, infoRepository);
                 model.StartDate = DateTime.UtcNow.UtcToLocalFromSettings().AddHours(-5);
                 var wnd = new ChatHistory(model);
                 wnd.Show();

@@ -8,6 +8,7 @@ using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Arma3BEClient.Libs.Repositories;
 using Admin = Arma3BE.Server.Models.Admin;
 
 namespace Arma3BE.Client.Modules.AdminsModule.Models
@@ -16,7 +17,7 @@ namespace Arma3BE.Client.Modules.AdminsModule.Models
     {
         private readonly AdminHelper _helper;
 
-        public ServerMonitorAdminsViewModel(ServerInfo serverInfo, IEventAggregator eventAggregator)
+        public ServerMonitorAdminsViewModel(ServerInfoDto serverInfo, IEventAggregator eventAggregator)
             : base(new ActionCommand(() => SendCommand(eventAggregator, serverInfo.Id, CommandType.Admins)), new AdminComparer())
         {
             _helper = new AdminHelper(serverInfo.Id);

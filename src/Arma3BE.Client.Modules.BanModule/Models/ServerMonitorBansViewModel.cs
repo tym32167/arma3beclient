@@ -7,7 +7,6 @@ using Arma3BE.Client.Infrastructure.Helpers.Views;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.BanModule.Boxes;
 using Arma3BE.Server;
-using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using Prism.Events;
 using System;
@@ -28,7 +27,7 @@ namespace Arma3BE.Client.Modules.BanModule.Models
         private readonly IBanHelper _helper;
         private readonly Guid _serverInfoId;
 
-        public ServerMonitorBansViewModel(ServerInfo serverInfo, IEventAggregator eventAggregator,
+        public ServerMonitorBansViewModel(ServerInfoDto serverInfo, IEventAggregator eventAggregator, IServerInfoRepository infoRepository,
             IBanHelper banHelper)
             : base(
                 new ActionCommand(() => SendCommand(eventAggregator, serverInfo.Id, CommandType.Bans)),
@@ -49,7 +48,7 @@ namespace Arma3BE.Client.Modules.BanModule.Models
 
             CustomBan = new ActionCommand(() =>
             {
-                var w = new BanPlayerWindow(_serverInfoId, _helper, null, false, null, null);
+                var w = new BanPlayerWindow(_serverInfoId, _helper, null, false, null, null, infoRepository);
                 w.ShowDialog();
             });
 

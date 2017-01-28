@@ -1,7 +1,6 @@
 ﻿using Arma3BE.Client.Infrastructure.Contracts;
 using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Events.BE;
-using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using Prism.Events;
 using System;
@@ -13,20 +12,22 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
     public class ServerMonitorModel : DisposableViewModelBase
     {
         private readonly IEventAggregator _eventAggregator;
+        private readonly IServerInfoRepository _infoRepository;
         private bool _connected;
 
-        public ServerMonitorModel(ServerInfo currentServer,
-            IEventAggregator eventAggregator)
+        public ServerMonitorModel(ServerInfoDto currentServer,
+            IEventAggregator eventAggregator, IServerInfoRepository infoRepository)
         {
             CurrentServer = currentServer;
             _eventAggregator = eventAggregator;
+            _infoRepository = infoRepository;
 
             _eventAggregator.GetEvent<ConnectServerEvent>().Subscribe(BeServerConnectHandler, ThreadOption.UIThread);
             _eventAggregator.GetEvent<DisConnectServerEvent>().Subscribe(BeServerDisconnectHandler, ThreadOption.UIThread);
             _eventAggregator.GetEvent<RunServerEvent>().Publish(CurrentServer);
         }
 
-        public ServerInfo CurrentServer { get; }
+        public ServerInfoDto CurrentServer { get; }
 
         public bool Connected
         {
@@ -41,13 +42,13 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 
         public string Title => CurrentServer.Name;
 
-        private void BeServerDisconnectHandler(ServerInfo info)
+        private void BeServerDisconnectHandler(ServerInfoDto info)
         {
             if (info.Id != CurrentServer.Id) return;
             Connected = false;
         }
 
-        private void BeServerConnectHandler(ServerInfo info)
+        private void BeServerConnectHandler(ServerInfoDto info)
         {
             Connected = true;
         }
@@ -61,11 +62,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 
         public void SetActive(Guid serverId, bool active = false)
         {
-            using (var repo = new ServerInfoRepository())
-            {
-                repo.SetServerInfoActive(serverId, active);
-            }
-
+            _infoRepository.SetServerInfoActive(serverId, active);
             _eventAggregator.GetEvent<BEServersChangedEvent>().Publish(null);
         }
 

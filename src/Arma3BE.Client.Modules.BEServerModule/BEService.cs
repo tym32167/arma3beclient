@@ -4,7 +4,7 @@ using Arma3BE.Server;
 using Arma3BE.Server.Abstract;
 using Arma3BEClient.Common.Core;
 using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Repositories;
 using Microsoft.Practices.Unity;
 using Prism.Events;
 using System;
@@ -12,6 +12,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+
 // ReSharper disable MemberCanBePrivate.Local
 
 namespace Arma3BE.Client.Modules.BEServerModule
@@ -40,7 +41,7 @@ namespace Arma3BE.Client.Modules.BEServerModule
             return _serverPool.Keys.ToArray();
         }
 
-        private void CloseServer(ServerInfo info)
+        private void CloseServer(ServerInfoDto info)
         {
             ServerItem item;
 
@@ -50,18 +51,18 @@ namespace Arma3BE.Client.Modules.BEServerModule
             }
         }
 
-        private void CheckServer(ServerInfo info)
+        private void CheckServer(ServerInfoDto info)
         {
             var item = _serverPool.GetOrAdd(info.Id, id => Create(info));
             if (!item.BEServer.Connected) item.BEServer.Connect();
         }
 
-        private ServerItem Create(ServerInfo info)
+        private ServerItem Create(ServerInfoDto info)
         {
             return new ServerItem(info, CreateServer(info), _eventAggregator);
         }
 
-        private IBEServer CreateServer(ServerInfo info)
+        private IBEServer CreateServer(ServerInfoDto info)
         {
             var host = _ipService.GetIpAddress(info.Host);
 
@@ -81,10 +82,10 @@ namespace Arma3BE.Client.Modules.BEServerModule
         private class ServerItem : DisposeObject
         {
             private readonly IEventAggregator _eventAggregator;
-            public ServerInfo Info { get; }
+            public ServerInfoDto Info { get; }
             public IBEServer BEServer { get; }
 
-            public ServerItem(ServerInfo info, IBEServer beServer, IEventAggregator eventAggregator)
+            public ServerItem(ServerInfoDto info, IBEServer beServer, IEventAggregator eventAggregator)
             {
                 _eventAggregator = eventAggregator;
                 Info = info;

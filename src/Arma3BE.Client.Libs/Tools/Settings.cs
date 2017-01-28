@@ -2,6 +2,7 @@
 using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
 using System;
+using System.Collections.Concurrent;
 using System.Data.Entity.Migrations;
 using System.Linq;
 
@@ -28,24 +29,6 @@ namespace Arma3BEClient.Libs.Tools
 
         private static SettingsStore _instance;
         public static SettingsStore Instance => _instance ?? (_instance = Load());
-
-
-        public void Save(string key, string value)
-        {
-            using (var context = new Arma3BeClientContext())
-            {
-                context.CustomSettings.AddOrUpdate(new CustomSettings() { Id = key, Value = value });
-                context.SaveChanges();
-            }
-        }
-
-        public string Load(string key)
-        {
-            using (var context = new Arma3BeClientContext())
-            {
-                return context.CustomSettings.FirstOrDefault(x => x.Id == key)?.Value;
-            }
-        }
 
         public void Save()
         {
@@ -108,6 +91,39 @@ namespace Arma3BEClient.Libs.Tools
                 BanMessageTemplate = BanMessageTemplate,
                 KickMessageTemplate = KickMessageTemplate
             };
+        }
+    }
+
+    public class CustomSettingsStore : ICustomSettingsStore
+    {
+        readonly ConcurrentDictionary<string, string> _cache = new ConcurrentDictionary<string, string>();
+
+        public void Save(string key, string value)
+        {
+            _cache.AddOrUpdate(key, k => value, (k, v) => value);
+            SaveInternal(key, value);
+        }
+
+        public string Load(string key)
+        {
+            return _cache.GetOrAdd(key, LoadInternal);
+        }
+
+        private string LoadInternal(string key)
+        {
+            using (var context = new Arma3BeClientContext())
+            {
+                return context.CustomSettings.FirstOrDefault(x => x.Id == key)?.Value;
+            }
+        }
+
+        private void SaveInternal(string key, string value)
+        {
+            using (var context = new Arma3BeClientContext())
+            {
+                context.CustomSettings.AddOrUpdate(new CustomSettings() { Id = key, Value = value });
+                context.SaveChanges();
+            }
         }
     }
 }

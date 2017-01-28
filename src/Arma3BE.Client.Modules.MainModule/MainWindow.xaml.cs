@@ -1,6 +1,5 @@
 ﻿using Arma3BE.Client.Infrastructure;
 using Arma3BE.Client.Modules.MainModule.ViewModel;
-using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using Microsoft.Practices.Unity;
 using Prism.Regions;
@@ -19,19 +18,21 @@ namespace Arma3BE.Client.Modules.MainModule
         private readonly IUnityContainer _container;
         private readonly MainViewModel _model;
         private readonly IRegionManager _regionManager;
+        private readonly IServerInfoRepository _infoRepository;
 
-        public MainWindow(MainViewModel model, IUnityContainer container, IRegionManager regionManager)
+        public MainWindow(MainViewModel model, IUnityContainer container, IRegionManager regionManager, IServerInfoRepository infoRepository)
         {
             InitializeComponent();
 
             _model = model;
             _container = container;
             _regionManager = regionManager;
+            _infoRepository = infoRepository;
 
             DataContext = _model;
         }
 
-        private void OpenServerInfo(ServerInfo serverInfo)
+        private void OpenServerInfo(ServerInfoDto serverInfo)
         {
             var region = _regionManager.Regions[RegionNames.ServerTabRegion];
 
@@ -55,9 +56,9 @@ namespace Arma3BE.Client.Modules.MainModule
         private void ServerClick(object sender, RoutedEventArgs e)
         {
             var orig = e.OriginalSource as FrameworkElement;
-            if (orig?.DataContext is ServerInfo)
+            if (orig?.DataContext is ServerInfoDto)
             {
-                var serverInfo = (ServerInfo)orig.DataContext;
+                var serverInfo = (ServerInfoDto)orig.DataContext;
                 OpenServerInfo(serverInfo);
             }
         }
@@ -70,13 +71,10 @@ namespace Arma3BE.Client.Modules.MainModule
 
         private void LoadedWindow(object sender, RoutedEventArgs e)
         {
-            using (var r = new ServerInfoRepository())
+            var servers = _infoRepository.GetActiveServerInfo();
+            foreach (var server in servers)
             {
-                var servers = r.GetActiveServerInfo();
-                foreach (var server in servers)
-                {
-                    OpenServerInfo(server);
-                }
+                OpenServerInfo(server);
             }
         }
 

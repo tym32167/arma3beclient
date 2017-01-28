@@ -23,11 +23,11 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
 {
     public class ServerMonitorPlayerViewModel : ServerMonitorBaseViewModel<Player, Helpers.Views.PlayerView>
     {
-        private readonly ServerInfo _serverInfo;
+        private readonly ServerInfoDto _serverInfo;
         private readonly IEventAggregator _eventAggregator;
         private readonly PlayerHelper _playerHelper;
 
-        public ServerMonitorPlayerViewModel(ServerInfo serverInfo,
+        public ServerMonitorPlayerViewModel(ServerInfoDto serverInfo,
             IBanHelper banHelper, IEventAggregator eventAggregator, IPlayerRepository playerRepository)
             : base(
                 new ActionCommand(() => SendCommand(eventAggregator, serverInfo.Id, CommandType.Players)),

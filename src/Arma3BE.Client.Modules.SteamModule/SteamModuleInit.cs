@@ -5,6 +5,7 @@ using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Modules.SteamModule.Grids;
 using Arma3BE.Client.Modules.SteamModule.Models;
 using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Repositories;
 using Microsoft.Practices.Unity;
 using Prism.Commands;
 using Prism.Modularity;
@@ -34,7 +35,7 @@ namespace Arma3BE.Client.Modules.SteamModule
 
         private object CreateSteamQueryView()
         {
-            return ServerTabViewHelper.RegisterView<SteamQuery, ServerInfo, ServerMonitorSteamQueryViewModel>(_container,
+            return ServerTabViewHelper.RegisterView<SteamQuery, ServerInfoDto, ServerMonitorSteamQueryViewModel>(_container,
                 "serverInfo");
         }
 

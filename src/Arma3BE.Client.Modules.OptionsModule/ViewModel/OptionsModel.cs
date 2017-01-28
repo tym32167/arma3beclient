@@ -21,18 +21,19 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
         private readonly IEventAggregator _eventAggregator;
         private readonly ISettingsStoreSource _settingsStoreSource;
         private readonly MessageHelper _messageHelper;
+        private readonly IServerInfoRepository _infoRepository;
         private readonly ILog _log = new Log();
         private ISettingsStore _settingsStore;
 
-        public OptionsModel(IEventAggregator eventAggregator, ISettingsStoreSource settingsStoreSource, MessageHelper messageHelper)
+        public OptionsModel(IEventAggregator eventAggregator, ISettingsStoreSource settingsStoreSource, MessageHelper messageHelper, IServerInfoRepository infoRepository)
         {
             _eventAggregator = eventAggregator;
             _settingsStoreSource = settingsStoreSource;
             _messageHelper = messageHelper;
-            using (var servierInfoRepository = new ServerInfoRepository())
-            {
-                Servers = servierInfoRepository.GetServerInfo().Select(x => new ServerInfoModel(x)).ToList();
-            }
+            _infoRepository = infoRepository;
+
+            Servers = _infoRepository.GetServerInfo().Select(x => new ServerInfoModel(x)).ToList();
+
 
             using (var dc = new ReasonRepository())
             {
@@ -134,27 +135,26 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
                 settings.PlayersUpdateSeconds = Settings.PlayersUpdateSeconds;
                 settings.Save();
 
-                using (var servierInfoRepository = new ServerInfoRepository())
+
+                var all = _infoRepository.GetServerInfo();
+
+                var todelete = all.Where(x => Servers.All(s => s.GetDbModel().Id != x.Id));
+
+                foreach (var serverInfo in todelete)
                 {
-                    var all = servierInfoRepository.GetServerInfo();
-
-                    var todelete = all.Where(x => Servers.All(s => s.GetDbModel().Id != x.Id));
-
-                    foreach (var serverInfo in todelete)
-                    {
-                        servierInfoRepository.Remove(serverInfo.Id);
-                    }
-
-                    foreach (var s in Servers)
-                    {
-                        var m = s.GetDbModel();
-                        if (m.Id == Guid.Empty)
-                        {
-                            m.Id = Guid.NewGuid();
-                        }
-                        servierInfoRepository.AddOrUpdate(m);
-                    }
+                    _infoRepository.Remove(serverInfo.Id);
                 }
+
+                foreach (var s in Servers)
+                {
+                    var m = s.GetDbModel();
+                    if (m.Id == Guid.Empty)
+                    {
+                        m.Id = Guid.NewGuid();
+                    }
+                    _infoRepository.AddOrUpdate(m);
+                }
+
 
                 using (var dc = new ReasonRepository())
                 {
@@ -176,9 +176,9 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
 
     public class ServerInfoModel
     {
-        private readonly ServerInfo _info;
+        private readonly ServerInfoDto _info;
 
-        public ServerInfoModel(ServerInfo info)
+        public ServerInfoModel(ServerInfoDto info)
         {
             _info = info;
 
@@ -194,7 +194,7 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
 
         public ServerInfoModel()
         {
-            var model = new ServerInfo();
+            var model = new ServerInfoDto();
             model.Id = Guid.Empty;
             _info = model;
         }
@@ -233,7 +233,7 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
             set { _info.Name = value; }
         }
 
-        public ServerInfo GetDbModel()
+        public ServerInfoDto GetDbModel()
         {
             return _info;
         }

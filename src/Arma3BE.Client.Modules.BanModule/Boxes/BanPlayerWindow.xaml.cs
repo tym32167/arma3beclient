@@ -1,6 +1,5 @@
 ﻿using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Infrastructure.Models;
-using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using System;
 using System.Collections.Generic;
@@ -20,10 +19,10 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
         private readonly BanPlayerViewModel _model;
 
         public BanPlayerWindow(Guid? serverId, IBanHelper banHelper, string playerGuid, bool isOnline, string playerName,
-            string playerNum)
+            string playerNum, IServerInfoRepository infoRepository)
         {
             InitializeComponent();
-            _model = new BanPlayerViewModel(serverId, playerGuid, isOnline, banHelper, playerName, playerNum);
+            _model = new BanPlayerViewModel(serverId, playerGuid, isOnline, banHelper, playerName, playerNum, infoRepository);
 
             tbGuid.IsEnabled = string.IsNullOrEmpty(playerGuid);
 
@@ -58,7 +57,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
 
         public BanPlayerViewModel(Guid? serverId, string playerGuid, bool isOnline, IBanHelper playerHelper,
             string playerName,
-            string playerNum)
+            string playerNum, IServerInfoRepository infoRepository)
         {
             _playerGuid = playerGuid;
             _isOnline = isOnline;
@@ -67,8 +66,8 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             _playerNum = playerNum;
             _minutes = 0;
 
-            using (var repo = new ServerInfoRepository())
-                Servers = repo.GetActiveServerInfo().OrderBy(x => x.Name).ToList();
+
+            Servers = infoRepository.GetActiveServerInfo().OrderBy(x => x.Name).ToList();
 
 
             if (string.IsNullOrEmpty(playerName))
@@ -78,15 +77,15 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
                     _playerName = player?.Name;
                 }
 
-            SelectedServers = new ObservableCollection<ServerInfo>();
+            SelectedServers = new ObservableCollection<ServerInfoDto>();
 
             if (serverId.HasValue)
                 SelectedServers.AddRange(Servers.Where(s => s.Id == serverId.Value));
         }
 
-        public List<ServerInfo> Servers { get; }
+        public List<ServerInfoDto> Servers { get; }
 
-        public ObservableCollection<ServerInfo> SelectedServers { get; }
+        public ObservableCollection<ServerInfoDto> SelectedServers { get; }
 
         public string PlayerName
         {

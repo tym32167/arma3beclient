@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Arma3BEClient.Libs.Repositories;
 
 namespace Arma3BE.Client.Modules.BEServerModule.Tests
 {
@@ -94,7 +95,7 @@ namespace Arma3BE.Client.Modules.BEServerModule.Tests
 
 
             ev.GetEvent<ConnectServerEvent>()
-               .Publish(new ServerInfo() { Id = serverGuid });
+               .Publish(new ServerInfoDto() { Id = serverGuid });
 
             Assert.IsNotNull(immediateCommands);
             Assert.IsNotNull(immediateCommands.FirstOrDefault(x => x.CommandType == CommandType.Players && x.ServerId == serverGuid));

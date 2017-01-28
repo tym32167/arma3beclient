@@ -4,6 +4,7 @@ using Arma3BEClient.Libs.ModelCompact;
 using Prism.Events;
 using System;
 using System.Threading.Tasks;
+using Arma3BEClient.Libs.Repositories;
 
 namespace Arma3BE.Client.Modules.BEServerModule
 {
@@ -35,7 +36,7 @@ namespace Arma3BE.Client.Modules.BEServerModule
             }
         }
 
-        private void BeServerConnectHandler(ServerInfo info)
+        private void BeServerConnectHandler(ServerInfoDto info)
         {
             OnServerImmediateUpdateHandler(new BECommand(info.Id, CommandType.Players));
 

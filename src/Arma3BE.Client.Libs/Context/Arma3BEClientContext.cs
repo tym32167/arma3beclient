@@ -2,6 +2,8 @@
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Tools;
 using System.Data.Entity;
+using System.Diagnostics;
+
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Arma3BEClient.Libs.Context
@@ -22,11 +24,12 @@ namespace Arma3BEClient.Libs.Context
         {
             //var log = new Log();
 
-            //this.Database.Log = s =>
-            //{
-            //    //Debug.WriteLine(s);
-            //    log.Info(s);
-            //};
+            this.Database.Log = s =>
+            {
+                //Debug.WriteLine("-------------------------------------------------------------------------");
+                Debug.WriteLine(s);
+                //log.Info(s);
+            };
         }
 
         public DbSet<ChatLog> ChatLog { get; set; }

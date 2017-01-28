@@ -1,6 +1,5 @@
 using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Models;
-using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using Prism.Commands;
 using Prism.Events;
@@ -15,17 +14,19 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
     // ReSharper disable once ClassNeverInstantiated.Global
     public class MainViewModel : ViewModelBase
     {
-        public MainViewModel(IEventAggregator eventAggregator)
+        private readonly IServerInfoRepository _infoRepository;
+
+        public MainViewModel(IEventAggregator eventAggregator, IServerInfoRepository infoRepository)
         {
-            var eventAggregator1 = eventAggregator;
+            _infoRepository = infoRepository;
             InitServers();
 
             OptionsCommand = new DelegateCommand(() =>
             {
-                eventAggregator1.GetEvent<ShowOptionsEvent>().Publish(null);
+                eventAggregator.GetEvent<ShowOptionsEvent>().Publish(new ShowOptionsEvent());
             });
 
-            eventAggregator1.GetEvent<BEServersChangedEvent>().Subscribe((state) =>
+            eventAggregator.GetEvent<BEServersChangedEvent>().Subscribe((state) =>
             {
                 Reload();
             });
@@ -35,13 +36,12 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
         public ICommand OptionsCommand { get; set; }
 
         // ReSharper disable once MemberCanBeMadeStatic.Global
-        public List<ServerInfo> Servers
+        public List<ServerInfoDto> Servers
         {
             // ReSharper disable once UnusedMember.Global
             get
             {
-                using (var repo = new ServerInfoRepository())
-                    return repo.GetNotActiveServerInfo().OrderBy(x => x.Name).ToList();
+                return _infoRepository.GetNotActiveServerInfo().OrderBy(x => x.Name).ToList();
             }
         }
 

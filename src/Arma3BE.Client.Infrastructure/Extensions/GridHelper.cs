@@ -142,7 +142,7 @@ namespace Arma3BE.Client.Infrastructure.Extensions
         {
             try
             {
-                var store = new SettingsStoreSource().GetSettingsStore();
+                var store = new SettingsStoreSource().GetCustomSettingsStore();
                 var data = store.Load(key);
                 if (string.IsNullOrEmpty(data)) return null;
                 var ser = new XmlSerializer(typeof(ColumnInfo[]));
@@ -180,7 +180,7 @@ namespace Arma3BE.Client.Infrastructure.Extensions
             try
             {
                 var array = infos.ToArray();
-                var store = new SettingsStoreSource().GetSettingsStore();
+                var store = new SettingsStoreSource().GetCustomSettingsStore();
                 var ser = new XmlSerializer(typeof(ColumnInfo[]));
 
                 var sb = new StringBuilder();

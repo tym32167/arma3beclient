@@ -4,15 +4,16 @@ using Arma3BE.Client.Infrastructure.Models;
 using Arma3BEClient.Libs.ModelCompact;
 using Prism.Events;
 using System;
+using Arma3BEClient.Libs.Repositories;
 
 namespace Arma3BE.Client.Modules.IndicatorsModule
 {
     // ReSharper disable once ClassNeverInstantiated.Global
     public class LastUpdateIndicatorViewModel : ViewModelBase
     {
-        private readonly ServerInfo _serverInfo;
+        private readonly ServerInfoDto _serverInfo;
 
-        public LastUpdateIndicatorViewModel(IEventAggregator eventAggregator, ServerInfo serverInfo)
+        public LastUpdateIndicatorViewModel(IEventAggregator eventAggregator, ServerInfoDto serverInfo)
         {
             _serverInfo = serverInfo;
             eventAggregator.GetEvent<BEMessageEvent<BEMessage>>().Subscribe(AddMessage);

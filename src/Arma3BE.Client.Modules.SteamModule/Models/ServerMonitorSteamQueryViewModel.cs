@@ -9,6 +9,8 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Arma3BEClient.Libs.Repositories;
+
 // ReSharper disable VirtualMemberCallInConstructor
 // ReSharper disable ExplicitCallerInfoArgument
 // ReSharper disable MemberCanBePrivate.Global
@@ -24,7 +26,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
         private bool _isBisy;
 
 
-        public ServerMonitorSteamQueryViewModel(ServerInfo serverInfo, IIpService ipService)
+        public ServerMonitorSteamQueryViewModel(ServerInfoDto serverInfo, IIpService ipService)
         {
             _ipService = ipService;
             Host = serverInfo.Host;

@@ -1,7 +1,6 @@
 ﻿using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Client.Infrastructure.Extensions;
 using Arma3BE.Client.Infrastructure.Models;
-using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using System;
 using System.Collections.Generic;
@@ -16,16 +15,11 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
 {
     public class ChatHistoryViewModel : ViewModelBase
     {
-        private readonly Lazy<IEnumerable<ServerInfo>> _serverList = new Lazy<IEnumerable<ServerInfo>>(() =>
-        {
-            using (var repo = new ServerInfoRepository())
-            {
-                return repo.GetServerInfo().OrderBy(x => x.Name).ToList();
-            }
-        });
+        private readonly IServerInfoRepository _repository;
 
-        public ChatHistoryViewModel(Guid serverId)
+        public ChatHistoryViewModel(Guid serverId, IServerInfoRepository repository)
         {
+            _repository = repository;
             FilterCommand = new ActionCommand(async () =>
             {
                 try
@@ -78,7 +72,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
         public IEnumerable<ChatView> Log { get; private set; }
 
 
-        public IEnumerable<ServerInfo> ServerList => _serverList.Value;
+        public IEnumerable<ServerInfoDto> ServerList => _repository.GetServerInfo().OrderBy(x => x.Name).ToList();
 
         // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
         public string SelectedServers { get; set; }

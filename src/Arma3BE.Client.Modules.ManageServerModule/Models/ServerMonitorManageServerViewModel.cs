@@ -8,6 +8,8 @@ using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using Arma3BEClient.Libs.Repositories;
+
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
@@ -21,7 +23,7 @@ namespace Arma3BE.Client.Modules.ManageServerModule.Models
         private IEnumerable<Mission> _missions;
         private Mission _selectedMission;
 
-        public ServerMonitorManageServerViewModel(ServerInfo serverInfo, IEventAggregator eventAggregator)
+        public ServerMonitorManageServerViewModel(ServerInfoDto serverInfo, IEventAggregator eventAggregator)
         {
             _serverId = serverInfo.Id;
             _eventAggregator = eventAggregator;

@@ -31,7 +31,7 @@ namespace Arma3BE.Client.Modules.OptionsModule
                 var w = container.Resolve<Options>();
                 w.Owner = owner;
                 w.ShowDialog();
-            });
+            }, ThreadOption.UIThread);
         }
     }
 }

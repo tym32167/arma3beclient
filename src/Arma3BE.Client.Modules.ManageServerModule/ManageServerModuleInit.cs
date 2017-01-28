@@ -3,6 +3,7 @@ using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Modules.ManageServerModule.Grids;
 using Arma3BE.Client.Modules.ManageServerModule.Models;
 using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Repositories;
 using Microsoft.Practices.Unity;
 using Prism.Modularity;
 using Prism.Regions;
@@ -27,7 +28,7 @@ namespace Arma3BE.Client.Modules.ManageServerModule
 
         private object CreateView()
         {
-            return ServerTabViewHelper.RegisterView<ManageServer, ServerInfo, ServerMonitorManageServerViewModel>(_container,
+            return ServerTabViewHelper.RegisterView<ManageServer, ServerInfoDto, ServerMonitorManageServerViewModel>(_container,
                 "serverInfo");
         }
     }

@@ -14,8 +14,11 @@ namespace Arma3BEClient.Libs.Tools
         TimeZoneInfo TimeZoneInfo { get; set; }
 
         void Save();
+    }
 
 
+    public interface ICustomSettingsStore
+    {
         void Save(string key, string value);
         string Load(string key);
     }
@@ -23,6 +26,7 @@ namespace Arma3BEClient.Libs.Tools
     public interface ISettingsStoreSource
     {
         ISettingsStore GetSettingsStore();
+        ICustomSettingsStore GetCustomSettingsStore();
     }
 
     public class SettingsStoreSource : ISettingsStoreSource
@@ -30,6 +34,11 @@ namespace Arma3BEClient.Libs.Tools
         public ISettingsStore GetSettingsStore()
         {
             return SettingsStore.Instance;
+        }
+
+        public ICustomSettingsStore GetCustomSettingsStore()
+        {
+            throw new NotImplementedException();
         }
     }
 }
