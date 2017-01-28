@@ -36,7 +36,7 @@ namespace Arma3BE.Server.Models
 
         public PlayerState State { get; }
 
-        protected bool Equals(Player other)
+        private bool Equals(Player other)
         {
             return Num == other.Num
                    && string.Equals(IP, other.IP)

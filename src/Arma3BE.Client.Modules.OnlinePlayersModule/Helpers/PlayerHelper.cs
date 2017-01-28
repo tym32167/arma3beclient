@@ -48,7 +48,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
 
             var guids = players.Select(x => x.Guid).ToList();
 
-            var playersInDb = _playerRepository.GetPlayers(guids);
+            var playersInDb = _playerRepository.GetPlayers(guids).ToArray();
             var dbGuids = playersInDb.Select(x => x.GUID).ToList();
 
             var historyToAdd = new List<PlayerHistory>();

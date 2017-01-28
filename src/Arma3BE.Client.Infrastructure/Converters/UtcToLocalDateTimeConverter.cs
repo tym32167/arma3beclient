@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Arma3BE.Client.Infrastructure.Extensions;
+using System;
 using System.Globalization;
 using System.Windows.Data;
-using Arma3BE.Client.Infrastructure.Extensions;
+// ReSharper disable HeuristicUnreachableCode
 
 namespace Arma3BE.Client.Infrastructure.Converters
 {
@@ -14,9 +15,12 @@ namespace Arma3BE.Client.Infrastructure.Converters
         public object Convert(object value, Type targetType, object parameter,
             CultureInfo culture)
         {
+            // ReSharper disable once CanBeReplacedWithTryCastAndCheckForNull
             if (value is DateTime?) return ((DateTime?)value).UtcToLocalFromSettings();
-            if (value is DateTime) return ((DateTime) value).UtcToLocalFromSettings();
-            
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+            // ReSharper disable once UseNullPropagation
+            if (value is DateTime) return ((DateTime)value).UtcToLocalFromSettings();
+
             return null;
         }
 

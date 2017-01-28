@@ -9,7 +9,7 @@ namespace Arma3BE.Client.Infrastructure.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (bool)value ? new SolidColorBrush() {Color = Colors.Red} : new SolidColorBrush() { Color = Colors.Transparent };
+            return value != null && (bool)value ? new SolidColorBrush { Color = Colors.Red } : new SolidColorBrush { Color = Colors.Transparent };
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -104,7 +104,9 @@
                         <xcdg:Column FieldName="ServerInfo" AllowGroup="False" Title="Server">
                             <xcdg:Column.CellContentTemplate>
                                 <DataTemplate>
+                                    <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                                     <TextBlock Text="{Binding Name}" />
+                                    <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                                 </DataTemplate>
                             </xcdg:Column.CellContentTemplate>
                         </xcdg:Column>

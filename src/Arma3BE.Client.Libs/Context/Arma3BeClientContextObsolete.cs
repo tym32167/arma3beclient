@@ -6,6 +6,12 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 // ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable MemberCanBeProtected.Global
+// ReSharper disable VirtualMemberCallInConstructor
+// ReSharper disable MemberHidesStaticFromOuterClass
 
 namespace Arma3BEClient.Libs.Context
 {

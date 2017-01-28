@@ -10,9 +10,13 @@ using Prism.Events;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable ExplicitCallerInfoArgument
 
 namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class PlayerListModelView : ViewModelBase, ITitledItem
     {
         private readonly IEventAggregator _eventAggregator;
@@ -48,31 +52,22 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
             }
         }
 
-        public ICommand RefreshCommand
-        {
-            get { return _refreshCommand ?? (_refreshCommand = new ActionCommand(Refresh)); }
-        }
+        public ICommand RefreshCommand => _refreshCommand ?? (_refreshCommand = new ActionCommand(Refresh));
 
         public List<PlayerView> Players { get; private set; } = new List<PlayerView>();
 
-        public string SelectedOptions { get; set; }
+        public string SelectedOptions { get; }
 
-        public IEnumerable<string> SearchOptions
+        public IEnumerable<string> SearchOptions => new[]
         {
-            get
-            {
-                return new[]
-                {
-                    "Name",
-                    "Last Names",
-                    "IP",
-                    "Guid",
-                    "Notes",
-                    "Comment",
-                    nameof(PlayerView.SteamId)
-                };
-            }
-        }
+            "Name",
+            "Last Names",
+            "IP",
+            "Guid",
+            "Notes",
+            "Comment",
+            nameof(PlayerView.SteamId)
+        };
 
         public static string StaticTitle = "Players";
         public string Title => StaticTitle;

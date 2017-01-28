@@ -4,7 +4,7 @@ using System.Windows.Data;
 
 namespace Arma3BE.Client.Infrastructure.Converters
 {
-    [ValueConversion(typeof (bool), typeof (bool))]
+    [ValueConversion(typeof(bool), typeof(bool))]
     public class InverseBooleanConverter : IValueConverter
     {
         #region IValueConverter Members
@@ -12,10 +12,10 @@ namespace Arma3BE.Client.Infrastructure.Converters
         public object Convert(object value, Type targetType, object parameter,
             CultureInfo culture)
         {
-            if (targetType != typeof (bool))
+            if (targetType != typeof(bool))
                 throw new InvalidOperationException("The target must be a boolean");
 
-            return !(bool) value;
+            return value != null && !(bool)value;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter,

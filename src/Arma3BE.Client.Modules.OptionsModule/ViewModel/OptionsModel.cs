@@ -10,6 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// ReSharper disable ExplicitCallerInfoArgument
 
 namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
 {

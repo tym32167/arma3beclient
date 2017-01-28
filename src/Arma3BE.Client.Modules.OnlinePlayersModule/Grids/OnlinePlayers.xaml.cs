@@ -29,10 +29,10 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Grids
             foreach (var menuItem in menu.Items.OfType<MenuItem>().ToList())
             {
                 menu.Items.Remove(menuItem);
-                dg.ContextMenu.Items.Add(menuItem);
+                dg.ContextMenu?.Items.Add(menuItem);
             }
 
-            dg.LoadState<PlayerView>(this.GetType().FullName);
+            dg.LoadState<PlayerView>(GetType().FullName);
         }
 
         private void Dg_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)

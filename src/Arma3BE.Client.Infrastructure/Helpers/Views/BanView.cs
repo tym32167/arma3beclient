@@ -1,6 +1,7 @@
 ﻿using Arma3BE.Client.Infrastructure.Models;
 using Arma3BEClient.Common.Attributes;
 using System;
+// ReSharper disable UnusedMember.Global
 
 namespace Arma3BE.Client.Infrastructure.Helpers.Views
 {

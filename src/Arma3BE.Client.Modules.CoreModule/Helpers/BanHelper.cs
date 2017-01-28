@@ -19,7 +19,7 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
         private readonly IEventAggregator _eventAggregator;
         private readonly IPlayerRepository _playerRepository;
         private readonly ISettingsStoreSource _settingsStoreSource;
-        private readonly Regex replace = new Regex(@"\[[^\]^\[]*\]", RegexOptions.Compiled | RegexOptions.Multiline);
+        private readonly Regex _replace = new Regex(@"\[[^\]^\[]*\]", RegexOptions.Compiled | RegexOptions.Multiline);
         private readonly MessageHelper _messageHelper;
 
         public BanHelper(IEventAggregator eventAggregator, IPlayerRepository playerRepository, ISettingsStoreSource settingsStoreSource)
@@ -47,14 +47,14 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
             {
 
                 var db =
-                    banRepository.GetActiveBans(currentServerId);
+                    banRepository.GetActiveBans(currentServerId).ToArray();
 
                 var ids = bans.Select(x => x.GuidIp).ToList();
 
                 ids.AddRange(db.Select(x => x.GuidIp).ToList());
                 ids = ids.Distinct().ToList();
 
-                var players = _playerRepository.GetPlayers(ids.ToArray());
+                var players = _playerRepository.GetPlayers(ids.ToArray()).ToArray();
 
                 var bansToUpdate = new List<Arma3BEClient.Libs.ModelCompact.Ban>();
                 var bansToAdd = new List<Arma3BEClient.Libs.ModelCompact.Ban>();
@@ -62,7 +62,7 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
 
                 foreach (var ban in db)
                 {
-                    bool needUpdate = false;
+                    var needUpdate = false;
 
                     var actual = bans.FirstOrDefault(x => x.GuidIp == ban.GuidIp);
                     if (actual == null)
@@ -133,7 +133,7 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
 
                         bansToAdd.Add(newBan);
 
-                        var comm = replace.Replace(ban.Reason, string.Empty).Trim();
+                        var comm = _replace.Replace(ban.Reason, string.Empty).Trim();
                         if (player != null &&
                             (string.IsNullOrEmpty(player.Comment) || !player.Comment.Contains(comm)))
                         {

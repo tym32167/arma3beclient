@@ -77,8 +77,9 @@
 
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
-
+                                <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                                 <TextBlock Text="{Binding Path=Name}" Foreground="{Binding Path=Num, Converter={StaticResource PlayerNumberToColorConverter}}">
+                                    <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                                     </TextBlock>
                                 
                             </DataTemplate>

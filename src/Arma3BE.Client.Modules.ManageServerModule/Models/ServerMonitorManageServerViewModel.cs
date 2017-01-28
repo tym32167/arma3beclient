@@ -8,6 +8,9 @@ using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Windows;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 
 namespace Arma3BE.Client.Modules.ManageServerModule.Models
 {
@@ -25,8 +28,8 @@ namespace Arma3BE.Client.Modules.ManageServerModule.Models
 
             _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Mission>>>().Subscribe(e =>
             {
-                if (e.ServerId == this._serverId)
-                    this.Missions = e.Items;
+                if (e.ServerId == _serverId)
+                    Missions = e.Items;
             });
 
             SetMissionCommand = new ActionCommand(() =>
@@ -98,10 +101,7 @@ namespace Arma3BE.Client.Modules.ManageServerModule.Models
             }
         }
 
-        public string Title
-        {
-            get { return "Manage Server"; }
-        }
+        public string Title => "Manage Server";
 
         public Mission SelectedMission
         {
@@ -109,7 +109,7 @@ namespace Arma3BE.Client.Modules.ManageServerModule.Models
             set
             {
                 _selectedMission = value;
-                OnPropertyChanged("SelectedMission");
+                OnPropertyChanged();
                 SetMissionCommand.RaiseCanExecuteChanged();
             }
         }
@@ -120,7 +120,7 @@ namespace Arma3BE.Client.Modules.ManageServerModule.Models
             set
             {
                 _missions = value;
-                OnPropertyChanged("Missions");
+                OnPropertyChanged();
             }
         }
 

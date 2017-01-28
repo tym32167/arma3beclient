@@ -9,9 +9,15 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Input;
+// ReSharper disable VirtualMemberCallInConstructor
+// ReSharper disable ExplicitCallerInfoArgument
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 
 namespace Arma3BE.Client.Modules.SteamModule.Models
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class ServerMonitorSteamQueryViewModel : ViewModelBase
     {
         private readonly IIpService _ipService;
@@ -54,7 +60,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
         private void GetStat()
         {
             var iphost = _ipService.GetIpAddress(Host);
-            var server = new Arma3BEClient.Steam.Server(new IPEndPoint(IPAddress.Parse(iphost), Port));
+            var server = new Server(new IPEndPoint(IPAddress.Parse(iphost), Port));
 
             var settings = new GetServerInfoSettings();
             var rules = server.GetServerRulesSync(settings);
@@ -85,7 +91,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
             OnPropertyChanged(nameof(ServerPlayers));
         }
 
-        public string Title { get { return "Steam Query"; } }
+        public string Title => "Steam Query";
 
         public bool IsBisy
         {

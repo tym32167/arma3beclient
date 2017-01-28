@@ -14,7 +14,7 @@ namespace Arma3BE.Client.Infrastructure.Extensions
         }
 
 
-        public static DateTime LocalToUtcFromSettings(this DateTime source)
+        private static DateTime LocalToUtcFromSettings(this DateTime source)
         {
             var zone = SettingsStore.TimeZoneInfo;
             return TimeZoneInfo.ConvertTimeToUtc(source, zone);

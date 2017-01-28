@@ -5,9 +5,11 @@ using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using Prism.Events;
 using System;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace Arma3BE.Client.Modules.MainModule.ViewModel
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class ServerMonitorModel : DisposableViewModelBase
     {
         private readonly IEventAggregator _eventAggregator;
@@ -36,7 +38,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             }
         }
 
-        public string Title { get { return CurrentServer.Name; } }
+        public string Title => CurrentServer.Name;
 
         private void BeServerDisconnectHandler(ServerInfo info)
         {

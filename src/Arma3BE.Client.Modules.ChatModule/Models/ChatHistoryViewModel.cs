@@ -9,13 +9,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 // ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace Arma3BE.Client.Modules.ChatModule.Models
 {
     public class ChatHistoryViewModel : ViewModelBase
     {
-        private readonly Guid _serverId;
-
         private readonly Lazy<IEnumerable<ServerInfo>> _serverList = new Lazy<IEnumerable<ServerInfo>>(() =>
         {
             using (var repo = new ServerInfoRepository())
@@ -26,14 +25,13 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
 
         public ChatHistoryViewModel(Guid serverId)
         {
-            _serverId = serverId;
-
             FilterCommand = new ActionCommand(async () =>
             {
                 try
                 {
                     IsBusy = true;
                     await Task.Factory.StartNew(UpdateLog, TaskCreationOptions.LongRunning).ConfigureAwait(true);
+                    // ReSharper disable once ExplicitCallerInfoArgument
                     OnPropertyChanged(nameof(Log));
                 }
                 finally
@@ -79,11 +77,9 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
         public IEnumerable<ChatView> Log { get; private set; }
 
 
-        public IEnumerable<ServerInfo> ServerList
-        {
-            get { return _serverList.Value; }
-        }
+        public IEnumerable<ServerInfo> ServerList => _serverList.Value;
 
+        // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
         public string SelectedServers { get; set; }
         public ICommand FilterCommand { get; set; }
     }

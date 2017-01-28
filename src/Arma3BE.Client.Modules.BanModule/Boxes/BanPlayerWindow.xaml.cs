@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace Arma3BE.Client.Modules.BanModule.Boxes
 {
@@ -202,10 +203,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             public TimeSpan Period { get; set; }
             public int PeriodMinutes { get; set; }
 
-            public string Display
-            {
-                get { return $"{Text} ({Period})"; }
-            }
+            public string Display => $"{Text} ({Period})";
         }
     }
 }

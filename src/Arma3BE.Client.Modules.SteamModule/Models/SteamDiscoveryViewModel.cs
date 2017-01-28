@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Arma3BE.Client.Infrastructure.Commands;
+using Arma3BE.Client.Infrastructure.Models;
+using Arma3BEClient.Libs.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -6,9 +9,7 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Arma3BE.Client.Infrastructure.Commands;
-using Arma3BE.Client.Infrastructure.Models;
-using Arma3BEClient.Libs.Repositories;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace Arma3BE.Client.Modules.SteamModule.Models
 {
@@ -157,7 +158,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
         private void Save()
         {
             var found = PlayersFound?.Where(x => _totalPlayers.ContainsKey(x.Item1))
-                .Select(x => new {Id = _totalPlayers[x.Item1], steamId = x.Item2})
+                .Select(x => new { Id = _totalPlayers[x.Item1], steamId = x.Item2 })
                 .ToDictionary(x => x.Id, x => x.steamId);
 
             if ((found != null) && (found.Count > 0))
@@ -198,7 +199,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
             {
                 var l = 76561190000000000L + i;
                 var hash = Steam_Hash(l);
-                Progress = (int) ((i - min)*100.0/(max - min));
+                Progress = (int)((i - min) * 100.0 / (max - min));
 
                 CheckHash(l.ToString(), hash);
 
@@ -221,13 +222,13 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
             // http://steamcommunity.com/profiles/7656119xxxxxxxxxx 
             // http://steamcommunity.com/profiles/76561198053877632
             var steamId = num;
-            var parts = new byte[] {0x42, 0x45, 0, 0, 0, 0, 0, 0, 0, 0};
+            var parts = new byte[] { 0x42, 0x45, 0, 0, 0, 0, 0, 0, 0, 0 };
 
             for (var i = 2; i < 10; i++)
             {
-                var res = steamId%256;
-                steamId = steamId/256;
-                parts[i] = (byte) res;
+                var res = steamId % 256;
+                steamId = steamId / 256;
+                parts[i] = (byte)res;
             }
 
             var md5 = new MD5CryptoServiceProvider();

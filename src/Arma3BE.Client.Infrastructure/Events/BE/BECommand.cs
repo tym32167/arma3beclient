@@ -17,7 +17,7 @@ namespace Arma3BE.Client.Infrastructure.Events.BE
 
     public class BECustomCommand : BEMessageBase<object>
     {
-        public string Command { get; set; }
+        public string Command { get; }
 
         public BECustomCommand(Guid serverId, string command) : base(serverId)
         {

@@ -16,6 +16,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Ban = Arma3BE.Server.Models.Ban;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable ExplicitCallerInfoArgument
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Arma3BE.Client.Modules.BanModule.Models
 {
@@ -99,10 +102,7 @@ namespace Arma3BE.Client.Modules.BanModule.Models
             }
         }
 
-        public long AvailibleBansCount
-        {
-            get { return AvailibleBans.Count(); }
-        }
+        public long AvailibleBansCount => AvailibleBans.Count();
 
         public ICommand SyncBans { get; set; }
         public ICommand CustomBan { get; set; }

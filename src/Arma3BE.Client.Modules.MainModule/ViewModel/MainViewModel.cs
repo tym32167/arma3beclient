@@ -37,6 +37,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
         // ReSharper disable once MemberCanBeMadeStatic.Global
         public List<ServerInfo> Servers
         {
+            // ReSharper disable once UnusedMember.Global
             get
             {
                 using (var repo = new ServerInfoRepository())

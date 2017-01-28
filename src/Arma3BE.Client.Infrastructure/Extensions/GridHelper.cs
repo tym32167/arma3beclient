@@ -204,7 +204,7 @@ namespace Arma3BE.Client.Infrastructure.Extensions
             public CustomColumn()
             {
                 HasChanges = false;
-                this.Changed += (s, e) => { HasChanges = true; };
+                Changed += (s, e) => { HasChanges = true; };
             }
 
             public void Reset()

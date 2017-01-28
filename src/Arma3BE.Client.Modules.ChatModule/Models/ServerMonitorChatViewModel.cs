@@ -18,6 +18,9 @@ using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
 using Player = Arma3BE.Server.Models.Player;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable ExplicitCallerInfoArgument
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Arma3BE.Client.Modules.ChatModule.Models
 {
@@ -33,7 +36,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
         private string _commandMessage;
         private List<Player> _players = new List<Player>();
 
-        public DelegateCommand SendCommandMessage { get; set; }
+        public DelegateCommand SendCommandMessage { get; }
 
         public ServerMonitorChatViewModel(ServerInfo serverInfo, IEventAggregator eventAggregator, ISettingsStoreSource settingsStoreSource)
         {
@@ -161,7 +164,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             set
             {
                 _players = value;
-                OnPropertyChanged("Players");
+                OnPropertyChanged();
             }
         }
 
@@ -172,7 +175,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             set
             {
                 _selectedPlayer = value;
-                OnPropertyChanged("SelectedPlayer");
+                OnPropertyChanged();
             }
         }
 
@@ -182,7 +185,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             set
             {
                 _autoScroll = value;
-                OnPropertyChanged("AutoScroll");
+                OnPropertyChanged();
             }
         }
 
@@ -192,7 +195,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             set
             {
                 _enableChat = value;
-                OnPropertyChanged("EnableChat");
+                OnPropertyChanged();
             }
         }
 
@@ -202,7 +205,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             set
             {
                 _inputMessage = value;
-                OnPropertyChanged("InputMessage");
+                OnPropertyChanged();
             }
         }
 
@@ -303,6 +306,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
                 case ChatMessage.MessageType.NonCommon:
                     color = Color.FromRgb(89, 173, 10);
                     break;
+                // ReSharper disable once RedundantEmptyDefaultSwitchBranch
                 default:
                     break;
             }

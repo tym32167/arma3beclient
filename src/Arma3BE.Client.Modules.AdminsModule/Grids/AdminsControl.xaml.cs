@@ -16,7 +16,7 @@ namespace Arma3BE.Client.Modules.AdminsModule.Grids
         {
             InitializeComponent();
             dg.ContextMenu = dg.Generate<Admin>();
-            dg.LoadState<Admin>(this.GetType().FullName);
+            dg.LoadState<Admin>(GetType().FullName);
         }
     }
 }

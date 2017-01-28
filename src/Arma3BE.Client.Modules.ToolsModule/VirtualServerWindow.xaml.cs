@@ -19,8 +19,11 @@ namespace Arma3BE.Client.Modules.ToolsModule
             InitializeComponent();
 
             _server = factory.Create(new BattlEyeLoginCredentials()) as VirtualServer;
-            _server.CommandRecieved += _server_CommandRecieved;
-            _server.PureCommandRecieved += _server_PureCommandRecieved;
+            if (_server != null)
+            {
+                _server.CommandRecieved += _server_CommandRecieved;
+                _server.PureCommandRecieved += _server_PureCommandRecieved;
+            }
         }
 
         private void _server_PureCommandRecieved(object sender, VirtualServer.PureCommandArgs e)
@@ -50,10 +53,10 @@ namespace Arma3BE.Client.Modules.ToolsModule
             _server.OnBattlEyeDisconnected(new BattlEyeDisconnectEventArgs(new BattlEyeLoginCredentials(), BattlEyeDisconnectionType.Manual));
         }
 
-        private int messageId = 0;
+        private int _messageId;
         private void Send_Click(object sender, RoutedEventArgs e)
         {
-            _server.OnBattlEyeMessageReceived(new BattlEyeMessageEventArgs(tbCmd.Text, ++messageId));
+            _server.OnBattlEyeMessageReceived(new BattlEyeMessageEventArgs(tbCmd.Text, ++_messageId));
         }
 
         private void Clear_OnClick(object sender, RoutedEventArgs e)
