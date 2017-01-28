@@ -38,7 +38,7 @@ namespace Arma3BEClient.Libs.Tools
 
         public ICustomSettingsStore GetCustomSettingsStore()
         {
-            throw new NotImplementedException();
+            return CustomSettingsStore.Instance;
         }
     }
 }

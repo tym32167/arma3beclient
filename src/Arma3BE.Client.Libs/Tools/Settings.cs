@@ -98,6 +98,10 @@ namespace Arma3BEClient.Libs.Tools
     {
         readonly ConcurrentDictionary<string, string> _cache = new ConcurrentDictionary<string, string>();
 
+
+        private static Lazy<CustomSettingsStore> _instance = new Lazy<CustomSettingsStore>(()=>new CustomSettingsStore());
+        public static CustomSettingsStore Instance => _instance.Value;
+
         public void Save(string key, string value)
         {
             _cache.AddOrUpdate(key, k => value, (k, v) => value);
@@ -106,7 +110,8 @@ namespace Arma3BEClient.Libs.Tools
 
         public string Load(string key)
         {
-            return _cache.GetOrAdd(key, LoadInternal);
+            var rrr =  _cache.GetOrAdd(key, LoadInternal);
+            return rrr;
         }
 
         private string LoadInternal(string key)
