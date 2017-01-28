@@ -114,6 +114,7 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
         }
 
 
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public IEnumerable<TimeZoneInfo> TimeZones { get; }
 
         public void Save()

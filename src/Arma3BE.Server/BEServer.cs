@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
+
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Arma3BE.Server
@@ -185,12 +186,6 @@ namespace Arma3BE.Server
             handler?.Invoke(this, new BEClientEventArgs<IEnumerable<Mission>>(e));
         }
 
-        private void OnConnectingHandler()
-        {
-            var handler = ConnectingHandler;
-            handler?.Invoke(this, EventArgs.Empty);
-        }
-
         private void OnBanLog(LogMessage message)
         {
             var handler = BanLog;
@@ -349,6 +344,7 @@ namespace Arma3BE.Server
         }
 
 
+        // ReSharper disable once UnusedParameter.Local
         private void RegisterMessage(ServerMessage message)
         {
             // _log.Info($"message [\nserver ip: {_host}\nmessageId:{message.MessageId}\n{message.Message}\n]");

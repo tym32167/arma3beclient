@@ -13,10 +13,7 @@ namespace Arma3BEClient.Steam
             _bytes = bytes;
         }
 
-        public bool BytesLeft
-        {
-            get { return _bytes.Length - 1 >= CurrentPosition; }
-        }
+        public bool BytesLeft => _bytes.Length - 1 >= CurrentPosition;
 
         public int CurrentPosition { get; set; }
 
@@ -80,7 +77,7 @@ namespace Arma3BEClient.Steam
 
         public string GetStringOfByte()
         {
-            return Encoding.ASCII.GetString(new[] {_bytes[CurrentPosition++]});
+            return Encoding.ASCII.GetString(new[] { _bytes[CurrentPosition++] });
         }
     }
 }

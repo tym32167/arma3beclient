@@ -18,7 +18,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
         private readonly IPlayerRepository _playerRepository;
         private readonly Guid _serverId;
 
-        private readonly Regex NameRegex = new Regex("[A-Za-zА-Яа-я0-9]+",
+        private readonly Regex _nameRegex = new Regex("[A-Za-zА-Яа-я0-9]+",
             RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
         public PlayerHelper(Guid serverId, IBanHelper banHelper, IPlayerRepository playerRepository)
@@ -34,7 +34,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
         }
 
 
-        private IEnumerable<Player> previous_state = new Player[0];
+        private IEnumerable<Player> _previousState = new Player[0];
 
         private bool RegisterPlayersInternal(IEnumerable<Player> list)
         {
@@ -43,8 +43,8 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
             if (!HaveChanges(players, x => x.Num))
                 return false;
 
-            var prevoius = new HashSet<string>(previous_state.Select(x => x.Guid).Distinct());
-            previous_state = players;
+            var prevoius = new HashSet<string>(_previousState.Select(x => x.Guid).Distinct());
+            _previousState = players;
 
             var guids = players.Select(x => x.Guid).ToList();
 
@@ -146,7 +146,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
                 }
             });
 
-            var filterUsers = result.FirstOrDefault(x => !NameRegex.IsMatch(x.Name));
+            var filterUsers = result.FirstOrDefault(x => !_nameRegex.IsMatch(x.Name));
             if (filterUsers != null)
             {
 #pragma warning disable 4014

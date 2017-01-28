@@ -64,10 +64,7 @@ namespace Arma3BE.Client.Modules.BanModule.Models
                 });
         }
 
-        public string Title
-        {
-            get { return "Bans"; }
-        }
+        public string Title => "Bans";
 
         public IEnumerable<BanView> SelectedAvailibleBans { get; set; }
 

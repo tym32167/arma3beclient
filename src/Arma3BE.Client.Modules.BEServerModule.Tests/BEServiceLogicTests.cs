@@ -80,7 +80,7 @@ namespace Arma3BE.Client.Modules.BEServerModule.Tests
             var logic = new BELogic(ev);
 
             var commands = new List<BECommand>();
-            var immediate_commands = new List<BECommand>();
+            var immediateCommands = new List<BECommand>();
 
             logic.ServerUpdateHandler += (s, e) =>
             {
@@ -89,15 +89,15 @@ namespace Arma3BE.Client.Modules.BEServerModule.Tests
 
             logic.ServerImmediateUpdateHandler += (s, e) =>
             {
-                immediate_commands.Add(e.Command);
+                immediateCommands.Add(e.Command);
             };
 
 
             ev.GetEvent<ConnectServerEvent>()
                .Publish(new ServerInfo() { Id = serverGuid });
 
-            Assert.IsNotNull(immediate_commands);
-            Assert.IsNotNull(immediate_commands.FirstOrDefault(x => x.CommandType == CommandType.Players && x.ServerId == serverGuid));
+            Assert.IsNotNull(immediateCommands);
+            Assert.IsNotNull(immediateCommands.FirstOrDefault(x => x.CommandType == CommandType.Players && x.ServerId == serverGuid));
 
             Assert.IsNotNull(commands);
             Assert.IsNotNull(commands.FirstOrDefault(x => x.CommandType == CommandType.Bans && x.ServerId == serverGuid));

@@ -3,6 +3,7 @@ using BattleNET;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+// ReSharper disable UnusedMember.Local
 
 namespace Arma3BE.Server.Mocks
 {
@@ -125,17 +126,14 @@ namespace Arma3BE.Server.Mocks
             return BattlEyeConnectionResult.Success;
         }
 
-        private static string ChatMessage
-        {
-            get { return $"(Global) bot: Текущее время {DateTime.UtcNow}"; }
-        }
+        private static string ChatMessage => $"(Global) bot: Текущее время {DateTime.UtcNow}";
 
 
-        private static string prev = null;
+        private static string _prev;
         static string GetPlayers()
         {
-            prev = prev == players2 ? players : players2;
-            return prev;
+            _prev = _prev == players2 ? players : players2;
+            return _prev;
         }
 
 

@@ -1,12 +1,8 @@
 ﻿using Arma3BE.Client.Infrastructure.Events;
-using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.PlayersModule.Boxes;
-using Arma3BE.Client.Modules.PlayersModule.Grids;
 using Arma3BE.Client.Modules.PlayersModule.Models;
 using Microsoft.Practices.Unity;
 using Prism.Events;
-using System.Windows;
-using System.Windows.Controls;
 
 namespace Arma3BE.Client.Modules.PlayersModule
 {

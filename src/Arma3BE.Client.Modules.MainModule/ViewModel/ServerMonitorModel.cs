@@ -30,6 +30,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 
         public bool Connected
         {
+            // ReSharper disable once UnusedMember.Global
             get { return _connected; }
             set
             {
@@ -70,6 +71,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 
         public void CloseServer()
         {
+            // ReSharper disable once RedundantArgumentDefaultValue
             SetActive(CurrentServer.Id, false);
         }
 

@@ -20,14 +20,15 @@ namespace Arma3BE.Server.Models
             NonCommon
         }
 
-        private bool? _isImportantMessage = null;
-        public bool IsImportantMessage {
+        private bool? _isImportantMessage;
+        public bool IsImportantMessage
+        {
             get
             {
                 if (_isImportantMessage.HasValue) return _isImportantMessage.Value;
                 _isImportantMessage = IsImportantMessageProc(Message);
                 return _isImportantMessage.Value;
-            } 
+            }
         }
 
         public MessageType Type
@@ -109,7 +110,7 @@ namespace Arma3BE.Server.Models
 
     public class LogMessage : MessageBase
     {
-        
+
     }
 
     public abstract class MessageBase

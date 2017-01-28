@@ -3,6 +3,7 @@ using Arma3BE.Client.Infrastructure.Models;
 using Arma3BEClient.Libs.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace Arma3BE.Client.Modules.BanModule.Boxes
@@ -17,7 +18,6 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
         private readonly Guid _serverId;
         private readonly int _playerNum;
         private readonly string _playerGuid;
-        private readonly KickPlayerViewModel Model;
 
         public KickPlayerWindow(IBanHelper playerHelper, Guid serverId, int playerNum, string playerGuid, string playerName)
         {
@@ -27,9 +27,8 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             _playerGuid = playerGuid;
             InitializeComponent();
 
-            Model = new KickPlayerViewModel(playerName);
-
-            DataContext = Model;
+            var model = new KickPlayerViewModel(playerName);
+            DataContext = model;
         }
 
         private void KickClick(object sender, RoutedEventArgs e)
@@ -45,6 +44,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
     }
 
 
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class KickPlayerViewModel : ViewModelBase
     {
         private string _reason;

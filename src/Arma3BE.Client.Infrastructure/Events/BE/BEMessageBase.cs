@@ -2,6 +2,7 @@
 
 namespace Arma3BE.Client.Infrastructure.Events.BE
 {
+    // ReSharper disable once UnusedTypeParameter
     public abstract class BEMessageBase<T> : BEMessageBase
     {
         protected BEMessageBase(Guid serverId) : base(serverId)

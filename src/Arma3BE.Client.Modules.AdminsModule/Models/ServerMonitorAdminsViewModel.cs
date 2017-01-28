@@ -31,7 +31,7 @@ namespace Arma3BE.Client.Modules.AdminsModule.Models
             });
         }
 
-        public string Title { get { return "Admins"; } }
+        public string Title => "Admins";
 
         protected override IEnumerable<Admin> RegisterData(IEnumerable<Admin> initialData)
         {

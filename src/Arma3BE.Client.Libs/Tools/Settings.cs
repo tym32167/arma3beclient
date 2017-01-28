@@ -86,7 +86,7 @@ namespace Arma3BEClient.Libs.Tools
                 try
                 {
                     var zone = settings.FirstOrDefault(x => x.Id == TimeZoneKey)?.Value;
-                    ss.TimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(zone);
+                    if (zone != null) ss.TimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(zone);
                 }
                 catch (Exception)
                 {

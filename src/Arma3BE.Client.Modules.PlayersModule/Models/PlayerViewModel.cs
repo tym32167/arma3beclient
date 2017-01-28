@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Windows.Input;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ExplicitCallerInfoArgument
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Arma3BE.Client.Modules.PlayersModule.Models
 {

@@ -23,18 +23,12 @@ namespace Arma3BE.Client.Modules.OptionsModule
 
     public class OptionsService
     {
-        private readonly IEventAggregator _eventAggregator;
-        private readonly IUnityContainer _container;
-
         public OptionsService(IEventAggregator eventAggregator, IUnityContainer container)
         {
-            _eventAggregator = eventAggregator;
-            _container = container;
-
-            _eventAggregator.GetEvent<ShowOptionsEvent>().Subscribe(e =>
+            eventAggregator.GetEvent<ShowOptionsEvent>().Subscribe(e =>
             {
                 var owner = Application.Current.MainWindow;
-                var w = _container.Resolve<Options>();
+                var w = container.Resolve<Options>();
                 w.Owner = owner;
                 w.ShowDialog();
             });

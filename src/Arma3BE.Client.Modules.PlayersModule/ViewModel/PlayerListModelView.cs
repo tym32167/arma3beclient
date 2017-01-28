@@ -13,6 +13,7 @@ using System.Windows.Input;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable ExplicitCallerInfoArgument
+// ReSharper disable UnusedMember.Global
 
 namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
 {

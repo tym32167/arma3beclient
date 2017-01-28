@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
 
 namespace Arma3BE.Client.Modules.ChatModule.Models
 {
