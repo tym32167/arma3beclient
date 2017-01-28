@@ -6,10 +6,13 @@
         Title="{Binding Path=Player.Name, StringFormat=Player info: {0}}"
         WindowStyle="ToolWindow" Width="700" SizeToContent="Height" MinHeight="500" MaxHeight="550"
         WindowStartupLocation="CenterScreen">
-    
+
+    <!-- ReSharper disable InconsistentNaming -->
     <Window.Resources>
+        
         <converters:UtcToLocalDateTimeConverter x:Uid="local:"
                                               x:Key="utcToLocalDateTimeConverter" />
+        
     </Window.Resources>
     <Grid>
         <TabControl Margin="5">
@@ -202,4 +205,5 @@
             </TabItem>
         </TabControl>
     </Grid>
+    <!-- ReSharper restore InconsistentNaming -->
 </Window>

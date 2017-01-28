@@ -1,5 +1,4 @@
-﻿using Arma3BE.Client.Modules.ManageServerModule.Models;
-using Prism.Regions;
+﻿using Prism.Regions;
 using System.Windows.Controls;
 
 namespace Arma3BE.Client.Modules.ManageServerModule.Grids
@@ -15,7 +14,5 @@ namespace Arma3BE.Client.Modules.ManageServerModule.Grids
         {
             InitializeComponent();
         }
-
-        private ServerMonitorManageServerViewModel Model => DataContext as ServerMonitorManageServerViewModel;
     }
 }

@@ -14,6 +14,7 @@ namespace Arma3BEClient.Libs.ModelCompact
         }
 
         [Key]
+        // ReSharper disable once UnusedMember.Global
         public int Id { get; set; }
 
         [Required]

@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Admin = Arma3BE.Server.Models.Admin;
 using Player = Arma3BE.Server.Models.Player;
+// ReSharper disable MemberCanBePrivate.Global
 
 // ReSharper disable RedundantNameQualifier
 
@@ -126,7 +127,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
             var enumerable = initialData as IList<Player> ?? initialData.ToList();
             _playerHelper.RegisterPlayers(enumerable);
             var view = _playerHelper.GetPlayerView(enumerable).ToArray();
-            var admins = _admins ?? new Arma3BE.Server.Models.Admin[0];
+            var admins = _admins ?? new Admin[0];
             var adminsIps = new HashSet<string>(admins.Select(x => x.IP.ToLower()).Distinct());
             foreach (var playerView in view)
             {

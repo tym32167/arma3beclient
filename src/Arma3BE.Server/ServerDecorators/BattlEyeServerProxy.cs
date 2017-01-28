@@ -80,7 +80,7 @@ namespace Arma3BE.Server.ServerDecorators
             return _battlEyeClient.SendCommand(command);
         }
 
-        private object _lock = new object();
+        private readonly object _lock = new object();
 
         protected override void DisposeManagedResources()
         {

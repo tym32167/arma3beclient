@@ -6,6 +6,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+// ReSharper disable MemberCanBePrivate.Local
 
 namespace Arma3BE.Server.ServerDecorators
 {

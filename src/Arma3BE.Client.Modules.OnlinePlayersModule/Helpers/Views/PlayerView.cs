@@ -5,6 +5,9 @@ using Arma3BEClient.Common.Attributes;
 using Microsoft.Practices.Unity;
 using System;
 using System.Threading.Tasks;
+// ReSharper disable UnusedMember.Global
+// ReSharper disable ExplicitCallerInfoArgument
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views
 {

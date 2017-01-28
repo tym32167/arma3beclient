@@ -2,6 +2,8 @@
 using Arma3BEClient.Common.Attributes;
 using System;
 // ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable ExplicitCallerInfoArgument
 
 namespace Arma3BE.Client.Infrastructure.Helpers.Views
 {
@@ -64,13 +66,7 @@ namespace Arma3BE.Client.Infrastructure.Helpers.Views
 
         [ShowInUi]
         [EnableCopy]
-        public TimeSpan TimeLeft
-        {
-            get
-            {
-                return TimeSpan.FromMinutes(Minutesleft);
-            }
-        }
+        public TimeSpan TimeLeft => TimeSpan.FromMinutes(Minutesleft);
 
         [ShowInUi]
         [EnableCopy]

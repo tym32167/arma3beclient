@@ -85,10 +85,10 @@ namespace Arma3BEClient.Libs.Repositories
             if (!_validCache) ResetCache();
 
             var result = new List<PlayerDto>();
-            PlayerDto element;
 
             foreach (var guid in guids.Distinct().ToArray())
             {
+                PlayerDto element;
                 if (_playersByGuidsCache.TryGetValue(guid, out element))
                     result.Add(element);
             }
@@ -127,11 +127,11 @@ namespace Arma3BEClient.Libs.Repositories
 
             _playerRepository.UpdateComment(dto);
 
-            PlayerDto element;
             var local = _playersByGuidsCache.Values.ToDictionary(x => x.Id);
 
             foreach (var playersToUpdateComment in dto)
             {
+                PlayerDto element;
                 if (local.TryGetValue(playersToUpdateComment.Key, out element))
                 {
                     element.Comment = playersToUpdateComment.Value;
@@ -193,7 +193,7 @@ namespace Arma3BEClient.Libs.Repositories
 
     public class PlayerRepository : DisposeObject, IPlayerRepository
     {
-        private ILog _log = new Log();
+        private readonly ILog _log = new Log();
 
         public IEnumerable<PlayerDto> GetAllPlayers()
         {

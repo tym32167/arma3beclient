@@ -10,6 +10,8 @@ using Prism.Events;
 using System;
 using System.Diagnostics;
 using System.Windows.Input;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable ExplicitCallerInfoArgument
 
 namespace Arma3BE.Client.Modules.PlayersModule.Models
 {

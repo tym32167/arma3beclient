@@ -37,8 +37,8 @@ namespace Arma3BE.Client.Modules.BEServerModule
             _playersUpdater = new TimedAction(_settingsStoreSource.GetSettingsStore().PlayersUpdateSeconds, UpdatePlayers);
             _bansUpdater = new TimedAction(_settingsStoreSource.GetSettingsStore().BansUpdateSeconds, UpdateBans);
 
-            _adminsUpdater = new TimedAction(3, UpdateAdmins); ;
-            _missionsUpdater = new TimedAction(4, UpdateMissions); ;
+            _adminsUpdater = new TimedAction(3, UpdateAdmins);
+            _missionsUpdater = new TimedAction(4, UpdateMissions);
 
 
             _aggregator.GetEvent<SettingsChangedEvent>()
@@ -155,7 +155,7 @@ namespace Arma3BE.Client.Modules.BEServerModule
 
         private Timer _timer;
 
-        private ConcurrentDictionary<Guid, byte> _servers = new ConcurrentDictionary<Guid, byte>();
+        private readonly ConcurrentDictionary<Guid, byte> _servers = new ConcurrentDictionary<Guid, byte>();
 
         public TimedAction(int interval, Action<HashSet<Guid>> action)
         {

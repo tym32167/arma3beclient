@@ -9,12 +9,14 @@ using System.Windows.Input;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable ExplicitCallerInfoArgument
+// ReSharper disable UnusedMember.Global
 
 namespace Arma3BE.Client.Infrastructure.Models
 {
     public abstract class ServerMonitorBaseViewModel<T, TK> : ViewModelBase where T : class where TK : class
     {
         private readonly IEqualityComparer<TK> _comparer;
+        // ReSharper disable once InconsistentNaming
         protected IEnumerable<TK> _data;
 
         private TK _selectedItem;

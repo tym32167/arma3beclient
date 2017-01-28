@@ -45,6 +45,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
             }
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public void AppendText(TextBox block, ScrollViewer scroll, MessageBase message)
         {
             var text = $"[ {message.Date.UtcToLocalFromSettings():HH:mm:ss} ]  {message.Message}\n";

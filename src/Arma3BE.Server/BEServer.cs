@@ -34,12 +34,10 @@ namespace Arma3BE.Server
             InitClients();
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public bool Disposed { get; set; }
 
-        public bool Connected
-        {
-            get { return _battlEyeServer != null && _battlEyeServer.Connected; }
-        }
+        public bool Connected => _battlEyeServer != null && _battlEyeServer.Connected;
 
         public event EventHandler<BEClientEventArgs<IEnumerable<Player>>> PlayerHandler;
         public event EventHandler<BEClientEventArgs<IEnumerable<Ban>>> BanHandler;
