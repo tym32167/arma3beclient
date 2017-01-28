@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Arma3BE.Server.Mocks
 {
+    // ReSharper disable once UnusedMember.Global
     public class MockBattleEyeServer : IBattlEyeServer
     {
         private Timer _timer;

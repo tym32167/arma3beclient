@@ -5,6 +5,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+// ReSharper disable MemberCanBeProtected.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable ExplicitCallerInfoArgument
 
 namespace Arma3BE.Client.Infrastructure.Models
 {
@@ -44,17 +48,12 @@ namespace Arma3BE.Client.Infrastructure.Models
             }
         }
 
-        public ObservableCollection<TK> Data
-        {
-            get { return FilteredData; }
-        }
+        public ObservableCollection<TK> Data => FilteredData;
 
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public string Filter { get; set; }
 
-        public int DataCount
-        {
-            get { return Data?.Count ?? 0; }
-        }
+        public int DataCount => Data?.Count ?? 0;
 
         public ICommand RefreshCommand { get; }
 

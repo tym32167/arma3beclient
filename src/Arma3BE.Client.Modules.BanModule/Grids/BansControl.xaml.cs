@@ -13,6 +13,7 @@ namespace Arma3BE.Client.Modules.BanModule.Grids
     ///     Interaction logic for BansControl.xaml
     /// </summary>
     [ViewSortHint("0200")]
+    // ReSharper disable once RedundantExtendsListEntry
     public partial class BansControl : UserControl
     {
         public BansControl()
@@ -24,10 +25,8 @@ namespace Arma3BE.Client.Modules.BanModule.Grids
             foreach (var menuItem in menu.Items.OfType<MenuItem>().ToList())
             {
                 menu.Items.Remove(menuItem);
-                dg.ContextMenu.Items.Add(menuItem);
+                dg.ContextMenu?.Items.Add(menuItem);
             }
-
-
 
             dg.LoadState<BanView>($"{GetType().FullName}_{typeof(BanView).FullName}");
 
@@ -36,20 +35,13 @@ namespace Arma3BE.Client.Modules.BanModule.Grids
             foreach (var menuItem in menu2.Items.OfType<MenuItem>().ToList())
             {
                 menu2.Items.Remove(menuItem);
-                dg2.ContextMenu.Items.Add(menuItem);
+                dg2.ContextMenu?.Items.Add(menuItem);
             }
 
             dg2.LoadState<BanView>($"{GetType().FullName}_{typeof(BanView).FullName}_2");
-
-            //_playerViewService = MainModuleInit.Current.Resolve<IPlayerViewService>();
         }
 
-        //private IPlayerViewService _playerViewService;
-
-        private ServerMonitorBansViewModel Model
-        {
-            get { return DataContext as ServerMonitorBansViewModel; }
-        }
+        private ServerMonitorBansViewModel Model => DataContext as ServerMonitorBansViewModel;
 
         private void RemoveBan_Click(object sender, RoutedEventArgs e)
         {
@@ -80,7 +72,6 @@ namespace Arma3BE.Client.Modules.BanModule.Grids
             if (si != null)
             {
                 Model.ShowPlayerInfo(si);
-                //_playerViewService.ShowDialog(si.GuidIp);
             }
         }
 

@@ -251,7 +251,7 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
 
         }
 
-        public async void BanGuidOnline(Guid serverId, string num, string guid, string reason, long minutes)
+        public void BanGuidOnline(Guid serverId, string num, string guid, string reason, long minutes)
         {
             var totalreason = _messageHelper.GetBanMessage(_settingsStoreSource.GetSettingsStore(), reason, minutes);
 

@@ -1,5 +1,6 @@
 ﻿using Arma3BEClient.Common.Attributes;
 using System;
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Arma3BE.Client.Modules.PlayersModule.Models
 {

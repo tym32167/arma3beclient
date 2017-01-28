@@ -6,6 +6,7 @@ namespace Arma3BEClient
     /// <summary>
     /// Interaction logic for Shell.xaml
     /// </summary>
+    // ReSharper disable once RedundantExtendsListEntry
     public partial class Shell : Window
     {
         public Shell()

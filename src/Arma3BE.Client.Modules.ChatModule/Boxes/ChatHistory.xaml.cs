@@ -9,6 +9,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
     /// <summary>
     ///     Interaction logic for ChatHistory.xaml
     /// </summary>
+    // ReSharper disable once RedundantExtendsListEntry
     public partial class ChatHistory : Window
     {
         private readonly ChatHistoryViewModel _model;

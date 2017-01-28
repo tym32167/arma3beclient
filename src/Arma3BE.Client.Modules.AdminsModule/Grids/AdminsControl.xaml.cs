@@ -9,6 +9,7 @@ namespace Arma3BE.Client.Modules.AdminsModule.Grids
     ///     Interaction logic for AdminsControl.xaml
     /// </summary>
     [ViewSortHint("0300")]
+    // ReSharper disable once RedundantExtendsListEntry
     public partial class AdminsControl : UserControl
     {
         public AdminsControl()

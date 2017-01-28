@@ -102,7 +102,6 @@
     </Compile>
     <Compile Include="Commands\ActionCommand.cs" />
     <Compile Include="Commands\BaseCommand.cs" />
-    <Compile Include="Contracts\DisposableUserControl.cs" />
     <Compile Include="Contracts\DisposableViewModelBase.cs" />
     <Compile Include="Converters\BisyBoolToColorConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter .cs" />
@@ -111,7 +110,6 @@
     <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Converters\PlayerNumberToColorConverter.cs" />
     <Compile Include="Converters\UtcToLocalDateTimeConverter.cs" />
-    <Compile Include="Data\IBasicRepository.cs" />
     <Compile Include="Events\BanUserEvent.cs" />
     <Compile Include="Events\BEServersChangedEvent.cs" />
     <Compile Include="Events\BE\BEAdminLogMessage.cs" />
@@ -128,7 +126,6 @@
     <Compile Include="Events\KickUserEvent.cs" />
     <Compile Include="Events\Models\BanUserModel.cs" />
     <Compile Include="Events\Models\KickUserModel.cs" />
-    <Compile Include="Events\Models\LoggerMessage.cs" />
     <Compile Include="Events\Models\ShowUserModel.cs" />
     <Compile Include="Events\SettingsChangedEvent.cs" />
     <Compile Include="Events\ShowOptionsEvent.cs" />

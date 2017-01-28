@@ -14,6 +14,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Grids
     ///     Interaction logic for OnlinePlayers.xaml
     /// </summary>
     [ViewSortHint("0100")]
+    // ReSharper disable once RedundantExtendsListEntry
     public partial class OnlinePlayers : UserControl
     {
         private readonly IEventAggregator _eventAggregator;

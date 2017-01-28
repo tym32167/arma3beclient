@@ -1,4 +1,7 @@
-﻿namespace Arma3BEClient.Steam
+﻿// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable NotAccessedField.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+namespace Arma3BEClient.Steam
 {
     public class ServerInfoResult
     {

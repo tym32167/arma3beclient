@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Arma3BE.Server
 {

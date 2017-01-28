@@ -13,6 +13,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
     /// <summary>
     ///     Interaction logic for BanPlayerWindow.xaml
     /// </summary>
+    // ReSharper disable once RedundantExtendsListEntry
     public partial class BanPlayerWindow : Window
     {
         private readonly BanPlayerViewModel _model;

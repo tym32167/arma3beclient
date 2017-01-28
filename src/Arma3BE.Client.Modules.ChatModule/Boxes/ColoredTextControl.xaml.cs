@@ -49,17 +49,11 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
 
         private void AppendText(ScrollViewer scroll, ChatMessage message, string servername = null)
         {
-            string text;
-
-            if (string.IsNullOrEmpty(servername))
-            {
-                text = $"[ {message.Date.UtcToLocalFromSettings():HH:mm:ss} ]  {message.Message}";
-            }
-            else
-            {
-                text =
-                    $"[{servername}] [ {message.Date.UtcToLocalFromSettings():yyyy-MM-dd HH:mm:ss} ]  {message.Message}";
-            }
+            var text = string.IsNullOrEmpty(servername)
+                ?
+                $"[ {message.Date.UtcToLocalFromSettings():HH:mm:ss} ]  {message.Message}"
+                :
+                $"[{servername}] [ {message.Date.UtcToLocalFromSettings():yyyy-MM-dd HH:mm:ss} ]  {message.Message}";
 
             var color = ServerMonitorChatViewModel.GetMessageColor(message);
 
@@ -93,8 +87,12 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
             };
             // remove indent between paragraphs
 
-            Hyperlink link = new Hyperlink { IsEnabled = true };
-            link.DataContext = player.Key;
+            var link = new Hyperlink
+            {
+                IsEnabled = true,
+                DataContext = player.Key
+            };
+
             link.Inlines.Add(player.Value);
             link.NavigateUri = new Uri("http://local/");
             link.RequestNavigate += (sender, args) =>

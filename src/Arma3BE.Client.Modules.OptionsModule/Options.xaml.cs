@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Arma3BE.Client.Modules.OptionsModule.ViewModel;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
-using Arma3BE.Client.Modules.OptionsModule.ViewModel;
 using Xceed.Wpf.Toolkit;
 
 namespace Arma3BE.Client.Modules.OptionsModule
@@ -9,6 +9,7 @@ namespace Arma3BE.Client.Modules.OptionsModule
     /// <summary>
     ///     Interaction logic for Options.xaml
     /// </summary>
+    // ReSharper disable once RedundantExtendsListEntry
     public partial class Options : Window
     {
         private readonly OptionsModel _optionsModel;

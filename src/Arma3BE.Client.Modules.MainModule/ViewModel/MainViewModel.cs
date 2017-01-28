@@ -7,31 +7,34 @@ using Prism.Events;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable ExplicitCallerInfoArgument
 
 namespace Arma3BE.Client.Modules.MainModule.ViewModel
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class MainViewModel : ViewModelBase
     {
-        private readonly IEventAggregator _eventAggregator;
-
         public MainViewModel(IEventAggregator eventAggregator)
         {
-            _eventAggregator = eventAggregator;
+            var eventAggregator1 = eventAggregator;
             InitServers();
 
             OptionsCommand = new DelegateCommand(() =>
             {
-                _eventAggregator.GetEvent<ShowOptionsEvent>().Publish(null);
+                eventAggregator1.GetEvent<ShowOptionsEvent>().Publish(null);
             });
 
-            _eventAggregator.GetEvent<BEServersChangedEvent>().Subscribe((state) =>
+            eventAggregator1.GetEvent<BEServersChangedEvent>().Subscribe((state) =>
             {
                 Reload();
             });
         }
 
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public ICommand OptionsCommand { get; set; }
 
+        // ReSharper disable once MemberCanBeMadeStatic.Global
         public List<ServerInfo> Servers
         {
             get

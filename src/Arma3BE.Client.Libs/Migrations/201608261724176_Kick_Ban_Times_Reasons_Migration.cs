@@ -2,6 +2,8 @@ using System.Data.Entity.Migrations;
 
 namespace Arma3BEClient.Libs.Migrations
 {
+    // ReSharper disable once UnusedMember.Global
+    // ReSharper disable once InconsistentNaming
     public partial class Kick_Ban_Times_Reasons_Migration : DbMigration
     {
         public override void Up()

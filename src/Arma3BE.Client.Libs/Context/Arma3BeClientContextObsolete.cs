@@ -1,10 +1,11 @@
+using Arma3BEClient.Common.Attributes;
+using Arma3BEClient.Libs.Tools;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
-using Arma3BEClient.Common.Attributes;
-using Arma3BEClient.Libs.Tools;
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Arma3BEClient.Libs.Context
 {

@@ -1,6 +1,6 @@
 ﻿using Arma3BE.Client.Modules.ManageServerModule.Models;
-using System.Windows.Controls;
 using Prism.Regions;
+using System.Windows.Controls;
 
 namespace Arma3BE.Client.Modules.ManageServerModule.Grids
 {
@@ -8,6 +8,7 @@ namespace Arma3BE.Client.Modules.ManageServerModule.Grids
     ///     Interaction logic for ManageServer.xaml
     /// </summary>
     [ViewSortHint("0500")]
+    // ReSharper disable once RedundantExtendsListEntry
     public partial class ManageServer : UserControl
     {
         public ManageServer()
@@ -15,9 +16,6 @@ namespace Arma3BE.Client.Modules.ManageServerModule.Grids
             InitializeComponent();
         }
 
-        private ServerMonitorManageServerViewModel Model
-        {
-            get { return DataContext as ServerMonitorManageServerViewModel; }
-        }
+        private ServerMonitorManageServerViewModel Model => DataContext as ServerMonitorManageServerViewModel;
     }
 }

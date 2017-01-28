@@ -10,6 +10,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
     /// <summary>
     ///     Interaction logic for KickPlayerWindow.xaml
     /// </summary>
+    // ReSharper disable once RedundantExtendsListEntry
     public partial class KickPlayerWindow : Window
     {
         private readonly IBanHelper _playerHelper;
@@ -53,6 +54,8 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             PlayerName = playerName;
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public string PlayerName { get; }
 
         public string Reason
@@ -65,6 +68,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             }
         }
 
+        // ReSharper disable once UnusedMember.Global
         public IEnumerable<string> Reasons
         {
             get

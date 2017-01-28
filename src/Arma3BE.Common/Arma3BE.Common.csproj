@@ -60,7 +60,6 @@
     </Compile>
     <Compile Include="Attributes\ShowInUIAttribute.cs" />
     <Compile Include="Core\DisposeObject.cs" />
-    <Compile Include="Core\IFactory.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\IntExtensions.cs" />
     <Compile Include="Logging\ILog.cs" />

@@ -10,6 +10,7 @@ namespace Arma3BE.Client.Modules.PlayersModule.Grids
     ///     Interaction logic for PlayersControl.xaml
     /// </summary>
     [ViewSortHint("0400")]
+    // ReSharper disable once RedundantExtendsListEntry
     public partial class PlayersControl : UserControl
     {
         public PlayersControl()
@@ -21,10 +22,10 @@ namespace Arma3BE.Client.Modules.PlayersModule.Grids
             foreach (var menuItem in menu.Items.OfType<MenuItem>().ToList())
             {
                 menu.Items.Remove(menuItem);
-                dg.ContextMenu.Items.Add(menuItem);
+                dg.ContextMenu?.Items.Add(menuItem);
             }
 
-            dg.LoadState<PlayerView>(this.GetType().FullName);
+            dg.LoadState<PlayerView>(GetType().FullName);
         }
     }
 }

@@ -9,6 +9,7 @@ namespace Arma3BE.Client.Modules.ToolsModule
     /// <summary>
     /// Interaction logic for VirtualServerWindow.xaml
     /// </summary>
+    // ReSharper disable once RedundantExtendsListEntry
     public partial class VirtualServerWindow : Window
     {
         private readonly VirtualServer _server;

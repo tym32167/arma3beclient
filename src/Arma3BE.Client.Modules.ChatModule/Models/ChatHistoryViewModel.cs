@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Arma3BE.Client.Modules.ChatModule.Models
 {

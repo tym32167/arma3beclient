@@ -8,6 +8,7 @@ namespace Arma3BE.Client.Modules.MainModule
     /// <summary>
     /// Interaction logic for About.xaml
     /// </summary>
+    // ReSharper disable once RedundantExtendsListEntry
     public partial class About : Window
     {
         public About()

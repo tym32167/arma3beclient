@@ -19,9 +19,12 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
     /// <summary>
     ///     Interaction logic for RTBControl.xaml
     /// </summary>
+    // ReSharper disable once RedundantExtendsListEntry
     public partial class RTBControl : UserControl, IColoredTextControl
     {
+        // ReSharper disable once InconsistentNaming
         private const int WM_USER = 0x400;
+        // ReSharper disable once InconsistentNaming
         private const int EM_HIDESELECTION = WM_USER + 63;
 
         public static readonly DependencyProperty IsAutoScrollProperty =
@@ -60,13 +63,11 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
 
         public void AppendText(ChatMessage message, string servername = null)
         {
-            string text;
-
-            if (string.IsNullOrEmpty(servername))
-                text = $"[ {message.Date.UtcToLocalFromSettings():HH:mm:ss} ]  {message.Message}\n";
-            else
-                text =
-                    $"[{servername}] [ {message.Date.UtcToLocalFromSettings():yyyy-MM-dd HH:mm:ss} ]  {message.Message}\n";
+            var text = string.IsNullOrEmpty(servername)
+                ?
+                $"[ {message.Date.UtcToLocalFromSettings():HH:mm:ss} ]  {message.Message}\n"
+                :
+                $"[{servername}] [ {message.Date.UtcToLocalFromSettings():yyyy-MM-dd HH:mm:ss} ]  {message.Message}\n";
 
             var color = ServerMonitorChatViewModel.GetMessageColor(message);
             Add(text, color, (message.Type != ChatMessage.MessageType.RCon) && message.IsImportantMessage);
@@ -80,7 +81,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
 
 
         [DllImport("user32.dll")]
-        private static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, int wParam, int lParam);
+        private static extern IntPtr SendMessage(IntPtr hWnd, uint msg, int wParam, int lParam);
 
         private void Add(string text, Color color, bool bold = false)
         {

@@ -4,9 +4,10 @@ using System;
 
 namespace Arma3BE.Client.Modules.ToolsModule.Virtual
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class VirtualServerFactory : IBattlEyeServerFactory
     {
-        private Lazy<VirtualServer> _server = new Lazy<VirtualServer>(() => new VirtualServer());
+        private readonly Lazy<VirtualServer> _server = new Lazy<VirtualServer>(() => new VirtualServer());
 
         public IBattlEyeServer Create(BattlEyeLoginCredentials credentials)
         {
@@ -14,6 +15,7 @@ namespace Arma3BE.Client.Modules.ToolsModule.Virtual
         }
     }
 
+    // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
     public class VirtualServer : IBattlEyeServer
     {
         public void Dispose()
@@ -21,10 +23,7 @@ namespace Arma3BE.Client.Modules.ToolsModule.Virtual
 
         }
 
-
-
         public bool Connected { get; private set; }
-
 
         public int SendCommand(BattlEyeCommand command, string parameters = "")
         {

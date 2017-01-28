@@ -11,6 +11,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
     /// <summary>
     ///     Interaction logic for ChatControl.xaml
     /// </summary>
+    // ReSharper disable once RedundantExtendsListEntry
     public partial class ChatControl : UserControl
     {
         public ChatControl()

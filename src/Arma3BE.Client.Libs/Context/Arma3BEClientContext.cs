@@ -2,6 +2,7 @@
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Tools;
 using System.Data.Entity;
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Arma3BEClient.Libs.Context
 {

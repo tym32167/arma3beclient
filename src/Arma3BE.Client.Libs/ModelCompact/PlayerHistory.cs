@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Arma3BEClient.Common.Attributes;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Arma3BEClient.Common.Attributes;
 
 namespace Arma3BEClient.Libs.ModelCompact
 {
+    // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
     public class PlayerHistory
     {
         public PlayerHistory()
@@ -28,14 +29,17 @@ namespace Arma3BEClient.Libs.ModelCompact
 
         [ShowInUi]
         [EnableCopy]
+        // ReSharper disable once MemberCanBePrivate.Global
         public DateTime Date { get; set; }
 
         public Guid ServerId { get; set; }
 
         [ForeignKey("PlayerId")]
+        // ReSharper disable once UnusedMember.Global
         public virtual Player Player { get; set; }
 
         [ForeignKey("ServerId")]
+        // ReSharper disable once UnusedMember.Global
         public virtual ServerInfo ServerInfo { get; set; }
     }
 }

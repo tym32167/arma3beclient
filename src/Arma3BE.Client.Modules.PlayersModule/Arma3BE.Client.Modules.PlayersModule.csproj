@@ -107,7 +107,6 @@
     <Compile Include="Boxes\PlayerViewWindow.xaml.cs">
       <DependentUpon>PlayerViewWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\IPlayerViewService.cs" />
     <Compile Include="Grids\PlayersControl.xaml.cs">
       <DependentUpon>PlayersControl.xaml</DependentUpon>
     </Compile>
