@@ -46,7 +46,7 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
             var zones = TimeZoneInfo.GetSystemTimeZones().ToArray();
             for (var i = 0; i < zones.Length; i++)
             {
-                if (zones[i].Id == Settings.TimeZoneInfo.Id)
+                if (zones[i].Id == Settings.TimeZoneInfo?.Id)
                 {
                     zones[i] = Settings.TimeZoneInfo;
                 }

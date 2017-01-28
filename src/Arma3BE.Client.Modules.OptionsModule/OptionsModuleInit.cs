@@ -3,6 +3,7 @@ using Microsoft.Practices.Unity;
 using Prism.Events;
 using Prism.Modularity;
 using System.Windows;
+// ReSharper disable PrivateFieldCanBeConvertedToLocalVariable
 
 namespace Arma3BE.Client.Modules.OptionsModule
 {
@@ -23,15 +24,21 @@ namespace Arma3BE.Client.Modules.OptionsModule
 
     public class OptionsService
     {
+        private readonly IEventAggregator _eventAggregator;
+        private readonly IUnityContainer _container;
+
         public OptionsService(IEventAggregator eventAggregator, IUnityContainer container)
         {
-            eventAggregator.GetEvent<ShowOptionsEvent>().Subscribe(e =>
+            _eventAggregator = eventAggregator;
+            _container = container;
+
+            _eventAggregator.GetEvent<ShowOptionsEvent>().Subscribe(e =>
             {
                 var owner = Application.Current.MainWindow;
-                var w = container.Resolve<Options>();
+                var w = _container.Resolve<Options>();
                 w.Owner = owner;
                 w.ShowDialog();
-            }, ThreadOption.UIThread);
+            });
         }
     }
 }
