@@ -57,7 +57,7 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
 
         public List<PlayerView> Players { get; private set; } = new List<PlayerView>();
 
-        public string SelectedOptions { get; }
+        public string SelectedOptions { get; set; }
 
         public IEnumerable<string> SearchOptions => new[]
         {
