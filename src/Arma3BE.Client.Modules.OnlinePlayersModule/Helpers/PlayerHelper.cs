@@ -5,15 +5,19 @@ using Arma3BEClient.Libs.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Arma3BEClient.Common.Extensions;
+using Arma3BEClient.Common.Logging;
 using Player = Arma3BE.Server.Models.Player;
 
 namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
 {
     public class PlayerHelper : StateHelper<Player>
     {
+        private readonly ILog _log = LogFactory.Create(new StackTrace().GetFrame(0).GetMethod().DeclaringType);
         private readonly IBanHelper _banHelper;
         private readonly IPlayerRepository _playerRepository;
         private readonly Guid _serverId;
@@ -119,58 +123,62 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
 
         public IEnumerable<PlayerView> GetPlayerView(IEnumerable<Player> list)
         {
-            var players = list.ToList();
-            var guids = players.Select(x => x.Guid).ToList();
-
-            var playersInDb = _playerRepository.GetPlayers(guids);
-
-            var result = players.Select(x => new PlayerView
+            using (_log.Time("GetPlayerView"))
             {
-                Guid = x.Guid,
-                IP = x.IP,
-                Name = x.Name,
-                Num = x.Num,
-                Ping = x.Ping,
-                State = x.State,
-                Port = x.Port
-            }).ToList();
 
-            result.ForEach(x =>
-            {
-                var p = playersInDb.FirstOrDefault(y => y.GUID == x.Guid);
-                if (p != null)
+                var players = list.ToList();
+                var guids = players.Select(x => x.Guid).ToList();
+
+                var playersInDb = _playerRepository.GetPlayers(guids);
+
+                var result = players.Select(x => new PlayerView
                 {
-                    x.Id = p.Id;
-                    x.Comment = p.Comment;
-                    x.SteamId = p.SteamId;
+                    Guid = x.Guid,
+                    IP = x.IP,
+                    Name = x.Name,
+                    Num = x.Num,
+                    Ping = x.Ping,
+                    State = x.State,
+                    Port = x.Port
+                }).ToList();
+
+                result.ForEach(x =>
+                {
+                    var p = playersInDb.FirstOrDefault(y => y.GUID == x.Guid);
+                    if (p != null)
+                    {
+                        x.Id = p.Id;
+                        x.Comment = p.Comment;
+                        x.SteamId = p.SteamId;
+                    }
+                });
+
+                var filterUsers = result.FirstOrDefault(x => !_nameRegex.IsMatch(x.Name));
+                if (filterUsers != null)
+                {
+#pragma warning disable 4014
+                    _banHelper.Kick(_serverId, filterUsers.Num, filterUsers.Guid, "bot: Fill Nickname");
+#pragma warning restore 4014
                 }
-            });
 
-            var filterUsers = result.FirstOrDefault(x => !_nameRegex.IsMatch(x.Name));
-            if (filterUsers != null)
-            {
+                var badNicknames = ConfigurationManager.AppSettings["Bad_Nicknames"];
+                if (!string.IsNullOrEmpty(badNicknames))
+                {
+                    var names = badNicknames.ToLower().Split('|').Distinct().ToDictionary(x => x);
+
+
+                    var bad =
+                        result.FirstOrDefault(x => !string.IsNullOrEmpty(x.Name) && names.ContainsKey(x.Name.ToLower()));
+
+                    if (bad != null)
 #pragma warning disable 4014
-                _banHelper.Kick(_serverId, filterUsers.Num, filterUsers.Guid, "bot: Fill Nickname");
+                        _banHelper.Kick(_serverId, bad.Num, bad.Guid, "bot: Bad Nickname");
 #pragma warning restore 4014
+                }
+
+
+                return result;
             }
-
-            var badNicknames = ConfigurationManager.AppSettings["Bad_Nicknames"];
-            if (!string.IsNullOrEmpty(badNicknames))
-            {
-                var names = badNicknames.ToLower().Split('|').Distinct().ToDictionary(x => x);
-
-
-                var bad =
-                    result.FirstOrDefault(x => !string.IsNullOrEmpty(x.Name) && names.ContainsKey(x.Name.ToLower()));
-
-                if (bad != null)
-#pragma warning disable 4014
-                    _banHelper.Kick(_serverId, bad.Num, bad.Guid, "bot: Bad Nickname");
-#pragma warning restore 4014
-            }
-
-
-            return result;
         }
     }
 }

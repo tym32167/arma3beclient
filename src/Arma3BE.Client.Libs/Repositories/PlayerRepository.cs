@@ -50,7 +50,7 @@ namespace Arma3BEClient.Libs.Repositories
             lock (Lock)
             {
                 if (_validCache) return;
-                _log.Info("Refresh Players cache.");
+                _log.Info($"Refresh Players cache from {new StackTrace()}.");
                 var playersByGuidsCache = new ConcurrentDictionary<string, PlayerDto>();
                 var players = _playerRepository.GetAllPlayers().GroupBy(x => x.GUID).Select(x => x.First());
                 foreach (var playerDto in players)
@@ -145,7 +145,18 @@ namespace Arma3BEClient.Libs.Repositories
             if (!playerDtos.Any()) return;
 
             _playerRepository.AddOrUpdate(playerDtos);
-            _validCache = false;
+
+            foreach (var player in playerDtos)
+            {
+                if (_playersByGuidsCache.ContainsKey(player.GUID) == false)
+                {
+                    _log.Info("AddOrUpdate - found new Player, resetting cache");
+                    _validCache = false;
+                    break;
+                }
+
+                _playersByGuidsCache.AddOrUpdate(player.GUID, player, (k, v) => player);
+            }
         }
 
         public void AddHistory(List<PlayerHistory> histories)
@@ -178,6 +189,7 @@ namespace Arma3BEClient.Libs.Repositories
                 _playerRepository.SaveSteamId(paged.ToDictionary(x => x.Key, x => x.Value));
             }
 
+            _log.Info("SaveSteamId resetting cache");
             _validCache = false;
         }
 
@@ -186,6 +198,8 @@ namespace Arma3BEClient.Libs.Repositories
             if (toAdd.Any() || toUpdate.Any())
             {
                 _playerRepository.ImportPlayers(toAdd, toUpdate);
+
+                _log.Info("ImportPlayers resetting cache");
                 _validCache = false;
             }
         }

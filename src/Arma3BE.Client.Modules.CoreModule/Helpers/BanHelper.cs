@@ -8,14 +8,18 @@ using Arma3BEClient.Libs.Tools;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Arma3BEClient.Common.Extensions;
+using Arma3BEClient.Common.Logging;
 
 namespace Arma3BE.Client.Modules.CoreModule.Helpers
 {
     public class BanHelper : StateHelper<Ban>, IBanHelper
     {
+        private readonly ILog _log = LogFactory.Create(new StackTrace().GetFrame(0).GetMethod().DeclaringType);
         private readonly IEventAggregator _eventAggregator;
         private readonly IPlayerRepository _playerRepository;
         private readonly ISettingsStoreSource _settingsStoreSource;
@@ -158,32 +162,33 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
 
         public IEnumerable<BanView> GetBanView(IEnumerable<Ban> list)
         {
-
-            var bans = list as Ban[] ?? list.ToArray();
-            var guids = bans.Select(x => x.GuidIp).ToArray();
-            var players = _playerRepository.GetPlayers(guids);
-
-            return bans.Select(x =>
+            using (_log.Time("GetBanView"))
             {
-                var p = players.FirstOrDefault(y => y.GUID == x.GuidIp);
+                var bans = list as Ban[] ?? list.ToArray();
+                var guids = bans.Select(x => x.GuidIp).ToArray();
+                var players = _playerRepository.GetPlayers(guids);
 
-                var ban = new BanView
+                return bans.Select(x =>
                 {
-                    Num = x.Num,
-                    GuidIp = x.GuidIp,
-                    Reason = x.Reason,
-                    Minutesleft = x.Minutesleft,
-                };
+                    var p = players.FirstOrDefault(y => y.GUID == x.GuidIp);
 
-                if (p != null)
-                {
-                    ban.PlayerComment = p.Comment;
-                    ban.PlayerName = p.Name;
-                    ban.SteamId = p.SteamId;
-                }
-                return ban;
-            }).ToList();
+                    var ban = new BanView
+                    {
+                        Num = x.Num,
+                        GuidIp = x.GuidIp,
+                        Reason = x.Reason,
+                        Minutesleft = x.Minutesleft,
+                    };
 
+                    if (p != null)
+                    {
+                        ban.PlayerComment = p.Comment;
+                        ban.PlayerName = p.Name;
+                        ban.SteamId = p.SteamId;
+                    }
+                    return ban;
+                }).ToList();
+            }
         }
 
         private void SendCommand(Guid serverId, CommandType commandType, string parameters = null)

@@ -1,8 +1,10 @@
-﻿using Arma3BEClient.Libs.Migrations;
+﻿using System.Configuration;
+using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Tools;
 using System.Data.Entity;
 using System.Diagnostics;
+using Configuration = Arma3BEClient.Libs.Migrations.Configuration;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
@@ -20,16 +22,17 @@ namespace Arma3BEClient.Libs.Context
                 db.Database.Initialize(false);
         }
 
+        private readonly ILog _log = LogFactory.Create(new StackTrace().GetFrame(0).GetMethod().DeclaringType);
         public Arma3BeClientContext() : base(new ConnectionFactory().Create(), true)
         {
-            //var log = new Log();
-
-            this.Database.Log = s =>
+            var debugServerKey = "DebugServerEnabled";
+            //if (ConfigurationManager.AppSettings[debugServerKey] == bool.TrueString)
             {
-                //Debug.WriteLine("-------------------------------------------------------------------------");
-                Debug.WriteLine(s);
-                //log.Info(s);
-            };
+                this.Database.Log = s =>
+                {
+                    _log.Info(s);
+                };
+            }
         }
 
         public DbSet<ChatLog> ChatLog { get; set; }
