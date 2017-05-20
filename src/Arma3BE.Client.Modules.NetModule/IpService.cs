@@ -32,10 +32,12 @@ namespace Arma3BE.Client.Modules.NetModule
         public async Task<string> Get(string ip)
         {
             if (string.IsNullOrEmpty(ip)) return string.Empty;
-            var c = new HttpClient();
-            var pattern = ConfigurationManager.AppSettings["IPServicePattern"];
-            var data = await c.GetStringAsync(string.Format(pattern, ip));
-            return data;
+            using (var c = new HttpClient())
+            {
+                var pattern = ConfigurationManager.AppSettings["IPServicePattern"];
+                var data = await c.GetStringAsync(string.Format(pattern, ip));
+                return data;
+            }
         }
 
         public string GetCountryLocal(string ip)
