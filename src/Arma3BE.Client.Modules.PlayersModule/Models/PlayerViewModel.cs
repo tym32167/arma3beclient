@@ -9,10 +9,12 @@ using Prism.Commands;
 using Prism.Events;
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ExplicitCallerInfoArgument
 // ReSharper disable UnusedAutoPropertyAccessor.Global
+
 
 namespace Arma3BE.Client.Modules.PlayersModule.Models
 {
@@ -22,8 +24,6 @@ namespace Arma3BE.Client.Modules.PlayersModule.Models
         private readonly IIpService _ipService;
         private readonly IPlayerRepository _playerRepository;
         private readonly IEventAggregator _eventAggregator;
-        private Player _player;
-        private string _playerIPInfo;
 
         public PlayerViewModel(string userGuid, IIpService ipService, IPlayerRepository playerRepository, IEventAggregator eventAggregator)
         {
@@ -35,7 +35,23 @@ namespace Arma3BE.Client.Modules.PlayersModule.Models
             SaveComment = new ActionCommand(SaveUserComment);
             GoToSteamCommand = new ActionCommand(GoToSteam);
             BanCommand = new DelegateCommand<string>(BanPlayerView);
+
+            SetupPlayer();
+            SetupPlayerIPInfo();
         }
+
+        private async void SetupPlayer()
+        {
+            Player = await _playerRepository.GetPlayerInfo(_userGuid);
+            OnPropertyChanged(nameof(Player));
+        }
+
+        private async void SetupPlayerIPInfo()
+        {
+            PlayerIPInfo = await _ipService.Get(Player.LastIp);
+            OnPropertyChanged(nameof(PlayerIPInfo));
+        }
+
 
         private void BanPlayerView(string obj)
         {
@@ -45,7 +61,7 @@ namespace Arma3BE.Client.Modules.PlayersModule.Models
 
         private void GoToSteam()
         {
-            var id = _player?.SteamId;
+            var id = Player?.SteamId;
             if (string.IsNullOrEmpty(id) == false)
             {
                 var suri = $"http://steamcommunity.com/profiles/{id}/";
@@ -53,37 +69,12 @@ namespace Arma3BE.Client.Modules.PlayersModule.Models
             }
         }
 
-        public Player Player
-        {
-            get
-            {
-                if (_player == null)
-                {
+        public Player Player { get; set; }
 
-                    var player = _playerRepository.GetPlayerInfo(_userGuid);
-                    _player = player;
 
-                }
-                return _player;
-            }
-        }
 
-        public string PlayerIPInfo
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_playerIPInfo))
-                {
-                    var t = _ipService.Get(Player.LastIp);
-                    t.ContinueWith(x =>
-                    {
-                        _playerIPInfo = x.Result;
-                        OnPropertyChanged(nameof(PlayerIPInfo));
-                    });
-                }
-                return _playerIPInfo;
-            }
-        }
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public string PlayerIPInfo { get; private set; }
 
         public ICommand SaveComment { get; set; }
         public ICommand GoToSteamCommand { get; set; }
@@ -93,8 +84,7 @@ namespace Arma3BE.Client.Modules.PlayersModule.Models
         private void SaveUserComment()
         {
             _playerRepository.UpdatePlayerComment(Player.GUID, Player.Comment);
-            _player = null;
-            OnPropertyChanged(nameof(Player));
+            SetupPlayer();
         }
     }
 }

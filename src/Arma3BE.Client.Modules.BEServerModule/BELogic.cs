@@ -1,6 +1,5 @@
 ﻿using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Server;
-using Arma3BEClient.Libs.ModelCompact;
 using Prism.Events;
 using System;
 using System.Threading.Tasks;

@@ -16,14 +16,13 @@ using System.Threading.Tasks;
 
 namespace Arma3BEClient.Libs.Repositories
 {
-
     public interface IPlayerRepository : IDisposable
     {
         IEnumerable<PlayerDto> GetAllPlayers();
         IEnumerable<PlayerDto> GetPlayers(Expression<Func<Player, bool>> expression);
         IEnumerable<PlayerDto> GetPlayers(IEnumerable<string> guids);
         PlayerDto GetPlayer(string guid);
-        Player GetPlayerInfo(string guid);
+        Task<Player> GetPlayerInfo(string guid);
 
         void UpdatePlayerComment(string guid, string comment);
         void UpdateComment(Dictionary<Guid, string> playersToUpdateComments);
@@ -104,7 +103,7 @@ namespace Arma3BEClient.Libs.Repositories
             return null;
         }
 
-        public Player GetPlayerInfo(string guid)
+        public Task<Player> GetPlayerInfo(string guid)
         {
             return _playerRepository.GetPlayerInfo(guid);
         }
@@ -281,7 +280,7 @@ namespace Arma3BEClient.Libs.Repositories
             }
         }
 
-        public Player GetPlayerInfo(string guid)
+        public Task<Player> GetPlayerInfo(string guid)
         {
             using (var dc = new Arma3BeClientContext())
             {
@@ -291,7 +290,7 @@ namespace Arma3BEClient.Libs.Repositories
                         .Include(x => x.Bans.Select(b => b.ServerInfo))
                         .Include(x => x.Notes)
                         .Include(x => x.PlayerHistory)
-                        .FirstOrDefault();
+                        .FirstOrDefaultAsync();
             }
         }
 

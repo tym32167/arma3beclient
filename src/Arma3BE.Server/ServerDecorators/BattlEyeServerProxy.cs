@@ -16,6 +16,8 @@ namespace Arma3BE.Server.ServerDecorators
             _battlEyeClient = client;
             _serverName = serverName;
 
+            _battlEyeClient.ReconnectOnPacketLoss = true;
+
             _battlEyeClient.BattlEyeConnected += OnBattlEyeConnected;
             _battlEyeClient.BattlEyeMessageReceived += OnBattlEyeMessageReceived;
             _battlEyeClient.BattlEyeDisconnected += OnBattlEyeDisconnected;
