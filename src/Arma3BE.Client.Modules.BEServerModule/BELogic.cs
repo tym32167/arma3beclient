@@ -1,9 +1,9 @@
 ﻿using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Server;
+using Arma3BEClient.Libs.Repositories;
 using Prism.Events;
 using System;
 using System.Threading.Tasks;
-using Arma3BEClient.Libs.Repositories;
 
 namespace Arma3BE.Client.Modules.BEServerModule
 {
@@ -11,13 +11,11 @@ namespace Arma3BE.Client.Modules.BEServerModule
     {
         public BELogic(IEventAggregator aggregator)
         {
-            var aggregator1 = aggregator;
-
-            aggregator1.GetEvent<BEMessageEvent<BECommand>>().Subscribe(ProcessCommand, ThreadOption.BackgroundThread);
-            aggregator1.GetEvent<BEMessageEvent<BEPlayerLogMessage>>().Subscribe(BEPlayerLogMessage, ThreadOption.BackgroundThread);
-            aggregator1.GetEvent<BEMessageEvent<BEBanLogMessage>>().Subscribe(BEBanLogMessage, ThreadOption.BackgroundThread);
-            aggregator1.GetEvent<BEMessageEvent<BEAdminLogMessage>>().Subscribe(BEAdminLogMessage, ThreadOption.BackgroundThread);
-            aggregator1.GetEvent<ConnectServerEvent>().Subscribe(BeServerConnectHandler, ThreadOption.BackgroundThread);
+            aggregator.GetEvent<BEMessageEvent<BECommand>>().Subscribe(ProcessCommand, ThreadOption.BackgroundThread);
+            aggregator.GetEvent<BEMessageEvent<BEPlayerLogMessage>>().Subscribe(BEPlayerLogMessage, ThreadOption.BackgroundThread);
+            aggregator.GetEvent<BEMessageEvent<BEBanLogMessage>>().Subscribe(BEBanLogMessage, ThreadOption.BackgroundThread);
+            aggregator.GetEvent<BEMessageEvent<BEAdminLogMessage>>().Subscribe(BEAdminLogMessage, ThreadOption.BackgroundThread);
+            aggregator.GetEvent<ConnectServerEvent>().Subscribe(BeServerConnectHandler, ThreadOption.BackgroundThread);
         }
 
         public event EventHandler<ServerCommandEventArgs> ServerUpdateHandler;
