@@ -65,7 +65,7 @@ namespace Arma3BEClient.Libs.Repositories
         public PlayerRepositoryCache(IPlayerRepository playerRepository)
         {
             _playerRepository = playerRepository;
-            Task.Run(() => ResetCache());
+            ResetCache();
         }
 
         public IEnumerable<PlayerDto> GetAllPlayers()

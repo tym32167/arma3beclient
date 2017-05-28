@@ -1,5 +1,4 @@
-﻿using System.Configuration;
-using Arma3BEClient.Common.Logging;
+﻿using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Tools;
 using System.Data.Entity;
