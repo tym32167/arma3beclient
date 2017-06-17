@@ -13,11 +13,12 @@ namespace Arma3BE.Server.ServerDecorators
         private readonly IBattlEyeServerFactory _battlEyeServerFactory;
         private readonly BattlEyeLoginCredentials _credentials;
 
-        private readonly object _lock = new object();
-        private readonly ILog _log = LogFactory.Create(new StackTrace().GetFrame(0).GetMethod().DeclaringType);
+        private static readonly ILog Log = LogFactory.Create(new StackTrace().GetFrame(0).GetMethod().DeclaringType);
 
         private readonly Timer _timer;
-        private IBattlEyeServer _battlEyeServer;
+        private readonly Timer _keepAliveTimer;
+
+        private volatile IBattlEyeServer _battlEyeServer;
         private DateTime _lastReceived = DateTime.UtcNow;
         private int _numAttempts;
 
@@ -29,8 +30,10 @@ namespace Arma3BE.Server.ServerDecorators
             _battlEyeServerFactory = battlEyeServerFactory;
             _credentials = credentials;
 
-            _timer = new Timer(_timer_Elapsed, null, 5000, 10000);
-            Init();
+            _timer = new Timer(_timer_Elapsed, null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10));
+            _keepAliveTimer = new Timer(_timer_KeepAlive, null, TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2));
+
+            _battlEyeServer = Init(_credentials);
         }
 
         public int SendCommand(BattlEyeCommand command, string parameters = "")
@@ -60,6 +63,17 @@ namespace Arma3BE.Server.ServerDecorators
         public event BattlEyeConnectEventHandler BattlEyeConnected;
         public event BattlEyeDisconnectEventHandler BattlEyeDisconnected;
 
+        private void _timer_KeepAlive(object state)
+        {
+            var lastReceivedSpan = DateTime.UtcNow - _lastReceived;
+            var local = _battlEyeServer;
+            if (local?.Connected == true && lastReceivedSpan.TotalMinutes > 2 &&
+                lastReceivedSpan.TotalMinutes < 5)
+            {
+                local.SendCommand(BattlEyeCommand.Players);
+            }
+        }
+
         private void _timer_Elapsed(object state)
         {
             if (_battlEyeServer == null || !_battlEyeServer.Connected)
@@ -78,48 +92,48 @@ namespace Arma3BE.Server.ServerDecorators
             {
                 _numAttempts = 0;
                 _lastReceived = DateTime.UtcNow;
-                _log.Info($"RECREATE CLIENT FOR {_credentials.Host}:{_credentials.Port} WITH LAST RECEIVED {lastReceivedSpan}");
+                Log.Info(
+                    $"RECREATE CLIENT FOR {_credentials.Host}:{_credentials.Port} WITH LAST RECEIVED {lastReceivedSpan}");
 
-                Release();
+                var local = _battlEyeServer;
+                _battlEyeServer = null;
+                if (local != null) Release(local, _credentials);
 
                 OnBattlEyeDisconnected(new BattlEyeDisconnectEventArgs(_credentials,
                     BattlEyeDisconnectionType.ConnectionLost));
 
-                Init();
+                Init(_credentials);
+
+                _battlEyeServer = Init(_credentials);
+
                 Connect();
             }
         }
 
-        private void Init()
+        private IBattlEyeServer Init(BattlEyeLoginCredentials battlEyeLoginCredentials)
         {
-            lock (_lock)
-            {
-                _log.Info($"Init {_credentials.Host}:{_credentials.Port}");
+            Log.Info($"Init {battlEyeLoginCredentials.Host}:{battlEyeLoginCredentials.Port}");
 
-                _battlEyeServer = _battlEyeServerFactory.Create(_credentials);
-                _battlEyeServer.BattlEyeConnected += OnBattlEyeConnected;
-                _battlEyeServer.BattlEyeMessageReceived += OnBattlEyeMessageReceived;
-                _battlEyeServer.BattlEyeDisconnected += OnBattlEyeDisconnected;
-            }
+            var battlEyeServer = _battlEyeServerFactory.Create(battlEyeLoginCredentials);
+            battlEyeServer.BattlEyeConnected += OnBattlEyeConnected;
+            battlEyeServer.BattlEyeMessageReceived += OnBattlEyeMessageReceived;
+            battlEyeServer.BattlEyeDisconnected += OnBattlEyeDisconnected;
+
+            return battlEyeServer;
         }
 
-        private void Release()
+        private void Release(IBattlEyeServer battlEyeServer, BattlEyeLoginCredentials battlEyeLoginCredentials)
         {
-            lock (_lock)
+            Log.Info($"Release {battlEyeLoginCredentials.Host}:{battlEyeLoginCredentials.Port}");
+            if (battlEyeServer != null)
             {
-                _log.Info($"Release {_credentials.Host}:{_credentials.Port}");
-                if (_battlEyeServer != null)
-                {
-                    _battlEyeServer.BattlEyeConnected -= OnBattlEyeConnected;
-                    _battlEyeServer.BattlEyeMessageReceived -= OnBattlEyeMessageReceived;
-                    _battlEyeServer.BattlEyeDisconnected -= OnBattlEyeDisconnected;
+                battlEyeServer.BattlEyeConnected -= OnBattlEyeConnected;
+                battlEyeServer.BattlEyeMessageReceived -= OnBattlEyeMessageReceived;
+                battlEyeServer.BattlEyeDisconnected -= OnBattlEyeDisconnected;
 
-                    if (_battlEyeServer.Connected) _battlEyeServer.Disconnect();
+                if (battlEyeServer.Connected) battlEyeServer.Disconnect();
 
-                    _battlEyeServer.Dispose();
-                }
-
-                _battlEyeServer = null;
+                battlEyeServer.Dispose();
             }
         }
 
@@ -142,18 +156,13 @@ namespace Arma3BE.Server.ServerDecorators
 
         protected override void DisposeManagedResources()
         {
-            _timer.Dispose();
+            _timer?.Dispose();
+            _keepAliveTimer?.Dispose();
 
-            if (_battlEyeServer != null)
-            {
-                lock (_lock)
-                {
-                    if (_battlEyeServer != null)
-                    {
-                        Release();
-                    }
-                }
-            }
+            var local = _battlEyeServer;
+            _battlEyeServer = null;
+            if (local != null) Release(local, _credentials);
+
 
             base.DisposeManagedResources();
         }

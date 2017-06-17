@@ -82,25 +82,18 @@ namespace Arma3BE.Server.ServerDecorators
             return _battlEyeClient.SendCommand(command);
         }
 
-        private readonly object _lock = new object();
-
         protected override void DisposeManagedResources()
         {
             _log.Info($"{_serverName}: Dispose");
-            if (_battlEyeClient != null)
+            var local = _battlEyeClient;
+            _battlEyeClient = null;
+            if (local != null)
             {
-                lock (_lock)
-                {
-                    if (_battlEyeClient != null)
-                    {
-                        _battlEyeClient.BattlEyeConnected -= OnBattlEyeConnected;
-                        _battlEyeClient.BattlEyeMessageReceived -= OnBattlEyeMessageReceived;
-                        _battlEyeClient.BattlEyeDisconnected -= OnBattlEyeDisconnected;
+                local.BattlEyeConnected -= OnBattlEyeConnected;
+                local.BattlEyeMessageReceived -= OnBattlEyeMessageReceived;
+                local.BattlEyeDisconnected -= OnBattlEyeDisconnected;
 
-                        if (_battlEyeClient.Connected) _battlEyeClient.Disconnect();
-                        _battlEyeClient = null;
-                    }
-                }
+                if (local.Connected) local.Disconnect();
             }
             base.DisposeManagedResources();
         }
