@@ -57,5 +57,24 @@ namespace Arma3BE.Client.Modules.NetModule
                 return string.Empty;
             }
         }
+
+
+        public string GetCityLocal(string ip)
+        {
+            if (string.IsNullOrEmpty(ip)) return string.Empty;
+
+            try
+            {
+                using (var reader = new DatabaseReader(@"IPDatabase\GeoLite2-City.mmdb"))
+                {
+                    var city = reader.City(ip);
+                    return city.City.Name;
+                }
+            }
+            catch (Exception e)
+            {
+                return string.Empty;
+            }
+        }
     }
 }

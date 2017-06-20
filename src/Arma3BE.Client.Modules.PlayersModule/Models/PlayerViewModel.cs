@@ -71,8 +71,6 @@ namespace Arma3BE.Client.Modules.PlayersModule.Models
 
         public Player Player { get; set; }
 
-
-
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public string PlayerIPInfo { get; private set; }
 

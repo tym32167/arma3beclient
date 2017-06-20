@@ -17,6 +17,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views
         private string _comment;
 
         private string _country;
+        private string _city;
         private string _ip;
 
         private readonly IIpService _ipService;
@@ -69,6 +70,26 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views
                 }
 
                 return _country;
+            }
+        }
+
+        [ShowInUi]
+        [EnableCopy]
+        public string City
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_city))
+                {
+                    Task.Run(() =>
+                    {
+                        var country = _ipService.GetCityLocal(IP);
+                        SetProperty(ref _city, country, nameof(City));
+                    });
+                    return null;
+                }
+
+                return _city;
             }
         }
 
