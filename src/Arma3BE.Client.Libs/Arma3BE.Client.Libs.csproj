@@ -58,6 +58,10 @@
     <Compile Include="Migrations\201612040948573_Added_custom_settings.Designer.cs">
       <DependentUpon>201612040948573_Added_custom_settings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706202056450_BadNicknames_ImportantWords.cs" />
+    <Compile Include="Migrations\201706202056450_BadNicknames_ImportantWords.Designer.cs">
+      <DependentUpon>201706202056450_BadNicknames_ImportantWords.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModelCompact\Reason.cs" />
     <Compile Include="Repositories\AdminRepository.cs" />
@@ -133,6 +137,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612040948573_Added_custom_settings.resx">
       <DependentUpon>201612040948573_Added_custom_settings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706202056450_BadNicknames_ImportantWords.resx">
+      <DependentUpon>201706202056450_BadNicknames_ImportantWords.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

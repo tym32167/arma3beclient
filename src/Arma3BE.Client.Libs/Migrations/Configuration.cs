@@ -1,7 +1,7 @@
-using System.Data.Entity.Migrations;
-using System.Linq;
 using Arma3BEClient.Libs.Context;
 using Arma3BEClient.Libs.ModelCompact;
+using System.Data.Entity.Migrations;
+using System.Linq;
 
 namespace Arma3BEClient.Libs.Migrations
 {
@@ -60,6 +60,25 @@ namespace Arma3BEClient.Libs.Migrations
                     new BanTime { Title = "Week", TimeInMinutes = 10080 },
                     new BanTime { Title = "Month", TimeInMinutes = 43200 }
                     );
+            }
+
+
+            if (context.BadNicknames.Any() == false)
+            {
+                context.BadNicknames.AddOrUpdate(x => x.Text,
+                    new BadNickname { Text = "Admin" },
+                    new BadNickname { Text = "Administrator" }
+                );
+            }
+
+            if (context.ImportantWords.Any() == false)
+            {
+                context.ImportantWords.AddOrUpdate(x => x.Text,
+                    new ImportantWord { Text = "Admin" },
+                    new ImportantWord { Text = "Administrator" },
+                    new ImportantWord { Text = "Админ" },
+                    new ImportantWord { Text = "Администратор" }
+                );
             }
         }
     }

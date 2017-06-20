@@ -26,8 +26,40 @@ namespace Arma3BEClient.Libs.Repositories
                 return dc.KickReasons.Select(x => x.Text).ToArray();
         }
 
+        public string[] GetBadNicknames()
+        {
+            using (var dc = new Arma3BeClientContext())
+                return dc.BadNicknames.Select(x => x.Text).ToArray();
+        }
+
+        public string[] GetImportantWords()
+        {
+            using (var dc = new Arma3BeClientContext())
+                return dc.ImportantWords.Select(x => x.Text).ToArray();
+        }
+
         public void Dispose()
         {
+        }
+
+        public void UpdateBadNicknames(string[] badNicknames)
+        {
+            using (var dc = new Arma3BeClientContext())
+            {
+                dc.BadNicknames.RemoveRange(dc.BadNicknames);
+                dc.BadNicknames.AddRange(badNicknames.Distinct().Select(x => new BadNickname() { Text = x }).ToArray());
+                dc.SaveChanges();
+            }
+        }
+
+        public void UpdateImportantWords(string[] importantWords)
+        {
+            using (var dc = new Arma3BeClientContext())
+            {
+                dc.ImportantWords.RemoveRange(dc.ImportantWords);
+                dc.ImportantWords.AddRange(importantWords.Distinct().Select(x => new ImportantWord() { Text = x }).ToArray());
+                dc.SaveChanges();
+            }
         }
 
         public void UpdateBanReasons(string[] banReasons)

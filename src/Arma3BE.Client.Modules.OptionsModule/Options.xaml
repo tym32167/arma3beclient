@@ -126,6 +126,41 @@
                     </Border>
                 </TabItem>
 
+
+
+                <TabItem Header="Other settings">
+                    <Border BorderThickness="1" BorderBrush="Gray" Margin="5" Padding="2">
+                        <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="0" Margin="3">
+                                    <TextBlock>Bad nicknames</TextBlock>
+                                    <DataGrid ItemsSource="{Binding BadNicknames}" IsReadOnly="False"></DataGrid>
+
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1" Margin="3">
+
+                                    <TextBlock>Important words</TextBlock>
+                                    <DataGrid ItemsSource="{Binding ImportantWords}" IsReadOnly="False"></DataGrid>
+
+                                </StackPanel>
+                            </Grid>
+                        </ScrollViewer>
+                    </Border>
+                </TabItem>
+
+
+
             </TabControl>
 
             <StackPanel Grid.Row="1" HorizontalAlignment="Right" Margin="5" Orientation="Horizontal">

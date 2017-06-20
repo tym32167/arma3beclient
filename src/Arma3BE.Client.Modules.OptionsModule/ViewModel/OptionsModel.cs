@@ -41,6 +41,9 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
                 KickReasons = dc.GetKickReasons().Select(x => new ReasonEdit { Text = x }).ToList();
                 BanTimes =
                     dc.GetBanTimes().Select(x => new BanTimeEdit { Text = x.Title, Minutes = x.TimeInMinutes }).ToList();
+
+                BadNicknames = dc.GetBadNicknames().Select(x => new ReasonEdit { Text = x }).ToList();
+                ImportantWords = dc.GetImportantWords().Select(x => new ReasonEdit { Text = x }).ToList();
             }
 
             var zones = TimeZoneInfo.GetSystemTimeZones().ToArray();
@@ -71,6 +74,9 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
         public List<ReasonEdit> BanReasons { get; set; }
         public List<ReasonEdit> KickReasons { get; set; }
         public List<BanTimeEdit> BanTimes { get; set; }
+
+        public List<ReasonEdit> BadNicknames { get; set; }
+        public List<ReasonEdit> ImportantWords { get; set; }
 
 
         public ISettingsStore Settings
@@ -161,6 +167,10 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
                     dc.UpdateBanReasons(BanReasons.Select(x => x.Text).Where(x => string.IsNullOrEmpty(x) == false).Distinct().ToArray());
                     dc.UpdateBanTimes(BanTimes.Where(x => string.IsNullOrEmpty(x.Text) == false).Select(x => new BanTime { TimeInMinutes = x.Minutes, Title = x.Text }).ToArray());
                     dc.UpdateKickReasons(KickReasons.Select(x => x.Text).Where(x => string.IsNullOrEmpty(x) == false).Distinct().ToArray());
+
+
+                    dc.UpdateBadNicknames(BadNicknames.Select(x => x.Text).Where(x => string.IsNullOrEmpty(x) == false).Distinct().ToArray());
+                    dc.UpdateImportantWords(ImportantWords.Select(x => x.Text).Where(x => string.IsNullOrEmpty(x) == false).Distinct().ToArray());
                 }
 
                 _eventAggregator.GetEvent<BEServersChangedEvent>().Publish(null);

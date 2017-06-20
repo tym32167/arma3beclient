@@ -3,11 +3,13 @@ using Arma3BE.Client.Infrastructure.Events.Models;
 using Arma3BE.Client.Infrastructure.Extensions;
 using Arma3BE.Client.Modules.ChatModule.Models;
 using Arma3BE.Server.Models;
+using Arma3BEClient.Libs.Repositories;
 using Microsoft.Practices.ServiceLocation;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -38,6 +40,11 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
             rtb.Font = new Font(rtb.Font.FontFamily, 10);
 
             rtb.LinkClicked += Rtb_LinkClicked;
+
+            using (var repo = new ReasonRepository())
+            {
+                importantWords = repo.GetImportantWords();
+            }
         }
 
         private void Rtb_LinkClicked(object sender, System.Windows.Forms.LinkClickedEventArgs e)
@@ -70,9 +77,17 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
                 $"[{servername}] [ {message.Date.UtcToLocalFromSettings():yyyy-MM-dd HH:mm:ss} ]  {message.Message}\n";
 
             var color = ServerMonitorChatViewModel.GetMessageColor(message);
-            Add(text, color, (message.Type != ChatMessage.MessageType.RCon) && message.IsImportantMessage);
+            Add(text, color, (message.Type != ChatMessage.MessageType.RCon) && IsImportantMessage(message));
         }
 
+
+        private string[] importantWords;
+        bool IsImportantMessage(ChatMessage message)
+        {
+            if (importantWords?.Any() == false) return false;
+
+            return ChatMessage.IsImportantMessageProc(message, importantWords);
+        }
 
         public void ClearAll()
         {

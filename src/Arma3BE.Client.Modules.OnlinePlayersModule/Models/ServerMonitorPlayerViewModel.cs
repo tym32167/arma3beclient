@@ -6,7 +6,6 @@ using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.OnlinePlayersModule.Helpers;
 using Arma3BE.Server;
-using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using Prism.Commands;
 using Prism.Events;
@@ -28,14 +27,14 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
         private readonly PlayerHelper _playerHelper;
 
         public ServerMonitorPlayerViewModel(ServerInfoDto serverInfo,
-            IBanHelper banHelper, IEventAggregator eventAggregator, IPlayerRepository playerRepository)
+            IBanHelper banHelper, IEventAggregator eventAggregator, IPlayerRepository playerRepository, ReasonRepository reasonRepository)
             : base(
                 new ActionCommand(() => SendCommand(eventAggregator, serverInfo.Id, CommandType.Players)),
                 new PlayerViewComparer())
         {
             _serverInfo = serverInfo;
             _eventAggregator = eventAggregator;
-            _playerHelper = new PlayerHelper(serverInfo.Id, banHelper, playerRepository);
+            _playerHelper = new PlayerHelper(serverInfo.Id, banHelper, playerRepository, reasonRepository);
 
             KickUserCommand = new DelegateCommand(ShowKickDialog, CanShowDialog);
             BanUserCommand = new DelegateCommand(ShowBanDialog, CanShowDialog);

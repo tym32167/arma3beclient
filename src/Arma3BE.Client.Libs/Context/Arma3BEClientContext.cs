@@ -48,6 +48,9 @@ namespace Arma3BEClient.Libs.Context
         public DbSet<BanReason> BanReasons { get; set; }
         public DbSet<KickReason> KickReasons { get; set; }
         public DbSet<BanTime> BanTimes { get; set; }
+
+        public DbSet<BadNickname> BadNicknames { get; set; }
+        public DbSet<ImportantWord> ImportantWords { get; set; }
     }
     internal class ProjectInitializer : MigrateDatabaseToLatestVersion<Arma3BeClientContext, Configuration>
     {

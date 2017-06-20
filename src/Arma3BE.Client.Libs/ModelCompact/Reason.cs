@@ -24,4 +24,20 @@ namespace Arma3BEClient.Libs.ModelCompact
         public string Title { get; set; }
         public int TimeInMinutes { get; set; }
     }
+
+
+
+    public class BadNickname
+    {
+        [Key]
+        public int Id { get; set; }
+        public string Text { get; set; }
+    }
+
+    public class ImportantWord
+    {
+        [Key]
+        public int Id { get; set; }
+        public string Text { get; set; }
+    }
 }

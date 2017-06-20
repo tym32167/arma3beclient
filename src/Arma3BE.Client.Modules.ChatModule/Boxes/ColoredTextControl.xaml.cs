@@ -3,10 +3,12 @@ using Arma3BE.Client.Infrastructure.Events.Models;
 using Arma3BE.Client.Infrastructure.Extensions;
 using Arma3BE.Client.Modules.ChatModule.Models;
 using Arma3BE.Server.Models;
+using Arma3BEClient.Libs.Repositories;
 using Microsoft.Practices.ServiceLocation;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -34,6 +36,11 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
         {
             InitializeComponent();
             InitBox();
+
+            using (var repo = new ReasonRepository())
+            {
+                importantWords = repo.GetImportantWords();
+            }
         }
 
         private void InitBox()
@@ -66,13 +73,21 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
 
             p.Inlines.Add(text);
 
-            if (message.Type != ChatMessage.MessageType.RCon && message.IsImportantMessage)
+            if (message.Type != ChatMessage.MessageType.RCon && IsImportantMessage(message))
                 p.FontWeight = FontWeights.Heavy;
 
             msgBox.Document.Blocks.Add(p);
 
             if (IsAutoScroll)
                 scroll.ScrollToEnd();
+        }
+
+        private string[] importantWords;
+        bool IsImportantMessage(ChatMessage message)
+        {
+            if (importantWords?.Any() == false) return false;
+
+            return ChatMessage.IsImportantMessageProc(message, importantWords);
         }
 
         public void AppendPlayerText(KeyValuePair<string, string> player, bool isIn)
