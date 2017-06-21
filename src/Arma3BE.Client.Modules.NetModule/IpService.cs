@@ -40,40 +40,23 @@ namespace Arma3BE.Client.Modules.NetModule
             }
         }
 
-        public string GetCountryLocal(string ip)
+        public GeoInfo GetGeoInfoLocal(string ip)
         {
-            if (string.IsNullOrEmpty(ip)) return string.Empty;
-
-            try
-            {
-                using (var reader = new DatabaseReader(@"IPDatabase\GeoLite2-Country.mmdb"))
-                {
-                    var country = reader.Country(ip);
-                    return country.Country.Name;
-                }
-            }
-            catch (Exception)
-            {
-                return string.Empty;
-            }
-        }
-
-
-        public string GetCityLocal(string ip)
-        {
-            if (string.IsNullOrEmpty(ip)) return string.Empty;
+            if (string.IsNullOrEmpty(ip)) return default(GeoInfo);
 
             try
             {
                 using (var reader = new DatabaseReader(@"IPDatabase\GeoLite2-City.mmdb"))
                 {
                     var city = reader.City(ip);
-                    return city.City.Name;
+
+                    var result = new GeoInfo(city.Country.Name, city.City.Name);
+                    return result;
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return string.Empty;
+                return default(GeoInfo);
             }
         }
     }

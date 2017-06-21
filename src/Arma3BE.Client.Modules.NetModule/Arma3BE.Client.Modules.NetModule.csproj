@@ -95,9 +95,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <Content Include="IPDatabase\GeoLite2-Country.mmdb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="IPDatabase\GeoLite2-City.mmdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

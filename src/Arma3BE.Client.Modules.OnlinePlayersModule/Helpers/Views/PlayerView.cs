@@ -4,7 +4,6 @@ using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Attributes;
 using Microsoft.Practices.Unity;
 using System;
-using System.Threading.Tasks;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ExplicitCallerInfoArgument
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -28,6 +27,8 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views
         public PlayerView()
         {
             _ipService = OnlinePlayersModuleInit.Current.Resolve<IIpService>();
+
+            _geoInfo = new Lazy<GeoInfo>(() => _ipService.GetGeoInfoLocal(IP));
         }
 
         [ShowInUi]
@@ -61,17 +62,14 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views
             {
                 if (string.IsNullOrEmpty(_country))
                 {
-                    Task.Run(() =>
-                    {
-                        var country = _ipService.GetCountryLocal(IP);
-                        SetProperty(ref _country, country, nameof(Country));
-                    });
-                    return null;
+                    SetProperty(ref _country, _geoInfo?.Value.Country, nameof(Country));
                 }
 
                 return _country;
             }
         }
+
+        private Lazy<GeoInfo> _geoInfo;
 
         [ShowInUi]
         [EnableCopy]
@@ -81,12 +79,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views
             {
                 if (string.IsNullOrEmpty(_city))
                 {
-                    Task.Run(() =>
-                    {
-                        var country = _ipService.GetCityLocal(IP);
-                        SetProperty(ref _city, country, nameof(City));
-                    });
-                    return null;
+                    SetProperty(ref _city, _geoInfo?.Value.City, nameof(Country));
                 }
 
                 return _city;
