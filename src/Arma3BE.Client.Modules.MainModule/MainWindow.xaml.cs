@@ -3,6 +3,9 @@ using Arma3BE.Client.Modules.MainModule.ViewModel;
 using Arma3BEClient.Libs.Repositories;
 using Microsoft.Practices.Unity;
 using Prism.Regions;
+using System;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using Xceed.Wpf.AvalonDock.Controls;
@@ -20,7 +23,8 @@ namespace Arma3BE.Client.Modules.MainModule
         private readonly IRegionManager _regionManager;
         private readonly IServerInfoRepository _infoRepository;
 
-        public MainWindow(MainViewModel model, IUnityContainer container, IRegionManager regionManager, IServerInfoRepository infoRepository)
+        public MainWindow(MainViewModel model, IUnityContainer container, IRegionManager regionManager,
+            IServerInfoRepository infoRepository)
         {
             InitializeComponent();
 
@@ -83,6 +87,29 @@ namespace Arma3BE.Client.Modules.MainModule
             var window = new About();
             window.Owner = this.FindVisualAncestor<Window>();
             window.ShowDialog();
+        }
+
+
+        private void UpdateToLatestDevClick(object sender, RoutedEventArgs e)
+        {
+            var tempDirName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            if (Directory.Exists(tempDirName) == false) Directory.CreateDirectory(tempDirName);
+
+            var files = new[] { "Arma3BE.Client.Updater.exe", "Newtonsoft.Json.dll" };
+            var currentfile = System.Reflection.Assembly.GetEntryAssembly().Location;
+            var currentDir = Path.GetDirectoryName(currentfile);
+
+            foreach (var file in files)
+            {
+                var from = Path.Combine(currentDir, file);
+                var to = Path.Combine(tempDirName, file);
+
+                File.Copy(from, to);
+            }
+
+            var exec = Path.Combine(tempDirName, "Arma3BE.Client.Updater.exe");
+            Process.Start(exec, $"\"{currentDir}\" RESTART");
+            Environment.Exit(0);
         }
     }
 }

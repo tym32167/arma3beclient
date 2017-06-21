@@ -22,6 +22,8 @@
     <SccProvider>
     </SccProvider>
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <TargetFrameworkProfile />
     <PublishUrl>D:\temp\be\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -37,8 +39,6 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -266,6 +266,10 @@
     <ProjectReference Include="..\Arma3BE.Client.Styles\Arma3BE.Client.Styles.csproj">
       <Project>{cf43b82b-1f25-4385-b315-ab7b4c010a4b}</Project>
       <Name>Arma3BE.Client.Styles</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Updater\Arma3BE.Client.Updater.csproj">
+      <Project>{9ade6790-cedc-43f0-8920-54afffb2646e}</Project>
+      <Name>Arma3BE.Client.Updater</Name>
     </ProjectReference>
     <ProjectReference Include="..\Arma3BE.Common\Arma3BE.Common.csproj">
       <Project>{d507e532-7de6-4028-9dbe-aa76c54cc92a}</Project>
