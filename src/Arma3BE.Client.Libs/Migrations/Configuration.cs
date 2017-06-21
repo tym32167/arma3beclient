@@ -76,8 +76,8 @@ namespace Arma3BEClient.Libs.Migrations
                 context.ImportantWords.AddOrUpdate(x => x.Text,
                     new ImportantWord { Text = "Admin" },
                     new ImportantWord { Text = "Administrator" },
-                    new ImportantWord { Text = "Админ" },
-                    new ImportantWord { Text = "Администратор" }
+                    new ImportantWord { Text = "РђРґРјРёРЅ" },
+                    new ImportantWord { Text = "РђРґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ" }
                 );
             }
         }
