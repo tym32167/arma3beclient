@@ -20,6 +20,8 @@ namespace Arma3BE.Client.Modules.BanModule.Grids
         {
             InitializeComponent();
 
+            dg.LoadState<BanView>($"{GetType().FullName}_{typeof(BanView).FullName}");
+
             var menu = dg.Generate<BanView>();
 
             foreach (var menuItem in menu.Items.OfType<MenuItem>().ToList())
@@ -28,7 +30,7 @@ namespace Arma3BE.Client.Modules.BanModule.Grids
                 dg.ContextMenu?.Items.Add(menuItem);
             }
 
-            dg.LoadState<BanView>($"{GetType().FullName}_{typeof(BanView).FullName}");
+            dg2.LoadState<BanView>($"{GetType().FullName}_{typeof(BanView).FullName}_2");
 
             var menu2 = dg2.Generate<BanView>();
 
@@ -37,8 +39,6 @@ namespace Arma3BE.Client.Modules.BanModule.Grids
                 menu2.Items.Remove(menuItem);
                 dg2.ContextMenu?.Items.Add(menuItem);
             }
-
-            dg2.LoadState<BanView>($"{GetType().FullName}_{typeof(BanView).FullName}_2");
         }
 
         private ServerMonitorBansViewModel Model => DataContext as ServerMonitorBansViewModel;

@@ -19,6 +19,9 @@ namespace Arma3BE.Client.Infrastructure.Extensions
         public static ContextMenu Generate<T>(this DataGridControl dgcGridControl) where T : class
         {
             var menu = new ContextMenu();
+
+            dgcGridControl.GenerateColumnsVisibilityMenu(menu);
+
             var root = new MenuItem { Header = "Copy" };
             menu.Items.Add(root);
 
@@ -59,6 +62,27 @@ namespace Arma3BE.Client.Infrastructure.Extensions
             }
 
             return menu;
+        }
+
+        private static void GenerateColumnsVisibilityMenu(this DataGridControl dgcGridControl, ContextMenu menu)
+        {
+            var root = new MenuItem { Header = "Columns" };
+            menu.Items.Add(root);
+
+            var columns = dgcGridControl.Columns.OfType<CustomColumn>().ToArray();
+
+            foreach (var column in columns)
+            {
+                var checkBox = new CheckBox() { Content = column.FieldName };
+                Binding myBinding = new Binding();
+                myBinding.Source = column;
+                myBinding.Path = new PropertyPath(nameof(Column.Visible));
+                myBinding.Mode = BindingMode.TwoWay;
+                BindingOperations.SetBinding(checkBox, CheckBox.IsCheckedProperty, myBinding);
+                var cmenu = new MenuItem() { Header = checkBox };
+                root.Items.Add(cmenu);
+            }
+
         }
 
         public static void LoadState<T>(this DataGridControl source, string key)

@@ -24,6 +24,8 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Grids
             _eventAggregator = eventAggregator;
             InitializeComponent();
 
+            dg.LoadState<PlayerView>(GetType().FullName);
+
             var menu = dg.Generate<PlayerView>();
 
             foreach (var menuItem in menu.Items.OfType<MenuItem>().ToList())
@@ -31,8 +33,6 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Grids
                 menu.Items.Remove(menuItem);
                 dg.ContextMenu?.Items.Add(menuItem);
             }
-
-            dg.LoadState<PlayerView>(GetType().FullName);
         }
 
         private void Dg_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)

@@ -17,6 +17,8 @@ namespace Arma3BE.Client.Modules.PlayersModule.Grids
         {
             InitializeComponent();
 
+            dg.LoadState<PlayerView>(GetType().FullName);
+
             var menu = dg.Generate<PlayerView>();
 
             foreach (var menuItem in menu.Items.OfType<MenuItem>().ToList())
@@ -24,8 +26,6 @@ namespace Arma3BE.Client.Modules.PlayersModule.Grids
                 menu.Items.Remove(menuItem);
                 dg.ContextMenu?.Items.Add(menuItem);
             }
-
-            dg.LoadState<PlayerView>(GetType().FullName);
         }
     }
 }
