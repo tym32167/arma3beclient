@@ -25,7 +25,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
                 try
                 {
                     IsBusy = true;
-                    await Task.Factory.StartNew(UpdateLog, TaskCreationOptions.LongRunning).ConfigureAwait(true);
+                    await Task.Factory.StartNew(UpdateLogAsync, TaskCreationOptions.LongRunning).ConfigureAwait(true);
                     // ReSharper disable once ExplicitCallerInfoArgument
                     OnPropertyChanged(nameof(Log));
                 }
@@ -35,7 +35,20 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
                 }
             });
 
+
+
+
+
+            Init(serverId);
+        }
+
+        public async Task Init(Guid serverId)
+        {
+            ServerList = (await _repository.GetServerInfoAsync()).OrderBy(x => x.Name).ToList();
             SelectedServers = serverId.ToString();
+
+            RaisePropertyChanged(nameof(ServerList));
+            RaisePropertyChanged(nameof(SelectedServers));
         }
 
         private bool _isBusy;
@@ -49,11 +62,11 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             }
         }
 
-        private void UpdateLog()
+        private async Task UpdateLogAsync()
         {
             using (var dc = new ChatRepository())
             {
-                var log = dc.GetChatLogs(SelectedServers, StartDate.LocalToUtcFromSettings(), EndDate.LocalToUtcFromSettings(), Filter);
+                var log = await dc.GetChatLogsAsync(SelectedServers, StartDate.LocalToUtcFromSettings(), EndDate.LocalToUtcFromSettings(), Filter);
 
                 Log = log.OrderBy(x => x.Date).Select(x => new ChatView
                 {
@@ -72,7 +85,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
         public IEnumerable<ChatView> Log { get; private set; }
 
 
-        public IEnumerable<ServerInfoDto> ServerList => _repository.GetServerInfo().OrderBy(x => x.Name).ToList();
+        public IEnumerable<ServerInfoDto> ServerList { get; set; }
 
         // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
         public string SelectedServers { get; set; }

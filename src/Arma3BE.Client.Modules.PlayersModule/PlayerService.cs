@@ -3,6 +3,7 @@ using Arma3BE.Client.Modules.PlayersModule.Boxes;
 using Arma3BE.Client.Modules.PlayersModule.Models;
 using Microsoft.Practices.Unity;
 using Prism.Events;
+using System.Threading.Tasks;
 
 namespace Arma3BE.Client.Modules.PlayersModule
 {
@@ -16,16 +17,16 @@ namespace Arma3BE.Client.Modules.PlayersModule
 
             var eventAggregator = _container.Resolve<IEventAggregator>();
 
-            eventAggregator.GetEvent<ShowUserInfoEvent>().Subscribe(model =>
+            eventAggregator.GetEvent<ShowUserInfoEvent>().Subscribe(async model =>
             {
-                ShowDialog(model.UserGuid);
+                await ShowDialogAsync(model.UserGuid);
             });
         }
 
-        private void ShowDialog(string userGuid)
+        private async Task ShowDialogAsync(string userGuid)
         {
             var model = _container.Resolve<PlayerViewModel>(new ParameterOverride("userGuid", userGuid));
-
+            await model.Init();
             if (model.Player != null)
             {
                 var window = _container.Resolve<PlayerViewWindow>(new ParameterOverride("model", model));

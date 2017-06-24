@@ -41,9 +41,14 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
 
             rtb.LinkClicked += Rtb_LinkClicked;
 
+            Init();
+        }
+
+        private async void Init()
+        {
             using (var repo = new ReasonRepository())
             {
-                importantWords = repo.GetImportantWords();
+                importantWords = await repo.GetImportantWordsAsync();
             }
         }
 

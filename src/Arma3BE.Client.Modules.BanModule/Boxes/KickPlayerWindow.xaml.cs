@@ -4,6 +4,7 @@ using Arma3BEClient.Libs.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Arma3BE.Client.Modules.BanModule.Boxes
@@ -29,11 +30,13 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
 
             var model = new KickPlayerViewModel(playerName);
             DataContext = model;
+
+
         }
 
         private void KickClick(object sender, RoutedEventArgs e)
         {
-            _playerHelper.Kick(_serverId, _playerNum, _playerGuid, tbReason.Text);
+            _playerHelper.KickAsync(_serverId, _playerNum, _playerGuid, tbReason.Text);
             Close();
         }
 
@@ -52,6 +55,14 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
         public KickPlayerViewModel(string playerName)
         {
             PlayerName = playerName;
+
+            Init();
+        }
+
+        private async void Init()
+        {
+            Reasons = await GerReasons();
+            RaisePropertyChanged(nameof(Reasons));
         }
 
         // ReSharper disable once MemberCanBePrivate.Global
@@ -69,22 +80,21 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
         }
 
         // ReSharper disable once UnusedMember.Global
-        public IEnumerable<string> Reasons
+        public IEnumerable<string> Reasons { get; set; }
+
+        private async Task<IEnumerable<string>> GerReasons()
         {
-            get
+            try
             {
-                try
+                using (var repo = new ReasonRepository())
                 {
-                    using (var repo = new ReasonRepository())
-                    {
-                        var str = repo.GetKickReasons();
-                        return str;
-                    }
+                    var str = await repo.GetKickReasonsAsync();
+                    return str;
                 }
-                catch (Exception)
-                {
-                    return new[] { string.Empty };
-                }
+            }
+            catch (Exception)
+            {
+                return new[] { string.Empty };
             }
         }
     }

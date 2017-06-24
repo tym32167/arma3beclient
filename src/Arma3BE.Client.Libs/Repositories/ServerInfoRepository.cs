@@ -14,12 +14,12 @@ namespace Arma3BEClient.Libs.Repositories
 {
     public interface IServerInfoRepository
     {
-        void AddOrUpdate(ServerInfoDto serverInfo);
-        IEnumerable<ServerInfoDto> GetActiveServerInfo();
-        IEnumerable<ServerInfoDto> GetNotActiveServerInfo();
-        IEnumerable<ServerInfoDto> GetServerInfo();
-        void Remove(Guid serverInfoId);
-        void SetServerInfoActive(Guid serverInfoId, bool active);
+        Task AddOrUpdateAsync(ServerInfoDto serverInfo);
+        Task<IEnumerable<ServerInfoDto>> GetActiveServerInfoAsync();
+        Task<IEnumerable<ServerInfoDto>> GetNotActiveServerInfoAsync();
+        Task<IEnumerable<ServerInfoDto>> GetServerInfoAsync();
+        Task RemoveAsync(Guid serverInfoId);
+        Task SetServerInfoActiveAsync(Guid serverInfoId, bool active);
     }
 
 
@@ -33,6 +33,17 @@ namespace Arma3BEClient.Libs.Repositories
         private static volatile bool _validCache;
         private static volatile ConcurrentDictionary<Guid, ServerInfoDto> _cache;
 
+        private Task ResetCacheAsync()
+        {
+            return Task.Run(() => { ResetCache(); });
+        }
+
+        async Task<ConcurrentDictionary<Guid, ServerInfoDto>> GetCacheAsync()
+        {
+            if (!_validCache) await ResetCacheAsync();
+            return _cache;
+        }
+
         private void ResetCache()
         {
             if (_validCache) return;
@@ -41,7 +52,7 @@ namespace Arma3BEClient.Libs.Repositories
                 if (_validCache) return;
                 _log.Info("Refresh ServerInfo cache.");
                 var playersByGuidsCache = new ConcurrentDictionary<Guid, ServerInfoDto>();
-                var players = _infoRepository.GetServerInfo();
+                var players = _infoRepository.GetServerInfoAsync().Result;
 
                 foreach (var playerDto in players)
                 {
@@ -57,45 +68,44 @@ namespace Arma3BEClient.Libs.Repositories
         public ServerInfoRepositoryCache(IServerInfoRepository infoRepository)
         {
             _infoRepository = infoRepository;
-            Task.Run(() => ResetCache());
         }
 
-        public void AddOrUpdate(ServerInfoDto serverInfo)
+        public async Task AddOrUpdateAsync(ServerInfoDto serverInfo)
         {
-            _cache.AddOrUpdate(serverInfo.Id, serverInfo, (key, value) => value);
-            _infoRepository.AddOrUpdate(serverInfo);
+            (await GetCacheAsync()).AddOrUpdate(serverInfo.Id, serverInfo, (key, value) => value);
+            await _infoRepository.AddOrUpdateAsync(serverInfo);
         }
 
-        public IEnumerable<ServerInfoDto> GetActiveServerInfo()
+        public async Task<IEnumerable<ServerInfoDto>> GetActiveServerInfoAsync()
         {
-            return _cache.Values.Where(x => x.Active).ToArray();
+            return (await GetCacheAsync()).Values.Where(x => x.Active).ToArray();
         }
 
-        public IEnumerable<ServerInfoDto> GetNotActiveServerInfo()
+        public async Task<IEnumerable<ServerInfoDto>> GetNotActiveServerInfoAsync()
         {
-            return _cache.Values.Where(x => !x.Active).ToArray();
+            return (await GetCacheAsync()).Values.Where(x => !x.Active).ToArray();
         }
 
-        public IEnumerable<ServerInfoDto> GetServerInfo()
+        public async Task<IEnumerable<ServerInfoDto>> GetServerInfoAsync()
         {
-            return _cache.Values.ToArray();
+            return (await GetCacheAsync()).Values.ToArray();
         }
 
-        public void Remove(Guid serverInfoId)
+        public async Task RemoveAsync(Guid serverInfoId)
         {
             ServerInfoDto val;
-            _cache.TryRemove(serverInfoId, out val);
-            _infoRepository.Remove(serverInfoId);
+            (await GetCacheAsync()).TryRemove(serverInfoId, out val);
+            await _infoRepository.RemoveAsync(serverInfoId);
         }
 
-        public void SetServerInfoActive(Guid serverInfoId, bool active)
+        public async Task SetServerInfoActiveAsync(Guid serverInfoId, bool active)
         {
             ServerInfoDto value;
-            if (_cache.TryGetValue(serverInfoId, out value))
+            if ((await GetCacheAsync()).TryGetValue(serverInfoId, out value))
             {
                 if (value.Active == active) return;
-                _infoRepository.SetServerInfoActive(serverInfoId, active);
-                _cache.AddOrUpdate(serverInfoId, k => value, (k, v) =>
+                await _infoRepository.SetServerInfoActiveAsync(serverInfoId, active);
+                (await GetCacheAsync()).AddOrUpdate(serverInfoId, k => value, (k, v) =>
                 {
                     v.Active = active;
                     return v;
@@ -103,7 +113,7 @@ namespace Arma3BEClient.Libs.Repositories
             }
             else
             {
-                _infoRepository.SetServerInfoActive(serverInfoId, active);
+                await _infoRepository.SetServerInfoActiveAsync(serverInfoId, active);
                 ResetCache();
             }
         }
@@ -111,65 +121,83 @@ namespace Arma3BEClient.Libs.Repositories
 
     public class ServerInfoRepository : DisposeObject, IServerInfoRepository
     {
-        public IEnumerable<ServerInfoDto> GetActiveServerInfo()
+        public async Task<IEnumerable<ServerInfoDto>> GetActiveServerInfoAsync()
         {
-            using (var dc = new Arma3BeClientContext())
+            return await Task.Run(() =>
             {
-                return dc.ServerInfo.Where(x => x.Active).Select(ToDto).ToArray();
-            }
-        }
-
-        public IEnumerable<ServerInfoDto> GetServerInfo()
-        {
-            using (var dc = new Arma3BeClientContext())
-            {
-                return dc.ServerInfo.ToList().Select(ToDto).ToArray();
-            }
-        }
-
-        public void SetServerInfoActive(Guid serverInfoId, bool active)
-        {
-            using (var dc = new Arma3BeClientContext())
-            {
-                var server = dc.ServerInfo.FirstOrDefault(x => x.Id == serverInfoId);
-                if (server != null)
+                using (var dc = new Arma3BeClientContext())
                 {
-                    server.Active = active;
+                    return dc.ServerInfo.Where(x => x.Active).Select(ToDto).ToArray();
+                }
+            });
+        }
+
+        public async Task<IEnumerable<ServerInfoDto>> GetServerInfoAsync()
+        {
+            return await Task.Run(() =>
+            {
+                using (var dc = new Arma3BeClientContext())
+                {
+                    return dc.ServerInfo.ToList().Select(ToDto).ToArray();
+                }
+            });
+        }
+
+        public Task SetServerInfoActiveAsync(Guid serverInfoId, bool active)
+        {
+            return Task.Run(() =>
+            {
+                using (var dc = new Arma3BeClientContext())
+                {
+                    var server = dc.ServerInfo.FirstOrDefault(x => x.Id == serverInfoId);
+                    if (server != null)
+                    {
+                        server.Active = active;
+                        dc.SaveChanges();
+                    }
+                }
+            });
+        }
+
+        public async Task<IEnumerable<ServerInfoDto>> GetNotActiveServerInfoAsync()
+        {
+            return await Task.Run(() =>
+            {
+                using (var dc = new Arma3BeClientContext())
+                {
+                    return dc.ServerInfo.Where(x => !x.Active).Select(ToDto).ToArray();
+                }
+            });
+        }
+
+        public Task AddOrUpdateAsync(ServerInfoDto serverInfo)
+        {
+            return Task.Run(() =>
+            {
+                using (var dc = new Arma3BeClientContext())
+                {
+
+                    dc.ServerInfo.AddOrUpdate(FromDto(serverInfo));
                     dc.SaveChanges();
                 }
-            }
+            });
         }
 
-        public IEnumerable<ServerInfoDto> GetNotActiveServerInfo()
+        public Task RemoveAsync(Guid serverInfoId)
         {
-            using (var dc = new Arma3BeClientContext())
+            return Task.Run(() =>
             {
-                return dc.ServerInfo.Where(x => !x.Active).Select(ToDto).ToArray();
-            }
-        }
+                using (var dc = new Arma3BeClientContext())
+                {
+                    dc.ChatLog.RemoveRange(dc.ChatLog.Where(x => x.ServerId == serverInfoId));
+                    dc.Bans.RemoveRange(dc.Bans.Where(x => x.ServerId == serverInfoId));
+                    dc.PlayerHistory.RemoveRange(dc.PlayerHistory.Where(x => x.ServerId == serverInfoId));
+                    dc.Admins.RemoveRange(dc.Admins.Where(x => x.ServerId == serverInfoId));
 
-        public void AddOrUpdate(ServerInfoDto serverInfo)
-        {
-            using (var dc = new Arma3BeClientContext())
-            {
-
-                dc.ServerInfo.AddOrUpdate(FromDto(serverInfo));
-                dc.SaveChanges();
-            }
-        }
-
-        public void Remove(Guid serverInfoId)
-        {
-            using (var dc = new Arma3BeClientContext())
-            {
-                dc.ChatLog.RemoveRange(dc.ChatLog.Where(x => x.ServerId == serverInfoId));
-                dc.Bans.RemoveRange(dc.Bans.Where(x => x.ServerId == serverInfoId));
-                dc.PlayerHistory.RemoveRange(dc.PlayerHistory.Where(x => x.ServerId == serverInfoId));
-                dc.Admins.RemoveRange(dc.Admins.Where(x => x.ServerId == serverInfoId));
-
-                dc.ServerInfo.RemoveRange(dc.ServerInfo.Where(x => x.Id == serverInfoId));
-                dc.SaveChanges();
-            }
+                    dc.ServerInfo.RemoveRange(dc.ServerInfo.Where(x => x.Id == serverInfoId));
+                    dc.SaveChanges();
+                }
+            });
         }
 
         private ServerInfoDto ToDto(ServerInfo info)

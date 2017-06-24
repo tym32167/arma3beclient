@@ -2,6 +2,7 @@
 using Arma3BEClient.Libs.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Admin = Arma3BE.Server.Models.Admin;
 
 namespace Arma3BE.Client.Modules.AdminsModule.Helpers
@@ -15,11 +16,11 @@ namespace Arma3BE.Client.Modules.AdminsModule.Helpers
             _serverInfoId = serverInfoId;
         }
 
-        public void RegisterAdmins(IEnumerable<Admin> list)
+        public Task RegisterAdminsAsync(IEnumerable<Admin> list)
         {
             using (var repo = new AdminRepository())
             {
-                repo.AddOrUpdate(list, _serverInfoId);
+                return repo.AddOrUpdateAsync(list, _serverInfoId);
             }
         }
     }

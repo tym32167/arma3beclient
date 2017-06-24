@@ -34,7 +34,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
         {
             _playerRepository = playerRepository;
             PlayersFound = new ObservableCollection<Tuple<string, string>>();
-            StartCommand = new ActionCommand(Start);
+            StartCommand = new ActionCommand(async () => await StartAsync());
             StopCommand = new ActionCommand(Stop);
 
             Max = 8274000000L;
@@ -141,12 +141,12 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
         {
             IsBusy = true;
 
-            Task.Factory.StartNew(() =>
+            Task.Factory.StartNew(async () =>
             {
                 try
                 {
                     _cancelatioTokenSource?.Cancel();
-                    Save();
+                    await SaveAsync();
                 }
                 finally
                 {
@@ -156,27 +156,27 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
             });
         }
 
-        private void Save()
+        private async Task SaveAsync()
         {
             var found = PlayersFound?.Where(x => _totalPlayers.ContainsKey(x.Item1))
                 .Select(x => new { Id = _totalPlayers[x.Item1], steamId = x.Item2 })
                 .ToDictionary(x => x.Id, x => x.steamId);
 
             if ((found != null) && (found.Count > 0))
-                _playerRepository.SaveSteamId(found);
+                await _playerRepository.SaveSteamIdAsync(found);
 
             InProcess = false;
         }
 
 
-        private void Start()
+        private async Task StartAsync()
         {
             InProcess = true;
             var found = PlayersFound;
             found.Clear();
 
             if (TotalPlayers == null)
-                TotalPlayers = _playerRepository.GetAllPlayersWithoutSteam()
+                TotalPlayers = (await _playerRepository.GetAllPlayersWithoutSteamAsync())
                     .Where(x => string.IsNullOrEmpty(x.GUID) == false)
                     .GroupBy(x => x.GUID)
                     .ToDictionary(x => x.Key, x => x.First().Id);
@@ -209,7 +209,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
                     return;
             }
 
-            Save();
+            SaveAsync().Wait();
         }
 
         private void CheckHash(string currentId, string hash)

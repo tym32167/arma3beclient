@@ -31,15 +31,15 @@ namespace Arma3BE.Client.Modules.ToolsModule
 
             if (res.HasValue && res.Value)
             {
-                await Task.Run(() => Export(dlg.FileName));
+                await Export(dlg.FileName);
                 MessageBox.Show("Export finished!");
             }
         }
 
-        private void Export(string fname)
+        private async Task Export(string fname)
         {
             var list =
-                _playerRepository.GetAllPlayers()
+                (await _playerRepository.GetAllPlayersAsync())
                     .GroupBy(x => x.GUID)
                     .Select(x => x.OrderByDescending(y => y.Name).First())
                     .OrderBy(x => x.Name)

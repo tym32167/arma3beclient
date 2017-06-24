@@ -9,6 +9,7 @@ using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
@@ -32,18 +33,23 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
             _messageHelper = messageHelper;
             _infoRepository = infoRepository;
 
-            Servers = _infoRepository.GetServerInfo().Select(x => new ServerInfoModel(x)).ToList();
+            Init();
+        }
+
+        private async void Init()
+        {
+            Servers = (await _infoRepository.GetServerInfoAsync()).Select(x => new ServerInfoModel(x)).ToList();
 
 
             using (var dc = new ReasonRepository())
             {
-                BanReasons = dc.GetBanReasons().Select(x => new ReasonEdit { Text = x }).ToList();
-                KickReasons = dc.GetKickReasons().Select(x => new ReasonEdit { Text = x }).ToList();
+                BanReasons = (await dc.GetBanReasonsAsync()).Select(x => new ReasonEdit { Text = x }).ToList();
+                KickReasons = (await dc.GetKickReasonsAsync()).Select(x => new ReasonEdit { Text = x }).ToList();
                 BanTimes =
-                    dc.GetBanTimes().Select(x => new BanTimeEdit { Text = x.Title, Minutes = x.TimeInMinutes }).ToList();
+                    (await dc.GetBanTimesAsync()).Select(x => new BanTimeEdit { Text = x.Title, Minutes = x.TimeInMinutes }).ToList();
 
-                BadNicknames = dc.GetBadNicknames().Select(x => new ReasonEdit { Text = x }).ToList();
-                ImportantWords = dc.GetImportantWords().Select(x => new ReasonEdit { Text = x }).ToList();
+                BadNicknames = (await dc.GetBadNicknamesAsync()).Select(x => new ReasonEdit { Text = x }).ToList();
+                ImportantWords = (await dc.GetImportantWordsAsync()).Select(x => new ReasonEdit { Text = x }).ToList();
             }
 
             var zones = TimeZoneInfo.GetSystemTimeZones().ToArray();
@@ -56,6 +62,14 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
             }
 
             TimeZones = zones;
+
+            RaisePropertyChanged(nameof(Servers));
+            RaisePropertyChanged(nameof(BanReasons));
+            RaisePropertyChanged(nameof(KickReasons));
+            RaisePropertyChanged(nameof(BanTimes));
+            RaisePropertyChanged(nameof(BadNicknames));
+            RaisePropertyChanged(nameof(ImportantWords));
+            RaisePropertyChanged(nameof(TimeZones));
         }
 
         public List<ServerInfoModel> Servers { get; set; }
@@ -122,9 +136,9 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
 
 
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
-        public IEnumerable<TimeZoneInfo> TimeZones { get; }
+        public IEnumerable<TimeZoneInfo> TimeZones { get; set; }
 
-        public void Save()
+        public async Task Save()
         {
             try
             {
@@ -142,13 +156,13 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
                 settings.Save();
 
 
-                var all = _infoRepository.GetServerInfo();
+                var all = await _infoRepository.GetServerInfoAsync();
 
                 var todelete = all.Where(x => Servers.All(s => s.GetDbModel().Id != x.Id));
 
                 foreach (var serverInfo in todelete)
                 {
-                    _infoRepository.Remove(serverInfo.Id);
+                    await _infoRepository.RemoveAsync(serverInfo.Id);
                 }
 
                 foreach (var s in Servers)
@@ -158,19 +172,19 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
                     {
                         m.Id = Guid.NewGuid();
                     }
-                    _infoRepository.AddOrUpdate(m);
+                    await _infoRepository.AddOrUpdateAsync(m);
                 }
 
 
                 using (var dc = new ReasonRepository())
                 {
-                    dc.UpdateBanReasons(BanReasons.Select(x => x.Text).Where(x => string.IsNullOrEmpty(x) == false).Distinct().ToArray());
-                    dc.UpdateBanTimes(BanTimes.Where(x => string.IsNullOrEmpty(x.Text) == false).Select(x => new BanTime { TimeInMinutes = x.Minutes, Title = x.Text }).ToArray());
-                    dc.UpdateKickReasons(KickReasons.Select(x => x.Text).Where(x => string.IsNullOrEmpty(x) == false).Distinct().ToArray());
+                    await dc.UpdateBanReasons(BanReasons.Select(x => x.Text).Where(x => string.IsNullOrEmpty(x) == false).Distinct().ToArray());
+                    await dc.UpdateBanTimes(BanTimes.Where(x => string.IsNullOrEmpty(x.Text) == false).Select(x => new BanTime { TimeInMinutes = x.Minutes, Title = x.Text }).ToArray());
+                    await dc.UpdateKickReasons(KickReasons.Select(x => x.Text).Where(x => string.IsNullOrEmpty(x) == false).Distinct().ToArray());
 
 
-                    dc.UpdateBadNicknames(BadNicknames.Select(x => x.Text).Where(x => string.IsNullOrEmpty(x) == false).Distinct().ToArray());
-                    dc.UpdateImportantWords(ImportantWords.Select(x => x.Text).Where(x => string.IsNullOrEmpty(x) == false).Distinct().ToArray());
+                    await dc.UpdateBadNicknames(BadNicknames.Select(x => x.Text).Where(x => string.IsNullOrEmpty(x) == false).Distinct().ToArray());
+                    await dc.UpdateImportantWords(ImportantWords.Select(x => x.Text).Where(x => string.IsNullOrEmpty(x) == false).Distinct().ToArray());
                 }
 
                 _eventAggregator.GetEvent<BEServersChangedEvent>().Publish(null);

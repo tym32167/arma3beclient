@@ -32,7 +32,12 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
             _banHelper = banHelper;
             _playerRepository = playerRepository;
 
-            _badNicknames = reasonRepository.GetBadNicknames();
+            Init(reasonRepository);
+        }
+
+        private async Task Init(ReasonRepository reasonRepository)
+        {
+            _badNicknames = await reasonRepository.GetBadNicknamesAsync();
         }
 
         public void RegisterPlayers(IEnumerable<Player> list)
@@ -43,7 +48,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
 
         private IEnumerable<Player> _previousState = new Player[0];
 
-        private bool RegisterPlayersInternal(IEnumerable<Player> list)
+        private async Task<bool> RegisterPlayersInternal(IEnumerable<Player> list)
         {
             var players = list.ToList();
 
@@ -55,7 +60,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
 
             var guids = players.Select(x => x.Guid).ToList();
 
-            var playersInDb = _playerRepository.GetPlayers(guids).ToArray();
+            var playersInDb = (await _playerRepository.GetPlayersAsync(guids)).ToArray();
             var dbGuids = playersInDb.Select(x => x.GUID).ToList();
 
             var historyToAdd = new List<PlayerHistory>();
@@ -117,22 +122,22 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
                     });
                 }
 
-            _playerRepository.AddOrUpdate(playerToUpdate);
-            _playerRepository.AddHistory(historyToAdd);
+            await _playerRepository.AddOrUpdateAsync(playerToUpdate);
+            await _playerRepository.AddHistoryAsync(historyToAdd);
 
 
             return true;
         }
 
-        public IEnumerable<PlayerView> GetPlayerView(IEnumerable<Player> list)
+        public async Task<IEnumerable<PlayerView>> GetPlayerViewAsync(IEnumerable<Player> list)
         {
-            using (_log.Time("GetPlayerView"))
+            using (_log.Time("GetPlayerViewAsync"))
             {
 
                 var players = list.ToList();
                 var guids = players.Select(x => x.Guid).ToList();
 
-                var playersInDb = _playerRepository.GetPlayers(guids);
+                var playersInDb = await _playerRepository.GetPlayersAsync(guids);
 
                 var result = players.Select(x => new PlayerView
                 {
@@ -160,7 +165,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
                 if (filterUsers != null)
                 {
 #pragma warning disable 4014
-                    _banHelper.Kick(_serverId, filterUsers.Num, filterUsers.Guid, "bot: Fill Nickname");
+                    _banHelper.KickAsync(_serverId, filterUsers.Num, filterUsers.Guid, "bot: Fill Nickname");
 #pragma warning restore 4014
                 }
 
@@ -174,7 +179,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
 
                     if (bad != null)
 #pragma warning disable 4014
-                        _banHelper.Kick(_serverId, bad.Num, bad.Guid, "bot: Bad Nickname");
+                        _banHelper.KickAsync(_serverId, bad.Num, bad.Guid, "bot: Bad Nickname");
 #pragma warning restore 4014
                 }
 

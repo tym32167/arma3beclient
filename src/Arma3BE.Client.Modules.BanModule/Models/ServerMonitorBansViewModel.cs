@@ -36,13 +36,14 @@ namespace Arma3BE.Client.Modules.BanModule.Models
             _serverInfoId = serverInfo.Id;
             _eventAggregator = eventAggregator;
             _helper = banHelper;
+            AvailibleBans = new BanView[0];
 
             SyncBans = new ActionCommand(() =>
             {
                 var bans = SelectedAvailibleBans;
 
                 if (bans != null)
-                    Task.Factory.StartNew(() => { _helper.BanGUIDOffline(_serverInfoId, bans.ToArray(), true); },
+                    Task.Factory.StartNew(async () => { await _helper.BanGUIDOfflineAsync(_serverInfoId, bans.ToArray(), true); },
                         TaskCreationOptions.LongRunning);
             });
 
@@ -53,48 +54,47 @@ namespace Arma3BE.Client.Modules.BanModule.Models
             });
 
             _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Ban>>>()
-                .Subscribe(e =>
-                {
-                    if (_serverInfoId == e.ServerId)
-                    {
-                        SetData(e.Items);
-                        WaitingForEvent = false;
-                    }
-                });
+                .Subscribe(async e =>
+               {
+                   if (_serverInfoId == e.ServerId)
+                   {
+                       await SetDataAsync(e.Items);
+                       WaitingForEvent = false;
+                   }
+               });
         }
 
         public string Title => "Bans";
 
         public IEnumerable<BanView> SelectedAvailibleBans { get; set; }
 
-        public IEnumerable<BanView> AvailibleBans
+        public IEnumerable<BanView> AvailibleBans { get; set; }
+
+        private async Task<IEnumerable<BanView>> GetAvailibleBans()
         {
-            get
+            if (_data == null) return new List<BanView>();
+
+            using (var dc = new BanRepository())
             {
-                if (_data == null) return new List<BanView>();
+                var dbBans = await dc.GetActivePermBansAsync();
 
-                using (var dc = new BanRepository())
-                {
-                    var dbBans = dc.GetActivePermBans();
+                var data = _data.ToList();
 
-                    var data = _data.ToList();
+                var res =
+                    dbBans.Where(x => data.All(y => y.GuidIp != x.GuidIp)).GroupBy(x => x.GuidIp)
+                        .Select(x => x.OrderByDescending(y => y.Reason).First())
+                        .Select(x => new BanView
+                        {
+                            GuidIp = x.GuidIp,
+                            Minutesleft = x.MinutesLeft,
+                            Num = 0,
+                            PlayerComment = x.Player == null ? string.Empty : x.Player.Comment,
+                            Reason = x.Reason,
+                            PlayerName = x.Player == null ? string.Empty : x.Player.Name
+                        })
+                        .ToList();
 
-                    var res =
-                        dbBans.Where(x => data.All(y => y.GuidIp != x.GuidIp)).GroupBy(x => x.GuidIp)
-                            .Select(x => x.OrderByDescending(y => y.Reason).First())
-                            .Select(x => new BanView
-                            {
-                                GuidIp = x.GuidIp,
-                                Minutesleft = x.MinutesLeft,
-                                Num = 0,
-                                PlayerComment = x.Player == null ? string.Empty : x.Player.Comment,
-                                Reason = x.Reason,
-                                PlayerName = x.Player == null ? string.Empty : x.Player.Name
-                            })
-                            .ToList();
-
-                    return res;
-                }
+                return res;
             }
         }
 
@@ -103,11 +103,11 @@ namespace Arma3BE.Client.Modules.BanModule.Models
         public ICommand SyncBans { get; set; }
         public ICommand CustomBan { get; set; }
 
-        protected override IEnumerable<BanView> RegisterData(IEnumerable<Ban> initialData)
+        protected override Task<IEnumerable<BanView>> RegisterDataAsync(IEnumerable<Ban> initialData)
         {
             var enumerable = initialData as IList<Ban> ?? initialData.ToList();
             _helper.RegisterBans(enumerable, _serverInfoId);
-            return _helper.GetBanView(enumerable);
+            return _helper.GetBanViewAsync(enumerable);
         }
 
         public void RemoveBan(BanView si)
@@ -115,9 +115,10 @@ namespace Arma3BE.Client.Modules.BanModule.Models
             SendCommand(CommandType.RemoveBan, si.Num.ToString());
         }
 
-        public override void SetData(IEnumerable<Ban> initialData)
+        public override async Task SetDataAsync(IEnumerable<Ban> initialData)
         {
-            base.SetData(initialData);
+            await base.SetDataAsync(initialData);
+            AvailibleBans = await GetAvailibleBans();
             OnPropertyChanged(nameof(AvailibleBans));
             OnPropertyChanged(nameof(AvailibleBansCount));
         }

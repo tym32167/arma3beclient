@@ -3,8 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+
 // ReSharper disable MemberCanBeProtected.Global
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -16,6 +18,7 @@ namespace Arma3BE.Client.Infrastructure.Models
     public abstract class ServerMonitorBaseViewModel<T, TK> : ViewModelBase where T : class where TK : class
     {
         private readonly IEqualityComparer<TK> _comparer;
+
         // ReSharper disable once InconsistentNaming
         protected IEnumerable<TK> _data;
 
@@ -61,9 +64,9 @@ namespace Arma3BE.Client.Infrastructure.Models
 
         public ICommand FilterCommand { get; private set; }
 
-        public virtual void SetData(IEnumerable<T> initialData)
+        public virtual async Task SetDataAsync(IEnumerable<T> initialData)
         {
-            _data = RegisterData(initialData);
+            _data = await RegisterDataAsync(initialData);
 
             UpdateData();
         }
@@ -128,7 +131,7 @@ namespace Arma3BE.Client.Infrastructure.Models
             }
         }
 
-        protected abstract IEnumerable<TK> RegisterData(IEnumerable<T> initialData);
+        protected abstract Task<IEnumerable<TK>> RegisterDataAsync(IEnumerable<T> initialData);
 
         protected virtual ObservableCollection<TK> FilterData(IEnumerable<TK> initialData)
         {

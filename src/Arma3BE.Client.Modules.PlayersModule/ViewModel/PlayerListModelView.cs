@@ -9,6 +9,7 @@ using Prism.Commands;
 using Prism.Events;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -53,7 +54,7 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
             }
         }
 
-        public ICommand RefreshCommand => _refreshCommand ?? (_refreshCommand = new ActionCommand(Refresh));
+        public ICommand RefreshCommand => _refreshCommand ?? (_refreshCommand = new ActionCommand(async () => await Refresh()));
 
         public List<PlayerView> Players { get; private set; } = new List<PlayerView>();
 
@@ -93,7 +94,7 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
                 _eventAggregator.GetEvent<ShowUserInfoEvent>().Publish(new ShowUserModel(local.Guid));
         }
 
-        public void Refresh()
+        public async Task Refresh()
         {
 
             var opts = SelectedOptions.Split(',');
@@ -109,7 +110,7 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
             IEnumerable<PlayerDto> result;
 
             if (!string.IsNullOrEmpty(Filter))
-                result = _playerRepository.GetPlayers(x =>
+                result = await _playerRepository.GetPlayersAsync(x =>
                     (searchGuid && (x.GUID == Filter))
                     ||
                     (searchComment && x.Comment.Contains(Filter))
@@ -124,7 +125,7 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
                     ||
                     (searchLastNames && x.PlayerHistory.Any(y => y.Name.Contains(Filter))));
             else
-                result = _playerRepository.GetAllPlayers();
+                result = await _playerRepository.GetAllPlayersAsync();
 
             var r = result.Select(x => new PlayerView
             {

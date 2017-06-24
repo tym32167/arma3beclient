@@ -3,12 +3,12 @@ using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.AdminsModule.Helpers;
 using Arma3BE.Server;
-using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Repositories;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Arma3BEClient.Libs.Repositories;
+using System.Threading.Tasks;
 using Admin = Arma3BE.Server.Models.Admin;
 
 namespace Arma3BE.Client.Modules.AdminsModule.Models
@@ -22,11 +22,11 @@ namespace Arma3BE.Client.Modules.AdminsModule.Models
         {
             _helper = new AdminHelper(serverInfo.Id);
 
-            eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Admin>>>().Subscribe(e =>
+            eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Admin>>>().Subscribe(async e =>
             {
                 if (e.ServerId == serverInfo.Id)
                 {
-                    SetData(e.Items);
+                    await SetDataAsync(e.Items);
                     WaitingForEvent = false;
                 }
             });
@@ -34,10 +34,10 @@ namespace Arma3BE.Client.Modules.AdminsModule.Models
 
         public string Title => "Admins";
 
-        protected override IEnumerable<Admin> RegisterData(IEnumerable<Admin> initialData)
+        protected override async Task<IEnumerable<Admin>> RegisterDataAsync(IEnumerable<Admin> initialData)
         {
             var enumerable = initialData as IList<Admin> ?? initialData.ToList();
-            _helper.RegisterAdmins(enumerable);
+            await _helper.RegisterAdminsAsync(enumerable);
             return enumerable;
         }
 

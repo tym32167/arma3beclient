@@ -7,6 +7,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using Xceed.Wpf.AvalonDock.Controls;
 
@@ -36,7 +37,7 @@ namespace Arma3BE.Client.Modules.MainModule
             DataContext = _model;
         }
 
-        private void OpenServerInfo(ServerInfoDto serverInfo)
+        private async Task OpenServerInfoAsync(ServerInfoDto serverInfo)
         {
             var region = _regionManager.Regions[RegionNames.ServerTabRegion];
 
@@ -45,25 +46,24 @@ namespace Arma3BE.Client.Modules.MainModule
                 .Any(x => x?.CurrentServer.Id == serverInfo.Id))
                 return;
 
-
             var control =
                 _container.Resolve<ServerInfoControl>(
                     new ParameterOverride("currentServer", serverInfo).OnType<ServerMonitorModel>(),
                     new ParameterOverride("console", false).OnType<ServerMonitorModel>());
 
-            _model.Reload();
+            await _model.ReloadAsync();
 
             region.Add(control, null, true);
             region.Activate(control);
         }
 
-        private void ServerClick(object sender, RoutedEventArgs e)
+        private async void ServerClick(object sender, RoutedEventArgs e)
         {
             var orig = e.OriginalSource as FrameworkElement;
             if (orig?.DataContext is ServerInfoDto)
             {
                 var serverInfo = (ServerInfoDto)orig.DataContext;
-                OpenServerInfo(serverInfo);
+                await OpenServerInfoAsync(serverInfo);
             }
         }
 
@@ -73,12 +73,12 @@ namespace Arma3BE.Client.Modules.MainModule
             Application.Current.Shutdown();
         }
 
-        private void LoadedWindow(object sender, RoutedEventArgs e)
+        private async void LoadedWindow(object sender, RoutedEventArgs e)
         {
-            var servers = _infoRepository.GetActiveServerInfo();
+            var servers = await _infoRepository.GetActiveServerInfoAsync();
             foreach (var server in servers)
             {
-                OpenServerInfo(server);
+                OpenServerInfoAsync(server);
             }
         }
 

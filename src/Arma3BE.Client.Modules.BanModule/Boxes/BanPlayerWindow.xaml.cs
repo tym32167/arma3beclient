@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -29,11 +30,11 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             DataContext = _model;
         }
 
-        private void BanClick(object sender, RoutedEventArgs e)
+        private async void BanClick(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(_model.Reason) && lnMinutes.Value.HasValue)
             {
-                _model.Ban();
+                await _model.BanAsync();
                 Close();
             }
         }
@@ -67,13 +68,18 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             _minutes = 0;
 
 
-            Servers = infoRepository.GetActiveServerInfo().OrderBy(x => x.Name).ToList();
+            Init(infoRepository, serverId);
+        }
+
+        private async Task Init(IServerInfoRepository infoRepository, Guid? serverId)
+        {
+            Servers = (await infoRepository.GetActiveServerInfoAsync()).OrderBy(x => x.Name).ToList();
 
 
-            if (string.IsNullOrEmpty(playerName))
+            if (string.IsNullOrEmpty(_playerName))
                 using (var userRepo = new PlayerRepository())
                 {
-                    var player = userRepo.GetPlayer(playerGuid);
+                    var player = await userRepo.GetPlayerAsync(_playerGuid);
                     _playerName = player?.Name;
                 }
 
@@ -81,11 +87,17 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
 
             if (serverId.HasValue)
                 SelectedServers.AddRange(Servers.Where(s => s.Id == serverId.Value));
+
+            Reasons = await GetReasons();
+            BanTimes = await GetBanTimes();
+
+            RaisePropertyChanged(nameof(Reasons));
+            RaisePropertyChanged(nameof(BanTimes));
         }
 
-        public List<ServerInfoDto> Servers { get; }
+        public List<ServerInfoDto> Servers { get; private set; }
 
-        public ObservableCollection<ServerInfoDto> SelectedServers { get; }
+        public ObservableCollection<ServerInfoDto> SelectedServers { get; private set; }
 
         public string PlayerName
         {
@@ -97,48 +109,47 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             }
         }
 
-        public IEnumerable<string> Reasons
+        async Task<string[]> GetReasons()
         {
-            get
+            try
             {
-                try
+                using (var repo = new ReasonRepository())
                 {
-                    using (var repo = new ReasonRepository())
-                    {
-                        var str = repo.GetBanReasons();
-                        return str;
-                    }
+                    var str = await repo.GetBanReasonsAsync();
+                    return str;
                 }
-                catch (Exception)
-                {
-                    return new[] { string.Empty };
-                }
+            }
+            catch (Exception)
+            {
+                return new[] { string.Empty };
             }
         }
 
-        public IEnumerable<BanFullTime> BanTimes
+        public IEnumerable<string> Reasons { get; set; }
+
+
+        async Task<IEnumerable<BanFullTime>> GetBanTimes()
         {
-            get
+            try
             {
-                try
+                using (var repo = new ReasonRepository())
                 {
-                    using (var repo = new ReasonRepository())
+                    var str = (await repo.GetBanTimesAsync()).Select(x => new BanFullTime
                     {
-                        var str = repo.GetBanTimes().Select(x => new BanFullTime
-                        {
-                            Text = x.Title,
-                            Period = System.TimeSpan.FromMinutes(x.TimeInMinutes),
-                            PeriodMinutes = x.TimeInMinutes
-                        }).ToArray();
-                        return str;
-                    }
-                }
-                catch (Exception)
-                {
-                    return Enumerable.Empty<BanFullTime>();
+                        Text = x.Title,
+                        Period = System.TimeSpan.FromMinutes(x.TimeInMinutes),
+                        PeriodMinutes = x.TimeInMinutes
+                    }).ToArray();
+                    return str;
                 }
             }
+            catch (Exception)
+            {
+                return Enumerable.Empty<BanFullTime>();
+            }
         }
+
+        public IEnumerable<BanFullTime> BanTimes { get; set; }
 
 
         public string PlayerGuid
@@ -182,16 +193,16 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             }
         }
 
-        public void Ban()
+        public async Task BanAsync()
         {
             if (Minutes != null)
             {
                 foreach (var selectedServer in SelectedServers)
                 {
                     if (_isOnline)
-                        _playerHelper.BanGuidOnline(selectedServer.Id, _playerNum, _playerGuid, Reason, Minutes.Value);
+                        await _playerHelper.BanGuidOnlineAsync(selectedServer.Id, _playerNum, _playerGuid, Reason, Minutes.Value);
                     else
-                        _playerHelper.BanGUIDOffline(selectedServer.Id, _playerGuid, Reason, Minutes.Value);
+                        await _playerHelper.BanGUIDOfflineAsync(selectedServer.Id, _playerGuid, Reason, Minutes.Value);
                 }
             }
         }

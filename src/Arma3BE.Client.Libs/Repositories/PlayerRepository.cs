@@ -18,21 +18,21 @@ namespace Arma3BEClient.Libs.Repositories
 {
     public interface IPlayerRepository : IDisposable
     {
-        IEnumerable<PlayerDto> GetAllPlayers();
-        IEnumerable<PlayerDto> GetPlayers(Expression<Func<Player, bool>> expression);
-        IEnumerable<PlayerDto> GetPlayers(IEnumerable<string> guids);
-        PlayerDto GetPlayer(string guid);
-        Task<Player> GetPlayerInfo(string guid);
+        Task<IEnumerable<PlayerDto>> GetAllPlayersAsync();
+        Task<IEnumerable<PlayerDto>> GetPlayersAsync(Expression<Func<Player, bool>> expression);
+        Task<IEnumerable<PlayerDto>> GetPlayersAsync(IEnumerable<string> guids);
+        Task<PlayerDto> GetPlayerAsync(string guid);
+        Task<Player> GetPlayerInfoAsync(string guid);
 
-        void UpdatePlayerComment(string guid, string comment);
-        void UpdateComment(Dictionary<Guid, string> playersToUpdateComments);
-        void AddOrUpdate(IEnumerable<PlayerDto> players);
-        void AddHistory(List<PlayerHistory> histories);
-        void AddNotes(Guid id, string s);
-        IEnumerable<PlayerDto> GetAllPlayersWithoutSteam();
-        void SaveSteamId(Dictionary<Guid, string> found);
+        Task UpdatePlayerCommentAsync(string guid, string comment);
+        Task UpdateCommentAsync(Dictionary<Guid, string> playersToUpdateComments);
+        Task AddOrUpdateAsync(IEnumerable<PlayerDto> players);
+        Task AddHistoryAsync(List<PlayerHistory> histories);
+        Task AddNotesAsync(Guid id, string s);
+        Task<IEnumerable<PlayerDto>> GetAllPlayersWithoutSteamAsync();
+        Task SaveSteamIdAsync(Dictionary<Guid, string> found);
 
-        void ImportPlayers(List<PlayerDto> toAdd, List<PlayerDto> toUpdate);
+        Task ImportPlayersAsync(List<PlayerDto> toAdd, List<PlayerDto> toUpdate);
     }
 
     public class PlayerRepositoryCache : DisposeObject, IPlayerRepository
@@ -43,15 +43,24 @@ namespace Arma3BEClient.Libs.Repositories
         private static volatile bool _validCache;
         private static volatile ConcurrentDictionary<string, PlayerDto> _playersByGuidsCache;
 
+
+        async Task<ConcurrentDictionary<string, PlayerDto>> GetCacheAsync()
+        {
+            if (!_validCache) await ResetCacheAsync();
+            return _playersByGuidsCache;
+        }
+
+
         private void ResetCache()
         {
             if (_validCache) return;
             lock (Lock)
             {
+
                 if (_validCache) return;
                 _log.Info($"Refresh Players cache from {new StackTrace()}.");
                 var playersByGuidsCache = new ConcurrentDictionary<string, PlayerDto>();
-                var players = _playerRepository.GetAllPlayers().GroupBy(x => x.GUID).Select(x => x.First());
+                var players = _playerRepository.GetAllPlayersAsync().Result.GroupBy(x => x.GUID).Select(x => x.First());
                 foreach (var playerDto in players)
                 {
                     playersByGuidsCache.AddOrUpdate(playerDto.GUID, playerDto, (key, value) => value);
@@ -62,71 +71,72 @@ namespace Arma3BEClient.Libs.Repositories
             }
         }
 
+        private Task ResetCacheAsync()
+        {
+            return Task.Run(() => ResetCache());
+        }
+
         public PlayerRepositoryCache(IPlayerRepository playerRepository)
         {
             _playerRepository = playerRepository;
-            ResetCache();
         }
 
-        public IEnumerable<PlayerDto> GetAllPlayers()
+        public async Task<IEnumerable<PlayerDto>> GetAllPlayersAsync()
         {
-            if (!_validCache) ResetCache();
-            return _playersByGuidsCache.Values.ToList();
+            return (await GetCacheAsync()).Values.ToArray();
         }
 
-        public IEnumerable<PlayerDto> GetPlayers(Expression<Func<Player, bool>> expression)
+        public Task<IEnumerable<PlayerDto>> GetPlayersAsync(Expression<Func<Player, bool>> expression)
         {
-            return _playerRepository.GetPlayers(expression);
+            return _playerRepository.GetPlayersAsync(expression);
         }
 
-        public IEnumerable<PlayerDto> GetPlayers(IEnumerable<string> guids)
+        public async Task<IEnumerable<PlayerDto>> GetPlayersAsync(IEnumerable<string> guids)
         {
-            if (!_validCache) ResetCache();
-
             var result = new List<PlayerDto>();
 
             foreach (var guid in guids.Distinct().ToArray())
             {
                 PlayerDto element;
-                if (_playersByGuidsCache.TryGetValue(guid, out element))
+                if ((await GetCacheAsync()).TryGetValue(guid, out element))
                     result.Add(element);
             }
 
             return result;
         }
 
-        public PlayerDto GetPlayer(string guid)
+        public async Task<PlayerDto> GetPlayerAsync(string guid)
         {
             PlayerDto element;
-            if (_playersByGuidsCache.TryGetValue(guid, out element))
+            if ((await GetCacheAsync()).TryGetValue(guid, out element))
                 return element;
             return null;
         }
 
-        public Task<Player> GetPlayerInfo(string guid)
+        public Task<Player> GetPlayerInfoAsync(string guid)
         {
-            return _playerRepository.GetPlayerInfo(guid);
+            return _playerRepository.GetPlayerInfoAsync(guid);
         }
 
-        public void UpdatePlayerComment(string guid, string comment)
+        public async Task UpdatePlayerCommentAsync(string guid, string comment)
         {
-            _playerRepository.UpdatePlayerComment(guid, comment);
+            await _playerRepository.UpdatePlayerCommentAsync(guid, comment);
 
             PlayerDto element;
-            if (_playersByGuidsCache.TryGetValue(guid, out element))
+            if ((await GetCacheAsync()).TryGetValue(guid, out element))
             {
                 element.Comment = comment;
             }
         }
 
-        public void UpdateComment(Dictionary<Guid, string> playersToUpdateComments)
+        public async Task UpdateCommentAsync(Dictionary<Guid, string> playersToUpdateComments)
         {
             var dto = playersToUpdateComments ?? new Dictionary<Guid, string>();
             if (dto.Count == 0) return;
 
-            _playerRepository.UpdateComment(dto);
+            await _playerRepository.UpdateCommentAsync(dto);
 
-            var local = _playersByGuidsCache.Values.ToDictionary(x => x.Id);
+            var local = (await GetCacheAsync()).Values.ToDictionary(x => x.Id);
 
             foreach (var playersToUpdateComment in dto)
             {
@@ -138,67 +148,67 @@ namespace Arma3BEClient.Libs.Repositories
             }
         }
 
-        public void AddOrUpdate(IEnumerable<PlayerDto> players)
+        public async Task AddOrUpdateAsync(IEnumerable<PlayerDto> players)
         {
             var playerDtos = players?.ToArray() ?? new PlayerDto[0];
             if (!playerDtos.Any()) return;
 
-            _playerRepository.AddOrUpdate(playerDtos);
+            await _playerRepository.AddOrUpdateAsync(playerDtos);
 
             foreach (var player in playerDtos)
             {
-                if (_playersByGuidsCache.ContainsKey(player.GUID) == false)
+                if ((await GetCacheAsync()).ContainsKey(player.GUID) == false)
                 {
-                    _log.Info("AddOrUpdate - found new Player, resetting cache");
+                    _log.Info("AddOrUpdateAsync - found new Player, resetting cache");
                     _validCache = false;
                     break;
                 }
 
-                _playersByGuidsCache.AddOrUpdate(player.GUID, player, (k, v) => player);
+                (await GetCacheAsync()).AddOrUpdate(player.GUID, player, (k, v) => player);
             }
         }
 
-        public void AddHistory(List<PlayerHistory> histories)
+        public Task AddHistoryAsync(List<PlayerHistory> histories)
         {
-            _playerRepository.AddHistory(histories);
+            return _playerRepository.AddHistoryAsync(histories);
         }
 
-        public void AddNotes(Guid id, string s)
+        public Task AddNotesAsync(Guid id, string s)
         {
-            _playerRepository.AddNotes(id, s);
+            return _playerRepository.AddNotesAsync(id, s);
         }
 
-        public IEnumerable<PlayerDto> GetAllPlayersWithoutSteam()
+        public Task<IEnumerable<PlayerDto>> GetAllPlayersWithoutSteamAsync()
         {
             if (_validCache)
             {
-                return _playersByGuidsCache.Values
-                    .Where(x => string.IsNullOrEmpty(x.SteamId));
+                return Task.FromResult(_playersByGuidsCache.Values
+                    .Where(x => string.IsNullOrEmpty(x.SteamId)));
             }
             else
             {
-                return _playerRepository.GetAllPlayersWithoutSteam();
+                return _playerRepository.GetAllPlayersWithoutSteamAsync();
             }
         }
 
-        public void SaveSteamId(Dictionary<Guid, string> found)
+        public async Task SaveSteamIdAsync(Dictionary<Guid, string> found)
         {
             foreach (var paged in found.Paged(2000))
             {
-                _playerRepository.SaveSteamId(paged.ToDictionary(x => x.Key, x => x.Value));
+                await _playerRepository.SaveSteamIdAsync(paged.ToDictionary(x => x.Key, x => x.Value));
             }
 
-            _log.Info("SaveSteamId resetting cache");
+            _log.Info("SaveSteamIdAsync resetting cache");
             _validCache = false;
         }
 
-        public void ImportPlayers(List<PlayerDto> toAdd, List<PlayerDto> toUpdate)
+        public async Task ImportPlayersAsync(List<PlayerDto> toAdd, List<PlayerDto> toUpdate)
         {
             if (toAdd.Any() || toUpdate.Any())
             {
-                _playerRepository.ImportPlayers(toAdd, toUpdate);
+                await _playerRepository.ImportPlayersAsync(toAdd, toUpdate);
 
-                _log.Info("ImportPlayers resetting cache");
+                _log.Info("ImportPlayersAsync resetting cache");
                 _validCache = false;
             }
         }
@@ -208,181 +218,220 @@ namespace Arma3BEClient.Libs.Repositories
     {
         private readonly ILog _log = new Log();
 
-        public IEnumerable<PlayerDto> GetAllPlayers()
+        public async Task<IEnumerable<PlayerDto>> GetAllPlayersAsync()
         {
             using (var dc = new Arma3BeClientContext())
             {
-                return dc.Player.ToList();
+                return await dc.Player.ToListAsync();
             }
         }
 
-        public void ImportPlayers(List<PlayerDto> toAdd, List<PlayerDto> toUpdate)
+        public Task ImportPlayersAsync(List<PlayerDto> toAdd, List<PlayerDto> toUpdate)
         {
-            _log.Info("ImportPlayers - Import started");
-            _log.Info($"ImportPlayers - ToAdd {toAdd.Count}, ToUpdate {toUpdate.Count}");
-            using (var dc = new Arma3BeClientContext())
+            return Task.Run(() =>
             {
-                var toAddDto = toAdd.Select(Map).ToArray();
-                dc.Player.AddRange(toAddDto);
-                dc.SaveChanges();
-            }
-
-            _log.Info($"Inserted {toAdd.Count}");
-
-            _log.Info("ImportPlayers - Update started");
-            using (var dc = new Arma3BeClientContext())
-            {
-                var allPlayers = dc.Player.ToArray().ToDictionary(x => x.Id);
-
-                _log.Info($"Players loaded");
-
-                foreach (var player in toUpdate)
+                _log.Info("ImportPlayersAsync - Import started");
+                _log.Info($"ImportPlayersAsync - ToAdd {toAdd.Count}, ToUpdate {toUpdate.Count}");
+                using (var dc = new Arma3BeClientContext())
                 {
-                    if (allPlayers.ContainsKey(player.Id))
+                    foreach (var _add in toAdd.Paged(2000))
                     {
-                        var dto = allPlayers[player.Id];
-
-                        if (string.IsNullOrEmpty(dto.SteamId))
-                            dto.SteamId = player.SteamId;
-
-                        if (string.IsNullOrEmpty(dto.Comment))
-                            dto.Comment = player.Comment;
+                        var toAddDto = _add.Select(Map).ToArray();
+                        dc.Player.AddRange(toAddDto);
+                        dc.SaveChanges();
                     }
                 }
 
-                dc.SaveChanges();
-            }
+                _log.Info($"Inserted {toAdd.Count}");
 
-            _log.Info("ImportPlayers - Update finished");
-        }
-
-        public IEnumerable<PlayerDto> GetPlayers(Expression<Func<Player, bool>> expression)
-        {
-            using (var dc = new Arma3BeClientContext())
-            {
-                return dc.Player.Where(expression).ToList();
-            }
-        }
-
-        public IEnumerable<PlayerDto> GetPlayers(IEnumerable<string> guids)
-        {
-            using (var dc = new Arma3BeClientContext())
-            {
-                return dc.Player.Where(x => guids.Contains(x.GUID)).ToList();
-            }
-        }
-
-        public PlayerDto GetPlayer(string guid)
-        {
-            using (var dc = new Arma3BeClientContext())
-            {
-                return dc.Player.FirstOrDefault(x => x.GUID == guid);
-            }
-        }
-
-        public Task<Player> GetPlayerInfo(string guid)
-        {
-            using (var dc = new Arma3BeClientContext())
-            {
-                return
-                    dc.Player.Where(x => x.GUID == guid)
-                        .Include(x => x.Bans)
-                        .Include(x => x.Bans.Select(b => b.ServerInfo))
-                        .Include(x => x.Notes)
-                        .Include(x => x.PlayerHistory)
-                        .FirstOrDefaultAsync();
-            }
-        }
-
-        public void UpdatePlayerComment(string guid, string comment)
-        {
-            using (var dc = new Arma3BeClientContext())
-            {
-                var dbp = dc.Player.FirstOrDefault(x => x.GUID == guid);
-                if (dbp != null)
+                _log.Info("ImportPlayersAsync - Update started");
+                using (var dc = new Arma3BeClientContext())
                 {
-                    dbp.Comment = comment;
+                    var allPlayers = dc.Player.ToArray().ToDictionary(x => x.Id);
+
+                    _log.Info($"Players loaded");
+
+                    foreach (var player in toUpdate)
+                    {
+                        if (allPlayers.ContainsKey(player.Id))
+                        {
+                            var dto = allPlayers[player.Id];
+
+                            if (string.IsNullOrEmpty(dto.SteamId))
+                                dto.SteamId = player.SteamId;
+
+                            if (string.IsNullOrEmpty(dto.Comment))
+                                dto.Comment = player.Comment;
+                        }
+                    }
+
                     dc.SaveChanges();
                 }
-            }
+
+                _log.Info("ImportPlayersAsync - Update finished");
+            });
         }
 
-        public void UpdateComment(Dictionary<Guid, string> playersToUpdateComments)
+        public async Task<IEnumerable<PlayerDto>> GetPlayersAsync(Expression<Func<Player, bool>> expression)
         {
-            var ids = playersToUpdateComments.Keys.ToArray();
-
-            using (var dc = new Arma3BeClientContext())
+            return await Task.Run(() =>
             {
-                var players = dc.Player.Where(x => ids.Contains(x.Id));
-                foreach (var player in players)
+                using (var dc = new Arma3BeClientContext())
                 {
-                    player.Comment = playersToUpdateComments[player.Id];
+                    return dc.Player.Where(expression).ToList();
                 }
-                dc.SaveChanges();
-            }
+            });
         }
 
-        public void AddOrUpdate(IEnumerable<PlayerDto> players)
+        public async Task<IEnumerable<PlayerDto>> GetPlayersAsync(IEnumerable<string> guids)
         {
-            var playerList = players.Select(Map).ToArray();
-
-            using (var dc = new Arma3BeClientContext())
+            return await Task.Run(() =>
             {
-                dc.Player.AddOrUpdate(playerList);
-                dc.SaveChanges();
-            }
-        }
-
-        public void AddHistory(List<PlayerHistory> histories)
-        {
-            using (var dc = new Arma3BeClientContext())
-            {
-                dc.PlayerHistory.AddOrUpdate(histories.ToArray());
-                dc.SaveChanges();
-            }
-        }
-
-        public void AddNotes(Guid id, string s)
-        {
-            using (var dc = new Arma3BeClientContext())
-            {
-                dc.Comments.Add(new Note()
+                using (var dc = new Arma3BeClientContext())
                 {
-                    PlayerId = id,
-                    Text = s,
-                });
-                dc.SaveChanges();
-            }
+                    return dc.Player.Where(x => guids.Contains(x.GUID)).ToList();
+                }
+            });
         }
 
-        public IEnumerable<PlayerDto> GetAllPlayersWithoutSteam()
+        public async Task<PlayerDto> GetPlayerAsync(string guid)
         {
-            using (var dc = new Arma3BeClientContext())
+            return await Task.Run(() =>
             {
-                return
-                    dc.Player.Where(x => string.IsNullOrEmpty(x.SteamId)).ToArray();
-            }
-        }
-
-        public void SaveSteamId(Dictionary<Guid, string> found)
-        {
-            var guids = found.Keys.ToArray();
-            using (var dc = new Arma3BeClientContext())
-            {
-                var players = dc.Player
-                    .Where(x => string.IsNullOrEmpty(x.GUID) == false && string.IsNullOrEmpty(x.SteamId))
-                    .Where(x => guids.Contains(x.Id)).ToArray();
-
-                foreach (var player in players)
+                using (var dc = new Arma3BeClientContext())
                 {
-                    if (found.ContainsKey(player.Id))
+                    return dc.Player.FirstOrDefault(x => x.GUID == guid);
+                }
+            });
+        }
+
+        public Task<Player> GetPlayerInfoAsync(string guid)
+        {
+            return Task.Run(() =>
+            {
+                using (var dc = new Arma3BeClientContext())
+                {
+                    return
+                        dc.Player.Where(x => x.GUID == guid)
+                            .Include(x => x.Bans)
+                            .Include(x => x.Bans.Select(b => b.ServerInfo))
+                            .Include(x => x.Notes)
+                            .Include(x => x.PlayerHistory)
+                            .FirstOrDefault();
+                }
+            });
+        }
+
+        public Task UpdatePlayerCommentAsync(string guid, string comment)
+        {
+            return Task.Run(() =>
+            {
+                using (var dc = new Arma3BeClientContext())
+                {
+                    var dbp = dc.Player.FirstOrDefault(x => x.GUID == guid);
+                    if (dbp != null)
                     {
-                        player.SteamId = found[player.Id];
+                        dbp.Comment = comment;
+                        dc.SaveChanges();
                     }
                 }
+            });
+        }
 
-                dc.SaveChanges();
-            }
+        public Task UpdateCommentAsync(Dictionary<Guid, string> playersToUpdateComments)
+        {
+            return Task.Run(() =>
+            {
+                var ids = playersToUpdateComments.Keys.ToArray();
+
+                using (var dc = new Arma3BeClientContext())
+                {
+                    var players = dc.Player.Where(x => ids.Contains(x.Id));
+                    foreach (var player in players)
+                    {
+                        player.Comment = playersToUpdateComments[player.Id];
+                    }
+                    dc.SaveChanges();
+                }
+            });
+        }
+
+        public Task AddOrUpdateAsync(IEnumerable<PlayerDto> players)
+        {
+            return Task.Run(() =>
+            {
+                var playerList = players.Select(Map).ToArray();
+
+                using (var dc = new Arma3BeClientContext())
+                {
+                    dc.Player.AddOrUpdate(playerList);
+                    dc.SaveChanges();
+                }
+            });
+        }
+
+        public Task AddHistoryAsync(List<PlayerHistory> histories)
+        {
+            return Task.Run(() =>
+            {
+                using (var dc = new Arma3BeClientContext())
+                {
+                    dc.PlayerHistory.AddOrUpdate(histories.ToArray());
+                    dc.SaveChanges();
+                }
+            });
+        }
+
+        public Task AddNotesAsync(Guid id, string s)
+        {
+            return Task.Run(() =>
+            {
+                using (var dc = new Arma3BeClientContext())
+                {
+                    dc.Comments.Add(new Note()
+                    {
+                        PlayerId = id,
+                        Text = s,
+                    });
+                    dc.SaveChanges();
+                }
+            });
+        }
+
+        public async Task<IEnumerable<PlayerDto>> GetAllPlayersWithoutSteamAsync()
+        {
+            return await Task.Run(() =>
+            {
+                using (var dc = new Arma3BeClientContext())
+                {
+                    return
+                        dc.Player.Where(x => string.IsNullOrEmpty(x.SteamId)).ToArray();
+                }
+            });
+        }
+
+        public Task SaveSteamIdAsync(Dictionary<Guid, string> found)
+        {
+            return Task.Run(() =>
+            {
+                var guids = found.Keys.ToArray();
+                using (var dc = new Arma3BeClientContext())
+                {
+                    var players = dc.Player
+                        .Where(x => string.IsNullOrEmpty(x.GUID) == false && string.IsNullOrEmpty(x.SteamId))
+                        .Where(x => guids.Contains(x.Id)).ToArray();
+
+                    foreach (var player in players)
+                    {
+                        if (found.ContainsKey(player.Id))
+                        {
+                            player.SteamId = found[player.Id];
+                        }
+                    }
+
+                    dc.SaveChanges();
+                }
+            });
         }
 
 

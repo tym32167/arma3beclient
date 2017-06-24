@@ -39,10 +39,9 @@ namespace Arma3BEClient.Libs.Tools
                     new Settings { Id = TimeZoneKey, Value = TimeZoneInfo?.Id },
                     new Settings { Id = PlayersUpdateKey, Value = PlayersUpdateSeconds.ToString() },
                     new Settings { Id = BansUpdateKey, Value = BansUpdateSeconds.ToString() },
-
                     new Settings { Id = BanMessageTemplateKey, Value = BanMessageTemplate },
                     new Settings { Id = KickMessageTemplateKey, Value = KickMessageTemplate }
-                    );
+                );
 
                 context.SaveChanges();
                 _instance = null;
@@ -59,8 +58,10 @@ namespace Arma3BEClient.Libs.Tools
                 ss.AdminName = settings.FirstOrDefault(x => x.Id == AdminNameKey)?.Value ?? "Admin";
 
 
-                ss.BanMessageTemplate = settings.FirstOrDefault(x => x.Id == BanMessageTemplateKey)?.Value ?? "[{AdminName}][{Date} {Time}] {Reason} {Minutes}";
-                ss.KickMessageTemplate = settings.FirstOrDefault(x => x.Id == KickMessageTemplateKey)?.Value ?? "[{AdminName}][{Date} {Time}] {Reason}";
+                ss.BanMessageTemplate = settings.FirstOrDefault(x => x.Id == BanMessageTemplateKey)?.Value ??
+                                        "[{AdminName}][{Date} {Time}] {Reason} {Minutes}";
+                ss.KickMessageTemplate = settings.FirstOrDefault(x => x.Id == KickMessageTemplateKey)?.Value ??
+                                         "[{AdminName}][{Date} {Time}] {Reason}";
 
 
                 ss.PlayersUpdateSeconds = (settings.FirstOrDefault(x => x.Id == PlayersUpdateKey)?.Value).FromString(5);
@@ -69,7 +70,7 @@ namespace Arma3BEClient.Libs.Tools
                 try
                 {
                     var zone = settings.FirstOrDefault(x => x.Id == TimeZoneKey)?.Value;
-                    if (zone != null) ss.TimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(zone);
+                    ss.TimeZoneInfo = zone != null ? TimeZoneInfo.FindSystemTimeZoneById(zone) : TimeZoneInfo.Local;
                 }
                 catch (Exception)
                 {
@@ -99,7 +100,9 @@ namespace Arma3BEClient.Libs.Tools
         readonly ConcurrentDictionary<string, string> _cache = new ConcurrentDictionary<string, string>();
 
 
-        private static Lazy<CustomSettingsStore> _instance = new Lazy<CustomSettingsStore>(()=>new CustomSettingsStore());
+        private static Lazy<CustomSettingsStore> _instance =
+            new Lazy<CustomSettingsStore>(() => new CustomSettingsStore());
+
         public static CustomSettingsStore Instance => _instance.Value;
 
         public void Save(string key, string value)
@@ -110,7 +113,7 @@ namespace Arma3BEClient.Libs.Tools
 
         public string Load(string key)
         {
-            var rrr =  _cache.GetOrAdd(key, LoadInternal);
+            var rrr = _cache.GetOrAdd(key, LoadInternal);
             return rrr;
         }
 

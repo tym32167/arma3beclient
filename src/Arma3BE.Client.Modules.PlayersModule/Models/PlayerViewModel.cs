@@ -10,6 +10,7 @@ using Prism.Events;
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using System.Windows.Input;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ExplicitCallerInfoArgument
@@ -35,18 +36,22 @@ namespace Arma3BE.Client.Modules.PlayersModule.Models
             SaveComment = new ActionCommand(SaveUserComment);
             GoToSteamCommand = new ActionCommand(GoToSteam);
             BanCommand = new DelegateCommand<string>(BanPlayerView);
-
-            SetupPlayer();
-            SetupPlayerIPInfo();
         }
 
-        private async void SetupPlayer()
+
+        public async Task Init()
         {
-            Player = await _playerRepository.GetPlayerInfo(_userGuid);
+            await SetupPlayerAsync();
+            await SetupPlayerIPInfoAsync();
+        }
+
+        private async Task SetupPlayerAsync()
+        {
+            Player = await _playerRepository.GetPlayerInfoAsync(_userGuid);
             OnPropertyChanged(nameof(Player));
         }
 
-        private async void SetupPlayerIPInfo()
+        private async Task SetupPlayerIPInfoAsync()
         {
             PlayerIPInfo = await _ipService.Get(Player.LastIp);
             OnPropertyChanged(nameof(PlayerIPInfo));
@@ -81,8 +86,8 @@ namespace Arma3BE.Client.Modules.PlayersModule.Models
 
         private void SaveUserComment()
         {
-            _playerRepository.UpdatePlayerComment(Player.GUID, Player.Comment);
-            SetupPlayer();
+            _playerRepository.UpdatePlayerCommentAsync(Player.GUID, Player.Comment);
+            SetupPlayerAsync();
         }
     }
 }

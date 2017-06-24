@@ -15,6 +15,7 @@ using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using Player = Arma3BE.Server.Models.Player;
@@ -50,7 +51,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             _chatHelper = new ChatHelper(_serverId);
 
             _eventAggregator.GetEvent<BEMessageEvent<BEChatMessage>>()
-                .Subscribe(BeServerChatMessageHandler, ThreadOption.UIThread);
+                .Subscribe(async e => await BeServerChatMessageHandlerAsync(e), ThreadOption.UIThread);
 
             _eventAggregator.GetEvent<BEMessageEvent<BEAdminLogMessage>>()
                 .Subscribe(_beServer_PlayerLog, ThreadOption.UIThread);
@@ -232,10 +233,10 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             ChatMessageEventHandler?.Invoke(this, new ServerMonitorChatViewModelEventArgs(e));
         }
 
-        private void BeServerChatMessageHandler(BEChatMessage e)
+        private async Task BeServerChatMessageHandlerAsync(BEChatMessage e)
         {
             if (e.ServerId != _serverId) return;
-            _chatHelper.RegisterChatMessage(e.Message);
+            await _chatHelper.RegisterChatMessageAsync(e.Message);
             OnChatMessageEventHandler(e.Message);
         }
 

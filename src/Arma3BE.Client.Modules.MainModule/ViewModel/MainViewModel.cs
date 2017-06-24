@@ -5,6 +5,7 @@ using Prism.Commands;
 using Prism.Events;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ExplicitCallerInfoArgument
@@ -19,16 +20,16 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
         public MainViewModel(IEventAggregator eventAggregator, IServerInfoRepository infoRepository)
         {
             _infoRepository = infoRepository;
-            InitServers();
+            ReloadAsync();
 
             OptionsCommand = new DelegateCommand(() =>
             {
                 eventAggregator.GetEvent<ShowOptionsEvent>().Publish(new ShowOptionsEvent());
             });
 
-            eventAggregator.GetEvent<BEServersChangedEvent>().Subscribe((state) =>
+            eventAggregator.GetEvent<BEServersChangedEvent>().Subscribe(async (state) =>
             {
-                Reload();
+                await ReloadAsync();
             });
         }
 
@@ -39,19 +40,13 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
         public List<ServerInfoDto> Servers
         {
             // ReSharper disable once UnusedMember.Global
-            get
-            {
-                return _infoRepository.GetNotActiveServerInfo().OrderBy(x => x.Name).ToList();
-            }
+            get;
+            set;
         }
 
-        private void InitServers()
+        public async Task ReloadAsync()
         {
-            Reload();
-        }
-
-        public void Reload()
-        {
+            Servers = (await _infoRepository.GetNotActiveServerInfoAsync()).OrderBy(x => x.Name).ToList();
             OnPropertyChanged(nameof(Servers));
         }
     }

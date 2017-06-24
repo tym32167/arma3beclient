@@ -4,6 +4,8 @@ using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BEClient.Libs.Repositories;
 using Prism.Events;
 using System;
+using System.Threading.Tasks;
+
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace Arma3BE.Client.Modules.MainModule.ViewModel
@@ -60,21 +62,21 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
                 .Publish(CurrentServer);
         }
 
-        public void SetActive(Guid serverId, bool active = false)
+        public async Task SetActive(Guid serverId, bool active = false)
         {
-            _infoRepository.SetServerInfoActive(serverId, active);
+            await _infoRepository.SetServerInfoActiveAsync(serverId, active);
             _eventAggregator.GetEvent<BEServersChangedEvent>().Publish(null);
         }
 
-        public void CloseServer()
+        public async Task CloseServerAsync()
         {
             // ReSharper disable once RedundantArgumentDefaultValue
-            SetActive(CurrentServer.Id, false);
+            await SetActive(CurrentServer.Id, false);
         }
 
-        public void OpenServer()
+        public async Task OpenServerAsync()
         {
-            SetActive(CurrentServer.Id, true);
+            await SetActive(CurrentServer.Id, true);
         }
     }
 }

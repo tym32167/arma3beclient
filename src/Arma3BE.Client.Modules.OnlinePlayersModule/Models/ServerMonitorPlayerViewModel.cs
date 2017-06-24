@@ -12,6 +12,7 @@ using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Admin = Arma3BE.Server.Models.Admin;
 using Player = Arma3BE.Server.Models.Player;
 // ReSharper disable MemberCanBePrivate.Global
@@ -47,7 +48,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
             {
                 if (e.ServerId == serverInfo.Id)
                 {
-                    SetData(e.Items);
+                    SetDataAsync(e.Items);
                     WaitingForEvent = false;
                 }
             });
@@ -121,11 +122,11 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
         public DelegateCommand BanUserCommand { get; }
         public DelegateCommand PlayerInfoCommand { get; }
 
-        protected override IEnumerable<Helpers.Views.PlayerView> RegisterData(IEnumerable<Player> initialData)
+        protected override async Task<IEnumerable<Helpers.Views.PlayerView>> RegisterDataAsync(IEnumerable<Player> initialData)
         {
             var enumerable = initialData as IList<Player> ?? initialData.ToList();
             _playerHelper.RegisterPlayers(enumerable);
-            var view = _playerHelper.GetPlayerView(enumerable).ToArray();
+            var view = (await _playerHelper.GetPlayerViewAsync(enumerable)).ToArray();
             var admins = _admins ?? new Admin[0];
             var adminsIps = new HashSet<string>(admins.Select(x => x.IP.ToLower()).Distinct());
             foreach (var playerView in view)

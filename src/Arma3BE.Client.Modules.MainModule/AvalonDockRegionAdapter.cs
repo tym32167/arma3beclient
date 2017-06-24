@@ -60,7 +60,7 @@ namespace Arma3BE.Client.Modules.MainModule
         /// <param name="e">The event.</param>
         /// <param name="regionTarget">The region target.</param>
         // ReSharper disable once UnusedParameter.Local
-        void OnViewsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e, DockingManager regionTarget)
+        async void OnViewsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e, DockingManager regionTarget)
         {
             if (e.Action == NotifyCollectionChangedAction.Remove)
             {
@@ -100,12 +100,12 @@ namespace Arma3BE.Client.Modules.MainModule
                         {
                             //All my viewmodels have properties DisplayName and IconKey
                             newLayoutDocument.Title = viewModel.CurrentServer.Name;
-                            viewModel.OpenServer();
+                            await viewModel.OpenServerAsync();
                             newLayoutDocument.Closed += (s, a) =>
                             {
-                                Task.Factory.StartNew(() =>
+                                Task.Factory.StartNew(async () =>
                                 {
-                                    viewModel.CloseServer();
+                                    await viewModel.CloseServerAsync();
                                     viewModel.Cleanup();
                                 });
                             };

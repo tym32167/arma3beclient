@@ -1,6 +1,5 @@
 ﻿using Arma3BE.Client.Modules.OptionsModule.ViewModel;
 using System;
-using System.Threading.Tasks;
 using System.Windows;
 using Xceed.Wpf.Toolkit;
 
@@ -40,22 +39,12 @@ namespace Arma3BE.Client.Modules.OptionsModule
             _optionsModel.Servers.Add(e.Item as ServerInfoModel);
         }
 
-        private void Save_Click(object sender, RoutedEventArgs e)
+        private async void Save_Click(object sender, RoutedEventArgs e)
         {
             BusyIndicator.IsBusy = true;
-            var t = Task.Factory.StartNew(() =>
-            {
-                _optionsModel.Save();
-            });
-
-            t.ContinueWith((p) =>
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    BusyIndicator.IsBusy = false;
-                    Close();
-                });
-            });
+            await _optionsModel.Save();
+            BusyIndicator.IsBusy = false;
+            Close();
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)

@@ -9,6 +9,7 @@ using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -36,17 +37,18 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
         {
             InitializeComponent();
             InitBox();
-
-            using (var repo = new ReasonRepository())
-            {
-                importantWords = repo.GetImportantWords();
-            }
         }
 
-        private void InitBox()
+        private async Task InitBox()
         {
             msgBox.Document.Blocks.Clear();
             msgBox.IsDocumentEnabled = true;
+
+
+            using (var repo = new ReasonRepository())
+            {
+                importantWords = await repo.GetImportantWordsAsync();
+            }
         }
 
         public void AppendText(ChatMessage message, string servername = null)
