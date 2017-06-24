@@ -24,7 +24,7 @@ namespace Arma3BE.Client.Modules.IndicatorsModule
             if (_serverInfo.Id != message.ServerId) return;
             LastUpdate = $"Last update at {DateTime.UtcNow.UtcToLocalFromSettings().ToLongTimeString()}";
             // ReSharper disable once ExplicitCallerInfoArgument
-            OnPropertyChanged(nameof(LastUpdate));
+            RaisePropertyChanged(nameof(LastUpdate));
         }
 
         // ReSharper disable once UnusedAutoPropertyAccessor.Global

@@ -165,7 +165,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             set
             {
                 _players = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -176,7 +176,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             set
             {
                 _selectedPlayer = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -186,7 +186,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             set
             {
                 _autoScroll = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -196,7 +196,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             set
             {
                 _enableChat = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -206,7 +206,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             set
             {
                 _inputMessage = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -216,7 +216,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             set
             {
                 _commandMessage = value;
-                OnPropertyChanged(nameof(CommandMessage));
+                RaisePropertyChanged(nameof(CommandMessage));
                 SendCommandMessage.RaiseCanExecuteChanged();
             }
         }

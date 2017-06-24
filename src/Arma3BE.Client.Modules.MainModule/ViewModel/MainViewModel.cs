@@ -47,7 +47,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
         public async Task ReloadAsync()
         {
             Servers = (await _infoRepository.GetNotActiveServerInfoAsync()).OrderBy(x => x.Name).ToList();
-            OnPropertyChanged(nameof(Servers));
+            RaisePropertyChanged(nameof(Servers));
         }
     }
 }

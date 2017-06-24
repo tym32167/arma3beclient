@@ -75,7 +75,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             set
             {
                 _reason = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 

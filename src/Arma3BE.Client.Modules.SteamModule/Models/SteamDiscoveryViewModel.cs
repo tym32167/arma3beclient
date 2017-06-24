@@ -52,7 +52,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
             set
             {
                 _min = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -62,7 +62,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
             set
             {
                 _max = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -72,7 +72,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
             set
             {
                 _current = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -82,7 +82,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
             set
             {
                 _isBusy = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -92,7 +92,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
             set
             {
                 _inProcess = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -102,7 +102,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
             set
             {
                 _totalPlayers = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -112,7 +112,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
             set
             {
                 _playersFound = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -124,7 +124,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
                 if (_progress != value)
                 {
                     _progress = value;
-                    OnPropertyChanged();
+                    RaisePropertyChanged();
                 }
             }
         }

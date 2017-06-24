@@ -39,7 +39,7 @@ namespace Arma3BE.Client.Infrastructure.Models
             set
             {
                 _waitingForEvent = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -49,7 +49,7 @@ namespace Arma3BE.Client.Infrastructure.Models
             set
             {
                 _selectedItem = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -76,8 +76,8 @@ namespace Arma3BE.Client.Infrastructure.Models
             var newData = FilterData(_data).ToArray();
             UpdateFilteredData(newData);
 
-            OnPropertyChanged(nameof(Data));
-            OnPropertyChanged(nameof(DataCount));
+            RaisePropertyChanged(nameof(Data));
+            RaisePropertyChanged(nameof(DataCount));
         }
 
 

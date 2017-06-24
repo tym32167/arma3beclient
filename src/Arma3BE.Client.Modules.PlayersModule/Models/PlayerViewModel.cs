@@ -48,13 +48,13 @@ namespace Arma3BE.Client.Modules.PlayersModule.Models
         private async Task SetupPlayerAsync()
         {
             Player = await _playerRepository.GetPlayerInfoAsync(_userGuid);
-            OnPropertyChanged(nameof(Player));
+            RaisePropertyChanged(nameof(Player));
         }
 
         private async Task SetupPlayerIPInfoAsync()
         {
             PlayerIPInfo = await _ipService.Get(Player.LastIp);
-            OnPropertyChanged(nameof(PlayerIPInfo));
+            RaisePropertyChanged(nameof(PlayerIPInfo));
         }
 
 

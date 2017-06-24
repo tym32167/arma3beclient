@@ -38,7 +38,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             set
             {
                 _connected = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 

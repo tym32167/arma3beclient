@@ -119,8 +119,8 @@ namespace Arma3BE.Client.Modules.BanModule.Models
         {
             await base.SetDataAsync(initialData);
             AvailibleBans = await GetAvailibleBans();
-            OnPropertyChanged(nameof(AvailibleBans));
-            OnPropertyChanged(nameof(AvailibleBansCount));
+            RaisePropertyChanged(nameof(AvailibleBans));
+            RaisePropertyChanged(nameof(AvailibleBansCount));
         }
 
         private void SendCommand(CommandType commandType, string parameters = null)

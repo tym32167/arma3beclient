@@ -111,7 +111,7 @@ namespace Arma3BE.Client.Modules.ManageServerModule.Models
             set
             {
                 _selectedMission = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
                 SetMissionCommand.RaiseCanExecuteChanged();
             }
         }
@@ -122,7 +122,7 @@ namespace Arma3BE.Client.Modules.ManageServerModule.Models
             set
             {
                 _missions = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 

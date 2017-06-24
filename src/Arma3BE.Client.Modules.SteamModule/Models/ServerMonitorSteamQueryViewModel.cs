@@ -32,8 +32,8 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
             Host = serverInfo.Host;
             Port = serverInfo.SteamPort;
 
-            OnPropertyChanged(nameof(Host));
-            OnPropertyChanged(nameof(Port));
+            RaisePropertyChanged(nameof(Host));
+            RaisePropertyChanged(nameof(Port));
 
             ExcecuteCommand = new ActionCommand(() => Task.Run(() =>
             {
@@ -88,9 +88,9 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
                 server.GetServerChallengeSync(settings);
 
 
-            OnPropertyChanged(nameof(ServerRules));
-            OnPropertyChanged(nameof(ServerInfo));
-            OnPropertyChanged(nameof(ServerPlayers));
+            RaisePropertyChanged(nameof(ServerRules));
+            RaisePropertyChanged(nameof(ServerInfo));
+            RaisePropertyChanged(nameof(ServerPlayers));
         }
 
         public string Title => "Steam Query";
@@ -101,7 +101,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
             set
             {
                 _isBisy = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 

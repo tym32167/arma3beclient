@@ -50,7 +50,7 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
             set
             {
                 _playerCount = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -148,7 +148,7 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
             Players = r;
 
 
-            OnPropertyChanged(nameof(Players));
+            RaisePropertyChanged(nameof(Players));
         }
     }
 }

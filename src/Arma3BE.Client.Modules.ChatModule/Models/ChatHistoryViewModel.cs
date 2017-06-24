@@ -25,18 +25,14 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
                 try
                 {
                     IsBusy = true;
-                    await Task.Factory.StartNew(UpdateLogAsync, TaskCreationOptions.LongRunning).ConfigureAwait(true);
-                    // ReSharper disable once ExplicitCallerInfoArgument
-                    OnPropertyChanged(nameof(Log));
+                    await UpdateLogAsync();
+                    RaisePropertyChanged(nameof(Log));
                 }
                 finally
                 {
                     IsBusy = false;
                 }
             });
-
-
-
 
 
             Init(serverId);
@@ -58,7 +54,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             set
             {
                 _isBusy = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 

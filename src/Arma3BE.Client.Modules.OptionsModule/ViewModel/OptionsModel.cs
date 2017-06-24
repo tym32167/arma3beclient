@@ -114,8 +114,8 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
             set
             {
                 Settings.BanMessageTemplate = value;
-                OnPropertyChanged(nameof(BanMessageTemplate));
-                OnPropertyChanged(nameof(BanMessageTemplateExample));
+                RaisePropertyChanged(nameof(BanMessageTemplate));
+                RaisePropertyChanged(nameof(BanMessageTemplateExample));
             }
         }
 
@@ -129,8 +129,8 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
             set
             {
                 Settings.KickMessageTemplate = value;
-                OnPropertyChanged(nameof(KickMessageTemplate));
-                OnPropertyChanged(nameof(KickMessageTemplateExample));
+                RaisePropertyChanged(nameof(KickMessageTemplate));
+                RaisePropertyChanged(nameof(KickMessageTemplateExample));
             }
         }
 

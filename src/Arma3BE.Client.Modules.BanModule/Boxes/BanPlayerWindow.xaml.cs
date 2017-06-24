@@ -105,7 +105,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             set
             {
                 _playerName = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -158,7 +158,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             set
             {
                 _playerGuid = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -168,7 +168,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             set
             {
                 _reason = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -178,7 +178,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             set
             {
                 _minutes = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -188,7 +188,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             set
             {
                 _timeSpan = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
                 Minutes = _timeSpan.PeriodMinutes;
             }
         }

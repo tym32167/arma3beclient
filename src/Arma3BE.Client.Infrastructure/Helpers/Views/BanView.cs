@@ -59,7 +59,7 @@ namespace Arma3BE.Client.Infrastructure.Helpers.Views
             {
                 if (SetProperty(ref _minutesleft, value))
                 {
-                    OnPropertyChanged(nameof(TimeLeft));
+                    RaisePropertyChanged(nameof(TimeLeft));
                 }
             }
         }
