@@ -35,27 +35,30 @@
             </xctk:DropDownButton>
         </ToolBar>
 
-        <xcdg:DataGridControl Name="dg" Grid.Row="1" ItemsSource="{Binding Players,  Mode=OneWay}"
+        <xctk:BusyIndicator Grid.Row="1" IsBusy="{Binding IsBusy}" BusyContent="Please, wait...">
+
+            <xcdg:DataGridControl Name="dg"  ItemsSource="{Binding Players,  Mode=OneWay}"
                               AutoCreateColumns="False" ReadOnly="True" SelectedItem="{Binding SelectedPlayer, Mode=TwoWay}">
-            <xcdg:DataGridControl.ContextMenu>
-                <ContextMenu>
+                <xcdg:DataGridControl.ContextMenu>
+                    <ContextMenu>
 
-                    <MenuItem Header="Ban" Command="{Binding BanCommand}" />
+                        <MenuItem Header="Ban" Command="{Binding BanCommand}" />
 
-                    <MenuItem Header="Player Info" Command="{Binding PlayerInfoCommand}" />
+                        <MenuItem Header="Player Info" Command="{Binding PlayerInfoCommand}" />
 
-                </ContextMenu>
-            </xcdg:DataGridControl.ContextMenu>
+                    </ContextMenu>
+                </xcdg:DataGridControl.ContextMenu>
 
-            <xcdg:DataGridControl.View>
-                <xcdg:TableflowView FixedColumnCount="0" UseDefaultHeadersFooters="False" ContainerHeight="20">
-                    <xcdg:TableView.FixedHeaders>
-                        <DataTemplate>
-                            <xcdg:ColumnManagerRow />
-                        </DataTemplate>
-                    </xcdg:TableView.FixedHeaders>
-                </xcdg:TableflowView>
-            </xcdg:DataGridControl.View>
-        </xcdg:DataGridControl>
+                <xcdg:DataGridControl.View>
+                    <xcdg:TableflowView FixedColumnCount="0" UseDefaultHeadersFooters="False" ContainerHeight="20">
+                        <xcdg:TableView.FixedHeaders>
+                            <DataTemplate>
+                                <xcdg:ColumnManagerRow />
+                            </DataTemplate>
+                        </xcdg:TableView.FixedHeaders>
+                    </xcdg:TableflowView>
+                </xcdg:DataGridControl.View>
+            </xcdg:DataGridControl>
+        </xctk:BusyIndicator>
     </Grid>
 </UserControl>

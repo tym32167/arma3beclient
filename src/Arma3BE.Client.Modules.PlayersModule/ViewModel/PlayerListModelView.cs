@@ -25,6 +25,7 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
         private readonly IPlayerRepository _playerRepository;
         private int _playerCount;
         private ICommand _refreshCommand;
+        private bool _isBusy = false;
 
         public PlayerListModelView(IEventAggregator eventAggregator, IPlayerRepository playerRepository)
         {
@@ -40,6 +41,12 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
 
         public ICommand BanCommand { get; set; }
         public ICommand PlayerInfoCommand { get; set; }
+
+        public bool IsBusy
+        {
+            get { return _isBusy; }
+            set { SetProperty(ref _isBusy, value); }
+        }
 
 
         public string Filter { get; set; }
@@ -96,6 +103,7 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
 
         public async Task Refresh()
         {
+            IsBusy = true;
 
             var opts = SelectedOptions.Split(',');
 
@@ -149,6 +157,8 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
 
 
             RaisePropertyChanged(nameof(Players));
+
+            IsBusy = false;
         }
     }
 }
