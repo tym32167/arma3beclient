@@ -37,7 +37,7 @@
 
         <xctk:BusyIndicator Grid.Row="1" IsBusy="{Binding IsBusy}" BusyContent="Please, wait...">
 
-            <xcdg:DataGridControl Name="dg"  ItemsSource="{Binding Players,  Mode=OneWay}"
+            <xcdg:DataGridControl Name="dg"  ItemsSource="{Binding Players,  Mode=OneWay}" MouseDoubleClick="Dg_OnMouseDoubleClick"
                               AutoCreateColumns="False" ReadOnly="True" SelectedItem="{Binding SelectedPlayer, Mode=TwoWay}">
                 <xcdg:DataGridControl.ContextMenu>
                     <ContextMenu>
