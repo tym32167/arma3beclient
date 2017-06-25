@@ -343,10 +343,14 @@ namespace Arma3BE.Server
             RegisterMessage(message);
         }
 
-
         // ReSharper disable once UnusedParameter.Local
         private void RegisterMessage(ServerMessage message)
         {
+            if (message.Type == ServerMessageType.Unknown)
+            {
+                _log.Info(
+                    $"UNKNOWN MESSAGE: message [\nserver ip: {_host}\nmessageId:{message.MessageId}\n{message.Message}\n]");
+            }
             // _log.Info($"message [\nserver ip: {_host}\nmessageId:{message.MessageId}\n{message.Message}\n]");
         }
 
