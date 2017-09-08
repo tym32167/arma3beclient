@@ -1,10 +1,12 @@
 ﻿using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views;
+using Arma3BEClient.Common.Extensions;
+using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -14,18 +16,28 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
 {
     public class PlayerHelper : StateHelper<Player>
     {
+        private readonly ILog _log = LogFactory.Create(new StackTrace().GetFrame(0).GetMethod().DeclaringType);
         private readonly IBanHelper _banHelper;
         private readonly IPlayerRepository _playerRepository;
         private readonly Guid _serverId;
 
-        private readonly Regex NameRegex = new Regex("[A-Za-zА-Яа-я0-9]+",
+        private string[] _badNicknames;
+
+        private readonly Regex _nameRegex = new Regex("[A-Za-zА-Яа-я0-9]+",
             RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
-        public PlayerHelper(Guid serverId, IBanHelper banHelper, IPlayerRepository playerRepository)
+        public PlayerHelper(Guid serverId, IBanHelper banHelper, IPlayerRepository playerRepository, ReasonRepository reasonRepository)
         {
             _serverId = serverId;
             _banHelper = banHelper;
             _playerRepository = playerRepository;
+
+            Init(reasonRepository);
+        }
+
+        private async Task Init(ReasonRepository reasonRepository)
+        {
+            _badNicknames = await reasonRepository.GetBadNicknamesAsync();
         }
 
         public void RegisterPlayers(IEnumerable<Player> list)
@@ -33,17 +45,22 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
             Task.Run(() => RegisterPlayersInternal(list));
         }
 
-        public bool RegisterPlayersInternal(IEnumerable<Player> list)
+
+        private IEnumerable<Player> _previousState = new Player[0];
+
+        private async Task<bool> RegisterPlayersInternal(IEnumerable<Player> list)
         {
             var players = list.ToList();
 
             if (!HaveChanges(players, x => x.Num))
                 return false;
 
+            var prevoius = new HashSet<string>(_previousState.Select(x => x.Guid).Distinct());
+            _previousState = players;
 
             var guids = players.Select(x => x.Guid).ToList();
 
-            var playersInDb = _playerRepository.GetPlayers(guids);
+            var playersInDb = (await _playerRepository.GetPlayersAsync(guids)).ToArray();
             var dbGuids = playersInDb.Select(x => x.GUID).ToList();
 
             var historyToAdd = new List<PlayerHistory>();
@@ -59,8 +76,8 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
                     {
                         historyToAdd.Add(new PlayerHistory
                         {
-                            IP = player.LastIp,
-                            Name = player.Name,
+                            IP = p.IP,
+                            Name = p.Name,
                             PlayerId = player.Id,
                             ServerId = _serverId
                         });
@@ -70,7 +87,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
 
                         needUpdate = true;
                     }
-                    if ((DateTime.UtcNow - player.LastSeen).TotalHours > 2)
+                    if (prevoius.Contains(player.GUID) == false)
                     {
                         player.LastSeen = DateTime.UtcNow;
                         needUpdate = true;
@@ -105,66 +122,70 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
                     });
                 }
 
-            _playerRepository.AddOrUpdate(playerToUpdate);
-            _playerRepository.AddHistory(historyToAdd);
+            await _playerRepository.AddOrUpdateAsync(playerToUpdate);
+            await _playerRepository.AddHistoryAsync(historyToAdd);
 
 
             return true;
         }
 
-        public IEnumerable<PlayerView> GetPlayerView(IEnumerable<Player> list)
+        public async Task<IEnumerable<PlayerView>> GetPlayerViewAsync(IEnumerable<Player> list)
         {
-            var players = list.ToList();
-            var guids = players.Select(x => x.Guid).ToList();
-
-            var playersInDb = _playerRepository.GetPlayers(guids);
-
-            var result = players.Select(x => new PlayerView
+            using (_log.Time("GetPlayerViewAsync"))
             {
-                Guid = x.Guid,
-                IP = x.IP,
-                Name = x.Name,
-                Num = x.Num,
-                Ping = x.Ping,
-                State = x.State,
-                Port = x.Port
-            }).ToList();
 
-            result.ForEach(x =>
-            {
-                var p = playersInDb.FirstOrDefault(y => y.GUID == x.Guid);
-                if (p != null)
+                var players = list.ToList();
+                var guids = players.Select(x => x.Guid).ToList();
+
+                var playersInDb = await _playerRepository.GetPlayersAsync(guids);
+
+                var result = players.Select(x => new PlayerView
                 {
-                    x.Id = p.Id;
-                    x.Comment = p.Comment;
+                    Guid = x.Guid,
+                    IP = x.IP,
+                    Name = x.Name,
+                    Num = x.Num,
+                    Ping = x.Ping,
+                    State = x.State,
+                    Port = x.Port
+                }).ToList();
+
+                result.ForEach(x =>
+                {
+                    var p = playersInDb.FirstOrDefault(y => y.GUID == x.Guid);
+                    if (p != null)
+                    {
+                        x.Id = p.Id;
+                        x.Comment = p.Comment;
+                        x.SteamId = p.SteamId;
+                    }
+                });
+
+                var filterUsers = result.FirstOrDefault(x => !_nameRegex.IsMatch(x.Name));
+                if (filterUsers != null)
+                {
+#pragma warning disable 4014
+                    _banHelper.KickAsync(_serverId, filterUsers.Num, filterUsers.Guid, "bot: Fill Nickname");
+#pragma warning restore 4014
                 }
-            });
 
-            var filterUsers = result.FirstOrDefault(x => !NameRegex.IsMatch(x.Name));
-            if (filterUsers != null)
-            {
+                if (_badNicknames?.Any() == true)
+                {
+                    var names = _badNicknames.Select(x => x.ToLower()).Distinct().ToDictionary(x => x);
+
+
+                    var bad =
+                        result.FirstOrDefault(x => !string.IsNullOrEmpty(x.Name) && names.ContainsKey(x.Name.ToLower()));
+
+                    if (bad != null)
 #pragma warning disable 4014
-                _banHelper.Kick(_serverId, filterUsers.Num, filterUsers.Guid, "bot: Fill Nickname");
+                        _banHelper.KickAsync(_serverId, bad.Num, bad.Guid, "bot: Bad Nickname");
 #pragma warning restore 4014
+                }
+
+
+                return result;
             }
-
-            var badNicknames = ConfigurationManager.AppSettings["Bad_Nicknames"];
-            if (!string.IsNullOrEmpty(badNicknames))
-            {
-                var names = badNicknames.ToLower().Split('|').Distinct().ToDictionary(x => x);
-
-
-                var bad =
-                    result.FirstOrDefault(x => !string.IsNullOrEmpty(x.Name) && names.ContainsKey(x.Name.ToLower()));
-
-                if (bad != null)
-#pragma warning disable 4014
-                    _banHelper.Kick(_serverId, bad.Num, bad.Guid, "bot: Bad Nickname");
-#pragma warning restore 4014
-            }
-
-
-            return result;
         }
     }
 }

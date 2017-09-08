@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 
 namespace Arma3BE.Server.Models
@@ -18,16 +17,6 @@ namespace Arma3BE.Server.Models
             Command,
             RCon,
             NonCommon
-        }
-
-        private bool? _isImportantMessage = null;
-        public bool IsImportantMessage {
-            get
-            {
-                if (_isImportantMessage.HasValue) return _isImportantMessage.Value;
-                _isImportantMessage = IsImportantMessageProc(Message);
-                return _isImportantMessage.Value;
-            } 
         }
 
         public MessageType Type
@@ -48,19 +37,18 @@ namespace Arma3BE.Server.Models
             }
         }
 
-        private bool IsImportantMessageProc(string message)
+        public static bool IsImportantMessageProc(ChatMessage message, string[] importantWords)
         {
-            var importantWordsConfig = ConfigurationManager.AppSettings["Important_Words"];
-            if (string.IsNullOrEmpty(importantWordsConfig)) return false;
-            if (string.IsNullOrEmpty(message)) return false;
+            if (importantWords == null) return false;
+            if (string.IsNullOrEmpty(message.Message)) return false;
 
-            var importantWords = new HashSet<string>(importantWordsConfig.ToLower().Split('|').Distinct());
-            var words = new WordParser().Parse(message)
+            var dict = new HashSet<string>(importantWords.Select(x => x.ToLower()).Distinct());
+            var words = new WordParser().Parse(message.Message)
                 .Where(x => !string.IsNullOrEmpty(x))
                 .Select(x => x.ToLower())
                 .Distinct()
                 .ToList();
-            if (words.Any(x => importantWords.Contains(x))) return true;
+            if (words.Any(x => dict.Contains(x))) return true;
             return false;
         }
 
@@ -109,7 +97,7 @@ namespace Arma3BE.Server.Models
 
     public class LogMessage : MessageBase
     {
-        
+
     }
 
     public abstract class MessageBase

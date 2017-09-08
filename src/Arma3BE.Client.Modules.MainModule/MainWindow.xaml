@@ -36,6 +36,7 @@
 
             <Separator/>
             <MenuItem Header="Help">
+                <MenuItem Header="Update to latest dev version" Click="UpdateToLatestDevClick" />
                 <MenuItem Header="About" Click="AboutClick" />
             </MenuItem>
         </Menu>

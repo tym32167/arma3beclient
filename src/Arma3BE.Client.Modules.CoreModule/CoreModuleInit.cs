@@ -31,6 +31,14 @@ namespace Arma3BE.Client.Modules.CoreModule
                         new PlayerRepositoryCache(
                             c.Resolve<PlayerRepository>())));
 
+
+            _container.RegisterType<IServerInfoRepository>(
+               new InjectionFactory(
+                   c =>
+                       new ServerInfoRepositoryCache(
+                           c.Resolve<ServerInfoRepository>())));
+
+
             _container.RegisterType<IBanHelper, BanHelper>();
         }
     }

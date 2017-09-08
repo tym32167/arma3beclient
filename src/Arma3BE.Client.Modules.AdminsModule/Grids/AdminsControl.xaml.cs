@@ -1,7 +1,7 @@
 ﻿using Arma3BE.Client.Infrastructure.Extensions;
 using Arma3BE.Server.Models;
-using System.Windows.Controls;
 using Prism.Regions;
+using System.Windows.Controls;
 
 namespace Arma3BE.Client.Modules.AdminsModule.Grids
 {
@@ -9,19 +9,15 @@ namespace Arma3BE.Client.Modules.AdminsModule.Grids
     ///     Interaction logic for AdminsControl.xaml
     /// </summary>
     [ViewSortHint("0300")]
+    // ReSharper disable once RedundantExtendsListEntry
     public partial class AdminsControl : UserControl
     {
         public AdminsControl()
         {
             InitializeComponent();
 
-
+            dg.LoadState<Admin>(GetType().FullName);
             dg.ContextMenu = dg.Generate<Admin>();
-
-            foreach (var generateColumn in GridHelper.GenerateColumns<Admin>())
-            {
-                dg.Columns.Add(generateColumn);
-            }
         }
     }
 }

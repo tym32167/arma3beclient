@@ -1,6 +1,7 @@
 ﻿using Arma3BE.Server.Models;
 using Arma3BEClient.Libs.Repositories;
 using System;
+using System.Threading.Tasks;
 
 namespace Arma3BE.Client.Modules.ChatModule.Helpers
 {
@@ -13,12 +14,12 @@ namespace Arma3BE.Client.Modules.ChatModule.Helpers
             _currentServerId = currentServerId;
         }
 
-        public bool RegisterChatMessage(ChatMessage message)
+        public async Task<bool> RegisterChatMessageAsync(ChatMessage message)
         {
             if (message.Type != ChatMessage.MessageType.Unknown)
                 using (var repo = new ChatRepository())
                 {
-                    repo.AddOrUpdate(message, _currentServerId);
+                    await repo.AddOrUpdateAsync(message, _currentServerId);
                 }
 
             return true;

@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Arma3BEClient.Common.Attributes;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Arma3BEClient.Common.Attributes;
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable UnusedMember.Global
 
 namespace Arma3BEClient.Libs.ModelCompact
 {
+    // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
     public class Ban
     {
         public Ban()

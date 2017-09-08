@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Arma3BEClient.Libs.Repositories;
 
 namespace Arma3BE.Client.Modules.BEServerModule.Tests
 {
@@ -80,20 +81,27 @@ namespace Arma3BE.Client.Modules.BEServerModule.Tests
             var logic = new BELogic(ev);
 
             var commands = new List<BECommand>();
+            var immediateCommands = new List<BECommand>();
 
             logic.ServerUpdateHandler += (s, e) =>
             {
                 commands.Add(e.Command);
             };
 
+            logic.ServerImmediateUpdateHandler += (s, e) =>
+            {
+                immediateCommands.Add(e.Command);
+            };
+
 
             ev.GetEvent<ConnectServerEvent>()
-               .Publish(new ServerInfo() { Id = serverGuid });
+               .Publish(new ServerInfoDto() { Id = serverGuid });
 
+            Assert.IsNotNull(immediateCommands);
+            Assert.IsNotNull(immediateCommands.FirstOrDefault(x => x.CommandType == CommandType.Players && x.ServerId == serverGuid));
 
             Assert.IsNotNull(commands);
             Assert.IsNotNull(commands.FirstOrDefault(x => x.CommandType == CommandType.Bans && x.ServerId == serverGuid));
-            Assert.IsNotNull(commands.FirstOrDefault(x => x.CommandType == CommandType.Players && x.ServerId == serverGuid));
             Assert.IsNotNull(commands.FirstOrDefault(x => x.CommandType == CommandType.Admins && x.ServerId == serverGuid));
             Assert.IsNotNull(commands.FirstOrDefault(x => x.CommandType == CommandType.Missions && x.ServerId == serverGuid));
 

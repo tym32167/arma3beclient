@@ -1,39 +1,32 @@
 ﻿using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Client.Infrastructure.Extensions;
 using Arma3BE.Client.Infrastructure.Models;
-using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
 
 namespace Arma3BE.Client.Modules.ChatModule.Models
 {
     public class ChatHistoryViewModel : ViewModelBase
     {
-        private readonly Guid _serverId;
+        private readonly IServerInfoRepository _repository;
 
-        private readonly Lazy<IEnumerable<ServerInfo>> _serverList = new Lazy<IEnumerable<ServerInfo>>(() =>
+        public ChatHistoryViewModel(Guid serverId, IServerInfoRepository repository)
         {
-            using (var repo = new ServerInfoRepository())
-            {
-                return repo.GetServerInfo().OrderBy(x => x.Name).ToList();
-            }
-        });
-
-        public ChatHistoryViewModel(Guid serverId)
-        {
-            _serverId = serverId;
-
+            _repository = repository;
             FilterCommand = new ActionCommand(async () =>
             {
                 try
                 {
                     IsBusy = true;
-                    await Task.Factory.StartNew(UpdateLog, TaskCreationOptions.LongRunning).ConfigureAwait(true);
-                    OnPropertyChanged(nameof(Log));
+                    await UpdateLogAsync();
+                    RaisePropertyChanged(nameof(Log));
                 }
                 finally
                 {
@@ -41,7 +34,17 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
                 }
             });
 
+
+            Init(serverId);
+        }
+
+        public async Task Init(Guid serverId)
+        {
+            ServerList = (await _repository.GetServerInfoAsync()).OrderBy(x => x.Name).ToList();
             SelectedServers = serverId.ToString();
+
+            RaisePropertyChanged(nameof(ServerList));
+            RaisePropertyChanged(nameof(SelectedServers));
         }
 
         private bool _isBusy;
@@ -51,15 +54,15 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             set
             {
                 _isBusy = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
-        private void UpdateLog()
+        private async Task UpdateLogAsync()
         {
             using (var dc = new ChatRepository())
             {
-                var log = dc.GetChatLogs(SelectedServers, StartDate.LocalToUtcFromSettings(), EndDate.LocalToUtcFromSettings(), Filter);
+                var log = await dc.GetChatLogsAsync(SelectedServers, StartDate.LocalToUtcFromSettings(), EndDate.LocalToUtcFromSettings(), Filter);
 
                 Log = log.OrderBy(x => x.Date).Select(x => new ChatView
                 {
@@ -78,11 +81,9 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
         public IEnumerable<ChatView> Log { get; private set; }
 
 
-        public IEnumerable<ServerInfo> ServerList
-        {
-            get { return _serverList.Value; }
-        }
+        public IEnumerable<ServerInfoDto> ServerList { get; set; }
 
+        // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
         public string SelectedServers { get; set; }
         public ICommand FilterCommand { get; set; }
     }

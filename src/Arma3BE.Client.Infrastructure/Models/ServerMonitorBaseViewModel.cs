@@ -1,16 +1,25 @@
-﻿using System;
+﻿using Arma3BE.Client.Infrastructure.Commands;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using Arma3BE.Client.Infrastructure.Commands;
+
+// ReSharper disable MemberCanBeProtected.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable ExplicitCallerInfoArgument
+// ReSharper disable UnusedMember.Global
 
 namespace Arma3BE.Client.Infrastructure.Models
 {
     public abstract class ServerMonitorBaseViewModel<T, TK> : ViewModelBase where T : class where TK : class
     {
         private readonly IEqualityComparer<TK> _comparer;
+
+        // ReSharper disable once InconsistentNaming
         protected IEnumerable<TK> _data;
 
         private TK _selectedItem;
@@ -30,7 +39,7 @@ namespace Arma3BE.Client.Infrastructure.Models
             set
             {
                 _waitingForEvent = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -40,29 +49,24 @@ namespace Arma3BE.Client.Infrastructure.Models
             set
             {
                 _selectedItem = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
-        public ObservableCollection<TK> Data
-        {
-            get { return FilteredData; }
-        }
+        public ObservableCollection<TK> Data => FilteredData;
 
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public string Filter { get; set; }
 
-        public int DataCount
-        {
-            get { return Data?.Count ?? 0; }
-        }
+        public int DataCount => Data?.Count ?? 0;
 
         public ICommand RefreshCommand { get; }
 
         public ICommand FilterCommand { get; private set; }
 
-        public virtual void SetData(IEnumerable<T> initialData)
+        public virtual async Task SetDataAsync(IEnumerable<T> initialData)
         {
-            _data = RegisterData(initialData);
+            _data = await RegisterDataAsync(initialData);
 
             UpdateData();
         }
@@ -72,8 +76,19 @@ namespace Arma3BE.Client.Infrastructure.Models
             var newData = FilterData(_data).ToArray();
             UpdateFilteredData(newData);
 
-            OnPropertyChanged(nameof(Data));
-            OnPropertyChanged(nameof(DataCount));
+            RaisePropertyChanged(nameof(Data));
+            RaisePropertyChanged(nameof(DataCount));
+        }
+
+
+        protected virtual void UpdateExisting(TK old, TK @new)
+        {
+            var props = typeof(TK).GetProperties().Where(x => x.SetMethod != null && x.GetMethod != null);
+            foreach (var prop in props)
+            {
+                var value = prop.GetValue(@new);
+                prop.SetValue(old, value);
+            }
         }
 
         private void UpdateFilteredData(TK[] newData)
@@ -91,6 +106,15 @@ namespace Arma3BE.Client.Infrastructure.Models
                 var todelete = exists.Where(x => newData.All(n => _comparer.Equals(n, x) == false)).ToArray();
                 var toAdd = newData.Where(x => exists.All(n => _comparer.Equals(n, x) == false)).ToArray();
 
+                foreach (var dataItem in exists)
+                {
+                    var newItem = newData.FirstOrDefault(x => _comparer.Equals(dataItem, x));
+                    if (newItem != null)
+                    {
+                        UpdateExisting(dataItem, newItem);
+                    }
+                }
+
                 foreach (var d in todelete)
                 {
                     FilteredData.Remove(d);
@@ -107,7 +131,7 @@ namespace Arma3BE.Client.Infrastructure.Models
             }
         }
 
-        protected abstract IEnumerable<TK> RegisterData(IEnumerable<T> initialData);
+        protected abstract Task<IEnumerable<TK>> RegisterDataAsync(IEnumerable<T> initialData);
 
         protected virtual ObservableCollection<TK> FilterData(IEnumerable<TK> initialData)
         {

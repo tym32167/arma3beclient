@@ -22,7 +22,7 @@ namespace Arma3BE.Client.Modules.BanModule
 
         }
 
-        public void ShowBanDialog(Guid? serverId, string playerGuid, bool isOnline, string playerName,
+        private void ShowBanDialog(Guid? serverId, string playerGuid, bool isOnline, string playerName,
             string playerNum)
         {
 
@@ -59,7 +59,7 @@ namespace Arma3BE.Client.Modules.BanModule
             //}
         }
 
-        public void ShowKickDialog(Guid serverId, int playerNum, string playerGuid, string playerName)
+        private void ShowKickDialog(Guid serverId, int playerNum, string playerGuid, string playerName)
         {
             var w = _container.Resolve<KickPlayerWindow>(
                 new ParameterOverride("serverId", serverId),

@@ -1,4 +1,6 @@
 ﻿using System;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Arma3BEClient.Steam
 {
@@ -13,21 +15,22 @@ namespace Arma3BEClient.Steam
         {
             var parser = new ResponseParser(data);
             parser.CurrentPosition += 5; //Header
-            var result = new ServerPlayers();
+            var result = new ServerPlayers { PlayerCount = parser.GetByte() };
 
 
-            result.PlayerCount = parser.GetByte();
 
             result.Players = new PlayerInfo[result.PlayerCount];
 
             for (var i = 0; i < result.PlayerCount; i++)
             {
-                var p = new PlayerInfo();
+                var p = new PlayerInfo
+                {
+                    N = parser.GetByte(),
+                    Name = parser.GetStringToTermination(),
+                    Score = parser.GetLong(),
+                    Time = TimeSpan.FromSeconds(parser.GetDouble())
+                };
 
-                p.N = parser.GetByte();
-                p.Name = parser.GetStringToTermination();
-                p.Score = parser.GetLong();
-                p.Time = TimeSpan.FromSeconds(parser.GetDouble());
 
                 //parser.CurrentPosition+=4;
 

@@ -6,7 +6,7 @@ namespace Arma3BEClient.Common.Logging
 {
     public class Log : ILog
     {
-        private log4net.ILog _log;
+        private readonly log4net.ILog _log;
 
         public Log()
         {

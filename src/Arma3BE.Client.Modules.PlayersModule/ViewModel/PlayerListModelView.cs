@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Input;
-using Arma3BE.Client.Infrastructure.Commands;
+﻿using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Events.Models;
 using Arma3BE.Client.Infrastructure.Extensions;
@@ -10,15 +7,25 @@ using Arma3BE.Client.Modules.PlayersModule.Models;
 using Arma3BEClient.Libs.Repositories;
 using Prism.Commands;
 using Prism.Events;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable ExplicitCallerInfoArgument
+// ReSharper disable UnusedMember.Global
 
 namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class PlayerListModelView : ViewModelBase, ITitledItem
     {
         private readonly IEventAggregator _eventAggregator;
         private readonly IPlayerRepository _playerRepository;
         private int _playerCount;
         private ICommand _refreshCommand;
+        private bool _isBusy = false;
 
         public PlayerListModelView(IEventAggregator eventAggregator, IPlayerRepository playerRepository)
         {
@@ -35,6 +42,12 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
         public ICommand BanCommand { get; set; }
         public ICommand PlayerInfoCommand { get; set; }
 
+        public bool IsBusy
+        {
+            get { return _isBusy; }
+            set { SetProperty(ref _isBusy, value); }
+        }
+
 
         public string Filter { get; set; }
 
@@ -44,34 +57,26 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
             set
             {
                 _playerCount = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
-        public ICommand RefreshCommand
-        {
-            get { return _refreshCommand ?? (_refreshCommand = new ActionCommand(Refresh)); }
-        }
+        public ICommand RefreshCommand => _refreshCommand ?? (_refreshCommand = new ActionCommand(async () => await Refresh()));
 
         public List<PlayerView> Players { get; private set; } = new List<PlayerView>();
 
         public string SelectedOptions { get; set; }
 
-        public IEnumerable<string> SearchOptions
+        public IEnumerable<string> SearchOptions => new[]
         {
-            get
-            {
-                return new[]
-                {
-                    "Name",
-                    "Last Names",
-                    "IP",
-                    "Guid",
-                    "Notes",
-                    "Comment"
-                };
-            }
-        }
+            "Name",
+            "Last Names",
+            "IP",
+            "Guid",
+            "Notes",
+            "Comment",
+            nameof(PlayerView.SteamId)
+        };
 
         public static string StaticTitle = "Players";
         public string Title => StaticTitle;
@@ -96,57 +101,64 @@ namespace Arma3BE.Client.Modules.PlayersModule.ViewModel
                 _eventAggregator.GetEvent<ShowUserInfoEvent>().Publish(new ShowUserModel(local.Guid));
         }
 
-        public void Refresh()
+        public async Task Refresh()
         {
-            
-                var opts = SelectedOptions.Split(',');
+            IsBusy = true;
 
-                var searchName = opts.Contains("Name");
-                var searchLastNames = opts.Contains("Last Names");
-                var searchIP = opts.Contains("IP");
-                var searchGuid = opts.Contains("Guid");
-                var searchNotes = opts.Contains("Notes");
-                var searchComment = opts.Contains("Comment");
+            var opts = SelectedOptions.Split(',');
 
-                IEnumerable<PlayerDto> result;
+            var searchName = opts.Contains(nameof(PlayerView.Name));
+            var searchLastNames = opts.Contains("Last Names");
+            var searchIP = opts.Contains("IP");
+            var searchGuid = opts.Contains("Guid");
+            var searchNotes = opts.Contains("Notes");
+            var searchComment = opts.Contains(nameof(PlayerView.Comment));
+            var searchSteamId = opts.Contains(nameof(PlayerView.SteamId));
 
-                if (!string.IsNullOrEmpty(Filter))
-                    result = _playerRepository.GetPlayers(x =>
-                        (searchGuid && (x.GUID == Filter))
-                        ||
-                        (searchComment && x.Comment.Contains(Filter))
-                        ||
-                        (searchName && x.Name.Contains(Filter))
-                        ||
-                        (searchNotes && x.Notes.Any(y => y.Text.Contains(Filter)))
-                        ||
-                        (searchIP && x.LastIp.Contains(Filter))
-                        ||
-                        (searchLastNames && x.PlayerHistory.Any(y => y.Name.Contains(Filter))));
-                else
-                    result = _playerRepository.GetAllPlayers();
+            IEnumerable<PlayerDto> result;
 
-                var r = result.Select(x => new PlayerView
-                {
-                    Id = x.Id,
-                    Comment = x.Comment,
-                    Guid = x.GUID,
-                    Name = x.Name,
-                    LastIp = x.LastIp,
-                    LastSeen = x.LastSeen
-                }).OrderBy(x => x.Name).ToList();
+            if (!string.IsNullOrEmpty(Filter))
+                result = await _playerRepository.GetPlayersAsync(x =>
+                    (searchGuid && (x.GUID == Filter))
+                    ||
+                    (searchComment && x.Comment.Contains(Filter))
+                    ||
+                    (searchName && x.Name.Contains(Filter))
+                    ||
+                    (searchNotes && x.Notes.Any(y => y.Text.Contains(Filter)))
+                    ||
+                    (searchIP && x.LastIp.Contains(Filter))
+                    ||
+                    (searchSteamId && x.SteamId.Contains(Filter))
+                    ||
+                    (searchLastNames && x.PlayerHistory.Any(y => y.Name.Contains(Filter))));
+            else
+                result = await _playerRepository.GetAllPlayersAsync();
 
-                foreach (var playerView in r)
-                {
-                    playerView.LastSeen = playerView.LastSeen.UtcToLocalFromSettings();
-                }
+            var r = result.Select(x => new PlayerView
+            {
+                Id = x.Id,
+                Comment = x.Comment,
+                Guid = x.GUID,
+                Name = x.Name,
+                LastIp = x.LastIp,
+                LastSeen = x.LastSeen,
+                SteamId = x.SteamId
+            }).OrderBy(x => x.Name).ToList();
 
-                PlayerCount = r.Count;
+            foreach (var playerView in r)
+            {
+                playerView.LastSeen = playerView.LastSeen.UtcToLocalFromSettings();
+            }
 
-                Players = r;
-         
+            PlayerCount = r.Count;
 
-            OnPropertyChanged(nameof(Players));
+            Players = r;
+
+
+            RaisePropertyChanged(nameof(Players));
+
+            IsBusy = false;
         }
     }
 }

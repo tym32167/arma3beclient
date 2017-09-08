@@ -14,6 +14,7 @@
         Shutdown,
         Reassign,
         Restart,
+        RestartServer,
         Lock,
         Unlock,
         Mission,

@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <!-- ReSharper disable InconsistentNaming -->
   <BitmapImage  x:Key="refresh_icon" UriSource="/Arma3BE.Client.Styles;component/Icons/refresh.ico"></BitmapImage>
   <BitmapImage  x:Key="main_icon" UriSource="/Arma3BE.Client.Styles;component/Icons/main.ico"></BitmapImage>
   <BitmapImage  x:Key="add_icon_icon" UriSource="/Arma3BE.Client.Styles;component/Icons/add.ico"></BitmapImage>
@@ -13,5 +14,5 @@
   <BitmapImage  x:Key="site_logo_image" UriSource="/Arma3BE.Client.Styles;component/Icons/site_logo.png"></BitmapImage>
   <BitmapImage  x:Key="tehgam_image" UriSource="/Arma3BE.Client.Styles;component/Icons/tehgam.jpg"></BitmapImage>
   <BitmapImage  x:Key="bg_header_image" UriSource="/Arma3BE.Client.Styles;component/Icons/bg_header.jpg"></BitmapImage>
-
+    <!-- ReSharper restore InconsistentNaming -->
 </ResourceDictionary>

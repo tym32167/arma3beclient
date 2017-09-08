@@ -7,7 +7,7 @@ namespace Arma3BE.Client.Infrastructure.Events.BE
     {
         public LogMessage Message { get; }
 
-        public BELogMessage(LogMessage message, Guid serverId) : base(serverId)
+        protected BELogMessage(LogMessage message, Guid serverId) : base(serverId)
         {
             Message = message;
         }

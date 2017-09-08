@@ -3,9 +3,11 @@ using BattleNET;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+// ReSharper disable UnusedMember.Local
 
 namespace Arma3BE.Server.Mocks
 {
+    // ReSharper disable once UnusedMember.Global
     public class MockBattleEyeServer : IBattlEyeServer
     {
         private Timer _timer;
@@ -90,6 +92,16 @@ namespace Arma3BE.Server.Mocks
             return 0;
         }
 
+        public int SendCommand(string command)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                MockMessage($"(Global) bot: Sended command {command}");
+            });
+
+            return 0;
+        }
+
         public void Disconnect()
         {
             Task.Delay(TimeSpan.FromSeconds(2)).ContinueWith(t =>
@@ -114,17 +126,14 @@ namespace Arma3BE.Server.Mocks
             return BattlEyeConnectionResult.Success;
         }
 
-        private static string ChatMessage
-        {
-            get { return $"(Global) bot: Текущее время {DateTime.UtcNow}"; }
-        }
+        private static string ChatMessage => $"(Global) bot: Текущее время {DateTime.UtcNow}";
 
 
-        private static string prev = null;
+        private static string _prev;
         static string GetPlayers()
         {
-            prev = prev == players2 ? players : players2;
-            return prev;
+            _prev = _prev == players2 ? players : players2;
+            return _prev;
         }
 
 

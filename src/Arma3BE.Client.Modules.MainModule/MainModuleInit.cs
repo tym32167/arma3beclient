@@ -6,6 +6,7 @@ using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
 using Prism.Modularity;
 using Prism.Regions;
+using System.Configuration;
 using Xceed.Wpf.AvalonDock;
 
 namespace Arma3BE.Client.Modules.MainModule
@@ -13,6 +14,7 @@ namespace Arma3BE.Client.Modules.MainModule
     public class MainModuleInit : IModule
     {
         private readonly IRegionManager _regionManager;
+        private const string DebugServerKey = "DebugServerEnabled";
 
         public MainModuleInit(IUnityContainer container, IRegionManager regionManager)
         {
@@ -22,7 +24,8 @@ namespace Arma3BE.Client.Modules.MainModule
             container1.RegisterType<MainViewModel>();
             container1.RegisterType<MainWindow>();
 
-            container1.RegisterType<IBattlEyeServerFactory, WatcherBEServerFactory>();
+            if (ConfigurationManager.AppSettings[DebugServerKey] != bool.TrueString)
+                container1.RegisterType<IBattlEyeServerFactory, WatcherBEServerFactory>();
         }
 
         public void Initialize()

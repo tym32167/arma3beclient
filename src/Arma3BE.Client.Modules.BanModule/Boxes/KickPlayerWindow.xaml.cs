@@ -3,6 +3,8 @@ using Arma3BE.Client.Infrastructure.Models;
 using Arma3BEClient.Libs.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Arma3BE.Client.Modules.BanModule.Boxes
@@ -10,13 +12,13 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
     /// <summary>
     ///     Interaction logic for KickPlayerWindow.xaml
     /// </summary>
+    // ReSharper disable once RedundantExtendsListEntry
     public partial class KickPlayerWindow : Window
     {
         private readonly IBanHelper _playerHelper;
         private readonly Guid _serverId;
         private readonly int _playerNum;
         private readonly string _playerGuid;
-        private readonly KickPlayerViewModel Model;
 
         public KickPlayerWindow(IBanHelper playerHelper, Guid serverId, int playerNum, string playerGuid, string playerName)
         {
@@ -26,14 +28,15 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             _playerGuid = playerGuid;
             InitializeComponent();
 
-            Model = new KickPlayerViewModel(playerName);
+            var model = new KickPlayerViewModel(playerName);
+            DataContext = model;
 
-            DataContext = Model;
+
         }
 
         private void KickClick(object sender, RoutedEventArgs e)
         {
-            _playerHelper.Kick(_serverId, _playerNum, _playerGuid, tbReason.Text);
+            _playerHelper.KickAsync(_serverId, _playerNum, _playerGuid, tbReason.Text);
             Close();
         }
 
@@ -44,6 +47,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
     }
 
 
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class KickPlayerViewModel : ViewModelBase
     {
         private string _reason;
@@ -51,8 +55,18 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
         public KickPlayerViewModel(string playerName)
         {
             PlayerName = playerName;
+
+            Init();
         }
 
+        private async void Init()
+        {
+            Reasons = await GerReasons();
+            RaisePropertyChanged(nameof(Reasons));
+        }
+
+        // ReSharper disable once MemberCanBePrivate.Global
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public string PlayerName { get; }
 
         public string Reason
@@ -61,26 +75,26 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             set
             {
                 _reason = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
-        public IEnumerable<string> Reasons
+        // ReSharper disable once UnusedMember.Global
+        public IEnumerable<string> Reasons { get; set; }
+
+        private async Task<IEnumerable<string>> GerReasons()
         {
-            get
+            try
             {
-                try
+                using (var repo = new ReasonRepository())
                 {
-                    using (var repo = new ReasonRepository())
-                    {
-                        var str = repo.GetKickReasons();
-                        return str;
-                    }
+                    var str = await repo.GetKickReasonsAsync();
+                    return str;
                 }
-                catch (Exception)
-                {
-                    return new[] { string.Empty };
-                }
+            }
+            catch (Exception)
+            {
+                return new[] { string.Empty };
             }
         }
     }

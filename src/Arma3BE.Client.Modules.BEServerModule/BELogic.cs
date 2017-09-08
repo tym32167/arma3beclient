@@ -1,9 +1,9 @@
 ﻿using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Server;
-using Arma3BEClient.Libs.ModelCompact;
 using Prism.Events;
 using System;
 using System.Threading.Tasks;
+using Arma3BEClient.Libs.Repositories;
 
 namespace Arma3BE.Client.Modules.BEServerModule
 {
@@ -21,6 +21,7 @@ namespace Arma3BE.Client.Modules.BEServerModule
         }
 
         public event EventHandler<ServerCommandEventArgs> ServerUpdateHandler;
+        public event EventHandler<ServerCommandEventArgs> ServerImmediateUpdateHandler;
 
         private void ProcessCommand(BECommand command)
         {
@@ -34,11 +35,11 @@ namespace Arma3BE.Client.Modules.BEServerModule
             }
         }
 
-        private void BeServerConnectHandler(ServerInfo info)
+        private void BeServerConnectHandler(ServerInfoDto info)
         {
-            OnServerUpdateHandler(new BECommand(info.Id, CommandType.Bans));
-            OnServerUpdateHandler(new BECommand(info.Id, CommandType.Players));
+            OnServerImmediateUpdateHandler(new BECommand(info.Id, CommandType.Players));
 
+            OnServerUpdateHandler(new BECommand(info.Id, CommandType.Bans));
             OnServerUpdateHandler(new BECommand(info.Id, CommandType.Missions));
             OnServerUpdateHandler(new BECommand(info.Id, CommandType.Admins));
         }
@@ -62,6 +63,11 @@ namespace Arma3BE.Client.Modules.BEServerModule
         private void OnServerUpdateHandler(BECommand command)
         {
             ServerUpdateHandler?.Invoke(this, new ServerCommandEventArgs(command));
+        }
+
+        private void OnServerImmediateUpdateHandler(BECommand command)
+        {
+            ServerImmediateUpdateHandler?.Invoke(this, new ServerCommandEventArgs(command));
         }
     }
 }

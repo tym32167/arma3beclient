@@ -1,10 +1,13 @@
 ﻿using Arma3BE.Client.Infrastructure;
 using Arma3BE.Client.Modules.MainModule.ViewModel;
-using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using Microsoft.Practices.Unity;
 using Prism.Regions;
+using System;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using Xceed.Wpf.AvalonDock.Controls;
 
@@ -19,19 +22,22 @@ namespace Arma3BE.Client.Modules.MainModule
         private readonly IUnityContainer _container;
         private readonly MainViewModel _model;
         private readonly IRegionManager _regionManager;
+        private readonly IServerInfoRepository _infoRepository;
 
-        public MainWindow(MainViewModel model, IUnityContainer container, IRegionManager regionManager)
+        public MainWindow(MainViewModel model, IUnityContainer container, IRegionManager regionManager,
+            IServerInfoRepository infoRepository)
         {
             InitializeComponent();
 
             _model = model;
             _container = container;
             _regionManager = regionManager;
+            _infoRepository = infoRepository;
 
             DataContext = _model;
         }
 
-        private void OpenServerInfo(ServerInfo serverInfo)
+        private async Task OpenServerInfoAsync(ServerInfoDto serverInfo)
         {
             var region = _regionManager.Regions[RegionNames.ServerTabRegion];
 
@@ -40,25 +46,24 @@ namespace Arma3BE.Client.Modules.MainModule
                 .Any(x => x?.CurrentServer.Id == serverInfo.Id))
                 return;
 
-
             var control =
                 _container.Resolve<ServerInfoControl>(
                     new ParameterOverride("currentServer", serverInfo).OnType<ServerMonitorModel>(),
                     new ParameterOverride("console", false).OnType<ServerMonitorModel>());
 
-            _model.Reload();
+            await _model.ReloadAsync();
 
             region.Add(control, null, true);
             region.Activate(control);
         }
 
-        private void ServerClick(object sender, RoutedEventArgs e)
+        private async void ServerClick(object sender, RoutedEventArgs e)
         {
             var orig = e.OriginalSource as FrameworkElement;
-            if (orig?.DataContext is ServerInfo)
+            if (orig?.DataContext is ServerInfoDto)
             {
-                var serverInfo = (ServerInfo)orig.DataContext;
-                OpenServerInfo(serverInfo);
+                var serverInfo = (ServerInfoDto)orig.DataContext;
+                await OpenServerInfoAsync(serverInfo);
             }
         }
 
@@ -68,15 +73,12 @@ namespace Arma3BE.Client.Modules.MainModule
             Application.Current.Shutdown();
         }
 
-        private void LoadedWindow(object sender, RoutedEventArgs e)
+        private async void LoadedWindow(object sender, RoutedEventArgs e)
         {
-            using (var r = new ServerInfoRepository())
+            var servers = await _infoRepository.GetActiveServerInfoAsync();
+            foreach (var server in servers)
             {
-                var servers = r.GetActiveServerInfo();
-                foreach (var server in servers)
-                {
-                    OpenServerInfo(server);
-                }
+                OpenServerInfoAsync(server);
             }
         }
 
@@ -85,6 +87,29 @@ namespace Arma3BE.Client.Modules.MainModule
             var window = new About();
             window.Owner = this.FindVisualAncestor<Window>();
             window.ShowDialog();
+        }
+
+
+        private void UpdateToLatestDevClick(object sender, RoutedEventArgs e)
+        {
+            var tempDirName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            if (Directory.Exists(tempDirName) == false) Directory.CreateDirectory(tempDirName);
+
+            var files = new[] { "Arma3BE.Client.Updater.exe", "Newtonsoft.Json.dll" };
+            var currentfile = System.Reflection.Assembly.GetEntryAssembly().Location;
+            var currentDir = Path.GetDirectoryName(currentfile);
+
+            foreach (var file in files)
+            {
+                var from = Path.Combine(currentDir, file);
+                var to = Path.Combine(tempDirName, file);
+
+                File.Copy(from, to);
+            }
+
+            var exec = Path.Combine(tempDirName, "Arma3BE.Client.Updater.exe");
+            Process.Start(exec, $"\"{currentDir}\" RESTART");
+            Environment.Exit(0);
         }
     }
 }

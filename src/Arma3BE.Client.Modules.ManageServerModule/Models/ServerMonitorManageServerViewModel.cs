@@ -8,6 +8,11 @@ using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using Arma3BEClient.Libs.Repositories;
+
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 
 namespace Arma3BE.Client.Modules.ManageServerModule.Models
 {
@@ -18,80 +23,87 @@ namespace Arma3BE.Client.Modules.ManageServerModule.Models
         private IEnumerable<Mission> _missions;
         private Mission _selectedMission;
 
-        public ServerMonitorManageServerViewModel(ServerInfo serverInfo, IEventAggregator eventAggregator)
+        public ServerMonitorManageServerViewModel(ServerInfoDto serverInfo, IEventAggregator eventAggregator)
         {
             _serverId = serverInfo.Id;
             _eventAggregator = eventAggregator;
 
             _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Mission>>>().Subscribe(e =>
             {
-                if (e.ServerId == this._serverId)
-                    this.Missions = e.Items;
+                if (e.ServerId == _serverId)
+                    Missions = e.Items;
             });
 
             SetMissionCommand = new ActionCommand(() =>
-            {
-                var m = SelectedMission;
-                if (m != null)
                 {
-                    var mn = m.Name;
-                    SendCommand(CommandType.Mission, mn);
-                }
-            },
+                    var m = SelectedMission;
+                    if (m != null)
+                    {
+                        var mn = m.Name;
+                        SendCommand(CommandType.Mission, mn);
+                    }
+                },
                 () => SelectedMission != null);
 
             RefreshCommand = new ActionCommand(() => SendCommand(CommandType.Missions));
 
             InitCommand = new ActionCommand(() =>
-           {
-               SendCommand(CommandType.Init);
-               MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
-           });
+            {
+                SendCommandWithConfirmation(CommandType.Init);
+            });
             ShutdownCommand = new ActionCommand(() =>
-           {
-               SendCommand(CommandType.Shutdown);
-               MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
-           });
+            {
+                SendCommandWithConfirmation(CommandType.Shutdown);
+            });
             ReassignCommand = new ActionCommand(() =>
-           {
-               SendCommand(CommandType.Reassign);
-               MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
-           });
+            {
+                SendCommandWithConfirmation(CommandType.Reassign);
+            });
             RestartCommand = new ActionCommand(() =>
-           {
-               SendCommand(CommandType.Restart);
-               MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
-           });
-            LockCommand = new ActionCommand(() =>
-           {
-               SendCommand(CommandType.Lock);
-               MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
-           });
-            UnlockCommand = new ActionCommand(() =>
-           {
-               SendCommand(CommandType.Unlock);
-               MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
-           });
+            {
+                SendCommandWithConfirmation(CommandType.Restart);
+            });
 
+            RestartServerCommand = new ActionCommand(() =>
+            {
+                SendCommandWithConfirmation(CommandType.RestartServer);
+            });
+
+            LockCommand = new ActionCommand(() =>
+            {
+                SendCommandWithConfirmation(CommandType.Lock);
+            });
+            UnlockCommand = new ActionCommand(() =>
+            {
+                SendCommandWithConfirmation(CommandType.Unlock);
+            });
 
             LoadBansCommand = new ActionCommand(() =>
-           {
-               SendCommand(CommandType.LoadBans);
-               MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
-           });
+            {
+                SendCommandWithConfirmation(CommandType.LoadBans);
+            });
             LoadScriptsCommand = new ActionCommand(() =>
-           {
-               SendCommand(CommandType.LoadScripts);
-               MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
-           });
+            {
+                SendCommandWithConfirmation(CommandType.LoadScripts);
+            });
             LoadEventsCommand = new ActionCommand(() =>
-           {
-               SendCommand(CommandType.LoadEvents);
-               MessageBox.Show("Executed", "Server command", MessageBoxButton.OK);
-           });
+            {
+                SendCommandWithConfirmation(CommandType.LoadEvents);
+            });
         }
 
-        public string Title { get { return "Manage Server"; } }
+
+        private void SendCommandWithConfirmation(CommandType command)
+        {
+            if (MessageBox.Show(Application.Current.MainWindow, "Are you sure?", command.ToString(),
+                       MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                SendCommand(command);
+                MessageBox.Show("Executed " + command, "Server command", MessageBoxButton.OK);
+            }
+        }
+
+        public string Title => "Manage Server";
 
         public Mission SelectedMission
         {
@@ -99,7 +111,7 @@ namespace Arma3BE.Client.Modules.ManageServerModule.Models
             set
             {
                 _selectedMission = value;
-                OnPropertyChanged("SelectedMission");
+                RaisePropertyChanged();
                 SetMissionCommand.RaiseCanExecuteChanged();
             }
         }
@@ -110,7 +122,7 @@ namespace Arma3BE.Client.Modules.ManageServerModule.Models
             set
             {
                 _missions = value;
-                OnPropertyChanged("Missions");
+                RaisePropertyChanged();
             }
         }
 
@@ -120,6 +132,7 @@ namespace Arma3BE.Client.Modules.ManageServerModule.Models
         public ActionCommand ShutdownCommand { get; set; }
         public ActionCommand ReassignCommand { get; set; }
         public ActionCommand RestartCommand { get; set; }
+        public ActionCommand RestartServerCommand { get; set; }
         public ActionCommand LockCommand { get; set; }
         public ActionCommand UnlockCommand { get; set; }
         public ActionCommand LoadBansCommand { get; set; }

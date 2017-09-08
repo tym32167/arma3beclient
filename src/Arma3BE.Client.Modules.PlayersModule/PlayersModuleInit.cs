@@ -1,14 +1,12 @@
-﻿using System.Linq;
-using System.Windows.Controls;
-using Arma3BE.Client.Infrastructure;
-using Arma3BE.Client.Infrastructure.Helpers;
+﻿using Arma3BE.Client.Infrastructure;
 using Arma3BE.Client.Modules.PlayersModule.Grids;
 using Arma3BE.Client.Modules.PlayersModule.ViewModel;
-using Arma3BEClient.Libs.ModelCompact;
 using Microsoft.Practices.Unity;
 using Prism.Commands;
 using Prism.Modularity;
 using Prism.Regions;
+using System.Linq;
+using System.Windows.Controls;
 
 namespace Arma3BE.Client.Modules.PlayersModule
 {
@@ -46,7 +44,5 @@ namespace Arma3BE.Client.Modules.PlayersModule
                 Header = PlayerListModelView.StaticTitle
             };
         }
-
-        public static IUnityContainer Current => _container;
     }
 }

@@ -11,6 +11,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
     /// <summary>
     ///     Interaction logic for ChatControl.xaml
     /// </summary>
+    // ReSharper disable once RedundantExtendsListEntry
     public partial class ChatControl : UserControl
     {
         public ChatControl()
@@ -44,6 +45,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
             }
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public void AppendText(TextBox block, ScrollViewer scroll, MessageBase message)
         {
             var text = $"[ {message.Date.UtcToLocalFromSettings():HH:mm:ss} ]  {message.Message}\n";

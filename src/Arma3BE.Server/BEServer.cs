@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+
 namespace Arma3BE.Server
 {
     public sealed class BEServer : DisposeObject, IBEServer
@@ -33,12 +35,10 @@ namespace Arma3BE.Server
             InitClients();
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public bool Disposed { get; set; }
 
-        public bool Connected
-        {
-            get { return _battlEyeServer != null && _battlEyeServer.Connected; }
-        }
+        public bool Connected => _battlEyeServer != null && _battlEyeServer.Connected;
 
         public event EventHandler<BEClientEventArgs<IEnumerable<Player>>> PlayerHandler;
         public event EventHandler<BEClientEventArgs<IEnumerable<Ban>>> BanHandler;
@@ -56,6 +56,13 @@ namespace Arma3BE.Server
         public event EventHandler ConnectingHandler;
         public event EventHandler DisconnectHandler;
         public event EventHandler MessageHandler;
+
+
+        public void SendCommand(string command)
+        {
+            _log.Info($"SERVER: {_host}:{_port} - TRY TO RCON CUSTOM COMMAND {command}");
+            _battlEyeServer.SendCommand(command);
+        }
 
         public void SendCommand(CommandType type, string parameters = null)
         {
@@ -130,6 +137,12 @@ namespace Arma3BE.Server
                     _battlEyeServer.SendCommand(BattlEyeCommand.Restart);
                     break;
 
+
+                case CommandType.RestartServer:
+                    _battlEyeServer.SendCommand("#restartserver");
+                    break;
+
+
                 case CommandType.Lock:
                     _battlEyeServer.SendCommand(BattlEyeCommand.Lock);
                     break;
@@ -171,12 +184,6 @@ namespace Arma3BE.Server
         {
             var handler = MissionHandler;
             handler?.Invoke(this, new BEClientEventArgs<IEnumerable<Mission>>(e));
-        }
-
-        private void OnConnectingHandler()
-        {
-            var handler = ConnectingHandler;
-            handler?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnBanLog(LogMessage message)
@@ -336,9 +343,14 @@ namespace Arma3BE.Server
             RegisterMessage(message);
         }
 
-
+        // ReSharper disable once UnusedParameter.Local
         private void RegisterMessage(ServerMessage message)
         {
+            if (message.Type == ServerMessageType.Unknown)
+            {
+                _log.Info(
+                    $"UNKNOWN MESSAGE: message [\nserver ip: {_host}\nmessageId:{message.MessageId}\n{message.Message}\n]");
+            }
             // _log.Info($"message [\nserver ip: {_host}\nmessageId:{message.MessageId}\n{message.Message}\n]");
         }
 

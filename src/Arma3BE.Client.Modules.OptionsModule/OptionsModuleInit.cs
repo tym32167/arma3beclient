@@ -3,6 +3,7 @@ using Microsoft.Practices.Unity;
 using Prism.Events;
 using Prism.Modularity;
 using System.Windows;
+// ReSharper disable PrivateFieldCanBeConvertedToLocalVariable
 
 namespace Arma3BE.Client.Modules.OptionsModule
 {

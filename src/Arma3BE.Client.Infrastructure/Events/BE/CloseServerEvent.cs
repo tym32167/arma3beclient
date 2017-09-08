@@ -1,25 +1,25 @@
-﻿using Arma3BEClient.Libs.ModelCompact;
+﻿using Arma3BEClient.Libs.Repositories;
 using Prism.Events;
 
 namespace Arma3BE.Client.Infrastructure.Events.BE
 {
-    public class CloseServerEvent : PubSubEvent<ServerInfo>
+    public class CloseServerEvent : PubSubEvent<ServerInfoDto>
     {
 
     }
 
 
-    public class ConnectServerEvent : PubSubEvent<ServerInfo>
+    public class ConnectServerEvent : PubSubEvent<ServerInfoDto>
     {
 
     }
 
-    public class DisConnectServerEvent : PubSubEvent<ServerInfo>
+    public class DisConnectServerEvent : PubSubEvent<ServerInfoDto>
     {
 
     }
 
-    public class ConnectingServerEvent : PubSubEvent<ServerInfo>
+    public class ConnectingServerEvent : PubSubEvent<ServerInfoDto>
     {
 
     }

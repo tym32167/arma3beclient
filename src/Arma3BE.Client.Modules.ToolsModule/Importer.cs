@@ -22,7 +22,7 @@ namespace Arma3BE.Client.Modules.ToolsModule
             _playerRepository = playerRepository;
         }
 
-        private ImportResult Import(string fname)
+        private async Task<ImportResult> Import(string fname)
         {
             var sw = Stopwatch.StartNew();
             _log.Info("Import started");
@@ -38,7 +38,7 @@ namespace Arma3BE.Client.Modules.ToolsModule
 
 
             var db =
-                _playerRepository.GetAllPlayers()
+               (await _playerRepository.GetAllPlayersAsync().ConfigureAwait(false))
                     .GroupBy(x => x.GUID)
                     .Select(x => x.OrderByDescending(y => y.Name).First())
                     .ToDictionary(x => x.GUID);
@@ -84,7 +84,7 @@ namespace Arma3BE.Client.Modules.ToolsModule
             result.Added = toadd.Count;
             result.Updated = toUpdate.Count;
 
-            _playerRepository.ImportPlayers(toadd, toUpdate);
+            await _playerRepository.ImportPlayersAsync(toadd, toUpdate);
 
             sw.Stop();
             _log.Info($"Import takes {sw.ElapsedMilliseconds} ms. Added {result.Added}, updated {result.Updated}");
@@ -104,7 +104,7 @@ namespace Arma3BE.Client.Modules.ToolsModule
 
             if (res.HasValue && res.Value)
             {
-                var result = await Task.Run(() => Import(ofd.FileName));
+                var result = await Import(ofd.FileName);
                 MessageBox.Show($"Import finished! Added {result.Added}, updated {result.Updated}");
             }
         }

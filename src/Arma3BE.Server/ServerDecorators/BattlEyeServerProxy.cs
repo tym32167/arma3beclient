@@ -16,6 +16,8 @@ namespace Arma3BE.Server.ServerDecorators
             _battlEyeClient = client;
             _serverName = serverName;
 
+            _battlEyeClient.ReconnectOnPacketLoss = true;
+
             _battlEyeClient.BattlEyeConnected += OnBattlEyeConnected;
             _battlEyeClient.BattlEyeMessageReceived += OnBattlEyeMessageReceived;
             _battlEyeClient.BattlEyeDisconnected += OnBattlEyeDisconnected;
@@ -74,25 +76,24 @@ namespace Arma3BE.Server.ServerDecorators
             return _battlEyeClient.SendCommand(command, parameters);
         }
 
-        private object _lock = new object();
+        public int SendCommand(string command)
+        {
+            _log.Info($"{_serverName}: Send {command}");
+            return _battlEyeClient.SendCommand(command);
+        }
 
         protected override void DisposeManagedResources()
         {
             _log.Info($"{_serverName}: Dispose");
-            if (_battlEyeClient != null)
+            var local = _battlEyeClient;
+            _battlEyeClient = null;
+            if (local != null)
             {
-                lock (_lock)
-                {
-                    if (_battlEyeClient != null)
-                    {
-                        _battlEyeClient.BattlEyeConnected -= OnBattlEyeConnected;
-                        _battlEyeClient.BattlEyeMessageReceived -= OnBattlEyeMessageReceived;
-                        _battlEyeClient.BattlEyeDisconnected -= OnBattlEyeDisconnected;
+                local.BattlEyeConnected -= OnBattlEyeConnected;
+                local.BattlEyeMessageReceived -= OnBattlEyeMessageReceived;
+                local.BattlEyeDisconnected -= OnBattlEyeDisconnected;
 
-                        if (_battlEyeClient.Connected) _battlEyeClient.Disconnect();
-                        _battlEyeClient = null;
-                    }
-                }
+                if (local.Connected) local.Disconnect();
             }
             base.DisposeManagedResources();
         }

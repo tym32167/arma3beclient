@@ -17,30 +17,33 @@
 
 
         <StackPanel Orientation="Vertical" Grid.Row="1" HorizontalAlignment="Left" Margin="5">
-            <!--<Button Content="Init" Command="{Binding InitCommand}" Height="40" Width="120"></Button>-->
-            <Button Content="Shutdown" Command="{Binding ShutdownCommand}" Height="40" Width="120" />
-            <!--<Button Content="Reassgn" Command="{Binding ReassignCommand}" Height="40" Width="120"></Button>-->
-            <Button Content="Restart" Command="{Binding RestartCommand}" Height="40" Width="120" />
             <Button Content="Lock" Command="{Binding LockCommand}" Height="40" Width="120" />
             <Button Content="Unlock" Command="{Binding UnlockCommand}" Height="40" Width="120" />
+            <Button Content="Shutdown" Command="{Binding ShutdownCommand}" Height="40" Width="120" />
+            <Button Content="Restart" Command="{Binding RestartCommand}" Height="40" Width="120" />
+            <Button Content="Restart Server" Command="{Binding RestartServerCommand}" Height="40" Width="120" />
         </StackPanel>
 
 
-        <!--<StackPanel Orientation="Vertical" Grid.Column="1">
+        <StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" Margin="5">
+            <Button Content="Init" Command="{Binding InitCommand}" Height="40" Width="120"></Button>
+            <Button Content="Reassign" Command="{Binding ReassignCommand}" Height="40" Width="120"></Button>
             <Button Content="Load bans" Command="{Binding LoadBansCommand}" Height="40" Width="120"></Button>
             <Button Content="Load scripts" Command="{Binding LoadScriptsCommand}" Height="40" Width="120"></Button>
             <Button Content="Load events" Command="{Binding LoadEventsCommand}" Height="40" Width="120"></Button>
-        </StackPanel>-->
+        </StackPanel>
 
 
-        <StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Left">
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Left">
             <Button Command="{Binding RefreshCommand}">
+                <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
                 <Image x:Uid="Image_1" Source="{StaticResource refresh_icon}" Height="16" Width="16" />
             </Button>
             <ComboBox ItemsSource="{Binding Missions, Mode=OneWay}" Width="300"
                       SelectedItem="{Binding SelectedMission, Mode=TwoWay}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
+                        <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
                         <TextBlock Text="{Binding Name, Mode=OneWay}" />
                     </DataTemplate>
                 </ComboBox.ItemTemplate>

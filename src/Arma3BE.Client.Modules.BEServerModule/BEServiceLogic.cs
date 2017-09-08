@@ -24,6 +24,9 @@ namespace Arma3BE.Client.Modules.BEServerModule
         private readonly TimedAction _playersUpdater;
         private readonly TimedAction _bansUpdater;
 
+        private readonly TimedAction _adminsUpdater;
+        private readonly TimedAction _missionsUpdater;
+
         public BEServiceLogic(IEventAggregator aggregator, IBEService beService, ISettingsStoreSource settingsStoreSource, IBELogic beLogic)
         {
             _aggregator = aggregator;
@@ -34,11 +37,23 @@ namespace Arma3BE.Client.Modules.BEServerModule
             _playersUpdater = new TimedAction(_settingsStoreSource.GetSettingsStore().PlayersUpdateSeconds, UpdatePlayers);
             _bansUpdater = new TimedAction(_settingsStoreSource.GetSettingsStore().BansUpdateSeconds, UpdateBans);
 
+            _adminsUpdater = new TimedAction(3, UpdateAdmins);
+            _missionsUpdater = new TimedAction(4, UpdateMissions);
+
+
             _aggregator.GetEvent<SettingsChangedEvent>()
                 .Subscribe(SettingsChanged);
 
 
             _beLogic.ServerUpdateHandler += _beLogic_ServerUpdateHandler;
+            _beLogic.ServerImmediateUpdateHandler += _beLogic_ServerImmediateUpdateHandler;
+
+        }
+
+        private void _beLogic_ServerImmediateUpdateHandler(object sender, ServerCommandEventArgs e)
+        {
+            _aggregator.GetEvent<BEMessageEvent<BECommand>>()
+                       .Publish(e.Command);
         }
 
         private void _beLogic_ServerUpdateHandler(object sender, ServerCommandEventArgs e)
@@ -51,6 +66,14 @@ namespace Arma3BE.Client.Modules.BEServerModule
                 case CommandType.Bans:
                     _bansUpdater.Update(e.Command.ServerId);
                     break;
+
+                case CommandType.Admins:
+                    _adminsUpdater.Update(e.Command.ServerId);
+                    break;
+                case CommandType.Missions:
+                    _missionsUpdater.Update(e.Command.ServerId);
+                    break;
+
                 default:
                     _aggregator.GetEvent<BEMessageEvent<BECommand>>()
                         .Publish(e.Command);
@@ -88,6 +111,32 @@ namespace Arma3BE.Client.Modules.BEServerModule
             }
         }
 
+
+        private void UpdateAdmins(HashSet<Guid> servers)
+        {
+            foreach (var server in _beService.ConnectedServers())
+            {
+                if (servers.Contains(server))
+                {
+                    _aggregator.GetEvent<BEMessageEvent<BECommand>>()
+                        .Publish(new BECommand(server, CommandType.Admins));
+                }
+            }
+        }
+
+        private void UpdateMissions(HashSet<Guid> servers)
+        {
+            foreach (var server in _beService.ConnectedServers())
+            {
+                if (servers.Contains(server))
+                {
+                    _aggregator.GetEvent<BEMessageEvent<BECommand>>()
+                        .Publish(new BECommand(server, CommandType.Missions));
+                }
+            }
+        }
+
+
         protected override void DisposeManagedResources()
         {
             base.DisposeManagedResources();
@@ -106,7 +155,7 @@ namespace Arma3BE.Client.Modules.BEServerModule
 
         private Timer _timer;
 
-        private ConcurrentDictionary<Guid, byte> _servers = new ConcurrentDictionary<Guid, byte>();
+        private readonly ConcurrentDictionary<Guid, byte> _servers = new ConcurrentDictionary<Guid, byte>();
 
         public TimedAction(int interval, Action<HashSet<Guid>> action)
         {

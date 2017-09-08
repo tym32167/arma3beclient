@@ -1,54 +1,53 @@
 using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Models;
-using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using Prism.Commands;
 using Prism.Events;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable ExplicitCallerInfoArgument
 
 namespace Arma3BE.Client.Modules.MainModule.ViewModel
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class MainViewModel : ViewModelBase
     {
-        private readonly IEventAggregator _eventAggregator;
+        private readonly IServerInfoRepository _infoRepository;
 
-        public MainViewModel(IEventAggregator eventAggregator)
+        public MainViewModel(IEventAggregator eventAggregator, IServerInfoRepository infoRepository)
         {
-            _eventAggregator = eventAggregator;
-            InitServers();
+            _infoRepository = infoRepository;
+            ReloadAsync();
 
             OptionsCommand = new DelegateCommand(() =>
             {
-                _eventAggregator.GetEvent<ShowOptionsEvent>().Publish(null);
+                eventAggregator.GetEvent<ShowOptionsEvent>().Publish(new ShowOptionsEvent());
             });
 
-            _eventAggregator.GetEvent<BEServersChangedEvent>().Subscribe((state) =>
+            eventAggregator.GetEvent<BEServersChangedEvent>().Subscribe(async (state) =>
             {
-                Reload();
+                await ReloadAsync();
             });
         }
 
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public ICommand OptionsCommand { get; set; }
 
-        public List<ServerInfo> Servers
+        // ReSharper disable once MemberCanBeMadeStatic.Global
+        public List<ServerInfoDto> Servers
         {
-            get
-            {
-                using (var repo = new ServerInfoRepository())
-                    return repo.GetNotActiveServerInfo().OrderBy(x => x.Name).ToList();
-            }
+            // ReSharper disable once UnusedMember.Global
+            get;
+            set;
         }
 
-        private void InitServers()
+        public async Task ReloadAsync()
         {
-            Reload();
-        }
-
-        public void Reload()
-        {
-            OnPropertyChanged(nameof(Servers));
+            Servers = (await _infoRepository.GetNotActiveServerInfoAsync()).OrderBy(x => x.Name).ToList();
+            RaisePropertyChanged(nameof(Servers));
         }
     }
 }

@@ -3,6 +3,7 @@ using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Modules.BanModule.Grids;
 using Arma3BE.Client.Modules.BanModule.Models;
 using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Repositories;
 using Microsoft.Practices.Unity;
 using Prism.Events;
 using Prism.Modularity;
@@ -29,7 +30,7 @@ namespace Arma3BE.Client.Modules.BanModule
 
         private object CreateView()
         {
-            return ServerTabViewHelper.RegisterView<BansControl, ServerInfo, ServerMonitorBansViewModel>(_container,
+            return ServerTabViewHelper.RegisterView<BansControl, ServerInfoDto, ServerMonitorBansViewModel>(_container,
                 "serverInfo");
         }
     }

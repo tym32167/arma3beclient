@@ -1,10 +1,17 @@
+using Arma3BEClient.Common.Attributes;
+using Arma3BEClient.Libs.Tools;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
-using Arma3BEClient.Common.Attributes;
-using Arma3BEClient.Libs.Tools;
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable MemberCanBeProtected.Global
+// ReSharper disable VirtualMemberCallInConstructor
+// ReSharper disable MemberHidesStaticFromOuterClass
 
 namespace Arma3BEClient.Libs.Context
 {

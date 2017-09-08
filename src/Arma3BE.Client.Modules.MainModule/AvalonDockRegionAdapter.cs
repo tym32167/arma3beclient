@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Xceed.Wpf.AvalonDock;
 using Xceed.Wpf.AvalonDock.Layout;
+// ReSharper disable PossibleInvalidCastExceptionInForeachLoop
 
 namespace Arma3BE.Client.Modules.MainModule
 {
@@ -37,7 +38,7 @@ namespace Arma3BE.Client.Modules.MainModule
             region.Views.CollectionChanged += delegate (
                 object sender, NotifyCollectionChangedEventArgs e)
             {
-                OnViewsCollectionChanged(sender, e, region, regionTarget);
+                OnViewsCollectionChanged(sender, e, regionTarget);
             };
 
             regionTarget.DocumentClosed += delegate (
@@ -57,9 +58,9 @@ namespace Arma3BE.Client.Modules.MainModule
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The event.</param>
-        /// <param name="region">The region.</param>
         /// <param name="regionTarget">The region target.</param>
-        void OnViewsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e, IRegion region, DockingManager regionTarget)
+        // ReSharper disable once UnusedParameter.Local
+        async void OnViewsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e, DockingManager regionTarget)
         {
             if (e.Action == NotifyCollectionChangedAction.Remove)
             {
@@ -99,12 +100,12 @@ namespace Arma3BE.Client.Modules.MainModule
                         {
                             //All my viewmodels have properties DisplayName and IconKey
                             newLayoutDocument.Title = viewModel.CurrentServer.Name;
-                            viewModel.OpenServer();
+                            await viewModel.OpenServerAsync();
                             newLayoutDocument.Closed += (s, a) =>
                             {
-                                Task.Factory.StartNew(() =>
+                                Task.Factory.StartNew(async () =>
                                 {
-                                    viewModel.CloseServer();
+                                    await viewModel.CloseServerAsync();
                                     viewModel.Cleanup();
                                 });
                             };
@@ -169,6 +170,7 @@ namespace Arma3BE.Client.Modules.MainModule
         /// <param name="sender">The sender</param>
         /// <param name="e">The event.</param>
         /// <param name="region">The region.</param>
+        // ReSharper disable once UnusedParameter.Local
         void OnDocumentClosedEventArgs(object sender, DocumentClosedEventArgs e, IRegion region)
         {
             region.Remove(e.Document.Content);

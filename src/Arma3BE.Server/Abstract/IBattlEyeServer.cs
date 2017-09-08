@@ -1,5 +1,5 @@
-﻿using System;
-using BattleNET;
+﻿using BattleNET;
+using System;
 
 namespace Arma3BE.Server.Abstract
 {
@@ -7,6 +7,7 @@ namespace Arma3BE.Server.Abstract
     {
         bool Connected { get; }
         int SendCommand(BattlEyeCommand command, string parameters = "");
+        int SendCommand(string command);
         void Disconnect();
         event BattlEyeMessageEventHandler BattlEyeMessageReceived;
         event BattlEyeConnectEventHandler BattlEyeConnected;

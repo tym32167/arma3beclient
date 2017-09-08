@@ -7,6 +7,8 @@ namespace Arma3BE.Client.Modules.MainModule
     /// <summary>
     ///     Interaction logic for ServerInfoControl.xaml
     /// </summary>
+    // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
+    // ReSharper disable once RedundantExtendsListEntry
     public partial class ServerInfoControl : UserControl, IDisposable
     {
         private bool _disposed;
@@ -32,6 +34,7 @@ namespace Arma3BE.Client.Modules.MainModule
             Cleanup();
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public void Cleanup()
         {
             Dispose();

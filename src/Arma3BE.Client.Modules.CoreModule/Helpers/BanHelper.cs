@@ -3,11 +3,14 @@ using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Infrastructure.Helpers.Views;
 using Arma3BE.Server;
 using Arma3BE.Server.Models;
+using Arma3BEClient.Common.Extensions;
+using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.Repositories;
 using Arma3BEClient.Libs.Tools;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -16,24 +19,27 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
 {
     public class BanHelper : StateHelper<Ban>, IBanHelper
     {
+        private readonly ILog _log = LogFactory.Create(new StackTrace().GetFrame(0).GetMethod().DeclaringType);
         private readonly IEventAggregator _eventAggregator;
         private readonly IPlayerRepository _playerRepository;
         private readonly ISettingsStoreSource _settingsStoreSource;
-        private readonly Regex replace = new Regex(@"\[[^\]^\[]*\]", RegexOptions.Compiled | RegexOptions.Multiline);
+        private readonly Regex _replace = new Regex(@"\[[^\]^\[]*\]", RegexOptions.Compiled | RegexOptions.Multiline);
+        private readonly MessageHelper _messageHelper;
 
         public BanHelper(IEventAggregator eventAggregator, IPlayerRepository playerRepository, ISettingsStoreSource settingsStoreSource)
         {
             _eventAggregator = eventAggregator;
             _playerRepository = playerRepository;
             _settingsStoreSource = settingsStoreSource;
+            _messageHelper = new MessageHelper();
         }
 
-        public void RegisterBans(IEnumerable<Ban> list, Guid currentServerId)
+        public Task RegisterBans(IEnumerable<Ban> list, Guid currentServerId)
         {
-            Task.Run(() => RegisterBansInternal(list, currentServerId));
+            return Task.Run(() => RegisterBansInternal(list, currentServerId));
         }
 
-        private bool RegisterBansInternal(IEnumerable<Ban> list, Guid currentServerId)
+        private async Task<bool> RegisterBansInternal(IEnumerable<Ban> list, Guid currentServerId)
         {
             var bans = list.ToList();
 
@@ -45,14 +51,14 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
             {
 
                 var db =
-                    banRepository.GetActiveBans(currentServerId);
+                    (await banRepository.GetActiveBansAsync(currentServerId)).ToArray();
 
                 var ids = bans.Select(x => x.GuidIp).ToList();
 
                 ids.AddRange(db.Select(x => x.GuidIp).ToList());
                 ids = ids.Distinct().ToList();
 
-                var players = _playerRepository.GetPlayers(ids.ToArray());
+                var players = (await _playerRepository.GetPlayersAsync(ids.ToArray())).ToArray();
 
                 var bansToUpdate = new List<Arma3BEClient.Libs.ModelCompact.Ban>();
                 var bansToAdd = new List<Arma3BEClient.Libs.ModelCompact.Ban>();
@@ -60,7 +66,7 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
 
                 foreach (var ban in db)
                 {
-                    bool needUpdate = false;
+                    var needUpdate = false;
 
                     var actual = bans.FirstOrDefault(x => x.GuidIp == ban.GuidIp);
                     if (actual == null)
@@ -131,7 +137,7 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
 
                         bansToAdd.Add(newBan);
 
-                        var comm = replace.Replace(ban.Reason, string.Empty).Trim();
+                        var comm = _replace.Replace(ban.Reason, string.Empty).Trim();
                         if (player != null &&
                             (string.IsNullOrEmpty(player.Comment) || !player.Comment.Contains(comm)))
                         {
@@ -145,42 +151,44 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
                     }
                 }
 
-                banRepository.AddOrUpdate(bansToAdd);
-                banRepository.AddOrUpdate(bansToUpdate);
-                _playerRepository.UpdateComment(playersToUpdateComments);
+                await banRepository.AddOrUpdateAsync(bansToAdd);
+                await banRepository.AddOrUpdateAsync(bansToUpdate);
+                await _playerRepository.UpdateCommentAsync(playersToUpdateComments);
             }
 
 
             return true;
         }
 
-        public IEnumerable<BanView> GetBanView(IEnumerable<Ban> list)
+        public async Task<IEnumerable<BanView>> GetBanViewAsync(IEnumerable<Ban> list)
         {
-
-            var bans = list as Ban[] ?? list.ToArray();
-            var guids = bans.Select(x => x.GuidIp).ToArray();
-            var players = _playerRepository.GetPlayers(guids);
-
-            return bans.Select(x =>
+            using (_log.Time("GetBanViewAsync"))
             {
-                var p = players.FirstOrDefault(y => y.GUID == x.GuidIp);
+                var bans = list as Ban[] ?? list.ToArray();
+                var guids = bans.Select(x => x.GuidIp).ToArray();
+                var players = await _playerRepository.GetPlayersAsync(guids);
 
-                var ban = new BanView
+                return bans.Select(x =>
                 {
-                    Num = x.Num,
-                    GuidIp = x.GuidIp,
-                    Reason = x.Reason,
-                    Minutesleft = x.Minutesleft
-                };
+                    var p = players.FirstOrDefault(y => y.GUID == x.GuidIp);
 
-                if (p != null)
-                {
-                    ban.PlayerComment = p.Comment;
-                    ban.PlayerName = p.Name;
-                }
-                return ban;
-            }).ToList();
+                    var ban = new BanView
+                    {
+                        Num = x.Num,
+                        GuidIp = x.GuidIp,
+                        Reason = x.Reason,
+                        Minutesleft = x.Minutesleft,
+                    };
 
+                    if (p != null)
+                    {
+                        ban.PlayerComment = p.Comment;
+                        ban.PlayerName = p.Name;
+                        ban.SteamId = p.SteamId;
+                    }
+                    return ban;
+                }).ToList();
+            }
         }
 
         private void SendCommand(Guid serverId, CommandType commandType, string parameters = null)
@@ -189,10 +197,10 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
                 .Publish(new BECommand(serverId, commandType, parameters));
         }
 
-        public void Kick(Guid serverId, int playerNum, string playerGuid, string reason, bool isAuto = false)
+
+        public async Task KickAsync(Guid serverId, int playerNum, string playerGuid, string reason, bool isAuto = false)
         {
-            var totalreason =
-                $"[{_settingsStoreSource.GetSettingsStore().AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
+            var totalreason = _messageHelper.GetKickMessage(_settingsStoreSource.GetSettingsStore(), reason);
 
             SendCommand(serverId, CommandType.Kick,
                 $"{playerNum} {totalreason}");
@@ -200,36 +208,32 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
             if (!isAuto)
             {
 
-                var user = _playerRepository.GetPlayer(playerGuid);
+                var user = await _playerRepository.GetPlayerAsync(playerGuid);
                 if (user != null)
                 {
-                    _playerRepository.AddNotes(user.Id, $"Kicked with reason: {totalreason}");
+                    await _playerRepository.AddNotesAsync(user.Id, $"Kicked with reason: {totalreason}");
                     user.Comment = $"{user.Comment} | {reason}";
-                    _playerRepository.UpdatePlayerComment(user.GUID, user.Comment);
+                    await _playerRepository.UpdatePlayerCommentAsync(user.GUID, user.Comment);
                 }
 
             }
         }
 
-        public void BanGUIDOffline(Guid serverId, string guid, string reason, long minutes, bool syncMode = false)
+        public async Task BanGUIDOfflineAsync(Guid serverId, string guid, string reason, long minutes, bool syncMode = false)
         {
             if (!syncMode)
             {
-                var totalreason =
-                    $"[{_settingsStoreSource.GetSettingsStore().AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
-
+                var totalreason = _messageHelper.GetBanMessage(_settingsStoreSource.GetSettingsStore(), reason, minutes);
 
                 SendCommand(serverId, CommandType.AddBan,
                     $"{guid} {minutes} {totalreason}");
 
-
-
-                var user = _playerRepository.GetPlayer(guid);
+                var user = await _playerRepository.GetPlayerAsync(guid);
                 if (user != null)
                 {
-                    _playerRepository.AddNotes(user.Id, $"Baned with reason: {totalreason}");
+                    await _playerRepository.AddNotesAsync(user.Id, $"Baned with reason: {totalreason}");
                     user.Comment = $"{user.Comment} | {reason}";
-                    _playerRepository.UpdatePlayerComment(user.GUID, user.Comment);
+                    await _playerRepository.UpdatePlayerCommentAsync(user.GUID, user.Comment);
                 }
 
 
@@ -243,19 +247,18 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
             }
         }
 
-        public void BanGUIDOffline(Guid serverId, BanView[] bans, bool syncMode = false)
+        public async Task BanGUIDOfflineAsync(Guid serverId, BanView[] bans, bool syncMode = false)
         {
             foreach (var ban in bans)
             {
-                BanGUIDOffline(serverId, ban.GuidIp, ban.Reason, ban.Minutesleft, syncMode);
+                await BanGUIDOfflineAsync(serverId, ban.GuidIp, ban.Reason, ban.Minutesleft, syncMode);
             }
 
         }
 
-        public async void BanGuidOnline(Guid serverId, string num, string guid, string reason, long minutes)
+        public async Task BanGuidOnlineAsync(Guid serverId, string num, string guid, string reason, long minutes)
         {
-            var totalreason =
-                $"[{_settingsStoreSource.GetSettingsStore().AdminName}][{DateTime.UtcNow.ToString("dd.MM.yy HH:mm:ss")}] {reason}";
+            var totalreason = _messageHelper.GetBanMessage(_settingsStoreSource.GetSettingsStore(), reason, minutes);
 
 
             SendCommand(serverId, CommandType.Ban,
@@ -263,12 +266,12 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
 
 
 
-            var user = _playerRepository.GetPlayer(guid);
+            var user = await _playerRepository.GetPlayerAsync(guid);
             if (user != null)
             {
-                _playerRepository.AddNotes(user.Id, $"Baned with reason: {totalreason}");
+                await _playerRepository.AddNotesAsync(user.Id, $"Baned with reason: {totalreason}");
                 user.Comment = $"{user.Comment} | {reason}";
-                _playerRepository.UpdatePlayerComment(user.GUID, user.Comment);
+                await _playerRepository.UpdatePlayerCommentAsync(user.GUID, user.Comment);
             }
 
         }

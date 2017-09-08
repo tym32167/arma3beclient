@@ -1,7 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using Arma3BE.Client.Modules.OptionsModule.ViewModel;
+using System;
 using System.Windows;
-using Arma3BE.Client.Modules.OptionsModule.ViewModel;
 using Xceed.Wpf.Toolkit;
 
 namespace Arma3BE.Client.Modules.OptionsModule
@@ -9,6 +8,7 @@ namespace Arma3BE.Client.Modules.OptionsModule
     /// <summary>
     ///     Interaction logic for Options.xaml
     /// </summary>
+    // ReSharper disable once RedundantExtendsListEntry
     public partial class Options : Window
     {
         private readonly OptionsModel _optionsModel;
@@ -39,22 +39,12 @@ namespace Arma3BE.Client.Modules.OptionsModule
             _optionsModel.Servers.Add(e.Item as ServerInfoModel);
         }
 
-        private void Save_Click(object sender, RoutedEventArgs e)
+        private async void Save_Click(object sender, RoutedEventArgs e)
         {
             BusyIndicator.IsBusy = true;
-            var t = Task.Factory.StartNew(() =>
-            {
-                _optionsModel.Save();
-            });
-
-            t.ContinueWith((p) =>
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    BusyIndicator.IsBusy = false;
-                    Close();
-                });
-            });
+            await _optionsModel.Save();
+            BusyIndicator.IsBusy = false;
+            Close();
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)

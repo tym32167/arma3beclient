@@ -4,7 +4,7 @@ using Arma3BE.Server;
 using Arma3BE.Server.Abstract;
 using Arma3BEClient.Common.Core;
 using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Repositories;
 using Microsoft.Practices.Unity;
 using Prism.Events;
 using System;
@@ -13,15 +13,18 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
+// ReSharper disable MemberCanBePrivate.Local
+
 namespace Arma3BE.Client.Modules.BEServerModule
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class BEService : IBEService
     {
         private readonly IUnityContainer _container;
         private readonly ILog _log = LogFactory.Create(new StackTrace().GetFrame(0).GetMethod().DeclaringType);
         private readonly IIpService _ipService;
         private readonly IEventAggregator _eventAggregator;
-        private ConcurrentDictionary<Guid, ServerItem> _serverPool = new ConcurrentDictionary<Guid, ServerItem>();
+        private readonly ConcurrentDictionary<Guid, ServerItem> _serverPool = new ConcurrentDictionary<Guid, ServerItem>();
 
         public BEService(IUnityContainer container, IIpService ipService, IEventAggregator eventAggregator)
         {
@@ -38,7 +41,7 @@ namespace Arma3BE.Client.Modules.BEServerModule
             return _serverPool.Keys.ToArray();
         }
 
-        private void CloseServer(ServerInfo info)
+        private void CloseServer(ServerInfoDto info)
         {
             ServerItem item;
 
@@ -48,18 +51,18 @@ namespace Arma3BE.Client.Modules.BEServerModule
             }
         }
 
-        private void CheckServer(ServerInfo info)
+        private void CheckServer(ServerInfoDto info)
         {
             var item = _serverPool.GetOrAdd(info.Id, id => Create(info));
             if (!item.BEServer.Connected) item.BEServer.Connect();
         }
 
-        private ServerItem Create(ServerInfo info)
+        private ServerItem Create(ServerInfoDto info)
         {
             return new ServerItem(info, CreateServer(info), _eventAggregator);
         }
 
-        private IBEServer CreateServer(ServerInfo info)
+        private IBEServer CreateServer(ServerInfoDto info)
         {
             var host = _ipService.GetIpAddress(info.Host);
 
@@ -79,10 +82,10 @@ namespace Arma3BE.Client.Modules.BEServerModule
         private class ServerItem : DisposeObject
         {
             private readonly IEventAggregator _eventAggregator;
-            public ServerInfo Info { get; }
+            public ServerInfoDto Info { get; }
             public IBEServer BEServer { get; }
 
-            public ServerItem(ServerInfo info, IBEServer beServer, IEventAggregator eventAggregator)
+            public ServerItem(ServerInfoDto info, IBEServer beServer, IEventAggregator eventAggregator)
             {
                 _eventAggregator = eventAggregator;
                 Info = info;
@@ -106,30 +109,31 @@ namespace Arma3BE.Client.Modules.BEServerModule
                 BEServer.MessageHandler += BEServer_MessageHandler;
 
                 _eventAggregator.GetEvent<BEMessageEvent<BECommand>>().Subscribe(Command);
+                _eventAggregator.GetEvent<BEMessageEvent<BECustomCommand>>().Subscribe(CustomCommand);
             }
 
             private void BEServer_MessageHandler(object sender, EventArgs e)
             {
                 _eventAggregator.GetEvent<BEMessageEvent<BEMessage>>()
-                  .Publish(new BEMessage(Info.Id));
+                    .Publish(new BEMessage(Info.Id));
             }
 
             private void BEServer_DisconnectHandler(object sender, EventArgs e)
             {
                 _eventAggregator.GetEvent<DisConnectServerEvent>()
-                   .Publish(Info);
+                    .Publish(Info);
             }
 
             private void BEServer_ConnectingHandler(object sender, EventArgs e)
             {
                 _eventAggregator.GetEvent<ConnectingServerEvent>()
-                  .Publish(Info);
+                    .Publish(Info);
             }
 
             private void BEServer_ConnectHandler(object sender, EventArgs e)
             {
                 _eventAggregator.GetEvent<ConnectServerEvent>()
-                  .Publish(Info);
+                    .Publish(Info);
             }
 
             protected override void DisposeManagedResources()
@@ -154,6 +158,7 @@ namespace Arma3BE.Client.Modules.BEServerModule
                 BEServer.MessageHandler -= BEServer_MessageHandler;
 
                 _eventAggregator.GetEvent<BEMessageEvent<BECommand>>().Unsubscribe(Command);
+                _eventAggregator.GetEvent<BEMessageEvent<BECustomCommand>>().Unsubscribe(CustomCommand);
 
                 BEServer.Disconnect();
                 BEServer.Dispose();
@@ -162,7 +167,7 @@ namespace Arma3BE.Client.Modules.BEServerModule
             private void BEServer_ChatMessageHandler(object sender, Server.Models.ChatMessage e)
             {
                 _eventAggregator.GetEvent<BEMessageEvent<BEChatMessage>>()
-                   .Publish(new BEChatMessage(e, Info.Id));
+                    .Publish(new BEChatMessage(e, Info.Id));
             }
 
             private void BEServer_PlayerLog(object sender, Server.Models.LogMessage e)
@@ -193,24 +198,38 @@ namespace Arma3BE.Client.Modules.BEServerModule
                 }
             }
 
+            private void CustomCommand(BECustomCommand command)
+            {
+                var server = BEServer;
+
+                if (Info.Id == command.ServerId && server != null && server.Connected)
+                {
+                    server.SendCommand(command.Command);
+                }
+            }
+
             private void BEServer_MissionHandler(object sender, BEClientEventArgs<IEnumerable<Server.Models.Mission>> e)
             {
-                _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Server.Models.Mission>>>().Publish(new BEItemsMessage<Server.Models.Mission>(e.Data, Info.Id));
+                _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Server.Models.Mission>>>()
+                    .Publish(new BEItemsMessage<Server.Models.Mission>(e.Data, Info.Id));
             }
 
             private void BEServer_BanHandler(object sender, BEClientEventArgs<IEnumerable<Server.Models.Ban>> e)
             {
-                _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Server.Models.Ban>>>().Publish(new BEItemsMessage<Server.Models.Ban>(e.Data, Info.Id));
+                _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Server.Models.Ban>>>()
+                    .Publish(new BEItemsMessage<Server.Models.Ban>(e.Data, Info.Id));
             }
 
             private void BEServer_AdminHandler(object sender, BEClientEventArgs<IEnumerable<Server.Models.Admin>> e)
             {
-                _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Server.Models.Admin>>>().Publish(new BEItemsMessage<Server.Models.Admin>(e.Data, Info.Id));
+                _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Server.Models.Admin>>>()
+                    .Publish(new BEItemsMessage<Server.Models.Admin>(e.Data, Info.Id));
             }
 
             private void BEServer_PlayerHandler(object sender, BEClientEventArgs<IEnumerable<Server.Models.Player>> e)
             {
-                _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Server.Models.Player>>>().Publish(new BEItemsMessage<Server.Models.Player>(e.Data, Info.Id));
+                _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Server.Models.Player>>>()
+                    .Publish(new BEItemsMessage<Server.Models.Player>(e.Data, Info.Id));
             }
         }
     }
