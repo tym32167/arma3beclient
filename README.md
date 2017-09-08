@@ -12,3 +12,10 @@ This program is designed specifically for the [TEHGAM](http://tehgam.com/) commu
 ![Player Nicknames and IP's](https://raw.githubusercontent.com/tym32167/arma3beclient/master/desc/4.PNG) Player Nicknames and IP's |![Player notes](https://raw.githubusercontent.com/tym32167/arma3beclient/master/desc/5.PNG) Player notes |![Chat history](https://raw.githubusercontent.com/tym32167/arma3beclient/master/desc/6.PNG) Chat history
 ![Server settings](https://raw.githubusercontent.com/tym32167/arma3beclient/master/desc/7.PNG) Server settings |![Select mission](https://raw.githubusercontent.com/tym32167/arma3beclient/master/desc/8.PNG) Select mission |![Steam query support](https://raw.githubusercontent.com/tym32167/arma3beclient/master/desc/9.PNG) Steam query support
 
+## Up and run for 2 steps: 
+
+1. Setup name and timezone
+![Setup name and timezone](https://raw.githubusercontent.com/tym32167/arma3beclient/master/desc/SetupNameAndTimeZone.gif)
+
+2. Add your first server and connect
+![Setup name and timezone](https://raw.githubusercontent.com/tym32167/arma3beclient/master/desc/AddingServer.gif)
