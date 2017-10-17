@@ -1,36 +1,20 @@
-﻿using Arma3BE.Client.Infrastructure.Models;
-using Arma3BE.Client.Modules.MainModule.ViewModel;
-using Prism.Regions;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Arma3BE.Client.Infrastructure.Models;
+using Arma3BE.Client.Modules.MainModule.ViewModel;
+using Prism.Regions;
 using Xceed.Wpf.AvalonDock;
 using Xceed.Wpf.AvalonDock.Layout;
-// ReSharper disable PossibleInvalidCastExceptionInForeachLoop
 
 namespace Arma3BE.Client.Modules.MainModule
 {
     public class AvalonDockRegionAdapter : RegionAdapterBase<DockingManager>
     {
-        #region Constructor
-
-        public AvalonDockRegionAdapter(IRegionBehaviorFactory factory)
-            : base(factory)
+        public AvalonDockRegionAdapter(IRegionBehaviorFactory regionBehaviorFactory) : base(regionBehaviorFactory)
         {
-        }
-
-        #endregion  //Constructor
-
-
-        #region Overrides
-
-        protected override IRegion CreateRegion()
-        {
-            return new AllActiveRegion();
         }
 
         protected override void Adapt(IRegion region, DockingManager regionTarget)
@@ -38,144 +22,88 @@ namespace Arma3BE.Client.Modules.MainModule
             region.Views.CollectionChanged += delegate (
                 object sender, NotifyCollectionChangedEventArgs e)
             {
-                OnViewsCollectionChanged(sender, e, regionTarget);
-            };
-
-            regionTarget.DocumentClosed += delegate (
-                            object sender, DocumentClosedEventArgs e)
-            {
-                OnDocumentClosedEventArgs(sender, e, region);
+                OnViewsCollectionChanged(e, regionTarget, region);
             };
         }
 
-        #endregion  //Overrides
-
-
-        #region Event Handlers
-
-        /// <summary>
-        /// Handles the NotifyCollectionChangedEventArgs event.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The event.</param>
-        /// <param name="regionTarget">The region target.</param>
-        // ReSharper disable once UnusedParameter.Local
-        async void OnViewsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e, DockingManager regionTarget)
+        async void OnViewsCollectionChanged(NotifyCollectionChangedEventArgs e, DockingManager regionTarget, IRegion region)
         {
-            if (e.Action == NotifyCollectionChangedAction.Remove)
+            switch (e.Action)
             {
-                foreach (var eOldItem in e.OldItems)
-                {
-                    var disposables = new[]
-                    {
-                        eOldItem as IDisposable,
-                        (eOldItem as FrameworkElement)?.DataContext as IDisposable,
-                        (eOldItem as ContentControl)?.Content as IDisposable,
-                        ((eOldItem as ContentControl)?.Content as FrameworkElement)?.DataContext as IDisposable
-                    };
+                case NotifyCollectionChangedAction.Add:
 
-                    foreach (var disposable in disposables)
-                    {
-                        disposable?.Dispose();
-                    }
-                }
-            }
-
-            if (e.Action == NotifyCollectionChangedAction.Add)
-            {
-                foreach (FrameworkElement item in e.NewItems)
-                {
-                    UIElement view = item;
-
-                    if (view != null)
+                    foreach (FrameworkElement item in e.NewItems)
                     {
                         //Create a new layout document to be included in the LayoutDocuemntPane (defined in xaml)
-                        LayoutDocument newLayoutDocument = new LayoutDocument();
+                        LayoutDocument newLayoutDocument = new LayoutDocument
+                        {
+                            Content = item,
+                            Title = (item.DataContext as ITitledItem)?.Title
+                        };
                         //Set the content of the LayoutDocument
-                        newLayoutDocument.Content = item;
-                        newLayoutDocument.Title = (item.DataContext as ITitledItem)?.Title;
 
-                        ServerMonitorModel viewModel = item.DataContext as ServerMonitorModel;
+                        var viewModel = item.DataContext as ServerMonitorModel;
                         if (viewModel != null)
                         {
                             //All my viewmodels have properties DisplayName and IconKey
                             newLayoutDocument.Title = viewModel.CurrentServer.Name;
                             await viewModel.OpenServerAsync();
-                            newLayoutDocument.Closed += (s, a) =>
+                            newLayoutDocument.Closed += async (s, a) =>
                             {
-                                Task.Factory.StartNew(async () =>
+                                region.Remove(item);
+                                await viewModel.CloseServerAsync();
+                                viewModel.Cleanup();
+
+                                if (!region.Views.Any())
                                 {
-                                    await viewModel.CloseServerAsync();
-                                    viewModel.Cleanup();
-                                });
+                                    regionTarget.ActiveContent = null;
+                                }
                             };
                         }
 
-                        //Store all LayoutDocuments already pertaining to the LayoutDocumentPane (defined in xaml)
-                        List<LayoutDocument> oldLayoutDocuments = new List<LayoutDocument>();
-                        //Get the current ILayoutDocumentPane ... Depending on the arrangement of the views this can be either 
-                        //a simple LayoutDocumentPane or a LayoutDocumentPaneGroup
-                        ILayoutDocumentPane currentILayoutDocumentPane = (ILayoutDocumentPane)regionTarget.Layout.RootPanel.Children[0];
+                        var  layoutDocumentPane = new LayoutDocumentPane();
 
-                        if (currentILayoutDocumentPane.GetType() == typeof(LayoutDocumentPaneGroup))
+                        if (regionTarget.Layout.RootPanel.Children.Count == 0)
                         {
-                            //If the current ILayoutDocumentPane turns out to be a group
-                            //Get the children (LayoutDocuments) of the first pane
-                            LayoutDocumentPane oldLayoutDocumentPane = (LayoutDocumentPane)currentILayoutDocumentPane.Children.ToList()[0];
-                            foreach (LayoutDocument child in oldLayoutDocumentPane.Children)
-                            {
-                                oldLayoutDocuments.Insert(0, child);
-                            }
+                            regionTarget.Layout.RootPanel.Children.Add(layoutDocumentPane);
+                            layoutDocumentPane.Children.Add(new LayoutDocument());
+                            layoutDocumentPane.Children.Clear();
                         }
-                        else if (currentILayoutDocumentPane.GetType() == typeof(LayoutDocumentPane))
+                        else
                         {
-                            //If the current ILayoutDocumentPane turns out to be a simple pane
-                            //Get the children (LayoutDocuments) of the single existing pane.
-                            foreach (LayoutDocument child in currentILayoutDocumentPane.Children)
-                            {
-                                oldLayoutDocuments.Insert(0, child);
-                            }
+                            layoutDocumentPane = regionTarget.Layout.RootPanel.Children[0] as LayoutDocumentPane;
                         }
 
-                        //Create a new LayoutDocumentPane and inserts your new LayoutDocument
-                        LayoutDocumentPane newLayoutDocumentPane = new LayoutDocumentPane();
-                        newLayoutDocumentPane.InsertChildAt(0, newLayoutDocument);
-
-                        //Append to the new LayoutDocumentPane the old LayoutDocuments
-                        foreach (LayoutDocument doc in oldLayoutDocuments)
-                        {
-                            newLayoutDocumentPane.InsertChildAt(0, doc);
-                        }
-
-                        //Traverse the visual tree of the xaml and replace the LayoutDocumentPane (or LayoutDocumentPaneGroup) in xaml
-                        //with your new LayoutDocumentPane (or LayoutDocumentPaneGroup)
-                        if (currentILayoutDocumentPane.GetType() == typeof(LayoutDocumentPane))
-                            regionTarget.Layout.RootPanel.ReplaceChildAt(0, newLayoutDocumentPane);
-                        else if (currentILayoutDocumentPane.GetType() == typeof(LayoutDocumentPaneGroup))
-                        {
-                            currentILayoutDocumentPane.ReplaceChild(currentILayoutDocumentPane.Children.ToList()[0], newLayoutDocumentPane);
-                            regionTarget.Layout.RootPanel.ReplaceChildAt(0, currentILayoutDocumentPane);
-                        }
-
-                        newLayoutDocument.IsActive = true;
+                        layoutDocumentPane?.Children?.Add(newLayoutDocument);
+                        regionTarget.ActiveContent = item;
                     }
-                }
+
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    foreach (var eOldItem in e.OldItems)
+                    {
+                        var disposables = new[]
+                        {
+                            eOldItem as IDisposable,
+                            (eOldItem as FrameworkElement)?.DataContext as IDisposable,
+                            (eOldItem as ContentControl)?.Content as IDisposable,
+                            ((eOldItem as ContentControl)?.Content as FrameworkElement)?.DataContext as IDisposable
+                        };
+
+                        foreach (var disposable in disposables)
+                        {
+                            disposable?.Dispose();
+                        }
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 
-        /// <summary>
-        /// Handles the DocumentClosedEventArgs event raised by the DockingNanager when
-        /// one of the LayoutContent it hosts is closed.
-        /// </summary>
-        /// <param name="sender">The sender</param>
-        /// <param name="e">The event.</param>
-        /// <param name="region">The region.</param>
-        // ReSharper disable once UnusedParameter.Local
-        void OnDocumentClosedEventArgs(object sender, DocumentClosedEventArgs e, IRegion region)
+        protected override IRegion CreateRegion()
         {
-            region.Remove(e.Document.Content);
+            return new SingleActiveRegion();
         }
-
-        #endregion  //Event handlers
     }
 }
