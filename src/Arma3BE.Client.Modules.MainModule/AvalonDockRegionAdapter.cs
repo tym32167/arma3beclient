@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Arma3BE.Client.Infrastructure.Models;
@@ -19,14 +20,36 @@ namespace Arma3BE.Client.Modules.MainModule
 
         protected override void Adapt(IRegion region, DockingManager regionTarget)
         {
-            region.Views.CollectionChanged += delegate (
+            region.Views.CollectionChanged += delegate(
                 object sender, NotifyCollectionChangedEventArgs e)
             {
-                OnViewsCollectionChanged(e, regionTarget, region);
+                OnViewsCollectionChanged(e, regionTarget);
+            };
+
+            regionTarget.DocumentClosed += async (s, e) =>
+            {
+                await CloseView(region, regionTarget, e.Document);
             };
         }
 
-        async void OnViewsCollectionChanged(NotifyCollectionChangedEventArgs e, DockingManager regionTarget, IRegion region)
+        private async Task CloseView(IRegion region, DockingManager regionTarget, LayoutDocument document)
+        {
+            region.Remove(document.Content);
+
+            var viewModel = (document.Content as FrameworkElement)?.DataContext as ServerMonitorModel;
+            if (viewModel != null)
+            {
+                await viewModel.CloseServerAsync();
+                viewModel.Cleanup();
+            }
+
+            if (!region.Views.Any())
+            {
+                regionTarget.ActiveContent = null;
+            }
+        }
+
+        async void OnViewsCollectionChanged(NotifyCollectionChangedEventArgs e, DockingManager regionTarget)
         {
             switch (e.Action)
             {
@@ -48,26 +71,13 @@ namespace Arma3BE.Client.Modules.MainModule
                             //All my viewmodels have properties DisplayName and IconKey
                             newLayoutDocument.Title = viewModel.CurrentServer.Name;
                             await viewModel.OpenServerAsync();
-                            newLayoutDocument.Closed += async (s, a) =>
-                            {
-                                region.Remove(item);
-                                await viewModel.CloseServerAsync();
-                                viewModel.Cleanup();
-
-                                if (!region.Views.Any())
-                                {
-                                    regionTarget.ActiveContent = null;
-                                }
-                            };
                         }
 
-                        var  layoutDocumentPane = new LayoutDocumentPane();
+                        var layoutDocumentPane = new LayoutDocumentPane();
 
                         if (regionTarget.Layout.RootPanel.Children.Count == 0)
                         {
                             regionTarget.Layout.RootPanel.Children.Add(layoutDocumentPane);
-                            layoutDocumentPane.Children.Add(new LayoutDocument());
-                            layoutDocumentPane.Children.Clear();
                         }
                         else
                         {
@@ -75,7 +85,7 @@ namespace Arma3BE.Client.Modules.MainModule
                         }
 
                         layoutDocumentPane?.Children?.Add(newLayoutDocument);
-                        regionTarget.ActiveContent = item;
+                        regionTarget.ActiveContent = newLayoutDocument.Content;
                     }
 
                     break;
