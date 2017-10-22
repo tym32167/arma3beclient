@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:Arma3BE.Client.Infrastructure.Converters;assembly=Arma3BE.Client.Infrastructure"
              xmlns:boxes="clr-namespace:Arma3BE.Client.Modules.ChatModule.Boxes"
+             xmlns:chat="clr-namespace:Arma3BE.Client.Modules.ChatModule.Chat"
              mc:Ignorable="d" DataContextChanged="ToolBar_DataContextChanged" HorizontalAlignment="Stretch"
              VerticalAlignment="Stretch">
 
@@ -68,6 +69,9 @@
                     <boxes:ColoredTextControl x:Name="textControl" IsAutoScroll="{Binding AutoScroll}" Grid.ColumnSpan="3">
                     </boxes:ColoredTextControl>
 
+                    <!--<boxes:ColoredItemsControl x:Name="textControl" Grid.ColumnSpan="3"  IsAutoScroll="{Binding AutoScroll}">
+                    </boxes:ColoredItemsControl>-->
+
                     <!--<boxes:RTBControl x:Name="textControl" IsAutoScroll="{Binding AutoScroll}" Grid.ColumnSpan="3">
                     </boxes:RTBControl>-->
 
@@ -122,8 +126,12 @@
 
 
             <TabItem Header="Players Log">
-                <boxes:ColoredTextControl x:Name="textPlayerControl" IsAutoScroll="{Binding AutoScroll}" >
-                </boxes:ColoredTextControl>
+
+                <boxes:ColoredItemsControl x:Name="textPlayerControl" IsAutoScroll="{Binding Path=DataContext.AutoScroll, RelativeSource={RelativeSource  AncestorType=chat:ChatControl}}" >
+                </boxes:ColoredItemsControl>
+
+                <!--<boxes:ColoredTextControl x:Name="textPlayerControl" IsAutoScroll="{Binding AutoScroll}" >
+                </boxes:ColoredTextControl>-->
 
                 <!--<boxes:RTBControl x:Name="textPlayerControl" IsAutoScroll="{Binding AutoScroll}" >
                 </boxes:RTBControl>-->

@@ -107,9 +107,14 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Boxes\ColoredItemsControl.xaml.cs">
+      <DependentUpon>ColoredItemsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Boxes\ColoredTextControl.xaml.cs">
       <DependentUpon>ColoredTextControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Boxes\Converters\ConnectTextConverter.cs" />
+    <Compile Include="Boxes\Converters\PlayerMessageToColorConverter.cs" />
     <Compile Include="Boxes\IColoredTextControl.cs" />
     <Compile Include="Boxes\RTBControl.xaml.cs">
       <DependentUpon>RTBControl.xaml</DependentUpon>
@@ -129,6 +134,10 @@
     <Page Include="Boxes\ChatHistory.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Boxes\ColoredItemsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Boxes\ColoredTextControl.xaml">
       <SubType>Designer</SubType>

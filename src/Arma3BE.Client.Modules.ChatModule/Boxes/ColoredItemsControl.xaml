@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="Arma3BE.Client.Modules.ChatModule.Boxes.ColoredItemsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Arma3BE.Client.Modules.ChatModule.Boxes"
+             xmlns:converters="clr-namespace:Arma3BE.Client.Modules.ChatModule.Boxes.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <ListView ItemsSource="{Binding Messages}" ScrollViewer.CanContentScroll="True" 
+                  SelectionMode="Extended" Name="lv">
+
+            <ListView.Resources>
+                <converters:PlayerMessageToColorConverter x:Key="playerMessageToColorConverter"/>
+                <converters:ConnectTextConverter x:Key="connectTextConverter"></converters:ConnectTextConverter>
+            </ListView.Resources>
+
+            <ListView.ItemTemplate>
+                <DataTemplate DataType="{x:Type local:PlayerMessage}">
+                    <TextBlock Foreground="{Binding Converter={StaticResource playerMessageToColorConverter}}">
+                        <Run Text="{Binding DateTime, Mode=OneWay, StringFormat=HH:mm:ss}"/>
+                        <Hyperlink Command="{Binding DataContext.ShowPlayerCommand, RelativeSource={RelativeSource AncestorType=local:ColoredItemsControl}}" CommandParameter="{Binding}">
+                            <Run Text="{Binding PlayerName, Mode=OneWay}" />
+                        </Hyperlink>
+                        <Run Text=" "></Run>
+                        <Run Text="{Binding Converter={StaticResource connectTextConverter}, Mode=OneWay}"></Run>
+                    </TextBlock>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+
+    
+</UserControl>
