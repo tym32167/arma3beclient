@@ -112,9 +112,13 @@
                     </Grid.ColumnDefinitions>
 
 
-                    <ScrollViewer  Name="ConsoleScrollViewer"  Grid.ColumnSpan="2">
+
+                    <boxes:ColoredItemsControl x:Name="consoleControl"  IsAutoScroll="{Binding Path=DataContext.AutoScroll, RelativeSource={RelativeSource  AncestorType=chat:ChatControl}}" >
+                    </boxes:ColoredItemsControl>
+
+                    <!--<ScrollViewer  Name="ConsoleScrollViewer"  Grid.ColumnSpan="2">
                         <TextBox Name="msgConsole" FontSize="12" IsReadOnly="True" />
-                    </ScrollViewer>
+                    </ScrollViewer>-->
 
                     <TextBox Grid.Row="1" Grid.Column="0" Margin="2"
                              Text="{Binding CommandMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="20" />

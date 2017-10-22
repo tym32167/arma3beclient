@@ -32,8 +32,12 @@
             <!--<boxes:ColoredTextControl x:Name="textControl" IsAutoScroll="True" Grid.Row="1">
             </boxes:ColoredTextControl>-->
 
-            <boxes:RTBControl x:Name="textControl" IsAutoScroll="True" Grid.Row="1">
-            </boxes:RTBControl>
+            <!--<boxes:RTBControl x:Name="textControl" IsAutoScroll="True" Grid.Row="1">
+            </boxes:RTBControl>-->
+
+
+            <boxes:ColoredItemsControl x:Name="textControl"  Grid.Row="1"  IsAutoScroll="True" >
+            </boxes:ColoredItemsControl>
 
         </Grid>
     </xctk:BusyIndicator>

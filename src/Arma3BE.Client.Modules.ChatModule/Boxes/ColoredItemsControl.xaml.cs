@@ -102,6 +102,13 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
             get { return (bool)GetValue(IsAutoScrollProperty); }
             set { SetValue(IsAutoScrollProperty, value); }
         }
+
+        public void AppendText(LogMessage message)
+        {
+            var text = $"[ {message.Date.UtcToLocalFromSettings():HH:mm:ss} ]  {message.Message}";
+            Messages.Add(text);
+            ScrollIfNeeded();
+        }
     }
 
     public class PlayerMessage
