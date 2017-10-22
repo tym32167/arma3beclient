@@ -1,5 +1,4 @@
-﻿using Arma3BE.Client.Infrastructure.Extensions;
-using Arma3BE.Client.Modules.ChatModule.Models;
+﻿using Arma3BE.Client.Modules.ChatModule.Models;
 using Arma3BE.Server.Models;
 using System.Collections.Generic;
 using System.Windows;
@@ -29,10 +28,6 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
                 textControl.AppendText(e.Message);
             else
                 consoleControl.AppendText(e.Message);
-            // AppendText(msgConsole, ConsoleScrollViewer, e.Message);
-
-
-            textControl.AppendText(e.Message);
         }
 
         private void SendMessage(object sender, RoutedEventArgs e)
@@ -47,16 +42,6 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
                 var text = tbNewMessage.Text;
                 Model.SendMessage(text);
             }
-        }
-
-        // ReSharper disable once MemberCanBePrivate.Global
-        public void AppendText(TextBox block, ScrollViewer scroll, MessageBase message)
-        {
-            var text = $"[ {message.Date.UtcToLocalFromSettings():HH:mm:ss} ]  {message.Message}\n";
-            block.Text += text;
-
-            if (Model.AutoScroll)
-                scroll.ScrollToEnd();
         }
 
         private void ToolBar_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -96,7 +81,6 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
             Dispatcher.Invoke(() =>
             {
                 if (!Model.EnableChat) return;
-                //AppendText(msgConsole, ConsoleScrollViewer, e.Message);
                 consoleControl.AppendText(e.Message);
             });
         }
@@ -104,7 +88,6 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
         private void ClearAll_Click(object sender, RoutedEventArgs e)
         {
             textPlayerControl.ClearAll();
-            //msgConsole.Text = string.Empty;
             consoleControl.ClearAll();
             textControl.ClearAll();
         }
