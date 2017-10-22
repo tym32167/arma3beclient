@@ -62,7 +62,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views
             {
                 if (string.IsNullOrEmpty(_country))
                 {
-                    SetProperty(ref _country, _geoInfo?.Value.Country, nameof(Country));
+                    SetProperty(ref _country, _geoInfo?.Value?.Country, nameof(Country));
                 }
 
                 return _country;
@@ -79,7 +79,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views
             {
                 if (string.IsNullOrEmpty(_city))
                 {
-                    SetProperty(ref _city, _geoInfo?.Value.City, nameof(Country));
+                    SetProperty(ref _city, _geoInfo?.Value?.City, nameof(Country));
                 }
 
                 return _city;

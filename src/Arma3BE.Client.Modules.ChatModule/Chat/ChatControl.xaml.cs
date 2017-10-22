@@ -28,7 +28,11 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
             if (type != ChatMessage.MessageType.Unknown)
                 textControl.AppendText(e.Message);
             else
-                AppendText(msgConsole, ConsoleScrollViewer, e.Message);
+                consoleControl.AppendText(e.Message);
+            // AppendText(msgConsole, ConsoleScrollViewer, e.Message);
+
+
+            textControl.AppendText(e.Message);
         }
 
         private void SendMessage(object sender, RoutedEventArgs e)
@@ -92,14 +96,16 @@ namespace Arma3BE.Client.Modules.ChatModule.Chat
             Dispatcher.Invoke(() =>
             {
                 if (!Model.EnableChat) return;
-                AppendText(msgConsole, ConsoleScrollViewer, e.Message);
+                //AppendText(msgConsole, ConsoleScrollViewer, e.Message);
+                consoleControl.AppendText(e.Message);
             });
         }
 
         private void ClearAll_Click(object sender, RoutedEventArgs e)
         {
             textPlayerControl.ClearAll();
-            msgConsole.Text = string.Empty;
+            //msgConsole.Text = string.Empty;
+            consoleControl.ClearAll();
             textControl.ClearAll();
         }
     }
