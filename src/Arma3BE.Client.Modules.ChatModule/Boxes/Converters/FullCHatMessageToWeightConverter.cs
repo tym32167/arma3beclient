@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
-using System.Windows.Media;
 
 namespace Arma3BE.Client.Modules.ChatModule.Boxes.Converters
 {
-    public class PlayerMessageToColorConverter : IValueConverter
+    public class FullCHatMessageToWeightConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if ((value as PlayerMessage)?.isIn == true) return Brushes.Green;
-            return Brushes.Red;
+            var message = value as FullChatMessage;
+            if (message == null) return FontWeights.Normal;
+
+            if (message.IsImportant) return FontWeights.Heavy;
+
+            return FontWeights.Normal;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

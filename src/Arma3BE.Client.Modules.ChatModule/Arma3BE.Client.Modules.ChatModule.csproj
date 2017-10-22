@@ -114,6 +114,9 @@
       <DependentUpon>ColoredTextControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Boxes\Converters\ConnectTextConverter.cs" />
+    <Compile Include="Boxes\Converters\FullCHatMessageToColorConverter.cs" />
+    <Compile Include="Boxes\Converters\FullCHatMessageToStringConverter.cs" />
+    <Compile Include="Boxes\Converters\FullCHatMessageToWeightConverter.cs" />
     <Compile Include="Boxes\Converters\PlayerMessageToColorConverter.cs" />
     <Compile Include="Boxes\IColoredTextControl.cs" />
     <Compile Include="Boxes\RTBControl.xaml.cs">

@@ -10,13 +10,24 @@
     <Grid>
         <ListView ItemsSource="{Binding Messages}" ScrollViewer.CanContentScroll="True" 
                   SelectionMode="Extended" Name="lv">
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Copy" Command="Copy"/>
+                </ContextMenu>
+            </ListView.ContextMenu>
+            <ListView.CommandBindings>
+                <CommandBinding Command="Copy" Executed="OnListCopy"/>
+            </ListView.CommandBindings>
 
             <ListView.Resources>
                 <converters:PlayerMessageToColorConverter x:Key="playerMessageToColorConverter"/>
                 <converters:ConnectTextConverter x:Key="connectTextConverter"></converters:ConnectTextConverter>
-            </ListView.Resources>
+                
+                <converters:FullCHatMessageToColorConverter x:Key="CHatMessageToColorConverter"></converters:FullCHatMessageToColorConverter>
+                <converters:FullCHatMessageToStringConverter x:Key="CHatMessageToStringConverter"></converters:FullCHatMessageToStringConverter>
+                <converters:FullCHatMessageToWeightConverter x:Key="CHatMessageToWeightConverter"></converters:FullCHatMessageToWeightConverter>
 
-            <ListView.ItemTemplate>
+
                 <DataTemplate DataType="{x:Type local:PlayerMessage}">
                     <TextBlock Foreground="{Binding Converter={StaticResource playerMessageToColorConverter}}">
                         <Run Text="{Binding DateTime, Mode=OneWay, StringFormat=HH:mm:ss}"/>
@@ -27,7 +38,18 @@
                         <Run Text="{Binding Converter={StaticResource connectTextConverter}, Mode=OneWay}"></Run>
                     </TextBlock>
                 </DataTemplate>
-            </ListView.ItemTemplate>
+
+
+
+                <DataTemplate DataType="{x:Type local:FullChatMessage}">
+                    <TextBlock Text="{Binding Converter={StaticResource CHatMessageToStringConverter}}"
+                               Foreground="{Binding Converter={StaticResource CHatMessageToColorConverter}}"
+                               FontWeight="{Binding Converter={StaticResource CHatMessageToWeightConverter}}"
+                               ></TextBlock>
+                </DataTemplate>
+
+
+            </ListView.Resources>
         </ListView>
     </Grid>
 
