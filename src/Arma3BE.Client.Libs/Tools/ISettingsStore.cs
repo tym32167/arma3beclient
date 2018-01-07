@@ -13,6 +13,8 @@ namespace Arma3BEClient.Libs.Tools
         int PlayersUpdateSeconds { get; set; }
         TimeZoneInfo TimeZoneInfo { get; set; }
 
+        bool TopMost { get; set; }
+
         void Save();
     }
 

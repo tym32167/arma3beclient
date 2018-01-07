@@ -71,7 +71,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             {
                 var model = new ChatHistoryViewModel(_serverId, infoRepository);
                 model.StartDate = DateTime.UtcNow.UtcToLocalFromSettings().AddHours(-5);
-                var wnd = new ChatHistory(model);
+                var wnd = new ChatHistory(model, settingsStoreSource);
                 wnd.Show();
                 wnd.Activate();
             });

@@ -153,6 +153,9 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
 
                 settings.BansUpdateSeconds = Settings.BansUpdateSeconds;
                 settings.PlayersUpdateSeconds = Settings.PlayersUpdateSeconds;
+
+                settings.TopMost = Settings.TopMost;
+
                 settings.Save();
 
 
@@ -189,6 +192,9 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
 
                 _eventAggregator.GetEvent<BEServersChangedEvent>().Publish(null);
                 _eventAggregator.GetEvent<SettingsChangedEvent>().Publish(_settingsStoreSource.GetSettingsStore());
+
+
+                foreach (Window wnd in Application.Current.Windows) wnd.Topmost = settings.TopMost;
             }
             catch (Exception e)
             {
