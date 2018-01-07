@@ -65,7 +65,6 @@
                             <TextBox Grid.Row="3" Grid.Column="1" Width="100" HorizontalAlignment="Left" Margin="2" Text="{Binding Settings.BansUpdateSeconds, Mode=TwoWay}" />
 
                             <TextBlock Grid.Row="4" Grid.Column="0"  Text="Always on top" Margin="2" />
-                            <TextBox Grid.Row="4" Grid.Column="1" Width="100" HorizontalAlignment="Left" Margin="2" Text="{Binding Settings.BansUpdateSeconds, Mode=TwoWay}" />
                             <CheckBox  Grid.Row="4" Grid.Column="1" Margin="2" IsChecked="{Binding Settings.TopMost, Mode=TwoWay}"></CheckBox>
                         </Grid>
                     </Border>
