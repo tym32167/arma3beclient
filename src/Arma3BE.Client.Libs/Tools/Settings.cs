@@ -18,6 +18,8 @@ namespace Arma3BEClient.Libs.Tools
         private const int BanMessageTemplateKey = 5;
         private const int KickMessageTemplateKey = 6;
 
+        private const int TopMostKey = 7;
+
         public string AdminName { get; set; }
 
         public string BanMessageTemplate { get; set; }
@@ -26,6 +28,8 @@ namespace Arma3BEClient.Libs.Tools
         public TimeZoneInfo TimeZoneInfo { get; set; }
         public int PlayersUpdateSeconds { get; set; }
         public int BansUpdateSeconds { get; set; }
+
+        public bool TopMost { get; set; }
 
         private static SettingsStore _instance;
         public static SettingsStore Instance => _instance ?? (_instance = Load());
@@ -40,7 +44,8 @@ namespace Arma3BEClient.Libs.Tools
                     new Settings { Id = PlayersUpdateKey, Value = PlayersUpdateSeconds.ToString() },
                     new Settings { Id = BansUpdateKey, Value = BansUpdateSeconds.ToString() },
                     new Settings { Id = BanMessageTemplateKey, Value = BanMessageTemplate },
-                    new Settings { Id = KickMessageTemplateKey, Value = KickMessageTemplate }
+                    new Settings { Id = KickMessageTemplateKey, Value = KickMessageTemplate },
+                    new Settings { Id = TopMostKey, Value = TopMost.ToString() }
                 );
 
                 context.SaveChanges();
@@ -77,6 +82,8 @@ namespace Arma3BEClient.Libs.Tools
                     ss.TimeZoneInfo = TimeZoneInfo.Local;
                 }
 
+                ss.TopMost = bool.Parse(settings.FirstOrDefault(x => x.Id == TopMostKey)?.Value ?? bool.FalseString);
+
                 return ss;
             }
         }
@@ -90,7 +97,8 @@ namespace Arma3BEClient.Libs.Tools
                 BansUpdateSeconds = BansUpdateSeconds,
                 PlayersUpdateSeconds = PlayersUpdateSeconds,
                 BanMessageTemplate = BanMessageTemplate,
-                KickMessageTemplate = KickMessageTemplate
+                KickMessageTemplate = KickMessageTemplate,
+                TopMost = TopMost
             };
         }
     }

@@ -1,6 +1,8 @@
 ﻿using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Infrastructure.Models;
+using Arma3BE.Client.Infrastructure.Windows;
 using Arma3BEClient.Libs.Repositories;
+using Arma3BEClient.Libs.Tools;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -13,14 +15,14 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
     ///     Interaction logic for KickPlayerWindow.xaml
     /// </summary>
     // ReSharper disable once RedundantExtendsListEntry
-    public partial class KickPlayerWindow : Window
+    public partial class KickPlayerWindow : WindowBase
     {
         private readonly IBanHelper _playerHelper;
         private readonly Guid _serverId;
         private readonly int _playerNum;
         private readonly string _playerGuid;
 
-        public KickPlayerWindow(IBanHelper playerHelper, Guid serverId, int playerNum, string playerGuid, string playerName)
+        public KickPlayerWindow(IBanHelper playerHelper, Guid serverId, int playerNum, string playerGuid, string playerName, ISettingsStoreSource settingsStoreSource) : base(settingsStoreSource)
         {
             _playerHelper = playerHelper;
             _serverId = serverId;

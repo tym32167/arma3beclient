@@ -1,12 +1,15 @@
 ﻿using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Infrastructure.Models;
+using Arma3BE.Client.Infrastructure.Windows;
 using Arma3BEClient.Libs.Repositories;
+using Arma3BEClient.Libs.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace Arma3BE.Client.Modules.BanModule.Boxes
@@ -15,12 +18,12 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
     ///     Interaction logic for BanPlayerWindow.xaml
     /// </summary>
     // ReSharper disable once RedundantExtendsListEntry
-    public partial class BanPlayerWindow : Window
+    public partial class BanPlayerWindow : WindowBase
     {
         private readonly BanPlayerViewModel _model;
 
         public BanPlayerWindow(Guid? serverId, IBanHelper banHelper, string playerGuid, bool isOnline, string playerName,
-            string playerNum, IServerInfoRepository infoRepository)
+            string playerNum, IServerInfoRepository infoRepository, ISettingsStoreSource settingsStoreSource) : base(settingsStoreSource)
         {
             InitializeComponent();
             _model = new BanPlayerViewModel(serverId, playerGuid, isOnline, banHelper, playerName, playerNum, infoRepository);

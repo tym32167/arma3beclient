@@ -207,6 +207,10 @@
       <Project>{b58670e5-011f-4318-964e-35c8b63870a5}</Project>
       <Name>Arma3BE.Client.Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Libs\Arma3BE.Client.Libs.csproj">
+      <Project>{E5240A50-E944-4F50-A353-2E3C9E547447}</Project>
+      <Name>Arma3BE.Client.Libs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Arma3BE.Client.Modules.AdminsModule\Arma3BE.Client.Modules.AdminsModule.csproj">
       <Project>{50e80fcc-87bd-4982-901e-38fd22482d02}</Project>
       <Name>Arma3BE.Client.Modules.AdminsModule</Name>

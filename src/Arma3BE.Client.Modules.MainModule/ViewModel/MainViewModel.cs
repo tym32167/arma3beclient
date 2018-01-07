@@ -1,12 +1,15 @@
 using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BEClient.Libs.Repositories;
+using Arma3BEClient.Libs.Tools;
 using Prism.Commands;
 using Prism.Events;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
+
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ExplicitCallerInfoArgument
 
@@ -17,7 +20,7 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
     {
         private readonly IServerInfoRepository _infoRepository;
 
-        public MainViewModel(IEventAggregator eventAggregator, IServerInfoRepository infoRepository)
+        public MainViewModel(IEventAggregator eventAggregator, IServerInfoRepository infoRepository, ISettingsStoreSource settingsStoreSource)
         {
             _infoRepository = infoRepository;
             ReloadAsync();
@@ -31,6 +34,12 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             {
                 await ReloadAsync();
             });
+
+            var tm = settingsStoreSource.GetSettingsStore().TopMost;
+            foreach (Window wnd in Application.Current.Windows)
+            {
+                wnd.Topmost = tm;
+            }
         }
 
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
