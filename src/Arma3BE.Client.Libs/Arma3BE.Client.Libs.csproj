@@ -67,7 +67,11 @@
     <Compile Include="Repositories\AdminRepository.cs" />
     <Compile Include="Repositories\BanRepository.cs" />
     <Compile Include="Repositories\ChatRepository.cs" />
-    <Compile Include="Repositories\PlayerRepository.cs" />
+    <Compile Include="Repositories\Players\IPlayerRepository.cs" />
+    <Compile Include="Repositories\Players\PlayerDto.cs" />
+    <Compile Include="Repositories\Players\PlayerRepository.cs" />
+    <Compile Include="Repositories\Players\PlayerRepositoryCache.cs" />
+    <Compile Include="Repositories\Players\PlayerRepositoryCacheV2.cs" />
     <Compile Include="Repositories\ReasonRepository.cs" />
     <Compile Include="Repositories\ServerInfoRepository.cs" />
     <Compile Include="ModelCompact\Admin.cs" />

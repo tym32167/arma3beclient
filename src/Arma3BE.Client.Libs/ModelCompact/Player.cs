@@ -7,10 +7,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
+using Arma3BEClient.Libs.Repositories.Players;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using Arma3BEClient.Libs.Repositories;
 
 namespace Arma3BEClient.Libs.ModelCompact
 {
@@ -20,9 +18,9 @@ namespace Arma3BEClient.Libs.ModelCompact
         {
             this.Notes = new HashSet<Note>();
             this.PlayerHistory = new HashSet<PlayerHistory>();
-           // this.Sessions = new HashSet<Sessions>();
+            // this.Sessions = new HashSet<Sessions>();
         }
-        
+
         public virtual ICollection<Note> Notes { get; set; }
         public virtual ICollection<Ban> Bans { get; set; }
         public virtual ICollection<PlayerHistory> PlayerHistory { get; set; }

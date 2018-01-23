@@ -1,4 +1,4 @@
-﻿using Arma3BEClient.Libs.Repositories;
+﻿using Arma3BEClient.Libs.Repositories.Players;
 using Microsoft.Win32;
 using System.Collections.Generic;
 using System.IO;

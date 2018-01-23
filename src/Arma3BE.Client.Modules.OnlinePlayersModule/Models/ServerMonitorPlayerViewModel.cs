@@ -7,6 +7,7 @@ using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.OnlinePlayersModule.Helpers;
 using Arma3BE.Server;
 using Arma3BEClient.Libs.Repositories;
+using Arma3BEClient.Libs.Repositories.Players;
 using Prism.Commands;
 using Prism.Events;
 using System;
@@ -44,11 +45,11 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
 
             PropertyChanged += ServerMonitorPlayerViewModel_PropertyChanged;
 
-            _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Player>>>().Subscribe(e =>
+            _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Player>>>().Subscribe(async e =>
             {
                 if (e.ServerId == serverInfo.Id)
                 {
-                    SetDataAsync(e.Items);
+                    await SetDataAsync(e.Items);
                     WaitingForEvent = false;
                 }
             });

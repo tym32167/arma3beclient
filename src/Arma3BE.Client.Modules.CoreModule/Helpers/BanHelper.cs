@@ -6,6 +6,7 @@ using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Extensions;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.Repositories;
+using Arma3BEClient.Libs.Repositories.Players;
 using Arma3BEClient.Libs.Tools;
 using Prism.Events;
 using System;

@@ -4,6 +4,7 @@ using Arma3BEClient.Common.Extensions;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
+using Arma3BEClient.Libs.Repositories.Players;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

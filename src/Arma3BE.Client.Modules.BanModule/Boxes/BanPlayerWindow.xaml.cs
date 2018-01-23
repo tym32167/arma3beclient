@@ -2,6 +2,7 @@
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Infrastructure.Windows;
 using Arma3BEClient.Libs.Repositories;
+using Arma3BEClient.Libs.Repositories.Players;
 using Arma3BEClient.Libs.Tools;
 using System;
 using System.Collections.Generic;

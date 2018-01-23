@@ -1,7 +1,9 @@
 ﻿using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Modules.CoreModule.Helpers;
+using Arma3BEClient.Common.Core;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.Repositories;
+using Arma3BEClient.Libs.Repositories.Players;
 using Arma3BEClient.Libs.Tools;
 using Microsoft.Practices.Unity;
 using Prism.Modularity;
@@ -20,16 +22,17 @@ namespace Arma3BE.Client.Modules.CoreModule
         public void Initialize()
         {
             _container.RegisterType<ILog, Log>();
-
-
+            _container.RegisterType<ICacheFactory, CacheFactory>();
             _container.RegisterType<ISettingsStoreSource, SettingsStoreSource>();
-
 
             _container.RegisterType<IPlayerRepository>(
                 new InjectionFactory(
                     c =>
-                        new PlayerRepositoryCache(
-                            c.Resolve<PlayerRepository>())));
+                    //new PlayerRepositoryCache(c.Resolve<PlayerRepository>())
+                    new PlayerRepositoryCacheV2(c.Resolve<PlayerRepository>(), c.Resolve<ICacheFactory>())
+                        ));
+
+            //_container.RegisterType<IPlayerRepository, PlayerRepositoryCacheV2>();
 
 
             _container.RegisterType<IServerInfoRepository>(
@@ -37,7 +40,6 @@ namespace Arma3BE.Client.Modules.CoreModule
                    c =>
                        new ServerInfoRepositoryCache(
                            c.Resolve<ServerInfoRepository>())));
-
 
             _container.RegisterType<IBanHelper, BanHelper>();
         }
