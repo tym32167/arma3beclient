@@ -31,7 +31,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
 
         public bool InProgress
         {
-            get => _inProgress;
+            get { return _inProgress; }
             set
             {
                 if (SetProperty(ref _inProgress, value))
@@ -45,7 +45,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
 
         public string Folder
         {
-            get => _folder;
+            get { return _folder; }
             set
             {
                 if (SetProperty(ref _folder, value))
@@ -61,8 +61,8 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
 
         public int Progress
         {
-            get => _progress;
-            set => SetProperty(ref _progress, value);
+            get { return _progress; }
+            set { SetProperty(ref _progress, value); }
         }
 
         public DelegateCommand SelectFolderCommand { get; set; }
