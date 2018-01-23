@@ -20,6 +20,8 @@ namespace Arma3BEClient.Libs.Tools
 
         private const int TopMostKey = 7;
 
+        private const int SteamFolderKey = 8;
+
         public string AdminName { get; set; }
 
         public string BanMessageTemplate { get; set; }
@@ -30,6 +32,8 @@ namespace Arma3BEClient.Libs.Tools
         public int BansUpdateSeconds { get; set; }
 
         public bool TopMost { get; set; }
+
+        public string SteamFolder { get; set; }
 
         private static SettingsStore _instance;
         public static SettingsStore Instance => _instance ?? (_instance = Load());
@@ -45,7 +49,8 @@ namespace Arma3BEClient.Libs.Tools
                     new Settings { Id = BansUpdateKey, Value = BansUpdateSeconds.ToString() },
                     new Settings { Id = BanMessageTemplateKey, Value = BanMessageTemplate },
                     new Settings { Id = KickMessageTemplateKey, Value = KickMessageTemplate },
-                    new Settings { Id = TopMostKey, Value = TopMost.ToString() }
+                    new Settings { Id = TopMostKey, Value = TopMost.ToString() },
+                    new Settings { Id = SteamFolderKey, Value = SteamFolder }
                 );
 
                 context.SaveChanges();
@@ -84,6 +89,8 @@ namespace Arma3BEClient.Libs.Tools
 
                 ss.TopMost = bool.Parse(settings.FirstOrDefault(x => x.Id == TopMostKey)?.Value ?? bool.FalseString);
 
+                ss.SteamFolder = settings.FirstOrDefault(x => x.Id == SteamFolderKey)?.Value;
+
                 return ss;
             }
         }
@@ -98,7 +105,8 @@ namespace Arma3BEClient.Libs.Tools
                 PlayersUpdateSeconds = PlayersUpdateSeconds,
                 BanMessageTemplate = BanMessageTemplate,
                 KickMessageTemplate = KickMessageTemplate,
-                TopMost = TopMost
+                TopMost = TopMost,
+                SteamFolder = SteamFolder
             };
         }
     }
@@ -108,7 +116,7 @@ namespace Arma3BEClient.Libs.Tools
         readonly ConcurrentDictionary<string, string> _cache = new ConcurrentDictionary<string, string>();
 
 
-        private static Lazy<CustomSettingsStore> _instance =
+        private static readonly Lazy<CustomSettingsStore> _instance =
             new Lazy<CustomSettingsStore>(() => new CustomSettingsStore());
 
         public static CustomSettingsStore Instance => _instance.Value;
@@ -137,7 +145,7 @@ namespace Arma3BEClient.Libs.Tools
         {
             using (var context = new Arma3BeClientContext())
             {
-                context.CustomSettings.AddOrUpdate(new CustomSettings() { Id = key, Value = value });
+                context.CustomSettings.AddOrUpdate(new CustomSettings { Id = key, Value = value });
                 context.SaveChanges();
             }
         }

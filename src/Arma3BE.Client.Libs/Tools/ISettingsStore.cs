@@ -15,6 +15,8 @@ namespace Arma3BEClient.Libs.Tools
 
         bool TopMost { get; set; }
 
+        string SteamFolder { get; set; }
+
         void Save();
     }
 

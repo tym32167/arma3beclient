@@ -5,6 +5,7 @@ using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Libs.Repositories;
 using Arma3BEClient.Libs.Repositories.Players;
+using Arma3BEClient.Libs.Tools;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -20,6 +21,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
         private readonly ILog _log = LogFactory.Create(new StackTrace().GetFrame(0).GetMethod().DeclaringType);
         private readonly IBanHelper _banHelper;
         private readonly IPlayerRepository _playerRepository;
+        private readonly ISteamService _steamService;
         private readonly Guid _serverId;
 
         private string[] _badNicknames;
@@ -27,11 +29,12 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
         private readonly Regex _nameRegex = new Regex("[A-Za-zА-Яа-я0-9]+",
             RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
-        public PlayerHelper(Guid serverId, IBanHelper banHelper, IPlayerRepository playerRepository, ReasonRepository reasonRepository)
+        public PlayerHelper(Guid serverId, IBanHelper banHelper, IPlayerRepository playerRepository, ReasonRepository reasonRepository, ISteamService steamService)
         {
             _serverId = serverId;
             _banHelper = banHelper;
             _playerRepository = playerRepository;
+            _steamService = steamService;
 
             Init(reasonRepository);
         }
@@ -88,9 +91,17 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
 
                         needUpdate = true;
                     }
+
+
                     if (prevoius.Contains(player.GUID) == false)
                     {
                         player.LastSeen = DateTime.UtcNow;
+                        needUpdate = true;
+                    }
+
+                    if (string.IsNullOrEmpty(player.SteamId))
+                    {
+                        player.SteamId = _steamService.GetSteamId(player.GUID)?.ToString();
                         needUpdate = true;
                     }
 
@@ -109,7 +120,8 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
                         GUID = p.Guid,
                         Name = p.Name,
                         Id = Guid.NewGuid(),
-                        LastIp = p.IP
+                        LastIp = p.IP,
+                        SteamId = _steamService.GetSteamId(p.Guid)?.ToString()
                     };
 
                     playerToUpdate.Add(np);
@@ -125,7 +137,6 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
 
             await _playerRepository.AddOrUpdateAsync(playerToUpdate);
             await _playerRepository.AddHistoryAsync(historyToAdd);
-
 
             return true;
         }
