@@ -28,6 +28,8 @@ namespace Arma3BE.Client.Modules.SteamModule.Core
 
             Step2_GenerateIndexAndIdsFile(step1Folder, folder, progress, cancellationToken);
             Directory.Delete(step1Folder, true);
+
+            progress.Report(100);
         }
 
         private void Step1_Generate256UnsortedFiles(string folder, IProgress<int> progress, CancellationToken cancellationToken)
@@ -44,7 +46,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Core
                 {
                     for (var i = 0; i < writers.Length; i++)
                     {
-                        if (cancellationToken.IsCancellationRequested) return;
+                        cancellationToken.ThrowIfCancellationRequested();
 
                         var fname = $"{i}.bin";
                         var path = Path.Combine(folder, fname);
@@ -60,14 +62,14 @@ namespace Arma3BE.Client.Modules.SteamModule.Core
 
                     foreach (var tuple in ForEach(Math.Min(4, Environment.ProcessorCount)))
                     {
-                        if (cancellationToken.IsCancellationRequested) return;
+                        cancellationToken.ThrowIfCancellationRequested();
                         var local = tuple;
                         tasks.Add(Task.Factory.StartNew(() =>
                         {
                             var md5Provicer = _md5ProviderFactory.Create();
                             for (uint i = local.Item1; i <= local.Item2; i++)
                             {
-                                if (cancellationToken.IsCancellationRequested) return;
+                                cancellationToken.ThrowIfCancellationRequested();
 
                                 var hash = md5Provicer.ComputeByteHash(i);
                                 var writer = writers[hash[0]];
@@ -132,7 +134,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Core
 
                     for (var i = 0; i < 256; i++)
                     {
-                        if (cancellationToken.IsCancellationRequested) return;
+                        cancellationToken.ThrowIfCancellationRequested();
 
                         var fileName = $"{i}.bin";
                         var inputFile = Path.Combine(step1Folder, fileName);
@@ -155,7 +157,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Core
 
                         for (var j = 0; j < inputLen; j += 8)
                         {
-                            if (cancellationToken.IsCancellationRequested) return;
+                            cancellationToken.ThrowIfCancellationRequested();
                             idsWriter.Write(tempBuffer, j + 4, 4);
                         }
 
@@ -171,7 +173,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Core
                             for (var ii = 0; ii < 256; ii++)
                                 for (var jj = 0; jj < 256; jj++)
                                 {
-                                    if (cancellationToken.IsCancellationRequested) return;
+                                    cancellationToken.ThrowIfCancellationRequested();
                                     var ind = 256 * 256 * i + 256 * ii + jj;
                                     indexWriter.Write(indexes[ind]);
                                 }

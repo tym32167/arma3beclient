@@ -4,6 +4,7 @@ using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.Tools;
 using Prism.Commands;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -16,6 +17,8 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
         public static string StaticTitle = "Steam Service";
         private string _folder;
         public string Title => StaticTitle;
+
+        private readonly ILog _log = LogFactory.Create(new StackTrace().GetFrame(0).GetMethod().DeclaringType);
 
         public SteamServiceViewModel(ISettingsStoreSource settingsStoreSource)
         {
@@ -99,33 +102,42 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
             _cancellationTokenSource?.Cancel();
             _cancellationTokenSource = new CancellationTokenSource();
 
-            await Task.Run(() =>
+            try
             {
-                var log = new Log();
-                var md5 = new OptimizedHashProviderFactory();
-                var generator = new Uint32ToTiont32AllHashesFileGenerator(md5, log);
 
-                try
+                await Task.Run(() =>
                 {
+                    var log = new Log();
+                    var md5 = new OptimizedHashProviderFactory();
+                    var generator = new Uint32ToTiont32AllHashesFileGenerator(md5, log);
                     generator.GenerateFile(Folder, progress, _cancellationTokenSource.Token);
-                }
-                catch (Exception e)
+                });
+
+                MessageBox.Show("Index files generated. Now you can restart application.", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                var baseException = ex.InnerException;
+                if (baseException is OperationCanceledException)
                 {
-                    log.Error(e);
-                    MessageBox.Show(e.ToString());
+                    /* NOPE */
+                    //MessageBox.Show("Operation cancelled.", "Cancelled", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-            });
+                else
+                {
+                    _log.Error(ex);
+                    MessageBox.Show("One or more errors occured", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
 
             progress.ProgressChanged -= Progress_ProgressChanged;
             InProgress = false;
-
         }
 
         private void Progress_ProgressChanged(object sender, int e)
         {
             Progress = e;
         }
-
 
         protected override void DisposeManagedResources()
         {
