@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Serialization;
 using Arma3BEClient.Libs.Core;
+using Arma3BEClient.Libs.Core.Model;
 
 namespace Arma3BE.Client.Modules.ToolsModule
 {

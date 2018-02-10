@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Arma3BEClient.Libs.Core;
+using Arma3BEClient.Libs.Core.Model;
 using Arma3BEClient.Libs.EF.Model;
 using Arma3BEClient.Libs.EF.Repositories;
 using Player = Arma3BE.Server.Models.Player;

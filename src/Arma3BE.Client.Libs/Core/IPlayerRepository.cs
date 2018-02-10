@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Arma3BEClient.Libs.Core.Model;
 using Arma3BEClient.Libs.EF.Model;
 
 namespace Arma3BEClient.Libs.Core

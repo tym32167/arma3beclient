@@ -68,7 +68,7 @@
     <Compile Include="EF\Repositories\BanRepository.cs" />
     <Compile Include="EF\Repositories\ChatRepository.cs" />
     <Compile Include="Core\IPlayerRepository.cs" />
-    <Compile Include="Core\PlayerDto.cs" />
+    <Compile Include="Core\Model\PlayerDto.cs" />
     <Compile Include="Core\IAdminRepository.cs" />
     <Compile Include="Core\IReasonRepository.cs" />
     <Compile Include="Core\IChatRepository.cs" />
@@ -155,9 +155,7 @@
       <DependentUpon>201706202056450_BadNicknames_ImportantWords.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Core\Model\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

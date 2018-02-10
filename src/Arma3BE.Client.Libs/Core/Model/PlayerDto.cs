@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Arma3BEClient.Libs.Core
+namespace Arma3BEClient.Libs.Core.Model
 {
     public class PlayerDto
     {

@@ -9,6 +9,7 @@
 
 using System.Collections.Generic;
 using Arma3BEClient.Libs.Core;
+using Arma3BEClient.Libs.Core.Model;
 
 namespace Arma3BEClient.Libs.EF.Model
 {

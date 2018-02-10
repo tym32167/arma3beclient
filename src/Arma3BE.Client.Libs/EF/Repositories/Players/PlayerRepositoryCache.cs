@@ -9,6 +9,7 @@ using Arma3BEClient.Common.Core;
 using Arma3BEClient.Common.Extensions;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.Core;
+using Arma3BEClient.Libs.Core.Model;
 using Arma3BEClient.Libs.EF.Model;
 
 namespace Arma3BEClient.Libs.EF.Repositories.Players
