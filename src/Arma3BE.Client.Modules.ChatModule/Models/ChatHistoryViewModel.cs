@@ -1,13 +1,14 @@
 ﻿using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Client.Infrastructure.Extensions;
 using Arma3BE.Client.Infrastructure.Models;
+using Arma3BEClient.Libs.Core;
+using Arma3BEClient.Libs.EF.Repositories;
+using Microsoft.Practices.ServiceLocation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Arma3BEClient.Libs.Core;
-using Arma3BEClient.Libs.EF.Repositories;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable MemberCanBePrivate.Global
@@ -62,7 +63,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
 
         private async Task UpdateLogAsync()
         {
-            using (var dc = new ChatRepository())
+            using (var dc = ServiceLocator.Current.TryResolve<IChatRepository>())
             {
                 var log = await dc.GetChatLogsAsync(SelectedServers, StartDate.LocalToUtcFromSettings(), EndDate.LocalToUtcFromSettings(), Filter);
 

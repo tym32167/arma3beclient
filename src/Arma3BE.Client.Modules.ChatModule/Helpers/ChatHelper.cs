@@ -1,7 +1,8 @@
 ﻿using Arma3BE.Server.Models;
+using Arma3BEClient.Libs.Core;
+using Microsoft.Practices.ServiceLocation;
 using System;
 using System.Threading.Tasks;
-using Arma3BEClient.Libs.EF.Repositories;
 
 namespace Arma3BE.Client.Modules.ChatModule.Helpers
 {
@@ -17,7 +18,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Helpers
         public async Task<bool> RegisterChatMessageAsync(ChatMessage message)
         {
             if (message.Type != ChatMessage.MessageType.Unknown)
-                using (var repo = new ChatRepository())
+                using (var repo = ServiceLocator.Current.TryResolve<IChatRepository>())
                 {
                     await repo.AddOrUpdateAsync(message, _currentServerId);
                 }
