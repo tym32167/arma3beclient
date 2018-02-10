@@ -1,10 +1,11 @@
 ﻿using Raven.Client.Documents;
+using System;
 
 namespace Arma3BEClient.Libs.RavenDB
 {
     public class RepositoryBase
     {
-        protected static IDocumentStore CreateStore()
+        private static readonly Lazy<IDocumentStore> Store = new Lazy<IDocumentStore>(() =>
         {
             IDocumentStore store = new DocumentStore()
             {
@@ -14,6 +15,11 @@ namespace Arma3BEClient.Libs.RavenDB
             }.Initialize();
 
             return store;
+        });
+
+        protected static IDocumentStore CreateStore()
+        {
+            return Store.Value;
         }
     }
 }

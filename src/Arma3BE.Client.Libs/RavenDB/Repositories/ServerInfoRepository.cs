@@ -1,7 +1,9 @@
 ﻿using Arma3BEClient.Libs.Core;
 using Arma3BEClient.Libs.Core.Model;
+using Arma3BEClient.Libs.RavenDB.Model;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Arma3BEClient.Libs.RavenDB.Repositories
@@ -10,35 +12,89 @@ namespace Arma3BEClient.Libs.RavenDB.Repositories
     {
         public Task AddOrUpdateAsync(ServerInfoDto serverInfo)
         {
-            using (var store = CreateStore())
+            using (var session = CreateStore().OpenSession())
             {
-                throw new NotImplementedException();
+                session.Store(FromDto(serverInfo));
+                session.SaveChanges();
+                return Task.CompletedTask;
             }
         }
 
         public Task<IEnumerable<ServerInfoDto>> GetActiveServerInfoAsync()
         {
-            throw new NotImplementedException();
+            using (var session = CreateStore().OpenSession())
+            {
+                var servers = session.Query<ServerInfo>().Where(s => s.Active).Select(FromModel).ToArray();
+                return Task.FromResult<IEnumerable<ServerInfoDto>>(servers);
+            }
         }
 
         public Task<IEnumerable<ServerInfoDto>> GetNotActiveServerInfoAsync()
         {
-            throw new NotImplementedException();
+            using (var session = CreateStore().OpenSession())
+            {
+                var servers = session.Query<ServerInfo>().Where(s => s.Active == false).Select(FromModel).ToArray();
+                return Task.FromResult<IEnumerable<ServerInfoDto>>(servers);
+            }
         }
 
         public Task<IEnumerable<ServerInfoDto>> GetServerInfoAsync()
         {
-            throw new NotImplementedException();
+            using (var session = CreateStore().OpenSession())
+            {
+                var servers = session.Query<ServerInfo>().Select(FromModel).ToArray();
+                return Task.FromResult<IEnumerable<ServerInfoDto>>(servers);
+            }
         }
 
         public Task RemoveAsync(Guid serverInfoId)
         {
-            throw new NotImplementedException();
+            using (var session = CreateStore().OpenSession())
+            {
+                session.Delete(serverInfoId.ToString());
+                session.SaveChanges();
+                return Task.CompletedTask;
+            }
         }
 
         public Task SetServerInfoActiveAsync(Guid serverInfoId, bool active)
         {
-            throw new NotImplementedException();
+            using (var session = CreateStore().OpenSession())
+            {
+                var si = session.Load<ServerInfo>(serverInfoId.ToString());
+                si.Active = active;
+                session.Store(si);
+                session.SaveChanges();
+                return Task.CompletedTask;
+            }
+        }
+
+        private ServerInfo FromDto(ServerInfoDto dto)
+        {
+            return new ServerInfo()
+            {
+                Id = dto.Id.ToString(),
+                Active = dto.Active,
+                Host = dto.Host,
+                Name = dto.Name,
+                Password = dto.Password,
+                Port = dto.Port,
+                SteamPort = dto.SteamPort
+            };
+        }
+
+        private ServerInfoDto FromModel(ServerInfo dto)
+        {
+            return new ServerInfoDto()
+            {
+                Id = Guid.Parse(dto.Id),
+                Active = dto.Active,
+                Host = dto.Host,
+                Name = dto.Name,
+                Password = dto.Password,
+                Port = dto.Port,
+                SteamPort = dto.SteamPort
+            };
         }
     }
 }
