@@ -1,5 +1,6 @@
 ﻿using Arma3BE.Client.Infrastructure;
 using Arma3BE.Client.Infrastructure.Helpers;
+using Arma3BEClient.Libs.Core.Model;
 using Arma3BEClient.Libs.EF.Repositories;
 using Microsoft.Practices.Unity;
 using Prism.Modularity;

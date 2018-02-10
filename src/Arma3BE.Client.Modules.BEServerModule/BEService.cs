@@ -11,6 +11,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Arma3BEClient.Libs.Core.Model;
 using Arma3BEClient.Libs.EF.Repositories;
 
 // ReSharper disable MemberCanBePrivate.Local

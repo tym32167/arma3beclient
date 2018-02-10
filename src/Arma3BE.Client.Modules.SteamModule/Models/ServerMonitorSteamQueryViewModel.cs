@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Arma3BEClient.Libs.Core.Model;
 using Arma3BEClient.Libs.EF.Repositories;
 
 // ReSharper disable VirtualMemberCallInConstructor

@@ -9,6 +9,7 @@ using Prism.Modularity;
 using Prism.Regions;
 using System.Linq;
 using System.Windows.Controls;
+using Arma3BEClient.Libs.Core.Model;
 using Arma3BEClient.Libs.EF.Repositories;
 
 namespace Arma3BE.Client.Modules.SteamModule

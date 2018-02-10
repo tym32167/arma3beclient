@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using Arma3BEClient.Libs.Core;
+using Arma3BEClient.Libs.Core.Model;
 using Arma3BEClient.Libs.Core.Settings;
 using Arma3BEClient.Libs.EF.Repositories;
 using Player = Arma3BE.Server.Models.Player;

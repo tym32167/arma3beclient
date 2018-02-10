@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Arma3BEClient.Libs.Core;
+using Arma3BEClient.Libs.Core.Model;
 using Arma3BEClient.Libs.Core.Settings;
 using Arma3BEClient.Libs.EF.Repositories;
 

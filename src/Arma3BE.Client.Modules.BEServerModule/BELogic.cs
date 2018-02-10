@@ -3,6 +3,7 @@ using Arma3BE.Server;
 using Prism.Events;
 using System;
 using System.Threading.Tasks;
+using Arma3BEClient.Libs.Core.Model;
 using Arma3BEClient.Libs.EF.Repositories;
 
 namespace Arma3BE.Client.Modules.BEServerModule

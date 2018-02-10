@@ -1,3 +1,9 @@
+using Arma3BEClient.Common.Core;
+using Arma3BEClient.Common.Logging;
+using Arma3BEClient.Libs.Core;
+using Arma3BEClient.Libs.Core.Model;
+using Arma3BEClient.Libs.EF.Context;
+using Arma3BEClient.Libs.EF.Model;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -5,11 +11,6 @@ using System.Data.Entity.Migrations;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Arma3BEClient.Common.Core;
-using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Libs.Core;
-using Arma3BEClient.Libs.EF.Context;
-using Arma3BEClient.Libs.EF.Model;
 
 namespace Arma3BEClient.Libs.EF.Repositories
 {
@@ -217,17 +218,5 @@ namespace Arma3BEClient.Libs.EF.Repositories
                 Active = info.Active,
             };
         }
-    }
-
-
-    public class ServerInfoDto
-    {
-        public Guid Id { get; set; }
-        public string Host { get; set; }
-        public int Port { get; set; }
-        public int SteamPort { get; set; }
-        public string Password { get; set; }
-        public string Name { get; set; }
-        public bool Active { get; set; }
     }
 }

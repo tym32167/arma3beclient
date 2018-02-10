@@ -2,6 +2,7 @@
 using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Modules.ChatModule.Chat;
 using Arma3BE.Client.Modules.ChatModule.Models;
+using Arma3BEClient.Libs.Core.Model;
 using Arma3BEClient.Libs.EF.Repositories;
 using Microsoft.Practices.Unity;
 using Prism.Modularity;

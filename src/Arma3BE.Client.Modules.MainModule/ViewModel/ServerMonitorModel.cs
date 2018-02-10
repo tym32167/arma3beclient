@@ -5,6 +5,7 @@ using Prism.Events;
 using System;
 using System.Threading.Tasks;
 using Arma3BEClient.Libs.Core;
+using Arma3BEClient.Libs.Core.Model;
 using Arma3BEClient.Libs.EF.Repositories;
 
 // ReSharper disable MemberCanBePrivate.Global

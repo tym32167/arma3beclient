@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Arma3BEClient.Libs.Core;
+using Arma3BEClient.Libs.Core.Model;
 using Arma3BEClient.Libs.EF.Repositories;
 using Admin = Arma3BE.Server.Models.Admin;
 using Player = Arma3BE.Server.Models.Player;
