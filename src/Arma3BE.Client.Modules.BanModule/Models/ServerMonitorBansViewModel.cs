@@ -10,6 +10,7 @@ using Arma3BE.Server;
 using Arma3BEClient.Libs.Core;
 using Arma3BEClient.Libs.Core.Settings;
 using Arma3BEClient.Libs.EF.Repositories;
+using Microsoft.Practices.ServiceLocation;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
@@ -78,7 +79,7 @@ namespace Arma3BE.Client.Modules.BanModule.Models
         {
             if (_data == null) return new List<BanView>();
 
-            using (var dc = new BanRepository())
+            using (var dc = ServiceLocator.Current.TryResolve<IBanRepository>())
             {
                 var dbBans = await dc.GetActivePermBansAsync();
 

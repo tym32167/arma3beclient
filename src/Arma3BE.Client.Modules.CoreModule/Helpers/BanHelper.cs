@@ -5,7 +5,9 @@ using Arma3BE.Server;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Extensions;
 using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Libs.Tools;
+using Arma3BEClient.Libs.Core;
+using Arma3BEClient.Libs.Core.Settings;
+using Microsoft.Practices.ServiceLocation;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
@@ -13,9 +15,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Arma3BEClient.Libs.Core;
-using Arma3BEClient.Libs.Core.Settings;
-using Arma3BEClient.Libs.EF.Repositories;
 
 namespace Arma3BE.Client.Modules.CoreModule.Helpers
 {
@@ -49,7 +48,7 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
                 return false;
 
 
-            using (var banRepository = new BanRepository())
+            using (var banRepository = ServiceLocator.Current.TryResolve<IBanRepository>())
             {
 
                 var db =

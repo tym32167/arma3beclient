@@ -1,11 +1,11 @@
+using Arma3BEClient.Libs.EF.Model;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Arma3BEClient.Libs.EF.Model;
 
 namespace Arma3BEClient.Libs.Core
 {
-    public interface IBanRepository
+    public interface IBanRepository : IDisposable
     {
         Task AddOrUpdateAsync(IEnumerable<Ban> bans);
         Task<IEnumerable<Ban>> GetActiveBansAsync(Guid serverId);
