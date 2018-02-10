@@ -1,7 +1,7 @@
 ﻿using Arma3BE.Server.Models;
-using Arma3BEClient.Libs.Repositories;
 using System;
 using System.Threading.Tasks;
+using Arma3BEClient.Libs.EF.Repositories;
 
 namespace Arma3BE.Client.Modules.ChatModule.Helpers
 {

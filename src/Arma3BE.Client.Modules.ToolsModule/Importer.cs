@@ -1,5 +1,4 @@
 ﻿using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Libs.Repositories.Players;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -9,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Serialization;
+using Arma3BEClient.Libs.Core;
 
 namespace Arma3BE.Client.Modules.ToolsModule
 {

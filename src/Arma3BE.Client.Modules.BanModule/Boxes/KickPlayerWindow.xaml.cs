@@ -1,13 +1,14 @@
 ﻿using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Infrastructure.Windows;
-using Arma3BEClient.Libs.Repositories;
 using Arma3BEClient.Libs.Tools;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Windows;
+using Arma3BEClient.Libs.Core.Settings;
+using Arma3BEClient.Libs.EF.Repositories;
 
 namespace Arma3BE.Client.Modules.BanModule.Boxes
 {

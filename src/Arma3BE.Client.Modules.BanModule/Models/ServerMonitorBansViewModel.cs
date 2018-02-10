@@ -7,8 +7,9 @@ using Arma3BE.Client.Infrastructure.Helpers.Views;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.BanModule.Boxes;
 using Arma3BE.Server;
-using Arma3BEClient.Libs.Repositories;
-using Arma3BEClient.Libs.Tools;
+using Arma3BEClient.Libs.Core;
+using Arma3BEClient.Libs.Core.Settings;
+using Arma3BEClient.Libs.EF.Repositories;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
@@ -26,10 +27,11 @@ namespace Arma3BE.Client.Modules.BanModule.Models
     {
         private readonly IEventAggregator _eventAggregator;
         private readonly IBanHelper _helper;
+        private readonly IPlayerRepository _playerRepository;
         private readonly Guid _serverInfoId;
 
         public ServerMonitorBansViewModel(ServerInfoDto serverInfo, IEventAggregator eventAggregator, IServerInfoRepository infoRepository,
-            IBanHelper banHelper, ISettingsStoreSource settingsStoreSource)
+            IBanHelper banHelper, ISettingsStoreSource settingsStoreSource, IPlayerRepository playerRepository)
             : base(
                 new ActionCommand(() => SendCommand(eventAggregator, serverInfo.Id, CommandType.Bans)),
                 new BanViewComparer())
@@ -37,6 +39,7 @@ namespace Arma3BE.Client.Modules.BanModule.Models
             _serverInfoId = serverInfo.Id;
             _eventAggregator = eventAggregator;
             _helper = banHelper;
+            _playerRepository = playerRepository;
             AvailibleBans = new BanView[0];
 
             SyncBans = new ActionCommand(() =>
@@ -50,7 +53,7 @@ namespace Arma3BE.Client.Modules.BanModule.Models
 
             CustomBan = new ActionCommand(() =>
             {
-                var w = new BanPlayerWindow(_serverInfoId, _helper, null, false, null, null, infoRepository, settingsStoreSource);
+                var w = new BanPlayerWindow(_serverInfoId, _helper, null, false, null, null, infoRepository, settingsStoreSource, _playerRepository);
                 w.ShowDialog();
             });
 

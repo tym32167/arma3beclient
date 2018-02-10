@@ -2,8 +2,6 @@
 using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Modules.CoreModule.Helpers;
 using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Libs.ModelCompact;
-using Arma3BEClient.Libs.Repositories;
 using Arma3BEClient.Libs.Tools;
 using Prism.Events;
 using System;
@@ -11,6 +9,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Arma3BEClient.Libs.Core;
+using Arma3BEClient.Libs.Core.Settings;
+using Arma3BEClient.Libs.EF.Model;
+using Arma3BEClient.Libs.EF.Repositories;
+
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable ExplicitCallerInfoArgument

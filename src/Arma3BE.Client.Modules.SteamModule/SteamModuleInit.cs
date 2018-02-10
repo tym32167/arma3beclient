@@ -2,7 +2,6 @@
 using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Modules.SteamModule.Grids;
 using Arma3BE.Client.Modules.SteamModule.Models;
-using Arma3BEClient.Libs.Repositories;
 using Arma3BEClient.Libs.Tools;
 using Microsoft.Practices.Unity;
 using Prism.Commands;
@@ -10,6 +9,7 @@ using Prism.Modularity;
 using Prism.Regions;
 using System.Linq;
 using System.Windows.Controls;
+using Arma3BEClient.Libs.EF.Repositories;
 
 namespace Arma3BE.Client.Modules.SteamModule
 {

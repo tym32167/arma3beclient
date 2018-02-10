@@ -1,10 +1,9 @@
 ﻿using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Client.Infrastructure.Extensions;
 using Arma3BE.Client.Infrastructure.Models;
-using Arma3BEClient.Libs.ModelCompact;
 using Prism.Events;
 using System;
-using Arma3BEClient.Libs.Repositories;
+using Arma3BEClient.Libs.EF.Repositories;
 
 namespace Arma3BE.Client.Modules.IndicatorsModule
 {

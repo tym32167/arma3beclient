@@ -6,8 +6,6 @@ using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.OnlinePlayersModule.Helpers;
 using Arma3BE.Server;
-using Arma3BEClient.Libs.Repositories;
-using Arma3BEClient.Libs.Repositories.Players;
 using Arma3BEClient.Libs.Tools;
 using Prism.Commands;
 using Prism.Events;
@@ -15,6 +13,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Arma3BEClient.Libs.Core;
+using Arma3BEClient.Libs.EF.Repositories;
 using Admin = Arma3BE.Server.Models.Admin;
 using Player = Arma3BE.Server.Models.Player;
 // ReSharper disable MemberCanBePrivate.Global

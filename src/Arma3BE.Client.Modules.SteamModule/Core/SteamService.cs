@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using Arma3BEClient.Libs.Core.Settings;
 
 namespace Arma3BE.Client.Modules.SteamModule.Core
 {

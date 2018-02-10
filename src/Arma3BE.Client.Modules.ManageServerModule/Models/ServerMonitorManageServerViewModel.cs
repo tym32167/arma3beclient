@@ -3,12 +3,11 @@ using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Server;
 using Arma3BE.Server.Models;
-using Arma3BEClient.Libs.ModelCompact;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Windows;
-using Arma3BEClient.Libs.Repositories;
+using Arma3BEClient.Libs.EF.Repositories;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global

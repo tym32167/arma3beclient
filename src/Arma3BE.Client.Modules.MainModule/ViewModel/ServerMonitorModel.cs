@@ -1,10 +1,11 @@
 ﻿using Arma3BE.Client.Infrastructure.Contracts;
 using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Events.BE;
-using Arma3BEClient.Libs.Repositories;
 using Prism.Events;
 using System;
 using System.Threading.Tasks;
+using Arma3BEClient.Libs.Core;
+using Arma3BEClient.Libs.EF.Repositories;
 
 // ReSharper disable MemberCanBePrivate.Global
 

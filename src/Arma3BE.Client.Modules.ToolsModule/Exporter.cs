@@ -1,11 +1,11 @@
-﻿using Arma3BEClient.Libs.Repositories.Players;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Serialization;
+using Arma3BEClient.Libs.Core;
 
 namespace Arma3BE.Client.Modules.ToolsModule
 {

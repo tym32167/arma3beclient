@@ -1,6 +1,5 @@
 ﻿using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Client.Infrastructure.Models;
-using Arma3BEClient.Libs.Repositories.Players;
 using Arma3BEClient.Libs.Tools;
 using System;
 using System.Collections.Generic;
@@ -10,6 +9,7 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Arma3BEClient.Libs.Core;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global

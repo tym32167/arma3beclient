@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using Arma3BE.Client.Infrastructure.Windows;
+using Arma3BEClient.Libs.Core.Settings;
 using Arma3BEClient.Libs.Tools;
 
 namespace Arma3BE.Client.Modules.ChatModule.Boxes

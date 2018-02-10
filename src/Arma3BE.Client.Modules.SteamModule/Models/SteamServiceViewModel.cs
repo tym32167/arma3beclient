@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Arma3BEClient.Libs.Core.Settings;
 
 namespace Arma3BE.Client.Modules.SteamModule.Models
 {

@@ -3,12 +3,12 @@ using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.AdminsModule.Helpers;
 using Arma3BE.Server;
-using Arma3BEClient.Libs.Repositories;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Arma3BEClient.Libs.EF.Repositories;
 using Admin = Arma3BE.Server.Models.Admin;
 
 namespace Arma3BE.Client.Modules.AdminsModule.Models

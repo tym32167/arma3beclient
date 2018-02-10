@@ -4,13 +4,13 @@ using Arma3BE.Client.Infrastructure.Events.Models;
 using Arma3BE.Client.Infrastructure.Extensions;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.PlayersModule.Models;
-using Arma3BEClient.Libs.Repositories.Players;
 using Prism.Commands;
 using Prism.Events;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Arma3BEClient.Libs.Core;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global

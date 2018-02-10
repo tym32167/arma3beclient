@@ -1,7 +1,6 @@
 ﻿using Arma3BE.Client.Infrastructure;
 using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Client.Infrastructure.Models;
-using Arma3BEClient.Libs.ModelCompact;
 using Arma3BEClient.Steam;
 using System;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Arma3BEClient.Libs.Repositories;
+using Arma3BEClient.Libs.EF.Repositories;
 
 // ReSharper disable VirtualMemberCallInConstructor
 // ReSharper disable ExplicitCallerInfoArgument

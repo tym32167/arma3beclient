@@ -1,5 +1,7 @@
 ﻿using Arma3BEClient.Libs.Tools;
 using System;
+using Arma3BEClient.Libs.Core.Settings;
+using Arma3BEClient.Libs.EF.Settings;
 
 namespace Arma3BE.Client.Infrastructure.Extensions
 {

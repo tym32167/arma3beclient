@@ -2,9 +2,11 @@
 using Arma3BE.Client.Modules.CoreModule.Helpers;
 using Arma3BEClient.Common.Core;
 using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Libs.Repositories;
-using Arma3BEClient.Libs.Repositories.Players;
-using Arma3BEClient.Libs.Tools;
+using Arma3BEClient.Libs.Core;
+using Arma3BEClient.Libs.Core.Settings;
+using Arma3BEClient.Libs.EF.Repositories;
+using Arma3BEClient.Libs.EF.Repositories.Players;
+using Arma3BEClient.Libs.EF.Settings;
 using Microsoft.Practices.Unity;
 using Prism.Modularity;
 

@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using Arma3BEClient.Libs.Core.Settings;
 
 namespace Arma3BE.Client.Modules.BEServerModule
 {

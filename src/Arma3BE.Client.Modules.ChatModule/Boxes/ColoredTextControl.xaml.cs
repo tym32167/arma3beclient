@@ -3,7 +3,6 @@ using Arma3BE.Client.Infrastructure.Events.Models;
 using Arma3BE.Client.Infrastructure.Extensions;
 using Arma3BE.Client.Modules.ChatModule.Models;
 using Arma3BE.Server.Models;
-using Arma3BEClient.Libs.Repositories;
 using Microsoft.Practices.ServiceLocation;
 using Prism.Events;
 using System;
@@ -14,6 +13,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
+using Arma3BEClient.Libs.EF.Repositories;
 
 namespace Arma3BE.Client.Modules.ChatModule.Boxes
 {

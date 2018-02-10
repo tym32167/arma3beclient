@@ -1,8 +1,8 @@
 ﻿using Arma3BE.Client.Infrastructure.Helpers;
-using Arma3BEClient.Libs.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Arma3BEClient.Libs.EF.Repositories;
 using Admin = Arma3BE.Server.Models.Admin;
 
 namespace Arma3BE.Client.Modules.AdminsModule.Helpers

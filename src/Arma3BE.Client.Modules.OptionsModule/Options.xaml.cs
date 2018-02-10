@@ -3,6 +3,7 @@ using Arma3BE.Client.Modules.OptionsModule.ViewModel;
 using Arma3BEClient.Libs.Tools;
 using System;
 using System.Windows;
+using Arma3BEClient.Libs.Core.Settings;
 using Xceed.Wpf.Toolkit;
 
 namespace Arma3BE.Client.Modules.OptionsModule

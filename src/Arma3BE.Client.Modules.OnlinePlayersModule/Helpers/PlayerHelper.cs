@@ -2,9 +2,6 @@
 using Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views;
 using Arma3BEClient.Common.Extensions;
 using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Libs.ModelCompact;
-using Arma3BEClient.Libs.Repositories;
-using Arma3BEClient.Libs.Repositories.Players;
 using Arma3BEClient.Libs.Tools;
 using System;
 using System.Collections.Generic;
@@ -12,6 +9,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Arma3BEClient.Libs.Core;
+using Arma3BEClient.Libs.EF.Model;
+using Arma3BEClient.Libs.EF.Repositories;
 using Player = Arma3BE.Server.Models.Player;
 
 namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
@@ -115,7 +115,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
             if (newplayers.Any())
                 foreach (var p in newplayers)
                 {
-                    var np = new Arma3BEClient.Libs.ModelCompact.Player
+                    var np = new Arma3BEClient.Libs.EF.Model.Player
                     {
                         GUID = p.Guid,
                         Name = p.Name,

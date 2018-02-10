@@ -3,8 +3,6 @@ using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Events.Models;
 using Arma3BE.Client.Infrastructure.Models;
-using Arma3BEClient.Libs.ModelCompact;
-using Arma3BEClient.Libs.Repositories.Players;
 using Prism.Commands;
 using Prism.Events;
 using System;
@@ -12,6 +10,8 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Arma3BEClient.Libs.Core;
+using Arma3BEClient.Libs.EF.Model;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ExplicitCallerInfoArgument
