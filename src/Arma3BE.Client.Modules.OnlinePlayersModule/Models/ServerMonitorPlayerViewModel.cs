@@ -31,7 +31,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
 
         public ServerMonitorPlayerViewModel(ServerInfoDto serverInfo,
             IBanHelper banHelper, IEventAggregator eventAggregator, IPlayerRepository playerRepository,
-            ReasonRepository reasonRepository,
+            IReasonRepository reasonRepository,
             ISteamService steamService)
             : base(
                 new ActionCommand(() => SendCommand(eventAggregator, serverInfo.Id, CommandType.Players)),

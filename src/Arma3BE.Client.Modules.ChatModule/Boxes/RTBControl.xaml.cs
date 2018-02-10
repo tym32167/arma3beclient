@@ -13,6 +13,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Arma3BEClient.Libs.Core;
 using Arma3BEClient.Libs.EF.Repositories;
 using Color = System.Windows.Media.Color;
 
@@ -46,7 +47,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
 
         private async void Init()
         {
-            using (var repo = new ReasonRepository())
+            using (var repo = ServiceLocator.Current.TryResolve<IReasonRepository>())
             {
                 importantWords = await repo.GetImportantWordsAsync();
             }

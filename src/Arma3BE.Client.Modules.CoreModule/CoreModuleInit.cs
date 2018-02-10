@@ -25,23 +25,28 @@ namespace Arma3BE.Client.Modules.CoreModule
         {
             _container.RegisterType<ILog, Log>();
             _container.RegisterType<ICacheFactory, CacheFactory>();
-            _container.RegisterType<ISettingsStoreSource, SettingsStoreSource>();
 
+
+
+
+            _container.RegisterType<ISettingsStoreSource, SettingsStoreSource>();
             _container.RegisterType<IPlayerRepository>(
                 new InjectionFactory(
                     c =>
                     //new PlayerRepositoryCache(c.Resolve<PlayerRepository>())
                     new PlayerRepositoryCacheV2(c.Resolve<PlayerRepository>(), c.Resolve<ICacheFactory>())
                         ));
-
-            //_container.RegisterType<IPlayerRepository, PlayerRepositoryCacheV2>();
-
-
             _container.RegisterType<IServerInfoRepository>(
                new InjectionFactory(
                    c =>
                        new ServerInfoRepositoryCache(
                            c.Resolve<ServerInfoRepository>())));
+
+            _container.RegisterType<IAdminRepository, AdminRepository>();
+            _container.RegisterType<IBanRepository, BanRepository>();
+            _container.RegisterType<IChatRepository, ChatRepository>();
+            _container.RegisterType<IReasonRepository, ReasonRepository>();
+
 
             _container.RegisterType<IBanHelper, BanHelper>();
         }

@@ -1,9 +1,10 @@
+using System;
 using System.Threading.Tasks;
 using Arma3BEClient.Libs.EF.Model;
 
 namespace Arma3BEClient.Libs.Core
 {
-    public interface IReasonRepository
+    public interface IReasonRepository : IDisposable
     {
         void Dispose();
         Task<string[]> GetBadNicknamesAsync();

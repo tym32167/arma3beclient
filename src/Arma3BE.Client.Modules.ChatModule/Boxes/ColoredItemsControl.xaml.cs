@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Arma3BEClient.Libs.Core;
 using Arma3BEClient.Libs.EF.Repositories;
 using Xceed.Wpf.AvalonDock.Controls;
 
@@ -39,7 +40,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
 
         private async Task InitBox()
         {
-            using (var repo = new ReasonRepository())
+            using (var repo = ServiceLocator.Current.TryResolve<IReasonRepository>())
             {
                 importantWords = await repo.GetImportantWordsAsync();
             }

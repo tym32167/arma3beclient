@@ -29,7 +29,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
         private readonly Regex _nameRegex = new Regex("[A-Za-zА-Яа-я0-9]+",
             RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
-        public PlayerHelper(Guid serverId, IBanHelper banHelper, IPlayerRepository playerRepository, ReasonRepository reasonRepository, ISteamService steamService)
+        public PlayerHelper(Guid serverId, IBanHelper banHelper, IPlayerRepository playerRepository, IReasonRepository reasonRepository, ISteamService steamService)
         {
             _serverId = serverId;
             _banHelper = banHelper;
@@ -39,7 +39,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
             Init(reasonRepository);
         }
 
-        private async Task Init(ReasonRepository reasonRepository)
+        private async Task Init(IReasonRepository reasonRepository)
         {
             _badNicknames = await reasonRepository.GetBadNicknamesAsync();
         }

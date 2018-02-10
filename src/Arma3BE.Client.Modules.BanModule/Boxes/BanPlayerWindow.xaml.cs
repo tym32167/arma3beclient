@@ -25,11 +25,11 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
         private readonly BanPlayerViewModel _model;
 
         public BanPlayerWindow(Guid? serverId, IBanHelper banHelper, string playerGuid, bool isOnline, string playerName,
-            string playerNum, IServerInfoRepository infoRepository, ISettingsStoreSource settingsStoreSource, IPlayerRepository playerRepository) : base(settingsStoreSource)
+            string playerNum, IServerInfoRepository infoRepository, ISettingsStoreSource settingsStoreSource, IPlayerRepository playerRepository, IReasonRepository reasonRepository) : base(settingsStoreSource)
         {
             _playerRepository = playerRepository;
             InitializeComponent();
-            _model = new BanPlayerViewModel(serverId, playerGuid, isOnline, banHelper, playerName, playerNum, infoRepository, _playerRepository);
+            _model = new BanPlayerViewModel(serverId, playerGuid, isOnline, banHelper, playerName, playerNum, infoRepository, _playerRepository, reasonRepository);
 
             tbGuid.IsEnabled = string.IsNullOrEmpty(playerGuid);
 
@@ -57,6 +57,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
         private readonly IBanHelper _playerHelper;
         private readonly string _playerNum;
         private readonly IPlayerRepository _playerRepository;
+        private readonly IReasonRepository _reasonRepository;
         private long? _minutes;
         private string _playerGuid;
         private string _playerName;
@@ -65,7 +66,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
 
         public BanPlayerViewModel(Guid? serverId, string playerGuid, bool isOnline, IBanHelper playerHelper,
             string playerName,
-            string playerNum, IServerInfoRepository infoRepository, IPlayerRepository playerRepository)
+            string playerNum, IServerInfoRepository infoRepository, IPlayerRepository playerRepository, IReasonRepository reasonRepository)
         {
             _playerGuid = playerGuid;
             _isOnline = isOnline;
@@ -73,6 +74,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             _playerName = playerName;
             _playerNum = playerNum;
             _playerRepository = playerRepository;
+            _reasonRepository = reasonRepository;
             _minutes = 0;
 
 
@@ -121,11 +123,11 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
         {
             try
             {
-                using (var repo = new ReasonRepository())
-                {
-                    var str = await repo.GetBanReasonsAsync();
-                    return str;
-                }
+
+
+                var str = await _reasonRepository.GetBanReasonsAsync();
+                return str;
+
             }
             catch (Exception)
             {
@@ -140,16 +142,13 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
         {
             try
             {
-                using (var repo = new ReasonRepository())
+                var str = (await _reasonRepository.GetBanTimesAsync()).Select(x => new BanFullTime
                 {
-                    var str = (await repo.GetBanTimesAsync()).Select(x => new BanFullTime
-                    {
-                        Text = x.Title,
-                        Period = System.TimeSpan.FromMinutes(x.TimeInMinutes),
-                        PeriodMinutes = x.TimeInMinutes
-                    }).ToArray();
-                    return str;
-                }
+                    Text = x.Title,
+                    Period = System.TimeSpan.FromMinutes(x.TimeInMinutes),
+                    PeriodMinutes = x.TimeInMinutes
+                }).ToArray();
+                return str;
             }
             catch (Exception)
             {

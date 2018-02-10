@@ -2,17 +2,17 @@
 using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Modules.CoreModule.Helpers;
 using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Libs.Tools;
+using Arma3BEClient.Libs.Core;
+using Arma3BEClient.Libs.Core.Settings;
+using Arma3BEClient.Libs.EF.Model;
+using Arma3BEClient.Libs.EF.Repositories;
+using Microsoft.Practices.ServiceLocation;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using Arma3BEClient.Libs.Core;
-using Arma3BEClient.Libs.Core.Settings;
-using Arma3BEClient.Libs.EF.Model;
-using Arma3BEClient.Libs.EF.Repositories;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
@@ -44,7 +44,7 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
             Servers = (await _infoRepository.GetServerInfoAsync()).Select(x => new ServerInfoModel(x)).ToList();
 
 
-            using (var dc = new ReasonRepository())
+            using (var dc = ServiceLocator.Current.TryResolve<IReasonRepository>())
             {
                 BanReasons = (await dc.GetBanReasonsAsync()).Select(x => new ReasonEdit { Text = x }).ToList();
                 KickReasons = (await dc.GetKickReasonsAsync()).Select(x => new ReasonEdit { Text = x }).ToList();
@@ -182,7 +182,7 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
                 }
 
 
-                using (var dc = new ReasonRepository())
+                using (var dc = ServiceLocator.Current.TryResolve<IReasonRepository>())
                 {
                     await dc.UpdateBanReasons(BanReasons.Select(x => x.Text).Where(x => string.IsNullOrEmpty(x) == false).Distinct().ToArray());
                     await dc.UpdateBanTimes(BanTimes.Where(x => string.IsNullOrEmpty(x.Text) == false).Select(x => new BanTime { TimeInMinutes = x.Minutes, Title = x.Text }).ToArray());

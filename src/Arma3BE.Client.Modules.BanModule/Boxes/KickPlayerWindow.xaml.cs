@@ -1,14 +1,13 @@
 ﻿using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Infrastructure.Windows;
-using Arma3BEClient.Libs.Tools;
+using Arma3BEClient.Libs.Core;
+using Arma3BEClient.Libs.Core.Settings;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Windows;
-using Arma3BEClient.Libs.Core.Settings;
-using Arma3BEClient.Libs.EF.Repositories;
 
 namespace Arma3BE.Client.Modules.BanModule.Boxes
 {
@@ -23,7 +22,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
         private readonly int _playerNum;
         private readonly string _playerGuid;
 
-        public KickPlayerWindow(IBanHelper playerHelper, Guid serverId, int playerNum, string playerGuid, string playerName, ISettingsStoreSource settingsStoreSource) : base(settingsStoreSource)
+        public KickPlayerWindow(IBanHelper playerHelper, Guid serverId, int playerNum, string playerGuid, string playerName, ISettingsStoreSource settingsStoreSource, IReasonRepository reasonRepository) : base(settingsStoreSource)
         {
             _playerHelper = playerHelper;
             _serverId = serverId;
@@ -31,7 +30,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
             _playerGuid = playerGuid;
             InitializeComponent();
 
-            var model = new KickPlayerViewModel(playerName);
+            var model = new KickPlayerViewModel(playerName, reasonRepository);
             DataContext = model;
 
 
@@ -53,10 +52,12 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class KickPlayerViewModel : ViewModelBase
     {
+        private readonly IReasonRepository _reasonRepository;
         private string _reason;
 
-        public KickPlayerViewModel(string playerName)
+        public KickPlayerViewModel(string playerName, IReasonRepository reasonRepository)
         {
+            _reasonRepository = reasonRepository;
             PlayerName = playerName;
 
             Init();
@@ -89,11 +90,8 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
         {
             try
             {
-                using (var repo = new ReasonRepository())
-                {
-                    var str = await repo.GetKickReasonsAsync();
-                    return str;
-                }
+                var str = await _reasonRepository.GetKickReasonsAsync();
+                return str;
             }
             catch (Exception)
             {

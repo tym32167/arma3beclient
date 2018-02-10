@@ -31,7 +31,7 @@ namespace Arma3BE.Client.Modules.BanModule.Models
         private readonly Guid _serverInfoId;
 
         public ServerMonitorBansViewModel(ServerInfoDto serverInfo, IEventAggregator eventAggregator, IServerInfoRepository infoRepository,
-            IBanHelper banHelper, ISettingsStoreSource settingsStoreSource, IPlayerRepository playerRepository)
+            IBanHelper banHelper, ISettingsStoreSource settingsStoreSource, IPlayerRepository playerRepository, IReasonRepository reasonRepository)
             : base(
                 new ActionCommand(() => SendCommand(eventAggregator, serverInfo.Id, CommandType.Bans)),
                 new BanViewComparer())
@@ -53,7 +53,7 @@ namespace Arma3BE.Client.Modules.BanModule.Models
 
             CustomBan = new ActionCommand(() =>
             {
-                var w = new BanPlayerWindow(_serverInfoId, _helper, null, false, null, null, infoRepository, settingsStoreSource, _playerRepository);
+                var w = new BanPlayerWindow(_serverInfoId, _helper, null, false, null, null, infoRepository, settingsStoreSource, _playerRepository, reasonRepository);
                 w.ShowDialog();
             });
 
