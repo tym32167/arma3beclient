@@ -9,6 +9,7 @@ namespace Arma3BEClient.Libs.RavenDB.Model
         public string IP { get; set; }
         public string SteamId { get; set; }
         public string GUID { get; set; }
+        public string Comment { get; set; }
         public DateTime LastSeen { get; set; }
     }
 }

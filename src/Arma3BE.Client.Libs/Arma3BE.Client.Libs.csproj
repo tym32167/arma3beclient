@@ -107,6 +107,7 @@
     <Compile Include="RavenDB\Model\PlayerHistory.cs" />
     <Compile Include="RavenDB\Model\ServerInfo.cs" />
     <Compile Include="RavenDB\Model\Setting.cs" />
+    <Compile Include="RavenDB\Repositories\PlayerRepository.cs" />
     <Compile Include="RavenDB\Repositories\ServerInfoRepository.cs" />
     <Compile Include="RavenDB\RepositoryBase.cs" />
     <Compile Include="Tools\ISteamService.cs" />
