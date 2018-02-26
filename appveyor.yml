@@ -53,6 +53,10 @@ platform: Any CPU
 configuration: Release
 
 
+submodules:
+git submodule init
+git submodule update
+
 build:  
   project: src\Arma3BE.sln     # path to Visual Studio solution or project  
   # MSBuild verbosity level
