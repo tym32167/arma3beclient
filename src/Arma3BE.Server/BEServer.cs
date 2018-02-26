@@ -84,7 +84,7 @@ namespace Arma3BE.Server
                     _battlEyeServer.SendCommand(BattlEyeCommand.Bans);
                     break;
                 case CommandType.Admins:
-                    _battlEyeServer.SendCommand(BattlEyeCommand.admins);
+                    _battlEyeServer.SendCommand(BattlEyeCommand.Admins);
                     break;
 
                 case CommandType.Say:
@@ -157,7 +157,7 @@ namespace Arma3BE.Server
                     break;
 
                 case CommandType.LoadEvents:
-                    _battlEyeServer.SendCommand(BattlEyeCommand.loadEvents);
+                    _battlEyeServer.SendCommand(BattlEyeCommand.LoadEvents);
                     break;
 
                 case CommandType.LoadScripts:
