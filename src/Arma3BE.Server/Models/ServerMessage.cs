@@ -1,6 +1,7 @@
 ﻿using Arma3BE.Server.Abstract;
 using Arma3BE.Server.Messaging;
 using Arma3BE.Server.Recognizers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -24,6 +25,8 @@ namespace Arma3BE.Server.Models
         {
             MessageId = messageId;
             Message = message;
+
+            _type = new Lazy<ServerMessageType>(GetMessageType);
         }
 
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
@@ -32,14 +35,16 @@ namespace Arma3BE.Server.Models
 
         public string Message { get; }
 
-        public ServerMessageType Type
+        private readonly Lazy<ServerMessageType> _type;
+
+        public ServerMessageType Type => _type.Value;
+
+        private ServerMessageType GetMessageType()
         {
-            get
-            {
-                var matches = Recognizers.Where(x => x.CanRecognize(this)).ToArray();
-                if (matches.Length == 1) return matches[0].GetMessageType(this);
-                return ServerMessageType.Unknown;
-            }
+            var matches = Recognizers.Where(x => x.CanRecognize(this)).ToArray();
+            if (matches.Length == 1) return matches[0].GetMessageType(this);
+            return ServerMessageType.Unknown;
         }
+
     }
 }

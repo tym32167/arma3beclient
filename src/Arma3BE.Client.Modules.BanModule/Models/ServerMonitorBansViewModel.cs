@@ -12,6 +12,7 @@ using Arma3BEClient.Libs.Tools;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -66,8 +67,10 @@ namespace Arma3BE.Client.Modules.BanModule.Models
                {
                    if (_serverInfoId == e.ServerId)
                    {
+                       Debug.WriteLine($"{DateTime.Now} BEMessageEvent<BEItemsMessage<Ban> enter");
                        await SetDataAsync(e.Items);
                        WaitingForEvent = false;
+                       Debug.WriteLine($"{DateTime.Now} BEMessageEvent<BEItemsMessage<Ban> enter");
                    }
                });
         }
@@ -113,11 +116,14 @@ namespace Arma3BE.Client.Modules.BanModule.Models
 
         public ICommand RefreshAvailiableCommand { get; set; }
 
-        protected override Task<IEnumerable<BanView>> RegisterDataAsync(IEnumerable<Ban> initialData)
+        protected override async Task<IEnumerable<BanView>> RegisterDataAsync(IEnumerable<Ban> initialData)
         {
+            Debug.WriteLine($"{DateTime.Now} RegisterDataAsync enter");
             var enumerable = initialData as IList<Ban> ?? initialData.ToList();
             _helper.RegisterBans(enumerable, _serverInfoId);
-            return _helper.GetBanViewAsync(enumerable);
+            var res = await _helper.GetBanViewAsync(enumerable);
+            Debug.WriteLine($"{DateTime.Now} RegisterDataAsync exit");
+            return res;
         }
 
         public void RemoveBan(BanView si)

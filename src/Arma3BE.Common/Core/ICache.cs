@@ -57,7 +57,7 @@ namespace Arma3BEClient.Common.Core
 
         public T[] GetAll(IEnumerable<string> keys)
         {
-            return _cache.GetValues(keys)?.OfType<T>().ToArray() ?? new T[0];
+            return _cache.GetValues(keys)?.Values?.OfType<T>().ToArray() ?? new T[0];
         }
     }
 

@@ -2,6 +2,7 @@
 using Arma3BE.Server.Messaging;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Core;
+using Arma3BEClient.Common.Extensions;
 using Arma3BEClient.Common.Logging;
 using BattleNET;
 using System;
@@ -280,64 +281,72 @@ namespace Arma3BE.Server
 
         private void ProcessMessage(ServerMessage message)
         {
-            var logMessage = new LogMessage
+            using (_log.Time("ProcessMessage"))
             {
-                Date = DateTime.UtcNow,
-                Message = message.Message
-            };
 
-            switch (message.Type)
-            {
-                case ServerMessageType.PlayerList:
-                    var list = new PlayerList(message);
-                    OnPlayerHandler(list);
-                    break;
-                case ServerMessageType.BanList:
-                    var banList = new BanList(message);
-                    OnBanHandler(banList);
-                    break;
+                var logMessage = new LogMessage
+                {
+                    Date = DateTime.UtcNow,
+                    Message = message.Message
+                };
 
-                case ServerMessageType.AdminList:
-                    var adminList = new AdminList(message);
-                    OnAdminHandler(adminList);
-                    break;
+                switch (message.Type)
+                {
+                    case ServerMessageType.PlayerList:
+                        var list = new PlayerList(message);
+                        OnPlayerHandler(list);
+                        break;
+                    case ServerMessageType.BanList:
+                        Debug.WriteLine($"{DateTime.Now} BanList enter");
+                        var banList = new BanList(message);
 
-                case ServerMessageType.MissionList:
-                    var missinlist = new MissionList(message);
-                    OnMissionHandler(missinlist);
-                    break;
+                        Debug.WriteLine($"{DateTime.Now} OnBanHandler enter");
+                        OnBanHandler(banList);
+                        Debug.WriteLine($"{DateTime.Now} OnBanHandler exit");
+                        break;
 
-                case ServerMessageType.ChatMessage:
-                    var chatMessage = new ChatMessage
-                    {
-                        Date = DateTime.UtcNow,
-                        Message = message.Message
-                    };
+                    case ServerMessageType.AdminList:
+                        var adminList = new AdminList(message);
+                        OnAdminHandler(adminList);
+                        break;
 
-                    OnChatMessageHandler(chatMessage);
-                    break;
+                    case ServerMessageType.MissionList:
+                        var missinlist = new MissionList(message);
+                        OnMissionHandler(missinlist);
+                        break;
 
-                case ServerMessageType.RconAdminLog:
-                    OnRConAdminLog(logMessage);
-                    break;
+                    case ServerMessageType.ChatMessage:
+                        var chatMessage = new ChatMessage
+                        {
+                            Date = DateTime.UtcNow,
+                            Message = message.Message
+                        };
 
-                case ServerMessageType.PlayerLog:
-                    OnPlayerLog(logMessage);
-                    break;
+                        OnChatMessageHandler(chatMessage);
+                        break;
 
-                case ServerMessageType.BanLog:
-                    OnBanLog(logMessage);
-                    break;
+                    case ServerMessageType.RconAdminLog:
+                        OnRConAdminLog(logMessage);
+                        break;
 
-                case ServerMessageType.Unknown:
-                    //var unknownMessage = new ChatMessage
-                    //{
-                    //    Date = DateTime.UtcNow,
-                    //    Message = message.Message
-                    //};
+                    case ServerMessageType.PlayerLog:
+                        OnPlayerLog(logMessage);
+                        break;
 
-                    //OnChatMessageHandler(unknownMessage);
-                    break;
+                    case ServerMessageType.BanLog:
+                        OnBanLog(logMessage);
+                        break;
+
+                    case ServerMessageType.Unknown:
+                        //var unknownMessage = new ChatMessage
+                        //{
+                        //    Date = DateTime.UtcNow,
+                        //    Message = message.Message
+                        //};
+
+                        //OnChatMessageHandler(unknownMessage);
+                        break;
+                }
             }
 
             RegisterMessage(message);
