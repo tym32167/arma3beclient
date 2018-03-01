@@ -54,6 +54,13 @@ namespace Arma3BE.Client.Modules.BanModule.Models
                 w.ShowDialog();
             });
 
+            RefreshAvailiableCommand = new ActionCommand(async () =>
+            {
+                AvailibleBans = await GetAvailibleBans();
+                RaisePropertyChanged(nameof(AvailibleBans));
+                RaisePropertyChanged(nameof(AvailibleBansCount));
+            });
+
             _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Ban>>>()
                 .Subscribe(async e =>
                {
@@ -104,6 +111,8 @@ namespace Arma3BE.Client.Modules.BanModule.Models
         public ICommand SyncBans { get; set; }
         public ICommand CustomBan { get; set; }
 
+        public ICommand RefreshAvailiableCommand { get; set; }
+
         protected override Task<IEnumerable<BanView>> RegisterDataAsync(IEnumerable<Ban> initialData)
         {
             var enumerable = initialData as IList<Ban> ?? initialData.ToList();
@@ -114,14 +123,6 @@ namespace Arma3BE.Client.Modules.BanModule.Models
         public void RemoveBan(BanView si)
         {
             SendCommand(CommandType.RemoveBan, si.Num.ToString());
-        }
-
-        public override async Task SetDataAsync(IEnumerable<Ban> initialData)
-        {
-            await base.SetDataAsync(initialData);
-            AvailibleBans = await GetAvailibleBans();
-            RaisePropertyChanged(nameof(AvailibleBans));
-            RaisePropertyChanged(nameof(AvailibleBansCount));
         }
 
         private void SendCommand(CommandType commandType, string parameters = null)
