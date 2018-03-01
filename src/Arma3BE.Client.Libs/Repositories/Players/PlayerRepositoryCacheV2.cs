@@ -49,7 +49,7 @@ namespace Arma3BEClient.Libs.Repositories.Players
 
             var result = _cache.GetAll(guidsArray).ToList();
             var foundGuids = new HashSet<string>(result.Select(x => x.GUID));
-            var notFound = guidsArray.Where(x => !foundGuids.Contains(x)).ToArray();
+            var notFound = new HashSet<string>(guidsArray.Where(x => !foundGuids.Contains(x) && x.IsGuid()).Distinct());
 
             if (notFound.Any())
             {
@@ -58,7 +58,14 @@ namespace Arma3BEClient.Libs.Repositories.Players
                 foreach (var playerDto in playedsToAdd)
                 {
                     _cache.Add(playerDto.GUID, playerDto);
+                    if (notFound.Contains(playerDto.GUID)) notFound.Remove(playerDto.GUID);
                 }
+
+                //await _inner.AddOrUpdateAsync(notFound.Select(x => new PlayerDto()
+                //{
+                //    Id = Guid.NewGuid(),
+                //    GUID = x
+                //}));
 
                 result.AddRange(playedsToAdd);
             }

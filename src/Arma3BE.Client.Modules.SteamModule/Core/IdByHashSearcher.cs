@@ -33,7 +33,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Core
         // 70473 - 6:13 vs 1:15
         public Dictionary<string, long> Search(string[] ids, CancellationToken token)
         {
-            var filteredIds = ids.Where(IsGuid).Distinct().ToArray();
+            var filteredIds = ids.Where(x => x.IsGuid()).Distinct().ToArray();
 
             var idsHash = new HashSet<string>(filteredIds);
             var result = new Dictionary<string, long>();
@@ -83,18 +83,6 @@ namespace Arma3BE.Client.Modules.SteamModule.Core
                     idsHashSet.Remove(str);
                 }
             }
-        }
-
-        private static bool IsGuid(string str)
-        {
-            if (string.IsNullOrEmpty(str)) return false;
-            if (str.Length != 32) return false;
-            foreach (var c in str)
-            {
-                if (!char.IsLetterOrDigit(c)) return false;
-                if (char.IsLetter(c) && char.IsUpper(c)) return false;
-            }
-            return true;
         }
 
         private static byte[] FromString(String hex)
