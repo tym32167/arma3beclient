@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Arma3BE.Server</RootNamespace>
     <AssemblyName>Arma3BE.Server</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -72,7 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\BattleNET\BattleNET\BattleNET.csproj">
-      <Project>{4fbb3734-215b-45b1-bdbc-0efa156a6900}</Project>
+      <Project>{db17061b-3fa9-46d5-acaf-f23693d86b5d}</Project>
       <Name>BattleNET</Name>
     </ProjectReference>
     <ProjectReference Include="..\Arma3BE.Common\Arma3BE.Common.csproj">
