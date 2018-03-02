@@ -43,7 +43,7 @@ namespace Arma3BE.Client.Modules.PlayersModule.Models
         public async Task Init()
         {
             await SetupPlayerAsync();
-            await SetupPlayerIPInfoAsync();
+            SetupPlayerIPInfoAsync();
         }
 
         private async Task SetupPlayerAsync()
