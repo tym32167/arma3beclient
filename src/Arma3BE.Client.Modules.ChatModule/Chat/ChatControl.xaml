@@ -23,7 +23,6 @@
         </Grid.RowDefinitions>
 
         <ToolBar>
-
             <CheckBox Content="Enable chat" IsChecked="{Binding EnableChat, Mode=TwoWay}" />
             <Separator />
             <CheckBox Content="Auto scroll" IsChecked="{Binding AutoScroll, Mode=TwoWay}" />
@@ -113,7 +112,7 @@
 
 
 
-                    <boxes:ColoredItemsControl x:Name="consoleControl"  IsAutoScroll="{Binding Path=DataContext.AutoScroll, RelativeSource={RelativeSource  AncestorType=chat:ChatControl}}" >
+                    <boxes:ColoredItemsControl x:Name="consoleControl" Grid.ColumnSpan="2" IsAutoScroll="{Binding Path=DataContext.AutoScroll, RelativeSource={RelativeSource  AncestorType=chat:ChatControl}}" >
                     </boxes:ColoredItemsControl>
 
                     <!--<ScrollViewer  Name="ConsoleScrollViewer"  Grid.ColumnSpan="2">
