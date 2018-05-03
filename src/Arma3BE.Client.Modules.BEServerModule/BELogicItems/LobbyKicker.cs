@@ -63,6 +63,12 @@ namespace Arma3BE.Client.Modules.BEServerModule.BELogicItems
             public void Update(Server.Models.Player[] players)
             {
                 var now = DateTime.UtcNow;
+                var set = new HashSet<int>(players.Select(x => x.Num));
+                var remove = _idlePlayers.Keys.Where(x => !set.Contains(x)).ToArray();
+                foreach (var i in remove)
+                {
+                    _idlePlayers.Remove(i);
+                }
                 foreach (var p in players)
                 {
                     if (!_idlePlayers.ContainsKey(p.Num))
