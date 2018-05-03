@@ -35,6 +35,15 @@ namespace Arma3BEClient.Libs.Tools
 
         public string SteamFolder { get; set; }
 
+
+        private const int IdleTimeInMinsKey = 9;
+        public int IdleTimeInMins { get; set; }
+
+        private const int IdleKickTextKey = 10;
+        public string IdleKickText { get; set; }
+
+
+
         private static SettingsStore _instance;
         public static SettingsStore Instance => _instance ?? (_instance = Load());
 
@@ -50,7 +59,10 @@ namespace Arma3BEClient.Libs.Tools
                     new Settings { Id = BanMessageTemplateKey, Value = BanMessageTemplate },
                     new Settings { Id = KickMessageTemplateKey, Value = KickMessageTemplate },
                     new Settings { Id = TopMostKey, Value = TopMost.ToString() },
-                    new Settings { Id = SteamFolderKey, Value = SteamFolder }
+                    new Settings { Id = SteamFolderKey, Value = SteamFolder },
+
+                    new Settings { Id = IdleTimeInMinsKey, Value = IdleTimeInMins.ToString() },
+                    new Settings { Id = IdleKickTextKey, Value = IdleKickText }
                 );
 
                 context.SaveChanges();
@@ -91,6 +103,9 @@ namespace Arma3BEClient.Libs.Tools
 
                 ss.SteamFolder = settings.FirstOrDefault(x => x.Id == SteamFolderKey)?.Value;
 
+                ss.IdleKickText = settings.FirstOrDefault(x => x.Id == IdleKickTextKey)?.Value ?? "Lobby Idle";
+                ss.IdleTimeInMins = (settings.FirstOrDefault(x => x.Id == IdleTimeInMinsKey)?.Value).FromString(0);
+
                 return ss;
             }
         }
@@ -106,7 +121,9 @@ namespace Arma3BEClient.Libs.Tools
                 BanMessageTemplate = BanMessageTemplate,
                 KickMessageTemplate = KickMessageTemplate,
                 TopMost = TopMost,
-                SteamFolder = SteamFolder
+                SteamFolder = SteamFolder,
+                IdleTimeInMins = IdleTimeInMins,
+                IdleKickText = IdleKickText
             };
         }
     }

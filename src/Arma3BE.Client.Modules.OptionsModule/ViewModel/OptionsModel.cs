@@ -154,6 +154,9 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
                 settings.BansUpdateSeconds = Settings.BansUpdateSeconds;
                 settings.PlayersUpdateSeconds = Settings.PlayersUpdateSeconds;
 
+                settings.IdleTimeInMins = Settings.IdleTimeInMins;
+                settings.IdleKickText = Settings.IdleKickText;
+
                 settings.TopMost = Settings.TopMost;
 
                 settings.Save();

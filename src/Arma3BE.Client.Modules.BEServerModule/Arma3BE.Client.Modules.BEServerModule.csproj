@@ -92,10 +92,12 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="BELogic.cs" />
+    <Compile Include="BELogicItems\LobbyKicker.cs" />
     <Compile Include="BEServerModuleInit.cs" />
     <Compile Include="BEService.cs" />
     <Compile Include="BEServiceLogic.cs" />
     <Compile Include="IBELogic.cs" />
+    <Compile Include="IBELogicItem.cs" />
     <Compile Include="IBEService.cs" />
   </ItemGroup>
   <ItemGroup>

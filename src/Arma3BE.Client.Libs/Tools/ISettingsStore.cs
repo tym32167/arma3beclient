@@ -17,6 +17,9 @@ namespace Arma3BEClient.Libs.Tools
 
         string SteamFolder { get; set; }
 
+        int IdleTimeInMins { get; set; }
+        string IdleKickText { get; set; }
+
         void Save();
     }
 

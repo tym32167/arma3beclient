@@ -42,6 +42,8 @@
                                 <RowDefinition Height="25" />
                                 <RowDefinition Height="25" />
                                 <RowDefinition Height="25" />
+                                <RowDefinition Height="25" />
+                                <RowDefinition Height="25" />
                             </Grid.RowDefinitions>
 
 
@@ -66,6 +68,13 @@
 
                             <TextBlock Grid.Row="4" Grid.Column="0"  Text="Always on top" Margin="2" />
                             <CheckBox  Grid.Row="4" Grid.Column="1" Margin="2" IsChecked="{Binding Settings.TopMost, Mode=TwoWay}"></CheckBox>
+
+
+                            <TextBlock Grid.Row="5" Grid.Column="0"  Text="Lobby Idle Time Limit (minutes)" Margin="2" />
+                            <TextBox Grid.Row="5" Grid.Column="1" Width="100" HorizontalAlignment="Left" Margin="2" Text="{Binding Settings.IdleTimeInMins, Mode=TwoWay}" />
+
+                            <TextBlock Grid.Row="6" Grid.Column="0"  Text="Lobby Idle kick reason" Margin="2" />
+                            <TextBox Grid.Row="6" Grid.Column="1" Width="100" HorizontalAlignment="Left" Margin="2" Text="{Binding Settings.IdleKickText, Mode=TwoWay}" />
                         </Grid>
                     </Border>
                 </TabItem>
