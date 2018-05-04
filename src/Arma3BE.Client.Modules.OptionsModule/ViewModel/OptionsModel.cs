@@ -1,5 +1,6 @@
 ﻿using Arma3BE.Client.Infrastructure.Contracts;
 using Arma3BE.Client.Infrastructure.Events;
+using Arma3BE.Client.Infrastructure.Settings;
 using Arma3BE.Client.Modules.CoreModule.Helpers;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.ModelCompact;
@@ -11,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable ExplicitCallerInfoArgument
@@ -38,7 +40,8 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
 
         private async void Init()
         {
-            Servers = (await _infoRepository.GetServerInfoAsync()).Select(x => new ServerInfoModel(x)).ToList();
+            var dbServers = (await _infoRepository.GetServerInfoAsync()).ToArray();
+            Servers = dbServers.Select(x => new ServerInfoModel(x)).ToList();
 
 
             using (var dc = new ReasonRepository())
@@ -63,6 +66,30 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
 
             TimeZones = zones;
 
+            var customStore = _settingsStoreSource.GetCustomSettingsStore();
+            ServerSettings = dbServers.Select(x => new
+            {
+                ServerSettings =
+                    customStore.Load<ServerSettings>(x.Id.ToString()) ?? new ServerSettings()
+                    {
+                        IdleTimeInMins = 0,
+                        KickIdlePlayers = false,
+                        IdleKickReason = "Lobby Idle",
+                        ServerId = x.Id
+                    },
+                ServerName = x.Name
+            })
+                .Select(x => new ServerSettingsVM()
+                {
+                    ServerId = x.ServerSettings.ServerId,
+                    IdleTimeInMins = x.ServerSettings.IdleTimeInMins,
+                    ServerName = x.ServerName,
+                    IdleKickReason = x.ServerSettings.IdleKickReason,
+                    KickIdlePlayers = x.ServerSettings.KickIdlePlayers
+                })
+                .ToList();
+
+
             RaisePropertyChanged(nameof(Servers));
             RaisePropertyChanged(nameof(BanReasons));
             RaisePropertyChanged(nameof(KickReasons));
@@ -70,6 +97,7 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
             RaisePropertyChanged(nameof(BadNicknames));
             RaisePropertyChanged(nameof(ImportantWords));
             RaisePropertyChanged(nameof(TimeZones));
+            RaisePropertyChanged(nameof(ServerSettings));
         }
 
         public List<ServerInfoModel> Servers { get; set; }
@@ -138,10 +166,25 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public IEnumerable<TimeZoneInfo> TimeZones { get; set; }
 
+        public List<ServerSettingsVM> ServerSettings { get; set; }
+
         public async Task Save()
         {
             try
             {
+                var customStore = _settingsStoreSource.GetCustomSettingsStore();
+
+                foreach (var serverSetting in ServerSettings)
+                {
+                    customStore.Save(serverSetting.ServerId.ToString(), new ServerSettings()
+                    {
+                        ServerId = serverSetting.ServerId,
+                        IdleTimeInMins = serverSetting.IdleTimeInMins,
+                        IdleKickReason = serverSetting.IdleKickReason,
+                        KickIdlePlayers = serverSetting.KickIdlePlayers
+                    });
+                }
+
                 var settings = _settingsStoreSource.GetSettingsStore();
                 settings.TimeZoneInfo = Settings.TimeZoneInfo;
 
@@ -153,9 +196,6 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
 
                 settings.BansUpdateSeconds = Settings.BansUpdateSeconds;
                 settings.PlayersUpdateSeconds = Settings.PlayersUpdateSeconds;
-
-                settings.IdleTimeInMins = Settings.IdleTimeInMins;
-                settings.IdleKickText = Settings.IdleKickText;
 
                 settings.TopMost = Settings.TopMost;
 
@@ -205,6 +245,11 @@ namespace Arma3BE.Client.Modules.OptionsModule.ViewModel
                 MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+    }
+
+    public class ServerSettingsVM : ServerSettings
+    {
+        public string ServerName { get; set; }
     }
 
     public class ServerInfoModel

@@ -4,7 +4,10 @@ using Arma3BEClient.Libs.ModelCompact;
 using System;
 using System.Collections.Concurrent;
 using System.Data.Entity.Migrations;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Xml.Serialization;
 
 namespace Arma3BEClient.Libs.Tools
 {
@@ -36,14 +39,6 @@ namespace Arma3BEClient.Libs.Tools
         public string SteamFolder { get; set; }
 
 
-        private const int IdleTimeInMinsKey = 9;
-        public int IdleTimeInMins { get; set; }
-
-        private const int IdleKickTextKey = 10;
-        public string IdleKickText { get; set; }
-
-
-
         private static SettingsStore _instance;
         public static SettingsStore Instance => _instance ?? (_instance = Load());
 
@@ -59,10 +54,7 @@ namespace Arma3BEClient.Libs.Tools
                     new Settings { Id = BanMessageTemplateKey, Value = BanMessageTemplate },
                     new Settings { Id = KickMessageTemplateKey, Value = KickMessageTemplate },
                     new Settings { Id = TopMostKey, Value = TopMost.ToString() },
-                    new Settings { Id = SteamFolderKey, Value = SteamFolder },
-
-                    new Settings { Id = IdleTimeInMinsKey, Value = IdleTimeInMins.ToString() },
-                    new Settings { Id = IdleKickTextKey, Value = IdleKickText }
+                    new Settings { Id = SteamFolderKey, Value = SteamFolder }
                 );
 
                 context.SaveChanges();
@@ -103,9 +95,6 @@ namespace Arma3BEClient.Libs.Tools
 
                 ss.SteamFolder = settings.FirstOrDefault(x => x.Id == SteamFolderKey)?.Value;
 
-                ss.IdleKickText = settings.FirstOrDefault(x => x.Id == IdleKickTextKey)?.Value ?? "Lobby Idle";
-                ss.IdleTimeInMins = (settings.FirstOrDefault(x => x.Id == IdleTimeInMinsKey)?.Value).FromString(0);
-
                 return ss;
             }
         }
@@ -121,9 +110,7 @@ namespace Arma3BEClient.Libs.Tools
                 BanMessageTemplate = BanMessageTemplate,
                 KickMessageTemplate = KickMessageTemplate,
                 TopMost = TopMost,
-                SteamFolder = SteamFolder,
-                IdleTimeInMins = IdleTimeInMins,
-                IdleKickText = IdleKickText
+                SteamFolder = SteamFolder
             };
         }
     }
@@ -148,6 +135,32 @@ namespace Arma3BEClient.Libs.Tools
         {
             var rrr = _cache.GetOrAdd(key, LoadInternal);
             return rrr;
+        }
+
+        public void Save<T>(string key, T value)
+        {
+            var ser = new XmlSerializer(typeof(T));
+
+            var sb = new StringBuilder();
+
+            using (var sw = new StringWriter(sb))
+            {
+                ser.Serialize(sw, value);
+            }
+
+            Save(key, sb.ToString());
+        }
+
+        public T Load<T>(string key)
+        {
+            var data = Load(key);
+            if (string.IsNullOrEmpty(data)) return default(T);
+
+            var ser = new XmlSerializer(typeof(T));
+            using (var sr = new StringReader(data))
+            {
+                return (T)ser.Deserialize(sr);
+            }
         }
 
         private string LoadInternal(string key)

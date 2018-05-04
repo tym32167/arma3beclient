@@ -1,4 +1,5 @@
 ﻿using Arma3BE.Client.Infrastructure.Events.BE;
+using Arma3BE.Client.Infrastructure.Settings;
 using Arma3BE.Server;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Libs.Tools;
@@ -6,6 +7,7 @@ using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Arma3BEClient.Common.Logging;
 
 namespace Arma3BE.Client.Modules.BEServerModule.BELogicItems
 {
@@ -15,6 +17,10 @@ namespace Arma3BE.Client.Modules.BEServerModule.BELogicItems
         private readonly ISettingsStoreSource _settingsStoreSource;
 
         private Dictionary<Guid, LobbyIdleStore> _servers = new Dictionary<Guid, LobbyIdleStore>();
+
+
+        private readonly ILog _logger = new Log();
+
 
         public LobbyKicker(IEventAggregator aggregator, ISettingsStoreSource settingsStoreSource)
         {
@@ -26,25 +32,33 @@ namespace Arma3BE.Client.Modules.BEServerModule.BELogicItems
 
         private void PlayersUpdate(BEItemsMessage<Player> data)
         {
-            var settings = _settingsStoreSource.GetSettingsStore();
-            var idleTime = settings.IdleTimeInMins;
-
-            if (idleTime > 0)
+            try
             {
-                if (!_servers.ContainsKey(data.ServerId)) _servers.Add(data.ServerId, new LobbyIdleStore());
-                var items = data.Items.ToArray();
-                _servers[data.ServerId].Update(items);
+                var settingsStore = _settingsStoreSource.GetCustomSettingsStore();
+                var serversSettings = settingsStore.Load<ServerSettings>(data.ServerId.ToString());
 
-                var span = TimeSpan.FromMinutes(idleTime);
-                var idlePlayers = _servers[data.ServerId].GetIdlePlayers(span, items);
-
-                var reason = settings.IdleKickText;
-
-                foreach (var idlePlayer in idlePlayers)
+                if (serversSettings?.IdleTimeInMins > 0 && serversSettings?.KickIdlePlayers == true)
                 {
-                    _aggregator.GetEvent<BEMessageEvent<BECommand>>()
-                        .Publish(new BECommand(data.ServerId, CommandType.Kick, $"{idlePlayer} {reason}"));
+                    var idleTime = serversSettings.IdleTimeInMins;
+                    if (!_servers.ContainsKey(data.ServerId)) _servers.Add(data.ServerId, new LobbyIdleStore());
+                    var items = data.Items.ToArray();
+                    _servers[data.ServerId].Update(items);
+
+                    var span = TimeSpan.FromMinutes(idleTime);
+                    var idlePlayers = _servers[data.ServerId].GetIdlePlayers(span, items);
+
+                    var reason = serversSettings.IdleKickReason;
+
+                    foreach (var idlePlayer in idlePlayers)
+                    {
+                        _aggregator.GetEvent<BEMessageEvent<BECommand>>()
+                            .Publish(new BECommand(data.ServerId, CommandType.Kick, $"{idlePlayer} {reason}"));
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e);
             }
         }
 

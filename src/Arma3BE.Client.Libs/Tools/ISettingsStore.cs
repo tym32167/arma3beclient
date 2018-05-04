@@ -17,9 +17,6 @@ namespace Arma3BEClient.Libs.Tools
 
         string SteamFolder { get; set; }
 
-        int IdleTimeInMins { get; set; }
-        string IdleKickText { get; set; }
-
         void Save();
     }
 
@@ -28,6 +25,9 @@ namespace Arma3BEClient.Libs.Tools
     {
         void Save(string key, string value);
         string Load(string key);
+
+        void Save<T>(string key, T value);
+        T Load<T>(string key);
     }
 
     public interface ISettingsStoreSource

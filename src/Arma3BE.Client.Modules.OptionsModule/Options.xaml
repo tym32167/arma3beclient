@@ -42,8 +42,8 @@
                                 <RowDefinition Height="25" />
                                 <RowDefinition Height="25" />
                                 <RowDefinition Height="25" />
-                                <RowDefinition Height="25" />
-                                <RowDefinition Height="25" />
+                                <RowDefinition Height="325" />
+                                <!--<RowDefinition Height="25" />-->
                             </Grid.RowDefinitions>
 
 
@@ -70,11 +70,37 @@
                             <CheckBox  Grid.Row="4" Grid.Column="1" Margin="2" IsChecked="{Binding Settings.TopMost, Mode=TwoWay}"></CheckBox>
 
 
-                            <TextBlock Grid.Row="5" Grid.Column="0"  Text="Lobby Idle Time Limit (minutes)" Margin="2" />
+
+                            <DataGrid Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding ServerSettings}" IsReadOnly="False"
+                                      CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Server" Binding="{Binding ServerName}" IsReadOnly="True"></DataGridTextColumn>
+
+
+                                    <DataGridTextColumn Header="Kick Rreason" Binding="{Binding IdleKickReason}" ></DataGridTextColumn>
+
+                                    <DataGridTextColumn Header="Lobby Time (mins)" Binding="{Binding IdleTimeInMins}" ></DataGridTextColumn>
+
+                                    <DataGridCheckBoxColumn Header="Kick Idle Players" Binding="{Binding KickIdlePlayers}"></DataGridCheckBoxColumn>
+
+                                </DataGrid.Columns>
+                            </DataGrid>
+
+                            <!--<ItemsControl ItemsSource="{Binding ServerSettings}" Grid.ColumnSpan="2">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>-->
+                            
+                            
+
+                            <!--<TextBlock Grid.Row="5" Grid.Column="0"  Text="Lobby Idle Time Limit (minutes)" Margin="2" />
                             <TextBox Grid.Row="5" Grid.Column="1" Width="100" HorizontalAlignment="Left" Margin="2" Text="{Binding Settings.IdleTimeInMins, Mode=TwoWay}" />
 
                             <TextBlock Grid.Row="6" Grid.Column="0"  Text="Lobby Idle kick reason" Margin="2" />
-                            <TextBox Grid.Row="6" Grid.Column="1" Width="100" HorizontalAlignment="Left" Margin="2" Text="{Binding Settings.IdleKickText, Mode=TwoWay}" />
+                            <TextBox Grid.Row="6" Grid.Column="1" Width="100" HorizontalAlignment="Left" Margin="2" Text="{Binding Settings.IdleKickText, Mode=TwoWay}" />-->
                         </Grid>
                     </Border>
                 </TabItem>

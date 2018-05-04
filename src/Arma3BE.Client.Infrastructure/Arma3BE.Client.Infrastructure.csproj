@@ -140,6 +140,7 @@
     <Compile Include="Models\ServerMonitorBaseViewModel.cs" />
     <Compile Include="Models\ViewModelBase.cs" />
     <Compile Include="RegionNames.cs" />
+    <Compile Include="Settings\ServerSettings.cs" />
     <Compile Include="Windows\WindowBase.cs" />
   </ItemGroup>
   <ItemGroup>
