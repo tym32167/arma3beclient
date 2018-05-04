@@ -2,12 +2,12 @@
 using Arma3BE.Client.Infrastructure.Settings;
 using Arma3BE.Server;
 using Arma3BE.Server.Models;
+using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.Tools;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Arma3BEClient.Common.Logging;
 
 namespace Arma3BE.Client.Modules.BEServerModule.BELogicItems
 {
@@ -71,7 +71,7 @@ namespace Arma3BE.Client.Modules.BEServerModule.BELogicItems
                 var now = DateTime.UtcNow;
                 var target = now.Add(span.Negate());
 
-                return players.Where(x => _idlePlayers[x.Num] < target).Select(x => x.Num).ToArray();
+                return players.Where(x => x.State == Player.PlayerState.Lobby).Where(x => _idlePlayers[x.Num] < target).Select(x => x.Num).ToArray();
             }
 
             public void Update(Server.Models.Player[] players)
