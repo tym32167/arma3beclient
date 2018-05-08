@@ -1,8 +1,9 @@
-﻿<Window x:Class="Arma3BE.Client.Modules.BanModule.Boxes.BanPlayerWindow"
+﻿<windows:WindowBase x:Class="Arma3BE.Client.Modules.BanModule.Boxes.BanPlayerWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:windows="clr-namespace:Arma3BE.Client.Infrastructure.Windows;assembly=Arma3BE.Client.Infrastructure"
         Title="{Binding PlayerName, StringFormat=Ban player {0}}"
         WindowStyle="ToolWindow" SizeToContent="WidthAndHeight" ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen">
@@ -57,4 +58,4 @@
         </StackPanel>
 
     </Grid>
-</Window>
+</windows:WindowBase>

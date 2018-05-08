@@ -1,6 +1,6 @@
 ﻿using Arma3BE.Client.Infrastructure.Commands;
 using Arma3BE.Client.Infrastructure.Models;
-using Arma3BEClient.Libs.Repositories;
+using Arma3BEClient.Libs.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,6 +9,8 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Arma3BEClient.Libs.Core;
+
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
@@ -18,6 +20,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
     {
         public static string StaticTitle = "Steam Discovery";
         private readonly IPlayerRepository _playerRepository;
+        private readonly ISteamService _steamService;
         private CancellationTokenSource _cancelatioTokenSource;
         private long _current;
         private bool _inProcess;
@@ -30,9 +33,10 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
         private Dictionary<string, Guid> _totalPlayers;
 
 
-        public SteamDiscoveryViewModel(IPlayerRepository playerRepository)
+        public SteamDiscoveryViewModel(IPlayerRepository playerRepository, ISteamService steamService)
         {
             _playerRepository = playerRepository;
+            _steamService = steamService;
             PlayersFound = new ObservableCollection<Tuple<string, string>>();
             StartCommand = new ActionCommand(async () => await StartAsync());
             StopCommand = new ActionCommand(Stop);
@@ -172,6 +176,7 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
         private async Task StartAsync()
         {
             InProcess = true;
+
             var found = PlayersFound;
             found.Clear();
 
@@ -184,7 +189,23 @@ namespace Arma3BE.Client.Modules.SteamModule.Models
             _cancelatioTokenSource?.Cancel();
             _cancelatioTokenSource = new CancellationTokenSource();
 
-            Task.Factory.StartNew(() => GenerateStart(_cancelatioTokenSource.Token), TaskCreationOptions.LongRunning);
+            if (_steamService.IsReady())
+            {
+                var res = await Task.Run(() => _steamService.GetSteamIds(TotalPlayers?.Keys.ToArray() ?? new string[0], _cancelatioTokenSource.Token));
+
+                foreach (var item in res)
+                {
+                    PlayersFound.Add(Tuple.Create(item.Key, item.Value.ToString()));
+                }
+
+                await SaveAsync();
+
+            }
+            else
+            {
+                Task.Factory.StartNew(() => GenerateStart(_cancelatioTokenSource.Token),
+                    TaskCreationOptions.LongRunning);
+            }
         }
 
         private void GenerateStart(CancellationToken token)

@@ -7,13 +7,17 @@ using Arma3BE.Client.Infrastructure.Helpers.Views;
 using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.BanModule.Boxes;
 using Arma3BE.Server;
-using Arma3BEClient.Libs.Repositories;
+using Arma3BEClient.Libs.Core;
+using Arma3BEClient.Libs.Core.Settings;
+using Arma3BEClient.Libs.EF.Repositories;
+using Microsoft.Practices.ServiceLocation;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Arma3BEClient.Libs.Core.Model;
 using Ban = Arma3BE.Server.Models.Ban;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ExplicitCallerInfoArgument
@@ -25,10 +29,11 @@ namespace Arma3BE.Client.Modules.BanModule.Models
     {
         private readonly IEventAggregator _eventAggregator;
         private readonly IBanHelper _helper;
+        private readonly IPlayerRepository _playerRepository;
         private readonly Guid _serverInfoId;
 
         public ServerMonitorBansViewModel(ServerInfoDto serverInfo, IEventAggregator eventAggregator, IServerInfoRepository infoRepository,
-            IBanHelper banHelper)
+            IBanHelper banHelper, ISettingsStoreSource settingsStoreSource, IPlayerRepository playerRepository, IReasonRepository reasonRepository)
             : base(
                 new ActionCommand(() => SendCommand(eventAggregator, serverInfo.Id, CommandType.Bans)),
                 new BanViewComparer())
@@ -36,6 +41,7 @@ namespace Arma3BE.Client.Modules.BanModule.Models
             _serverInfoId = serverInfo.Id;
             _eventAggregator = eventAggregator;
             _helper = banHelper;
+            _playerRepository = playerRepository;
             AvailibleBans = new BanView[0];
 
             SyncBans = new ActionCommand(() =>
@@ -49,7 +55,7 @@ namespace Arma3BE.Client.Modules.BanModule.Models
 
             CustomBan = new ActionCommand(() =>
             {
-                var w = new BanPlayerWindow(_serverInfoId, _helper, null, false, null, null, infoRepository);
+                var w = new BanPlayerWindow(_serverInfoId, _helper, null, false, null, null, infoRepository, settingsStoreSource, _playerRepository, reasonRepository);
                 w.ShowDialog();
             });
 
@@ -74,7 +80,7 @@ namespace Arma3BE.Client.Modules.BanModule.Models
         {
             if (_data == null) return new List<BanView>();
 
-            using (var dc = new BanRepository())
+            using (var dc = ServiceLocator.Current.TryResolve<IBanRepository>())
             {
                 var dbBans = await dc.GetActivePermBansAsync();
 

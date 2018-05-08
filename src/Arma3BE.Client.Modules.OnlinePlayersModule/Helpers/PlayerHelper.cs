@@ -2,14 +2,17 @@
 using Arma3BE.Client.Modules.OnlinePlayersModule.Helpers.Views;
 using Arma3BEClient.Common.Extensions;
 using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Libs.ModelCompact;
-using Arma3BEClient.Libs.Repositories;
+using Arma3BEClient.Libs.Tools;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Arma3BEClient.Libs.Core;
+using Arma3BEClient.Libs.Core.Model;
+using Arma3BEClient.Libs.EF.Model;
+using Arma3BEClient.Libs.EF.Repositories;
 using Player = Arma3BE.Server.Models.Player;
 
 namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
@@ -19,6 +22,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
         private readonly ILog _log = LogFactory.Create(new StackTrace().GetFrame(0).GetMethod().DeclaringType);
         private readonly IBanHelper _banHelper;
         private readonly IPlayerRepository _playerRepository;
+        private readonly ISteamService _steamService;
         private readonly Guid _serverId;
 
         private string[] _badNicknames;
@@ -26,16 +30,17 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
         private readonly Regex _nameRegex = new Regex("[A-Za-zА-Яа-я0-9]+",
             RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
-        public PlayerHelper(Guid serverId, IBanHelper banHelper, IPlayerRepository playerRepository, ReasonRepository reasonRepository)
+        public PlayerHelper(Guid serverId, IBanHelper banHelper, IPlayerRepository playerRepository, IReasonRepository reasonRepository, ISteamService steamService)
         {
             _serverId = serverId;
             _banHelper = banHelper;
             _playerRepository = playerRepository;
+            _steamService = steamService;
 
             Init(reasonRepository);
         }
 
-        private async Task Init(ReasonRepository reasonRepository)
+        private async Task Init(IReasonRepository reasonRepository)
         {
             _badNicknames = await reasonRepository.GetBadNicknamesAsync();
         }
@@ -87,9 +92,17 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
 
                         needUpdate = true;
                     }
+
+
                     if (prevoius.Contains(player.GUID) == false)
                     {
                         player.LastSeen = DateTime.UtcNow;
+                        needUpdate = true;
+                    }
+
+                    if (string.IsNullOrEmpty(player.SteamId))
+                    {
+                        player.SteamId = _steamService.GetSteamId(player.GUID)?.ToString();
                         needUpdate = true;
                     }
 
@@ -103,12 +116,13 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
             if (newplayers.Any())
                 foreach (var p in newplayers)
                 {
-                    var np = new Arma3BEClient.Libs.ModelCompact.Player
+                    var np = new Arma3BEClient.Libs.EF.Model.Player
                     {
                         GUID = p.Guid,
                         Name = p.Name,
                         Id = Guid.NewGuid(),
-                        LastIp = p.IP
+                        LastIp = p.IP,
+                        SteamId = _steamService.GetSteamId(p.Guid)?.ToString()
                     };
 
                     playerToUpdate.Add(np);
@@ -124,7 +138,6 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Helpers
 
             await _playerRepository.AddOrUpdateAsync(playerToUpdate);
             await _playerRepository.AddHistoryAsync(historyToAdd);
-
 
             return true;
         }

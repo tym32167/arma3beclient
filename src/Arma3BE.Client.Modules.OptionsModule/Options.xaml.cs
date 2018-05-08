@@ -1,6 +1,9 @@
-﻿using Arma3BE.Client.Modules.OptionsModule.ViewModel;
+﻿using Arma3BE.Client.Infrastructure.Windows;
+using Arma3BE.Client.Modules.OptionsModule.ViewModel;
+using Arma3BEClient.Libs.Tools;
 using System;
 using System.Windows;
+using Arma3BEClient.Libs.Core.Settings;
 using Xceed.Wpf.Toolkit;
 
 namespace Arma3BE.Client.Modules.OptionsModule
@@ -9,11 +12,11 @@ namespace Arma3BE.Client.Modules.OptionsModule
     ///     Interaction logic for Options.xaml
     /// </summary>
     // ReSharper disable once RedundantExtendsListEntry
-    public partial class Options : Window
+    public partial class Options : WindowBase
     {
         private readonly OptionsModel _optionsModel;
 
-        public Options(OptionsModel optionsModel)
+        public Options(OptionsModel optionsModel, ISettingsStoreSource settingsStoreSource) : base(settingsStoreSource)
         {
             InitializeComponent();
 

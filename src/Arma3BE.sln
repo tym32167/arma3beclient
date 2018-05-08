@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BE.Client", "Arma3BE.Client\Arma3BE.Client.csproj", "{46B9AF55-01D0-45B0-95CB-16F5B61A9F03}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -225,5 +225,8 @@ Global
 		{FA11FEA6-31FA-4A53-AFB0-DCB23CE48ECF} = {561F7217-8BEF-4812-91ED-3DE5483DFD07}
 		{969269FC-6C5F-49E9-BC60-96F1AE571B8F} = {561F7217-8BEF-4812-91ED-3DE5483DFD07}
 		{9ADE6790-CEDC-43F0-8920-54AFFFB2646E} = {22A6CC46-99D2-45AF-B379-3320ECE99124}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {67F6E9B7-0530-4B0D-8DD6-3A028C0662E5}
 	EndGlobalSection
 EndGlobal

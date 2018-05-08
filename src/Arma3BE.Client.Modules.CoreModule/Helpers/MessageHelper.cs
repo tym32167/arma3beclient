@@ -1,5 +1,6 @@
 using Arma3BEClient.Libs.Tools;
 using System;
+using Arma3BEClient.Libs.Core.Settings;
 
 namespace Arma3BE.Client.Modules.CoreModule.Helpers
 {

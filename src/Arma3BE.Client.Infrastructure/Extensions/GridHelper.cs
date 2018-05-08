@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Xml.Serialization;
+using Arma3BEClient.Libs.EF.Settings;
 using Xceed.Wpf.DataGrid;
 
 namespace Arma3BE.Client.Infrastructure.Extensions

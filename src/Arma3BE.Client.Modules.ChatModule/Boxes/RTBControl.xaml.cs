@@ -3,7 +3,6 @@ using Arma3BE.Client.Infrastructure.Events.Models;
 using Arma3BE.Client.Infrastructure.Extensions;
 using Arma3BE.Client.Modules.ChatModule.Models;
 using Arma3BE.Server.Models;
-using Arma3BEClient.Libs.Repositories;
 using Microsoft.Practices.ServiceLocation;
 using Prism.Events;
 using System;
@@ -14,6 +13,8 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Arma3BEClient.Libs.Core;
+using Arma3BEClient.Libs.EF.Repositories;
 using Color = System.Windows.Media.Color;
 
 namespace Arma3BE.Client.Modules.ChatModule.Boxes
@@ -46,7 +47,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
 
         private async void Init()
         {
-            using (var repo = new ReasonRepository())
+            using (var repo = ServiceLocator.Current.TryResolve<IReasonRepository>())
             {
                 importantWords = await repo.GetImportantWordsAsync();
             }

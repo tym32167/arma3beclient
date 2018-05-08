@@ -5,8 +5,9 @@ using Arma3BE.Server;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Extensions;
 using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Libs.Repositories;
-using Arma3BEClient.Libs.Tools;
+using Arma3BEClient.Libs.Core;
+using Arma3BEClient.Libs.Core.Settings;
+using Microsoft.Practices.ServiceLocation;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
@@ -47,7 +48,7 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
                 return false;
 
 
-            using (var banRepository = new BanRepository())
+            using (var banRepository = ServiceLocator.Current.TryResolve<IBanRepository>())
             {
 
                 var db =
@@ -60,8 +61,8 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
 
                 var players = (await _playerRepository.GetPlayersAsync(ids.ToArray())).ToArray();
 
-                var bansToUpdate = new List<Arma3BEClient.Libs.ModelCompact.Ban>();
-                var bansToAdd = new List<Arma3BEClient.Libs.ModelCompact.Ban>();
+                var bansToUpdate = new List<Arma3BEClient.Libs.EF.Model.Ban>();
+                var bansToAdd = new List<Arma3BEClient.Libs.EF.Model.Ban>();
                 var playersToUpdateComments = new Dictionary<Guid, string>();
 
                 foreach (var ban in db)
@@ -122,7 +123,7 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
                     {
                         var player = players.FirstOrDefault(x => x.GUID == ban.GuidIp);
 
-                        var newBan = new Arma3BEClient.Libs.ModelCompact.Ban
+                        var newBan = new Arma3BEClient.Libs.EF.Model.Ban
                         {
                             CreateDate = DateTime.UtcNow,
                             GuidIp = ban.GuidIp,

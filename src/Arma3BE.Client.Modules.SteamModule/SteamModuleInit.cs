@@ -1,15 +1,16 @@
-﻿using System.Linq;
-using System.Windows.Controls;
-using Arma3BE.Client.Infrastructure;
+﻿using Arma3BE.Client.Infrastructure;
 using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Modules.SteamModule.Grids;
 using Arma3BE.Client.Modules.SteamModule.Models;
-using Arma3BEClient.Libs.ModelCompact;
-using Arma3BEClient.Libs.Repositories;
+using Arma3BEClient.Libs.Tools;
 using Microsoft.Practices.Unity;
 using Prism.Commands;
 using Prism.Modularity;
 using Prism.Regions;
+using System.Linq;
+using System.Windows.Controls;
+using Arma3BEClient.Libs.Core.Model;
+using Arma3BEClient.Libs.EF.Repositories;
 
 namespace Arma3BE.Client.Modules.SteamModule
 {
@@ -26,11 +27,11 @@ namespace Arma3BE.Client.Modules.SteamModule
 
         public void Initialize()
         {
+            _container.RegisterType<ISteamService, Core.SteamService>(new ContainerControlledLifetimeManager());
+
             _regionManager.RegisterViewWithRegion(RegionNames.ServerTabPartRegion, CreateSteamQueryView);
             _regionManager.RegisterViewWithRegion(RegionNames.MenuToolsRegion, CreateSteamDiscoveryView);
-
-
-            //_container.RegisterInstance(_container.Resolve<SteamDiscoveryViewModel>());
+            _regionManager.RegisterViewWithRegion(RegionNames.MenuToolsRegion, CreateSteamServiceView);
         }
 
         private object CreateSteamQueryView()
@@ -41,7 +42,7 @@ namespace Arma3BE.Client.Modules.SteamModule
 
         private object CreateSteamDiscoveryView()
         {
-            return new MenuItem()
+            return new MenuItem
             {
                 Command = new DelegateCommand(() =>
                     {
@@ -54,6 +55,24 @@ namespace Arma3BE.Client.Modules.SteamModule
                         _regionManager.Regions[RegionNames.ServerTabRegion].Views.OfType<SteamDiscovery>().Any() ==
                         false),
                 Header = SteamDiscoveryViewModel.StaticTitle
+            };
+        }
+
+        private object CreateSteamServiceView()
+        {
+            return new MenuItem
+            {
+                Command = new DelegateCommand(() =>
+                    {
+                        var vm = _container.Resolve<SteamServiceViewModel>();
+                        var view = _container.Resolve<SteamService>();
+                        view.DataContext = vm;
+                        _regionManager.Regions[RegionNames.ServerTabRegion].Add(view, null, true);
+                    },
+                    () =>
+                        _regionManager.Regions[RegionNames.ServerTabRegion].Views.OfType<SteamService>().Any() ==
+                        false),
+                Header = SteamServiceViewModel.StaticTitle
             };
         }
     }

@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Arma3BEClient.Libs</RootNamespace>
     <AssemblyName>Arma3BEClient.Libs</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
@@ -40,48 +40,79 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Context\Arma3BEClientContext.cs" />
-    <Compile Include="Context\Arma3BeClientContextObsolete.cs" />
-    <Compile Include="Migrations\201608261724176_Kick_Ban_Times_Reasons_Migration.cs" />
-    <Compile Include="Migrations\201608261724176_Kick_Ban_Times_Reasons_Migration.Designer.cs">
+    <Compile Include="EF\Context\Arma3BEClientContext.cs" />
+    <Compile Include="EF\Context\Arma3BeClientContextObsolete.cs" />
+    <Compile Include="EF\Migrations\201608261724176_Kick_Ban_Times_Reasons_Migration.cs" />
+    <Compile Include="EF\Migrations\201608261724176_Kick_Ban_Times_Reasons_Migration.Designer.cs">
       <DependentUpon>201608261724176_Kick_Ban_Times_Reasons_Migration.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201609011936124_AddSteamPortToServerInfo.cs" />
-    <Compile Include="Migrations\201609011936124_AddSteamPortToServerInfo.Designer.cs">
+    <Compile Include="EF\Migrations\201609011936124_AddSteamPortToServerInfo.cs" />
+    <Compile Include="EF\Migrations\201609011936124_AddSteamPortToServerInfo.Designer.cs">
       <DependentUpon>201609011936124_AddSteamPortToServerInfo.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201609111835579_Added_SteamId.cs" />
-    <Compile Include="Migrations\201609111835579_Added_SteamId.Designer.cs">
+    <Compile Include="EF\Migrations\201609111835579_Added_SteamId.cs" />
+    <Compile Include="EF\Migrations\201609111835579_Added_SteamId.Designer.cs">
       <DependentUpon>201609111835579_Added_SteamId.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201612040948573_Added_custom_settings.cs" />
-    <Compile Include="Migrations\201612040948573_Added_custom_settings.Designer.cs">
+    <Compile Include="EF\Migrations\201612040948573_Added_custom_settings.cs" />
+    <Compile Include="EF\Migrations\201612040948573_Added_custom_settings.Designer.cs">
       <DependentUpon>201612040948573_Added_custom_settings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201706202056450_BadNicknames_ImportantWords.cs" />
-    <Compile Include="Migrations\201706202056450_BadNicknames_ImportantWords.Designer.cs">
+    <Compile Include="EF\Migrations\201706202056450_BadNicknames_ImportantWords.cs" />
+    <Compile Include="EF\Migrations\201706202056450_BadNicknames_ImportantWords.Designer.cs">
       <DependentUpon>201706202056450_BadNicknames_ImportantWords.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="ModelCompact\Reason.cs" />
-    <Compile Include="Repositories\AdminRepository.cs" />
-    <Compile Include="Repositories\BanRepository.cs" />
-    <Compile Include="Repositories\ChatRepository.cs" />
-    <Compile Include="Repositories\PlayerRepository.cs" />
-    <Compile Include="Repositories\ReasonRepository.cs" />
-    <Compile Include="Repositories\ServerInfoRepository.cs" />
-    <Compile Include="ModelCompact\Admin.cs" />
-    <Compile Include="ModelCompact\Ban.cs" />
-    <Compile Include="ModelCompact\ChatLog.cs" />
-    <Compile Include="ModelCompact\Note.cs" />
-    <Compile Include="ModelCompact\Player.cs" />
-    <Compile Include="ModelCompact\PlayerHistory.cs" />
-    <Compile Include="ModelCompact\ServerInfo.cs" />
-    <Compile Include="ModelCompact\Sessions.cs" />
-    <Compile Include="ModelCompact\Settings.cs" />
-    <Compile Include="Tools\ConnectionFactory.cs" />
-    <Compile Include="Tools\ISettingsStore.cs" />
-    <Compile Include="Tools\Settings.cs" />
+    <Compile Include="EF\Migrations\Configuration.cs" />
+    <Compile Include="EF\Model\Reason.cs" />
+    <Compile Include="EF\Repositories\AdminRepository.cs" />
+    <Compile Include="EF\Repositories\BanRepository.cs" />
+    <Compile Include="EF\Repositories\ChatRepository.cs" />
+    <Compile Include="Core\IPlayerRepository.cs" />
+    <Compile Include="Core\Model\PlayerDto.cs" />
+    <Compile Include="Core\IAdminRepository.cs" />
+    <Compile Include="Core\IReasonRepository.cs" />
+    <Compile Include="Core\IChatRepository.cs" />
+    <Compile Include="Core\IServerInfoRepository.cs" />
+    <Compile Include="Core\IBanRepository.cs" />
+    <Compile Include="EF\Repositories\Players\PlayerRepository.cs" />
+    <Compile Include="EF\Repositories\Players\PlayerRepositoryCache.cs" />
+    <Compile Include="EF\Repositories\Players\PlayerRepositoryCacheV2.cs" />
+    <Compile Include="EF\Repositories\ReasonRepository.cs" />
+    <Compile Include="Core\Model\ServerInfoDto.cs" />
+    <Compile Include="EF\Repositories\ServerInfoRepository.cs" />
+    <Compile Include="EF\Model\Admin.cs" />
+    <Compile Include="EF\Model\Ban.cs" />
+    <Compile Include="EF\Model\ChatLog.cs" />
+    <Compile Include="EF\Model\Note.cs" />
+    <Compile Include="EF\Model\Player.cs" />
+    <Compile Include="EF\Model\PlayerHistory.cs" />
+    <Compile Include="EF\Model\ServerInfo.cs" />
+    <Compile Include="EF\Model\Sessions.cs" />
+    <Compile Include="EF\Model\Settings.cs" />
+    <Compile Include="EF\ConnectionFactory.cs" />
+    <Compile Include="Core\Settings\ICustomSettingsStore.cs" />
+    <Compile Include="Core\Settings\ISettingsStore.cs" />
+    <Compile Include="Core\Settings\ISettingsStoreSource.cs" />
+    <Compile Include="RavenDB\Model\Admin.cs" />
+    <Compile Include="RavenDB\Model\BadNickname.cs" />
+    <Compile Include="RavenDB\Model\Ban.cs" />
+    <Compile Include="RavenDB\Model\BanReason.cs" />
+    <Compile Include="RavenDB\Model\BanTime.cs" />
+    <Compile Include="RavenDB\Model\ChatLog.cs" />
+    <Compile Include="RavenDB\Model\CustomSetting.cs" />
+    <Compile Include="RavenDB\Model\ImportantWord.cs" />
+    <Compile Include="RavenDB\Model\KickReason.cs" />
+    <Compile Include="RavenDB\Model\Note.cs" />
+    <Compile Include="RavenDB\Model\Player.cs" />
+    <Compile Include="RavenDB\Model\PlayerHistory.cs" />
+    <Compile Include="RavenDB\Model\ServerInfo.cs" />
+    <Compile Include="RavenDB\Model\Setting.cs" />
+    <Compile Include="RavenDB\Repositories\PlayerRepository.cs" />
+    <Compile Include="RavenDB\Repositories\ServerInfoRepository.cs" />
+    <Compile Include="RavenDB\RepositoryBase.cs" />
+    <Compile Include="Tools\ISteamService.cs" />
+    <Compile Include="EF\Settings\Settings.cs" />
+    <Compile Include="EF\Settings\SettingsStoreSource.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -110,7 +141,24 @@
       <HintPath>..\packages\EntityFramework.SqlServerCompact.6.1.3\lib\net45\EntityFramework.SqlServerCompact.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Lambda2Js.Signed.Custom, Version=3.0.2.0, Culture=neutral, PublicKeyToken=9ba16f7edfc48fe6, processorArchitecture=MSIL">
+      <HintPath>..\packages\RavenDB.Client.4.0.0\lib\netstandard2.0\Lambda2Js.Signed.Custom.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Raven.Client, Version=4.0.0.0, Culture=neutral, PublicKeyToken=37f41c7f99471593, processorArchitecture=MSIL">
+      <HintPath>..\packages\RavenDB.Client.4.0.0\lib\netstandard2.0\Raven.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Sparrow, Version=4.0.0.0, Culture=neutral, PublicKeyToken=37f41c7f99471593, processorArchitecture=MSIL">
+      <HintPath>..\packages\RavenDB.Client.4.0.0\lib\netstandard2.0\Sparrow.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.4.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
@@ -118,30 +166,40 @@
       <HintPath>..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.4.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Security.Cryptography.Cng, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Cng.4.4.0\lib\net462\System.Security.Cryptography.Cng.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.1.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.4.0\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201608261724176_Kick_Ban_Times_Reasons_Migration.resx">
+    <EmbeddedResource Include="EF\Migrations\201608261724176_Kick_Ban_Times_Reasons_Migration.resx">
       <DependentUpon>201608261724176_Kick_Ban_Times_Reasons_Migration.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609011936124_AddSteamPortToServerInfo.resx">
+    <EmbeddedResource Include="EF\Migrations\201609011936124_AddSteamPortToServerInfo.resx">
       <DependentUpon>201609011936124_AddSteamPortToServerInfo.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609111835579_Added_SteamId.resx">
+    <EmbeddedResource Include="EF\Migrations\201609111835579_Added_SteamId.resx">
       <DependentUpon>201609111835579_Added_SteamId.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201612040948573_Added_custom_settings.resx">
+    <EmbeddedResource Include="EF\Migrations\201612040948573_Added_custom_settings.resx">
       <DependentUpon>201612040948573_Added_custom_settings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706202056450_BadNicknames_ImportantWords.resx">
+    <EmbeddedResource Include="EF\Migrations\201706202056450_BadNicknames_ImportantWords.resx">
       <DependentUpon>201706202056450_BadNicknames_ImportantWords.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

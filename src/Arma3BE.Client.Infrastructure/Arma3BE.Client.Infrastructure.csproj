@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Arma3BE.Client.Infrastructure</RootNamespace>
     <AssemblyName>Arma3BE.Client.Infrastructure</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -140,6 +140,7 @@
     <Compile Include="Models\ServerMonitorBaseViewModel.cs" />
     <Compile Include="Models\ViewModelBase.cs" />
     <Compile Include="RegionNames.cs" />
+    <Compile Include="Windows\WindowBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

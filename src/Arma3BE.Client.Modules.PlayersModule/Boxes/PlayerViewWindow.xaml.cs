@@ -1,7 +1,10 @@
 ﻿using Arma3BE.Client.Infrastructure.Extensions;
 using Arma3BE.Client.Modules.PlayersModule.Models;
-using Arma3BEClient.Libs.ModelCompact;
 using System.Windows;
+using Arma3BE.Client.Infrastructure.Windows;
+using Arma3BEClient.Libs.Core.Settings;
+using Arma3BEClient.Libs.EF.Model;
+using Arma3BEClient.Libs.Tools;
 
 namespace Arma3BE.Client.Modules.PlayersModule.Boxes
 {
@@ -9,9 +12,9 @@ namespace Arma3BE.Client.Modules.PlayersModule.Boxes
     ///     Interaction logic for PlayerViewWindow.xaml
     /// </summary>
     // ReSharper disable once RedundantExtendsListEntry
-    public partial class PlayerViewWindow : Window
+    public partial class PlayerViewWindow : WindowBase
     {
-        public PlayerViewWindow(PlayerViewModel model)
+        public PlayerViewWindow(PlayerViewModel model, ISettingsStoreSource settingsStoreSource):base(settingsStoreSource)
         {
             InitializeComponent();
 

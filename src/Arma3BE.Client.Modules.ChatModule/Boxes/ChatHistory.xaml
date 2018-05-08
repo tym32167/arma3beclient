@@ -1,8 +1,9 @@
-﻿<Window x:Class="Arma3BE.Client.Modules.ChatModule.Boxes.ChatHistory"
+﻿<windows:WindowBase x:Class="Arma3BE.Client.Modules.ChatModule.Boxes.ChatHistory"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:boxes="clr-namespace:Arma3BE.Client.Modules.ChatModule.Boxes"
+        xmlns:windows="clr-namespace:Arma3BE.Client.Infrastructure.Windows;assembly=Arma3BE.Client.Infrastructure"
         Title="Chat history"
         WindowStyle="SingleBorderWindow" Width="750" Height="500"
         WindowStartupLocation="CenterScreen">
@@ -32,9 +33,13 @@
             <!--<boxes:ColoredTextControl x:Name="textControl" IsAutoScroll="True" Grid.Row="1">
             </boxes:ColoredTextControl>-->
 
-            <boxes:RTBControl x:Name="textControl" IsAutoScroll="True" Grid.Row="1">
-            </boxes:RTBControl>
+            <!--<boxes:RTBControl x:Name="textControl" IsAutoScroll="True" Grid.Row="1">
+            </boxes:RTBControl>-->
+
+
+            <boxes:ColoredItemsControl x:Name="textControl"  Grid.Row="1"  IsAutoScroll="True" >
+            </boxes:ColoredItemsControl>
 
         </Grid>
     </xctk:BusyIndicator>
-</Window>
+</windows:WindowBase>

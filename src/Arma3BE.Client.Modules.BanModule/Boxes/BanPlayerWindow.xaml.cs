@@ -1,12 +1,17 @@
 ﻿using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Infrastructure.Models;
-using Arma3BEClient.Libs.Repositories;
+using Arma3BE.Client.Infrastructure.Windows;
+using Arma3BEClient.Libs.Core;
+using Arma3BEClient.Libs.Core.Settings;
+using Arma3BEClient.Libs.EF.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Arma3BEClient.Libs.Core.Model;
+
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace Arma3BE.Client.Modules.BanModule.Boxes
@@ -15,15 +20,17 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
     ///     Interaction logic for BanPlayerWindow.xaml
     /// </summary>
     // ReSharper disable once RedundantExtendsListEntry
-    public partial class BanPlayerWindow : Window
+    public partial class BanPlayerWindow : WindowBase
     {
+        private readonly IPlayerRepository _playerRepository;
         private readonly BanPlayerViewModel _model;
 
         public BanPlayerWindow(Guid? serverId, IBanHelper banHelper, string playerGuid, bool isOnline, string playerName,
-            string playerNum, IServerInfoRepository infoRepository)
+            string playerNum, IServerInfoRepository infoRepository, ISettingsStoreSource settingsStoreSource, IPlayerRepository playerRepository, IReasonRepository reasonRepository) : base(settingsStoreSource)
         {
+            _playerRepository = playerRepository;
             InitializeComponent();
-            _model = new BanPlayerViewModel(serverId, playerGuid, isOnline, banHelper, playerName, playerNum, infoRepository);
+            _model = new BanPlayerViewModel(serverId, playerGuid, isOnline, banHelper, playerName, playerNum, infoRepository, _playerRepository, reasonRepository);
 
             tbGuid.IsEnabled = string.IsNullOrEmpty(playerGuid);
 
@@ -50,6 +57,8 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
         private readonly bool _isOnline;
         private readonly IBanHelper _playerHelper;
         private readonly string _playerNum;
+        private readonly IPlayerRepository _playerRepository;
+        private readonly IReasonRepository _reasonRepository;
         private long? _minutes;
         private string _playerGuid;
         private string _playerName;
@@ -58,13 +67,15 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
 
         public BanPlayerViewModel(Guid? serverId, string playerGuid, bool isOnline, IBanHelper playerHelper,
             string playerName,
-            string playerNum, IServerInfoRepository infoRepository)
+            string playerNum, IServerInfoRepository infoRepository, IPlayerRepository playerRepository, IReasonRepository reasonRepository)
         {
             _playerGuid = playerGuid;
             _isOnline = isOnline;
             _playerHelper = playerHelper;
             _playerName = playerName;
             _playerNum = playerNum;
+            _playerRepository = playerRepository;
+            _reasonRepository = reasonRepository;
             _minutes = 0;
 
 
@@ -77,11 +88,11 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
 
 
             if (string.IsNullOrEmpty(_playerName))
-                using (var userRepo = new PlayerRepository())
-                {
-                    var player = await userRepo.GetPlayerAsync(_playerGuid);
-                    _playerName = player?.Name;
-                }
+            {
+                var player = await _playerRepository.GetPlayerAsync(_playerGuid);
+                _playerName = player?.Name;
+            }
+
 
             SelectedServers = new ObservableCollection<ServerInfoDto>();
 
@@ -113,11 +124,11 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
         {
             try
             {
-                using (var repo = new ReasonRepository())
-                {
-                    var str = await repo.GetBanReasonsAsync();
-                    return str;
-                }
+
+
+                var str = await _reasonRepository.GetBanReasonsAsync();
+                return str;
+
             }
             catch (Exception)
             {
@@ -132,16 +143,13 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
         {
             try
             {
-                using (var repo = new ReasonRepository())
+                var str = (await _reasonRepository.GetBanTimesAsync()).Select(x => new BanFullTime
                 {
-                    var str = (await repo.GetBanTimesAsync()).Select(x => new BanFullTime
-                    {
-                        Text = x.Title,
-                        Period = System.TimeSpan.FromMinutes(x.TimeInMinutes),
-                        PeriodMinutes = x.TimeInMinutes
-                    }).ToArray();
-                    return str;
-                }
+                    Text = x.Title,
+                    Period = System.TimeSpan.FromMinutes(x.TimeInMinutes),
+                    PeriodMinutes = x.TimeInMinutes
+                }).ToArray();
+                return str;
             }
             catch (Exception)
             {

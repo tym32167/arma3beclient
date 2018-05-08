@@ -2,8 +2,8 @@
 using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Modules.OnlinePlayersModule.Grids;
 using Arma3BE.Client.Modules.OnlinePlayersModule.Models;
-using Arma3BEClient.Libs.ModelCompact;
-using Arma3BEClient.Libs.Repositories;
+using Arma3BEClient.Libs.Core.Model;
+using Arma3BEClient.Libs.EF.Repositories;
 using Microsoft.Practices.Unity;
 using Prism.Modularity;
 using Prism.Regions;

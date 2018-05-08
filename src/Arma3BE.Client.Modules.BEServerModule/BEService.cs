@@ -4,7 +4,6 @@ using Arma3BE.Server;
 using Arma3BE.Server.Abstract;
 using Arma3BEClient.Common.Core;
 using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Libs.Repositories;
 using Microsoft.Practices.Unity;
 using Prism.Events;
 using System;
@@ -12,6 +11,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Arma3BEClient.Libs.Core.Model;
+using Arma3BEClient.Libs.EF.Repositories;
 
 // ReSharper disable MemberCanBePrivate.Local
 

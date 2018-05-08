@@ -8,7 +8,6 @@ using Arma3BE.Client.Modules.ChatModule.Boxes;
 using Arma3BE.Client.Modules.ChatModule.Helpers;
 using Arma3BE.Server;
 using Arma3BE.Server.Models;
-using Arma3BEClient.Libs.Repositories;
 using Arma3BEClient.Libs.Tools;
 using Prism.Commands;
 using Prism.Events;
@@ -18,6 +17,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
+using Arma3BEClient.Libs.Core;
+using Arma3BEClient.Libs.Core.Model;
+using Arma3BEClient.Libs.Core.Settings;
+using Arma3BEClient.Libs.EF.Repositories;
 using Player = Arma3BE.Server.Models.Player;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ExplicitCallerInfoArgument
@@ -71,7 +74,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Models
             {
                 var model = new ChatHistoryViewModel(_serverId, infoRepository);
                 model.StartDate = DateTime.UtcNow.UtcToLocalFromSettings().AddHours(-5);
-                var wnd = new ChatHistory(model);
+                var wnd = new ChatHistory(model, settingsStoreSource);
                 wnd.Show();
                 wnd.Activate();
             });

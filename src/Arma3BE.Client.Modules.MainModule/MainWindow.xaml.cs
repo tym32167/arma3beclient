@@ -1,6 +1,5 @@
 ﻿using Arma3BE.Client.Infrastructure;
 using Arma3BE.Client.Modules.MainModule.ViewModel;
-using Arma3BEClient.Libs.Repositories;
 using Microsoft.Practices.Unity;
 using Prism.Regions;
 using System;
@@ -9,6 +8,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Arma3BEClient.Libs.Core;
+using Arma3BEClient.Libs.Core.Model;
+using Arma3BEClient.Libs.EF.Repositories;
 using Xceed.Wpf.AvalonDock.Controls;
 
 namespace Arma3BE.Client.Modules.MainModule

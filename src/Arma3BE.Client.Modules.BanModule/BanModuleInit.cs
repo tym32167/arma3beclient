@@ -2,8 +2,8 @@
 using Arma3BE.Client.Infrastructure.Helpers;
 using Arma3BE.Client.Modules.BanModule.Grids;
 using Arma3BE.Client.Modules.BanModule.Models;
-using Arma3BEClient.Libs.ModelCompact;
-using Arma3BEClient.Libs.Repositories;
+using Arma3BEClient.Libs.Core.Model;
+using Arma3BEClient.Libs.EF.Repositories;
 using Microsoft.Practices.Unity;
 using Prism.Events;
 using Prism.Modularity;

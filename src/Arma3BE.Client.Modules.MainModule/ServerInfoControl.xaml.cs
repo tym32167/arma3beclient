@@ -66,6 +66,8 @@ namespace Arma3BE.Client.Modules.MainModule
                 _model.Cleanup();
                 _model = null;
             }
+
+            Dispatcher.ShutdownStarted -= Dispatcher_ShutdownStarted;
         }
 
         protected virtual void DisposeUnManagedResources()
