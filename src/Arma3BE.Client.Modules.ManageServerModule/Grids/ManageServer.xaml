@@ -3,9 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:Arma3BE.Client.Infrastructure.Converters;assembly=Arma3BE.Client.Infrastructure"
              mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:BoolToVisibilityConverter x:Uid="local:BoolToVisibilityConverter_1"
+                                              x:Key="BoolToVisibilityConverter" />
+
+        <converters:BisyBoolToColorConverter x:Uid="local:BisyBoolToColorConverter_1"
+                                              x:Key="BisyBoolToColorConverter" />
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition />
@@ -15,17 +24,34 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
+        <TextBlock Grid.Row="0" HorizontalAlignment="Left" Margin="2" Grid.ColumnSpan="2" 
+                   Visibility="{Binding ShowWarning, Converter={StaticResource BoolToVisibilityConverter}}" 
+                   Text="Warning! Not all commands supported by this server." 
+                   FontWeight="Bold"
+                   Foreground="Red"></TextBlock>
 
-        <StackPanel Orientation="Vertical" Grid.Row="1" HorizontalAlignment="Left" Margin="5">
+        <StackPanel Orientation="Vertical" Grid.Row="2" HorizontalAlignment="Left" Margin="5">
             <Button Content="Lock" Command="{Binding LockCommand}" Height="40" Width="120" />
             <Button Content="Unlock" Command="{Binding UnlockCommand}" Height="40" Width="120" />
-            <Button Content="Shutdown" Command="{Binding ShutdownCommand}" Height="40" Width="120" />
-            <Button Content="Restart" Command="{Binding RestartCommand}" Height="40" Width="120" />
-            <Button Content="Restart Server" Command="{Binding RestartServerCommand}" Height="40" Width="120" />
+
+            <Border BorderBrush="{Binding ShowWarning, Converter={StaticResource BisyBoolToColorConverter}}" 
+                    BorderThickness="1">
+                <Button Content="Shutdown" Command="{Binding ShutdownCommand}" Height="40" Width="120" />
+            </Border>
+
+            <Border BorderBrush="{Binding ShowWarning, Converter={StaticResource BisyBoolToColorConverter}}" 
+                    BorderThickness="1">
+                <Button Content="Restart" Command="{Binding RestartCommand}" Height="40" Width="120" />
+            </Border>
+
+            <Border BorderBrush="{Binding ShowWarning, Converter={StaticResource BisyBoolToColorConverter}}" 
+                    BorderThickness="1">
+                <Button Content="Restart Server" Command="{Binding RestartServerCommand}" Height="40" Width="120" />
+            </Border>
         </StackPanel>
 
 
-        <StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" Margin="5">
+        <StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Margin="5">
             <Button Content="Init" Command="{Binding InitCommand}" Height="40" Width="120"></Button>
             <Button Content="Reassign" Command="{Binding ReassignCommand}" Height="40" Width="120"></Button>
             <Button Content="Load bans" Command="{Binding LoadBansCommand}" Height="40" Width="120"></Button>
@@ -33,8 +59,10 @@
             <Button Content="Load events" Command="{Binding LoadEventsCommand}" Height="40" Width="120"></Button>
         </StackPanel>
 
-
-        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Left">
+        <Border Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Left"
+                BorderBrush="{Binding ShowWarning, Converter={StaticResource BisyBoolToColorConverter}}" 
+                BorderThickness="1">
+            <StackPanel Orientation="Horizontal" >
             <Button Command="{Binding RefreshCommand}">
                 <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
                 <Image x:Uid="Image_1" Source="{StaticResource refresh_icon}" Height="16" Width="16" />
@@ -51,5 +79,6 @@
 
             <Button Content="Set Mission" Command="{Binding SetMissionCommand}" />
         </StackPanel>
+        </Border>
     </Grid>
 </UserControl>
