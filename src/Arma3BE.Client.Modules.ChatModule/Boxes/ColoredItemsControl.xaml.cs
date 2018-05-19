@@ -14,7 +14,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Xceed.Wpf.AvalonDock.Controls;
 
 namespace Arma3BE.Client.Modules.ChatModule.Boxes
 {
@@ -42,6 +41,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
 
         private void ColoredItemsControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
+            lv.SelectedItem = null;
             ScrollIfNeeded();
         }
 
@@ -112,8 +112,9 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
         {
             if (!IsAutoScroll) return;
 
-            var sv = lv.FindVisualChildren<ScrollViewer>().FirstOrDefault();
-            sv?.ScrollToEnd();
+            lv.SelectedIndex = lv.Items.Count - 1;
+            lv.ScrollIntoView(lv.SelectedItem);
+            lv.SelectedItem = null;
         }
 
         void OnListCopy(object sender, ExecutedRoutedEventArgs e)
