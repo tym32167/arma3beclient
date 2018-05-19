@@ -64,7 +64,34 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
 
         public void AppendText(ChatMessage message, string servername = null)
         {
-            Messages.Add(new FullChatMessage { Message = message, Server = servername, DateTime = message.Date.UtcToLocalFromSettings(), IsImportant = message.Type != ChatMessage.MessageType.RCon && IsImportantMessage(message) });
+            var msg = new FullChatMessage
+            {
+                Message = message,
+                Server = servername,
+                DateTime = message.Date.UtcToLocalFromSettings(),
+                IsImportant = message.Type != ChatMessage.MessageType.RCon && IsImportantMessage(message)
+            };
+
+            if (msg.IsImportant)
+            {
+                if (Application.Current?.MainWindow?.WindowState == WindowState.Minimized)
+                {
+                    var wnd = Application.Current.MainWindow;
+
+                    EventHandler handler = null;
+                    handler = (s, e) =>
+                    {
+                        wnd.StateChanged -= handler;
+                        wnd.StopFlashingWindow();
+                    };
+
+                    wnd.StateChanged += handler;
+                    wnd.FlashWindow();
+                }
+            }
+
+
+            Messages.Add(msg);
             ScrollIfNeeded();
         }
 
@@ -85,7 +112,7 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
         {
             var lv = (ListView)sender;
             var text = string.Join(Environment.NewLine, lv.SelectedItems.Cast<object>()
-                .OrderBy(x=>Messages.IndexOf(x))
+                .OrderBy(x => Messages.IndexOf(x))
                 .Select(x => x.ToString()).ToArray());
             Clipboard.SetDataObject(text);
         }
