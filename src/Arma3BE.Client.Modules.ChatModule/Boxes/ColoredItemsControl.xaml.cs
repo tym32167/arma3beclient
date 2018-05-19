@@ -35,6 +35,14 @@ namespace Arma3BE.Client.Modules.ChatModule.Boxes
             });
 
             InitBox();
+
+            this.IsHitTestVisibleChanged += ColoredItemsControl_IsVisibleChanged;
+            this.IsVisibleChanged += ColoredItemsControl_IsVisibleChanged;
+        }
+
+        private void ColoredItemsControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            ScrollIfNeeded();
         }
 
         private async Task InitBox()
