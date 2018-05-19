@@ -150,7 +150,6 @@ namespace Arma3BE.Server.ServerDecorators
         private void OnBattlEyeDisconnected(BattlEyeDisconnectEventArgs args)
         {
             BattlEyeDisconnected?.Invoke(args);
-            _battlEyeServer?.Connect();
         }
 
         protected override void DisposeManagedResources()
