@@ -101,7 +101,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
 
         public List<ServerInfoDto> Servers { get; private set; }
 
-        public ObservableCollection<ServerInfoDto> SelectedServers { get; private set; }
+        public ObservableCollection<ServerInfoDto> SelectedServers { get; set; }
 
         public string PlayerName
         {
