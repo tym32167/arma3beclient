@@ -59,6 +59,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
         private string _playerName;
         private string _reason;
         private BanFullTime _timeSpan;
+        private ObservableCollection<ServerInfoDto> _selectedServers = new ObservableCollection<ServerInfoDto>();
 
         public BanPlayerViewModel(Guid? serverId, string playerGuid, bool isOnline, IBanHelper playerHelper,
             string playerName,
@@ -87,7 +88,7 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
                     _playerName = player?.Name;
                 }
 
-            SelectedServers = new ObservableCollection<ServerInfoDto>();
+            //SelectedServers = new ObservableCollection<ServerInfoDto>();
 
             if (serverId.HasValue)
                 SelectedServers.AddRange(Servers.Where(s => s.Id == serverId.Value));
@@ -101,7 +102,11 @@ namespace Arma3BE.Client.Modules.BanModule.Boxes
 
         public List<ServerInfoDto> Servers { get; private set; }
 
-        public ObservableCollection<ServerInfoDto> SelectedServers { get; set; }
+        public ObservableCollection<ServerInfoDto> SelectedServers
+        {
+            get => _selectedServers;
+            set => SetProperty(ref _selectedServers, value);
+        }
 
         public string PlayerName
         {
