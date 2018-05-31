@@ -41,7 +41,7 @@
 
         </ToolBar>
 
-        <xcdg:DataGridControl Grid.Row="1" ItemsSource="{Binding Data, Mode=OneWay, NotifyOnTargetUpdated=True}" 
+        <xcdg:DataGridControl Grid.Row="1" ItemsSource="{Binding Data, Mode=OneWay}" 
                               AutoCreateColumns="False" SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                               ReadOnly="True" Name="dg" MouseDoubleClick="Dg_OnMouseDoubleClick">
 
