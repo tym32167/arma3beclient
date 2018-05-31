@@ -41,7 +41,7 @@
 
         </ToolBar>
 
-        <xcdg:DataGridControl Grid.Row="1" ItemsSource="{Binding Data, Mode=OneWay}" 
+        <xcdg:DataGridControl Grid.Row="1" ItemsSource="{Binding Data, Mode=OneWay, NotifyOnTargetUpdated=True}" 
                               AutoCreateColumns="False" SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                               ReadOnly="True" Name="dg" MouseDoubleClick="Dg_OnMouseDoubleClick">
 
@@ -62,6 +62,24 @@
                     </xcdg:TableView.FixedHeaders>
                 </xcdg:TableflowView>
             </xcdg:DataGridControl.View>
+
+            <xcdg:DataGridControl.ItemContainerStyle>
+                <Style TargetType="xcdg:DataRow">
+                    <Style.Triggers>
+                        <EventTrigger RoutedEvent="Binding.TargetUpdated">
+                            <EventTrigger.Actions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
+                                                        From="LightGreen" Duration="0:0:5"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+                    </Style.Triggers>
+                </Style>
+            </xcdg:DataGridControl.ItemContainerStyle>
+
         </xcdg:DataGridControl>
 
     </Grid>
