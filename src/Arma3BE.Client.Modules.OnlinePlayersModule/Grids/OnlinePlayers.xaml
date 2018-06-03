@@ -66,30 +66,16 @@
             <xcdg:DataGridControl.ItemContainerStyle>
                 <Style TargetType="xcdg:DataRow">
                     <Style.Triggers>
-
-                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource self}, Path=DataContext.State}"
-                                     Value="Ingame">
-                            <DataTrigger.EnterActions>
+                        <EventTrigger RoutedEvent="Binding.TargetUpdated">
+                            <EventTrigger.Actions>
                                 <BeginStoryboard>
                                     <Storyboard>
                                         <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
                                                         From="LightGreen" Duration="0:0:5"/>
                                     </Storyboard>
                                 </BeginStoryboard>
-                            </DataTrigger.EnterActions>
-                        </DataTrigger>
-
-                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource self}, Path=DataContext.State}"
-                                     Value="Lobby">
-                            <DataTrigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
-                                                        From="LightPink" Duration="0:0:5"/>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </DataTrigger.EnterActions>
-                        </DataTrigger>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
                     </Style.Triggers>
                 </Style>
             </xcdg:DataGridControl.ItemContainerStyle>
