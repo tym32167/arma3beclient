@@ -3,13 +3,10 @@ using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.Tools;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Xml.Serialization;
 using Xceed.Wpf.DataGrid;
 
 namespace Arma3BE.Client.Infrastructure.Extensions
@@ -167,13 +164,8 @@ namespace Arma3BE.Client.Infrastructure.Extensions
             try
             {
                 var store = new SettingsStoreSource().GetCustomSettingsStore();
-                var data = store.Load(key);
-                if (string.IsNullOrEmpty(data)) return null;
-                var ser = new XmlSerializer(typeof(ColumnInfo[]));
-                using (var sr = new StringReader(data))
-                {
-                    return ser.Deserialize(sr) as ColumnInfo[];
-                }
+                var data = store.Load<ColumnInfo[]>(key);
+                return data;
             }
             catch (Exception e)
             {
@@ -205,16 +197,7 @@ namespace Arma3BE.Client.Infrastructure.Extensions
             {
                 var array = infos.ToArray();
                 var store = new SettingsStoreSource().GetCustomSettingsStore();
-                var ser = new XmlSerializer(typeof(ColumnInfo[]));
-
-                var sb = new StringBuilder();
-
-                using (var sw = new StringWriter(sb))
-                {
-                    ser.Serialize(sw, array);
-                }
-
-                store.Save(key, sb.ToString());
+                store.Save(key, array);
             }
             catch (Exception e)
             {

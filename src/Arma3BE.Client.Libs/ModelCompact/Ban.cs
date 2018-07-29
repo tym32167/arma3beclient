@@ -19,21 +19,32 @@ namespace Arma3BEClient.Libs.ModelCompact
         [Key]
         public int Id { get; set; }
 
+        [Index]
         public Guid? PlayerId { get; set; }
         public int Num { get; set; }
+
+        [Index]
         public Guid ServerId { get; set; }
+
+        [Index]
         public string GuidIp { get; set; }
+
+        [Index]
         public int Minutes { get; set; }
 
         [ShowInUi]
         [EnableCopy]
+        [Index]
         public int MinutesLeft { get; set; }
 
         [ShowInUi]
         [EnableCopy]
         public string Reason { get; set; }
 
+        [Index]
         public DateTime CreateDate { get; set; }
+
+        [Index]
         public bool IsActive { get; set; }
 
         [ForeignKey("PlayerId")]

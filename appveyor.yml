@@ -9,7 +9,7 @@
 #---------------------------------#
 
 # version format
-version: 0.7.{build}
+version: 0.8.{build}
 
 assembly_info:
   patch: true
@@ -33,7 +33,7 @@ branches:
 #---------------------------------#
 
 # Build worker image (VM template)
-image: Visual Studio 2015
+image: Visual Studio 2017
 
 
 
@@ -52,6 +52,9 @@ platform: Any CPU
 # build Configuration, i.e. Debug, Release, etc.
 configuration: Release
 
+
+install:
+  - git submodule update --init --recursive
 
 build:  
   project: src\Arma3BE.sln     # path to Visual Studio solution or project  

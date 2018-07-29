@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BE.Client", "Arma3BE.Client\Arma3BE.Client.csproj", "{46B9AF55-01D0-45B0-95CB-16F5B61A9F03}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -86,6 +86,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BE.Client.Modules.CoreModule.Tests", "Arma3BE.Client.Modules.CoreModule.Tests\Arma3BE.Client.Modules.CoreModule.Tests.csproj", "{969269FC-6C5F-49E9-BC60-96F1AE571B8F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3BE.Client.Updater", "Arma3BE.Client.Updater\Arma3BE.Client.Updater.csproj", "{9ADE6790-CEDC-43F0-8920-54AFFFB2646E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{82D402E3-29C4-4486-B6DC-48D24F0CCF4F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleNET", "..\BattleNET\BattleNET\BattleNET.csproj", "{DB17061B-3FA9-46D5-ACAF-F23693D86B5D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -193,6 +197,10 @@ Global
 		{9ADE6790-CEDC-43F0-8920-54AFFFB2646E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9ADE6790-CEDC-43F0-8920-54AFFFB2646E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9ADE6790-CEDC-43F0-8920-54AFFFB2646E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB17061B-3FA9-46D5-ACAF-F23693D86B5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB17061B-3FA9-46D5-ACAF-F23693D86B5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB17061B-3FA9-46D5-ACAF-F23693D86B5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB17061B-3FA9-46D5-ACAF-F23693D86B5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -225,5 +233,9 @@ Global
 		{FA11FEA6-31FA-4A53-AFB0-DCB23CE48ECF} = {561F7217-8BEF-4812-91ED-3DE5483DFD07}
 		{969269FC-6C5F-49E9-BC60-96F1AE571B8F} = {561F7217-8BEF-4812-91ED-3DE5483DFD07}
 		{9ADE6790-CEDC-43F0-8920-54AFFFB2646E} = {22A6CC46-99D2-45AF-B379-3320ECE99124}
+		{DB17061B-3FA9-46D5-ACAF-F23693D86B5D} = {82D402E3-29C4-4486-B6DC-48D24F0CCF4F}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {70F2B29D-1E4F-42D4-B9EC-58F547F06247}
 	EndGlobalSection
 EndGlobal

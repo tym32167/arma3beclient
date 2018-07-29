@@ -82,7 +82,7 @@ namespace Arma3BE.Server.Mocks
                     case BattlEyeCommand.Missions:
                         MockMessage(missions);
                         break;
-                    case BattlEyeCommand.admins:
+                    case BattlEyeCommand.Admins:
                         MockMessage(admins);
                         break;
                 }

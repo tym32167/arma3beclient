@@ -31,7 +31,7 @@ namespace Arma3BE.Server.ServerDecorators
             _credentials = credentials;
 
             _timer = new Timer(_timer_Elapsed, null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10));
-            _keepAliveTimer = new Timer(_timer_KeepAlive, null, TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2));
+            _keepAliveTimer = new Timer(_timer_KeepAlive, null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
 
             _battlEyeServer = Init(_credentials);
         }
@@ -65,10 +65,8 @@ namespace Arma3BE.Server.ServerDecorators
 
         private void _timer_KeepAlive(object state)
         {
-            var lastReceivedSpan = DateTime.UtcNow - _lastReceived;
             var local = _battlEyeServer;
-            if (local?.Connected == true && lastReceivedSpan.TotalMinutes > 2 &&
-                lastReceivedSpan.TotalMinutes < 5)
+            if (local?.Connected == true)
             {
                 local.SendCommand(BattlEyeCommand.Players);
             }

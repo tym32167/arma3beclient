@@ -13,6 +13,10 @@ namespace Arma3BEClient.Libs.Tools
         int PlayersUpdateSeconds { get; set; }
         TimeZoneInfo TimeZoneInfo { get; set; }
 
+        bool TopMost { get; set; }
+
+        string SteamFolder { get; set; }
+
         void Save();
     }
 
@@ -21,6 +25,9 @@ namespace Arma3BEClient.Libs.Tools
     {
         void Save(string key, string value);
         string Load(string key);
+
+        void Save<T>(string key, T value);
+        T Load<T>(string key);
     }
 
     public interface ISettingsStoreSource

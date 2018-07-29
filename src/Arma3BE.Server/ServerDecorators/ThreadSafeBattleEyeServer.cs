@@ -35,21 +35,25 @@ namespace Arma3BE.Server.ServerDecorators
 
         public int SendCommand(BattlEyeCommand command, string parameters = "")
         {
-            if (_battlEyeServer != null && _battlEyeServer.Connected && _commandPackets.Count < 1000)
+            if (_battlEyeServer != null && _commandPackets.Count < 50)
             {
                 _commandPackets.Enqueue(new CommandPacket(command, parameters));
                 _log.Info($"ThreadSafeBattleEyeClient Saving {command} WITH {parameters}");
             }
+
+            if (!Connected) _battlEyeServer.Connect();
             return 0;
         }
 
         public int SendCommand(string command)
         {
-            if (_battlEyeServer != null && _battlEyeServer.Connected && _commandPackets.Count < 1000)
+            if (_battlEyeServer != null && _commandPackets.Count < 50)
             {
                 _commandPackets.Enqueue(new PureCommandPacket(command));
                 _log.Info($"ThreadSafeBattleEyeClient Saving {command}");
             }
+
+            if (!Connected) _battlEyeServer.Connect();
             return 0;
         }
 

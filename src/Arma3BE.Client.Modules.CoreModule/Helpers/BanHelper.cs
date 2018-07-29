@@ -6,6 +6,7 @@ using Arma3BE.Server.Models;
 using Arma3BEClient.Common.Extensions;
 using Arma3BEClient.Common.Logging;
 using Arma3BEClient.Libs.Repositories;
+using Arma3BEClient.Libs.Repositories.Players;
 using Arma3BEClient.Libs.Tools;
 using Prism.Events;
 using System;
@@ -41,123 +42,126 @@ namespace Arma3BE.Client.Modules.CoreModule.Helpers
 
         private async Task<bool> RegisterBansInternal(IEnumerable<Ban> list, Guid currentServerId)
         {
-            var bans = list.ToList();
-
-            if (!HaveChanges(bans, x => x.Num, (x, y) => x.GuidIp == y.GuidIp && x.Reason == y.Reason && x.Num == y.Num))
-                return false;
-
-
-            using (var banRepository = new BanRepository())
+            using (_log.Time("RegisterBansInternal"))
             {
+                var bans = list.ToList();
 
-                var db =
-                    (await banRepository.GetActiveBansAsync(currentServerId)).ToArray();
+                if (!HaveChanges(bans, x => x.Num,
+                    (x, y) => x.GuidIp == y.GuidIp && x.Reason == y.Reason && x.Num == y.Num))
+                    return false;
 
-                var ids = bans.Select(x => x.GuidIp).ToList();
 
-                ids.AddRange(db.Select(x => x.GuidIp).ToList());
-                ids = ids.Distinct().ToList();
-
-                var players = (await _playerRepository.GetPlayersAsync(ids.ToArray())).ToArray();
-
-                var bansToUpdate = new List<Arma3BEClient.Libs.ModelCompact.Ban>();
-                var bansToAdd = new List<Arma3BEClient.Libs.ModelCompact.Ban>();
-                var playersToUpdateComments = new Dictionary<Guid, string>();
-
-                foreach (var ban in db)
+                using (var banRepository = new BanRepository())
                 {
-                    var needUpdate = false;
 
-                    var actual = bans.FirstOrDefault(x => x.GuidIp == ban.GuidIp);
-                    if (actual == null)
+                    var db =
+                        (await banRepository.GetActiveBansAsync(currentServerId)).ToArray();
+
+                    var ids = bans.Select(x => x.GuidIp).ToList();
+
+                    ids.AddRange(db.Select(x => x.GuidIp).ToList());
+                    ids = ids.Distinct().ToList();
+
+                    var players = (await _playerRepository.GetPlayersAsync(ids.ToArray())).ToArray();
+
+                    var bansToUpdate = new List<Arma3BEClient.Libs.ModelCompact.Ban>();
+                    var bansToAdd = new List<Arma3BEClient.Libs.ModelCompact.Ban>();
+                    var playersToUpdateComments = new Dictionary<Guid, string>();
+
+                    foreach (var ban in db)
                     {
-                        ban.IsActive = false;
-                        needUpdate = true;
-                    }
-                    else
-                    {
-                        if (ban.MinutesLeft != actual.Minutesleft)
+                        var needUpdate = false;
+
+                        var actual = bans.FirstOrDefault(x => x.GuidIp == ban.GuidIp);
+                        if (actual == null)
                         {
-                            ban.MinutesLeft = actual.Minutesleft;
+                            ban.IsActive = false;
                             needUpdate = true;
                         }
+                        else
+                        {
+                            if (ban.MinutesLeft != actual.Minutesleft)
+                            {
+                                ban.MinutesLeft = actual.Minutesleft;
+                                needUpdate = true;
+                            }
 
-                        if (ban.PlayerId == null)
+                            if (ban.PlayerId == null)
+                            {
+                                var player = players.FirstOrDefault(x => x.GUID == ban.GuidIp);
+                                if (player != null && !string.IsNullOrEmpty(ban.Reason))
+                                {
+                                    ban.PlayerId = player.Id;
+
+                                    var comm = ban.Reason;
+
+                                    var ind1 = comm.IndexOf('[');
+                                    var ind2 = comm.LastIndexOf(']');
+
+                                    if (ind1 > -1 && ind2 > ind1) comm = comm.Remove(ind1, ind2 - ind1 + 1).Trim();
+
+                                    if (string.IsNullOrEmpty(player.Comment) || !player.Comment.Contains(comm))
+                                    {
+                                        player.Comment = $"{player.Comment} | {comm}";
+
+                                        if (!playersToUpdateComments.ContainsKey(player.Id))
+                                            playersToUpdateComments.Add(player.Id, player.Comment);
+                                        else
+                                            playersToUpdateComments[player.Id] = player.Comment;
+                                    }
+
+                                    needUpdate = true;
+                                }
+                            }
+                        }
+
+                        if (needUpdate)
+                            bansToUpdate.Add(ban);
+                    }
+
+                    foreach (var ban in bans)
+                    {
+                        var bdb = db.FirstOrDefault(x => x.ServerId == currentServerId && x.GuidIp == ban.GuidIp);
+                        if (bdb == null)
                         {
                             var player = players.FirstOrDefault(x => x.GUID == ban.GuidIp);
-                            if (player != null && !string.IsNullOrEmpty(ban.Reason))
+
+                            var newBan = new Arma3BEClient.Libs.ModelCompact.Ban
                             {
-                                ban.PlayerId = player.Id;
+                                CreateDate = DateTime.UtcNow,
+                                GuidIp = ban.GuidIp,
+                                IsActive = true,
+                                Minutes = ban.Minutesleft,
+                                MinutesLeft = ban.Minutesleft,
+                                Num = ban.Num,
+                                Reason = ban.Reason,
+                                ServerId = currentServerId,
+                                PlayerId = player?.Id
+                            };
 
-                                var comm = ban.Reason;
+                            bansToAdd.Add(newBan);
 
-                                var ind1 = comm.IndexOf('[');
-                                var ind2 = comm.LastIndexOf(']');
+                            var comm = _replace.Replace(ban.Reason, string.Empty).Trim();
+                            if (player != null &&
+                                (string.IsNullOrEmpty(player.Comment) || !player.Comment.Contains(comm)))
+                            {
+                                player.Comment = $"{player.Comment} | {comm}";
 
-                                if (ind1 > -1 && ind2 > ind1) comm = comm.Remove(ind1, ind2 - ind1 + 1).Trim();
-
-                                if (string.IsNullOrEmpty(player.Comment) || !player.Comment.Contains(comm))
-                                {
-                                    player.Comment = $"{player.Comment} | {comm}";
-
-                                    if (!playersToUpdateComments.ContainsKey(player.Id))
-                                        playersToUpdateComments.Add(player.Id, player.Comment);
-                                    else
-                                        playersToUpdateComments[player.Id] = player.Comment;
-                                }
-
-                                needUpdate = true;
+                                if (!playersToUpdateComments.ContainsKey(player.Id))
+                                    playersToUpdateComments.Add(player.Id, player.Comment);
+                                else
+                                    playersToUpdateComments[player.Id] = player.Comment;
                             }
                         }
                     }
 
-                    if (needUpdate)
-                        bansToUpdate.Add(ban);
+                    await banRepository.AddOrUpdateAsync(bansToAdd);
+                    await banRepository.AddOrUpdateAsync(bansToUpdate);
+                    await _playerRepository.UpdateCommentAsync(playersToUpdateComments);
                 }
 
-                foreach (var ban in bans)
-                {
-                    var bdb = db.FirstOrDefault(x => x.ServerId == currentServerId && x.GuidIp == ban.GuidIp);
-                    if (bdb == null)
-                    {
-                        var player = players.FirstOrDefault(x => x.GUID == ban.GuidIp);
-
-                        var newBan = new Arma3BEClient.Libs.ModelCompact.Ban
-                        {
-                            CreateDate = DateTime.UtcNow,
-                            GuidIp = ban.GuidIp,
-                            IsActive = true,
-                            Minutes = ban.Minutesleft,
-                            MinutesLeft = ban.Minutesleft,
-                            Num = ban.Num,
-                            Reason = ban.Reason,
-                            ServerId = currentServerId,
-                            PlayerId = player?.Id
-                        };
-
-                        bansToAdd.Add(newBan);
-
-                        var comm = _replace.Replace(ban.Reason, string.Empty).Trim();
-                        if (player != null &&
-                            (string.IsNullOrEmpty(player.Comment) || !player.Comment.Contains(comm)))
-                        {
-                            player.Comment = $"{player.Comment} | {comm}";
-
-                            if (!playersToUpdateComments.ContainsKey(player.Id))
-                                playersToUpdateComments.Add(player.Id, player.Comment);
-                            else
-                                playersToUpdateComments[player.Id] = player.Comment;
-                        }
-                    }
-                }
-
-                await banRepository.AddOrUpdateAsync(bansToAdd);
-                await banRepository.AddOrUpdateAsync(bansToUpdate);
-                await _playerRepository.UpdateCommentAsync(playersToUpdateComments);
+                return true;
             }
-
-
-            return true;
         }
 
         public async Task<IEnumerable<BanView>> GetBanViewAsync(IEnumerable<Ban> list)

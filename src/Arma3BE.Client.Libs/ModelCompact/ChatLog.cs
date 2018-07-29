@@ -16,9 +16,14 @@ namespace Arma3BEClient.Libs.ModelCompact
     {
         [Key]
         public int Id { get; set; }
-       
+
+        [Index]
         public string Text { get; set; }
+
+        [Index]
         public System.Guid ServerId { get; set; }
+
+        [Index]
         public System.DateTime Date { get; set; }
 
         [ForeignKey("ServerId")]

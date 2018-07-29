@@ -9,6 +9,7 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Arma3BEClient.Libs.ModelCompact
 {
@@ -40,6 +41,7 @@ namespace Arma3BEClient.Libs.ModelCompact
         public string Name { get; set; }
 
         [Required]
+        [Index]
         public bool Active { get; set; }
 
 

@@ -8,6 +8,7 @@ using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.BanModule.Boxes;
 using Arma3BE.Server;
 using Arma3BEClient.Libs.Repositories;
+using Arma3BEClient.Libs.Tools;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace Arma3BE.Client.Modules.BanModule.Models
         private readonly Guid _serverInfoId;
 
         public ServerMonitorBansViewModel(ServerInfoDto serverInfo, IEventAggregator eventAggregator, IServerInfoRepository infoRepository,
-            IBanHelper banHelper)
+            IBanHelper banHelper, ISettingsStoreSource settingsStoreSource)
             : base(
                 new ActionCommand(() => SendCommand(eventAggregator, serverInfo.Id, CommandType.Bans)),
                 new BanViewComparer())
@@ -49,8 +50,15 @@ namespace Arma3BE.Client.Modules.BanModule.Models
 
             CustomBan = new ActionCommand(() =>
             {
-                var w = new BanPlayerWindow(_serverInfoId, _helper, null, false, null, null, infoRepository);
+                var w = new BanPlayerWindow(_serverInfoId, _helper, null, false, null, null, infoRepository, settingsStoreSource);
                 w.ShowDialog();
+            });
+
+            RefreshAvailiableCommand = new ActionCommand(async () =>
+            {
+                AvailibleBans = await GetAvailibleBans();
+                RaisePropertyChanged(nameof(AvailibleBans));
+                RaisePropertyChanged(nameof(AvailibleBansCount));
             });
 
             _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Ban>>>()
@@ -103,6 +111,8 @@ namespace Arma3BE.Client.Modules.BanModule.Models
         public ICommand SyncBans { get; set; }
         public ICommand CustomBan { get; set; }
 
+        public ICommand RefreshAvailiableCommand { get; set; }
+
         protected override Task<IEnumerable<BanView>> RegisterDataAsync(IEnumerable<Ban> initialData)
         {
             var enumerable = initialData as IList<Ban> ?? initialData.ToList();
@@ -113,14 +123,6 @@ namespace Arma3BE.Client.Modules.BanModule.Models
         public void RemoveBan(BanView si)
         {
             SendCommand(CommandType.RemoveBan, si.Num.ToString());
-        }
-
-        public override async Task SetDataAsync(IEnumerable<Ban> initialData)
-        {
-            await base.SetDataAsync(initialData);
-            AvailibleBans = await GetAvailibleBans();
-            RaisePropertyChanged(nameof(AvailibleBans));
-            RaisePropertyChanged(nameof(AvailibleBansCount));
         }
 
         private void SendCommand(CommandType commandType, string parameters = null)

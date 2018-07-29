@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Arma3BEClient.Libs</RootNamespace>
     <AssemblyName>Arma3BEClient.Libs</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
@@ -62,12 +62,20 @@
     <Compile Include="Migrations\201706202056450_BadNicknames_ImportantWords.Designer.cs">
       <DependentUpon>201706202056450_BadNicknames_ImportantWords.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201803012256245_Table_Indexes.cs" />
+    <Compile Include="Migrations\201803012256245_Table_Indexes.Designer.cs">
+      <DependentUpon>201803012256245_Table_Indexes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModelCompact\Reason.cs" />
     <Compile Include="Repositories\AdminRepository.cs" />
     <Compile Include="Repositories\BanRepository.cs" />
     <Compile Include="Repositories\ChatRepository.cs" />
-    <Compile Include="Repositories\PlayerRepository.cs" />
+    <Compile Include="Repositories\Players\IPlayerRepository.cs" />
+    <Compile Include="Repositories\Players\PlayerDto.cs" />
+    <Compile Include="Repositories\Players\PlayerRepository.cs" />
+    <Compile Include="Repositories\Players\PlayerRepositoryCache.cs" />
+    <Compile Include="Repositories\Players\PlayerRepositoryCacheV2.cs" />
     <Compile Include="Repositories\ReasonRepository.cs" />
     <Compile Include="Repositories\ServerInfoRepository.cs" />
     <Compile Include="ModelCompact\Admin.cs" />
@@ -81,6 +89,7 @@
     <Compile Include="ModelCompact\Settings.cs" />
     <Compile Include="Tools\ConnectionFactory.cs" />
     <Compile Include="Tools\ISettingsStore.cs" />
+    <Compile Include="Tools\ISteamService.cs" />
     <Compile Include="Tools\Settings.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -140,6 +149,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706202056450_BadNicknames_ImportantWords.resx">
       <DependentUpon>201706202056450_BadNicknames_ImportantWords.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803012256245_Table_Indexes.resx">
+      <DependentUpon>201803012256245_Table_Indexes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

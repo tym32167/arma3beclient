@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Arma3BEClient</RootNamespace>
     <AssemblyName>Arma3BEClient</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -206,6 +206,10 @@
     <ProjectReference Include="..\Arma3BE.Client.Infrastructure\Arma3BE.Client.Infrastructure.csproj">
       <Project>{b58670e5-011f-4318-964e-35c8b63870a5}</Project>
       <Name>Arma3BE.Client.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Libs\Arma3BE.Client.Libs.csproj">
+      <Project>{E5240A50-E944-4F50-A353-2E3C9E547447}</Project>
+      <Name>Arma3BE.Client.Libs</Name>
     </ProjectReference>
     <ProjectReference Include="..\Arma3BE.Client.Modules.AdminsModule\Arma3BE.Client.Modules.AdminsModule.csproj">
       <Project>{50e80fcc-87bd-4982-901e-38fd22482d02}</Project>

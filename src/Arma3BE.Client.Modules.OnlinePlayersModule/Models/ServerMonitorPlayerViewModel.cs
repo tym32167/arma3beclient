@@ -7,6 +7,8 @@ using Arma3BE.Client.Infrastructure.Models;
 using Arma3BE.Client.Modules.OnlinePlayersModule.Helpers;
 using Arma3BE.Server;
 using Arma3BEClient.Libs.Repositories;
+using Arma3BEClient.Libs.Repositories.Players;
+using Arma3BEClient.Libs.Tools;
 using Prism.Commands;
 using Prism.Events;
 using System;
@@ -28,14 +30,16 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
         private readonly PlayerHelper _playerHelper;
 
         public ServerMonitorPlayerViewModel(ServerInfoDto serverInfo,
-            IBanHelper banHelper, IEventAggregator eventAggregator, IPlayerRepository playerRepository, ReasonRepository reasonRepository)
+            IBanHelper banHelper, IEventAggregator eventAggregator, IPlayerRepository playerRepository,
+            ReasonRepository reasonRepository,
+            ISteamService steamService)
             : base(
                 new ActionCommand(() => SendCommand(eventAggregator, serverInfo.Id, CommandType.Players)),
                 new PlayerViewComparer())
         {
             _serverInfo = serverInfo;
             _eventAggregator = eventAggregator;
-            _playerHelper = new PlayerHelper(serverInfo.Id, banHelper, playerRepository, reasonRepository);
+            _playerHelper = new PlayerHelper(serverInfo.Id, banHelper, playerRepository, reasonRepository, steamService);
 
             KickUserCommand = new DelegateCommand(ShowKickDialog, CanShowDialog);
             BanUserCommand = new DelegateCommand(ShowBanDialog, CanShowDialog);
@@ -44,11 +48,11 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
 
             PropertyChanged += ServerMonitorPlayerViewModel_PropertyChanged;
 
-            _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Player>>>().Subscribe(e =>
+            _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Player>>>().Subscribe(async e =>
             {
                 if (e.ServerId == serverInfo.Id)
                 {
-                    SetDataAsync(e.Items);
+                    await SetDataAsync(e.Items);
                     WaitingForEvent = false;
                 }
             });

@@ -30,15 +30,6 @@
 
             <Separator />
 
-            <TextBlock Margin="2" HorizontalAlignment="Right" VerticalAlignment="Center"
-                       Text="{Binding AvailibleBansCount, Mode=OneWay, StringFormat=Availible bans: {0}}" />
-
-            <Button Command="{Binding SyncBans, Mode=OneWay}" Content="Ban selected">
-                <!--<Image x:Uid="Image_1" Source="{StaticResource refresh_icon}" Height="16" Width="16"></Image>-->
-            </Button>
-
-            <Separator />
-
             <Button Content="Custom ban" Command="{Binding CustomBan, Mode=TwoWay}" />
 
             <Separator />
@@ -76,41 +67,52 @@
             </TabItem>
             <TabItem Header="Availible bans">
 
-                <xcdg:DataGridControl ItemsSource="{Binding AvailibleBans, Mode=OneWay}" AutoCreateColumns="False"
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <ToolBar Height="30">
+                        <Button Command="{Binding RefreshAvailiableCommand, Mode=OneWay}"
+                            BorderThickness="1">
+                            <Image x:Uid="Image_1" Source="{StaticResource ResourceKey=refresh_icon}" Height="16" Width="16" />
+                        </Button>
+
+                        <Separator />
+
+                        <TextBlock Margin="2" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                   Text="{Binding AvailibleBansCount, Mode=OneWay, StringFormat=Availible bans: {0}}" />
+
+                        <Button Command="{Binding SyncBans, Mode=OneWay}" Content="Ban selected">
+                            <!--<Image x:Uid="Image_1" Source="{StaticResource refresh_icon}" Height="16" Width="16"></Image>-->
+                        </Button>
+
+                    </ToolBar>
+
+                    <xcdg:DataGridControl Grid.Row="1" ItemsSource="{Binding AvailibleBans, Mode=OneWay}" AutoCreateColumns="False"
                                       ReadOnly="True"
                                       SelectionChanged="Av_Grid_Selection_Changed" Name="dg2">
 
-                    <xcdg:DataGridControl.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Header="Player Info" Click="PlayerInfo_Click" />
-                        </ContextMenu>
-                    </xcdg:DataGridControl.ContextMenu>
+                        <xcdg:DataGridControl.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Player Info" Click="PlayerInfo_Click" />
+                            </ContextMenu>
+                        </xcdg:DataGridControl.ContextMenu>
 
-                    <xcdg:DataGridControl.View>
-                        <xcdg:TableflowView FixedColumnCount="0" UseDefaultHeadersFooters="False" ContainerHeight="20">
-                            <xcdg:TableView.FixedHeaders>
-                                <DataTemplate>
-                                    <xcdg:ColumnManagerRow />
-                                </DataTemplate>
-                            </xcdg:TableView.FixedHeaders>
-                        </xcdg:TableflowView>
-                    </xcdg:DataGridControl.View>
-                    <!--<xcdg:DataGridControl.Columns>
-                        
-                        <xcdg:Column FieldName="PlayerName" AllowGroup="False" Title="PlayerName">
-                        </xcdg:Column>
+                        <xcdg:DataGridControl.View>
+                            <xcdg:TableflowView FixedColumnCount="0" UseDefaultHeadersFooters="False" ContainerHeight="20">
+                                <xcdg:TableView.FixedHeaders>
+                                    <DataTemplate>
+                                        <xcdg:ColumnManagerRow />
+                                    </DataTemplate>
+                                </xcdg:TableView.FixedHeaders>
+                            </xcdg:TableflowView>
+                        </xcdg:DataGridControl.View>
 
-                        <xcdg:Column FieldName="PlayerComment" AllowGroup="False" Title="PlayerComment" >
-                        </xcdg:Column>
-
-                        <xcdg:Column FieldName="GuidIp" AllowGroup="False" Title="GuidIp" >
-                        </xcdg:Column>
-                        <xcdg:Column FieldName="Minutesleft" AllowGroup="False" Title="Minutesleft" >
-                        </xcdg:Column>
-                        <xcdg:Column FieldName="Reason" AllowGroup="False" Title="Reason" >
-                        </xcdg:Column>
-                    </xcdg:DataGridControl.Columns>-->
-                </xcdg:DataGridControl>
+                    </xcdg:DataGridControl>
+                </Grid>
 
             </TabItem>
 

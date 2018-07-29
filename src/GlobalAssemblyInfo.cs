@@ -10,11 +10,11 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("tym32167")]
 [assembly: AssemblyProduct("Arma 3 BattlEye Client")]
-[assembly: AssemblyCopyright("Copyright © 2016")]
+[assembly: AssemblyCopyright("Copyright Â© 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 [assembly: ComVisible(false)]
 
-[assembly: AssemblyVersion("0.7.*")]
+[assembly: AssemblyVersion("0.8.*")]
 [assembly: System.Resources.NeutralResourcesLanguage("en")]

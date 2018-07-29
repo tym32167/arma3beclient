@@ -1,5 +1,5 @@
 ﻿using Arma3BEClient.Common.Logging;
-using Arma3BEClient.Libs.Repositories;
+using Arma3BEClient.Libs.Repositories.Players;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;

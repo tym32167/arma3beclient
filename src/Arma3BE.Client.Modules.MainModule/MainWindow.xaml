@@ -42,13 +42,7 @@
         </Menu>
         <xcad:DockingManager x:Name="DockManager" Grid.Row="1" Margin="0,0,0,0" regions:RegionManager.RegionName="{x:Static inf:RegionNames.ServerTabRegion}">
             <xcad:LayoutRoot>
-                <xcad:LayoutPanel>
-                    <xcad:LayoutDocumentPaneGroup>
-                        <xcad:LayoutDocumentPane>
-
-                        </xcad:LayoutDocumentPane>
-                    </xcad:LayoutDocumentPaneGroup>
-                </xcad:LayoutPanel>
+                
             </xcad:LayoutRoot>
         </xcad:DockingManager>
     </Grid>
