@@ -1,7 +1,7 @@
 ﻿using Arma3BE.Client.Infrastructure.Events.BE;
 using Arma3BE.Server;
 using Arma3BE.Server.Models;
-using Arma3BEClient.Libs.ModelCompact;
+using Arma3BEClient.Libs.Repositories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Prism.Events;
@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Arma3BEClient.Libs.Repositories;
 
 namespace Arma3BE.Client.Modules.BEServerModule.Tests
 {
