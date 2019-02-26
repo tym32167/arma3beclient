@@ -139,7 +139,7 @@ namespace Arma3BE.Server
 
 
                 case CommandType.RestartServer:
-                    _battlEyeServer.SendCommand("#restartserver");
+                    _battlEyeServer.SendCommand(BattlEyeCommand.RestartServer);
                     break;
 
 
