@@ -2,20 +2,21 @@
 using Arma3BE.Server;
 using Arma3BE.Server.Models;
 using Arma3BEClient.Libs.Repositories;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using NUnit.Framework;
+
 
 namespace Arma3BE.Client.Modules.BEServerModule.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class BEServiceLogicTests
     {
-        [TestMethod]
+        [Test]
         public void Player_Log_Test()
         {
             var serverGuid = Guid.NewGuid();
@@ -42,7 +43,7 @@ namespace Arma3BE.Client.Modules.BEServerModule.Tests
             GC.KeepAlive(logic);
         }
 
-        [TestMethod]
+        [Test]
         public void Admin_Test()
         {
             var serverGuid = Guid.NewGuid();
@@ -70,7 +71,7 @@ namespace Arma3BE.Client.Modules.BEServerModule.Tests
         }
 
 
-        [TestMethod]
+        [Test]
         public void Connect_Test()
         {
             var serverGuid = Guid.NewGuid();
@@ -108,7 +109,7 @@ namespace Arma3BE.Client.Modules.BEServerModule.Tests
         }
 
 
-        [TestMethod]
+        [Test]
         public void Player_Ban_Test()
         {
             var serverGuid = Guid.NewGuid();
