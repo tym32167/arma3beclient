@@ -1,9 +1,12 @@
 ﻿using Arma3BE.Client.Infrastructure.Contracts;
 using Arma3BE.Client.Infrastructure.Events;
 using Arma3BE.Client.Infrastructure.Events.BE;
+using Arma3BE.Server.Models;
 using Arma3BEClient.Libs.Repositories;
 using Prism.Events;
 using System;
+using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -27,9 +30,17 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             _eventAggregator.GetEvent<ConnectServerEvent>().Subscribe(BeServerConnectHandler, ThreadOption.UIThread);
             _eventAggregator.GetEvent<DisConnectServerEvent>().Subscribe(BeServerDisconnectHandler, ThreadOption.UIThread);
             _eventAggregator.GetEvent<RunServerEvent>().Publish(CurrentServer);
+
+            _eventAggregator.GetEvent<BEMessageEvent<BEItemsMessage<Player>>>().Subscribe(PlayersMessage);
         }
 
         public ServerInfoDto CurrentServer { get; }
+
+        private void PlayersMessage(BEItemsMessage<Player> items)
+        {
+            if (items.ServerId != CurrentServer.Id) return;
+            Count = items?.Items?.Count() ?? 0;
+        }
 
         public bool Connected
         {
@@ -42,7 +53,25 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
             }
         }
 
-        public string Title => CurrentServer.Name;
+        private int _count;
+        private int Count
+        {
+            get { return _count; }
+            set
+            {
+                _count = value;
+                RaisePropertyChanged(nameof(Title));
+            }
+        }
+
+        public string Title
+        {
+            get => $"{CurrentServer.Name} ({Count})";
+            set
+            {
+
+            }
+        } 
 
         private void BeServerDisconnectHandler(ServerInfoDto info)
         {
@@ -52,8 +81,11 @@ namespace Arma3BE.Client.Modules.MainModule.ViewModel
 
         private void BeServerConnectHandler(ServerInfoDto info)
         {
+            if (info.Id != CurrentServer.Id) return;
             Connected = true;
         }
+
+
 
         protected override void DisposeManagedResources()
         {

@@ -32,7 +32,7 @@ namespace Arma3BE.Client.Modules.AdminsModule.Models
             });
         }
 
-        public string Title => "Admins";
+        public override string Title => $"Admins ({DataCount})";
 
         protected override async Task<IEnumerable<Admin>> RegisterDataAsync(IEnumerable<Admin> initialData)
         {

@@ -76,8 +76,7 @@ namespace Arma3BE.Client.Modules.OnlinePlayersModule.Models
                 PlayerInfoCommand?.RaiseCanExecuteChanged();
             }
         }
-
-        public string Title => "Session";
+        public override string Title => $"Session ({DataCount})";
 
         private static void SendCommand(IEventAggregator eventAggregator, Guid serverId, CommandType commandType,
             string parameters = null)

@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Arma3BE.Client.Infrastructure.Models;
+using Arma3BE.Client.Modules.MainModule.ViewModel;
+using Prism.Regions;
+using System;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Arma3BE.Client.Infrastructure.Models;
-using Arma3BE.Client.Modules.MainModule.ViewModel;
-using Prism.Regions;
+using System.Windows.Data;
 using Xceed.Wpf.AvalonDock;
 using Xceed.Wpf.AvalonDock.Layout;
 
@@ -20,7 +21,7 @@ namespace Arma3BE.Client.Modules.MainModule
 
         protected override void Adapt(IRegion region, DockingManager regionTarget)
         {
-            region.Views.CollectionChanged += delegate(
+            region.Views.CollectionChanged += delegate (
                 object sender, NotifyCollectionChangedEventArgs e)
             {
                 OnViewsCollectionChanged(e, regionTarget);
@@ -69,7 +70,10 @@ namespace Arma3BE.Client.Modules.MainModule
                         if (viewModel != null)
                         {
                             //All my viewmodels have properties DisplayName and IconKey
-                            newLayoutDocument.Title = viewModel.CurrentServer.Name;
+                            Binding myBinding = new Binding(nameof(ServerMonitorModel.Title));
+                            myBinding.Source = viewModel;
+                            myBinding.Mode = BindingMode.OneWay;
+                            BindingOperations.SetBinding(newLayoutDocument, LayoutContent.TitleProperty, myBinding);
                             await viewModel.OpenServerAsync();
                         }
 

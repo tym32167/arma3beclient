@@ -60,6 +60,8 @@ namespace Arma3BE.Client.Infrastructure.Models
 
         public int DataCount => Data?.Count ?? 0;
 
+        public virtual string Title => $"({DataCount})";
+
         public ICommand RefreshCommand { get; }
 
         public ICommand FilterCommand { get; private set; }
@@ -78,6 +80,7 @@ namespace Arma3BE.Client.Infrastructure.Models
 
             RaisePropertyChanged(nameof(Data));
             RaisePropertyChanged(nameof(DataCount));
+            RaisePropertyChanged(nameof(Title));
         }
 
 

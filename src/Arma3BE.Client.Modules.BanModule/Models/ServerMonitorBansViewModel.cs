@@ -72,7 +72,7 @@ namespace Arma3BE.Client.Modules.BanModule.Models
                });
         }
 
-        public string Title => "Bans";
+        public override string Title => $"Bans ({DataCount})";
 
         public IEnumerable<BanView> SelectedAvailibleBans { get; set; }
 
