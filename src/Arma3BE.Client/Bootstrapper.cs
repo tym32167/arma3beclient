@@ -11,6 +11,7 @@ using Arma3BE.Client.Modules.OnlinePlayersModule;
 using Arma3BE.Client.Modules.OptionsModule;
 using Arma3BE.Client.Modules.PlayersModule;
 using Arma3BE.Client.Modules.SteamModule;
+using Arma3BE.Client.Modules.SyncModule;
 using Arma3BE.Client.Modules.ToolsModule;
 using Arma3BEClient.Common.Logging;
 using log4net.Config;
@@ -58,6 +59,7 @@ namespace Arma3BEClient
             AddModule(typeof(ManageServerModuleInit));
             AddModule(typeof(OnlinePlayersModuleInit));
             AddModule(typeof(SteamModuleInit));
+            AddModule(typeof(SyncModuleInit));
             AddModule(typeof(IndicatorsModuleInit));
             AddModule(typeof(MainModuleInit));
         }
