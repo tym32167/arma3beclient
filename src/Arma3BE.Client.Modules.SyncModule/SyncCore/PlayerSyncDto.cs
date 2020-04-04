@@ -17,4 +17,10 @@ namespace Arma3BE.Client.Modules.SyncModule.SyncCore
         public int Count { get; set; }
         public PlayerSyncDto[] Players { get; set; }
     }
+
+    public class PlayerSyncRequest
+    {
+        public int Count { get; set; }
+        public PlayerSyncDto[] Players { get; set; }
+    }
 }

@@ -21,6 +21,13 @@ namespace Arma3BE.Client.Modules.SyncModule.SyncCore
             return await _client.GetAsync<PlayerSyncResponse>(uri);
         }
 
+        public async Task PostPlayers(PlayerSyncRequest request)
+        {
+            var uri = $"{_credentials.Endpoint}/api/sync/players";
+            _client.SetHeader("Authorization", $"Bearer {await GetToken()}");
+            await _client.PostAsync<PlayerSyncRequest, string>(uri, request);
+        }
+
         private string _token;
         public async Task<string> GetToken()
         {

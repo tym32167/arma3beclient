@@ -99,8 +99,10 @@ namespace Arma3BE.Client.Modules.SteamModule.Core
                 var result = _idByHashSearcher.Search(hashes, token);
 
                 var notFound = hashes.Where(x => !result.ContainsKey(x));
-                foreach (var f in notFound)
-                    _failedSearches.AddOrUpdate(f, x => f, (x, y) => f);
+
+                if (!token.IsCancellationRequested)
+                    foreach (var f in notFound)
+                        _failedSearches.AddOrUpdate(f, x => f, (x, y) => f);
 
                 return result;
             }
