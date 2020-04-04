@@ -263,6 +263,10 @@
       <Project>{6ce098a8-dff1-4c66-ad16-909903945e2b}</Project>
       <Name>Arma3BE.Client.Modules.SteamModule</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Arma3BE.Client.Modules.SyncModule\Arma3BE.Client.Modules.SyncModule.csproj">
+      <Project>{A4A62C09-9C90-4AAD-B09B-AA93A31BB16E}</Project>
+      <Name>Arma3BE.Client.Modules.SyncModule</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Arma3BE.Client.Modules.ToolsModule\Arma3BE.Client.Modules.ToolsModule.csproj">
       <Project>{57ef9e36-98d1-4dfe-a56b-ade958bab019}</Project>
       <Name>Arma3BE.Client.Modules.ToolsModule</Name>

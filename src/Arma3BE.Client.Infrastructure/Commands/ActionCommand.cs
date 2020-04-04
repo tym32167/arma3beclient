@@ -24,5 +24,7 @@ namespace Arma3BE.Client.Infrastructure.Commands
         {
             _action();
         }
+
+        public void CanExecuteInvalidate() => this.OnCanExecuteChanged();
     }
 }
