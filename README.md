@@ -1,4 +1,4 @@
-# Arma 3 BattlEye Tool
+# Arma 3 BattlEye Tool 
 
 This program is designed specifically for the [TEHGAM](http://tehgam.com/) community, with the main intended purpose of managing players and bans through the BattlEye protocol.
 
